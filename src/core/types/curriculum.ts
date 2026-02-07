@@ -1,0 +1,80 @@
+// Curriculum domain types
+
+/** A single concept within a module — explained and explorable */
+export interface CurriculumConcept {
+  title: string;
+  explanation: string;
+  /** Query to fire via onQuery when "Try This" is clicked — creates existing visual components on canvas */
+  tryThisQuery: string;
+  /** Label shown on the "Try This" button */
+  tryThisLabel: string;
+  /** Simplified explanation for children's audience mode */
+  childDescription?: string;
+  /** Simplified query for children's audience mode */
+  childTryThisQuery?: string;
+}
+
+/** A practice task within a module */
+export interface CurriculumTask {
+  id: string;
+  instruction: string;
+  /** Query to fire via onQuery — optional, some tasks are observational */
+  query?: string;
+}
+
+/** A single lesson module */
+export interface CurriculumModule {
+  id: string;
+  unitId: string;
+  title: string;
+  subtitle: string;
+  objectives: string[];
+  concepts: CurriculumConcept[];
+  tasks: CurriculumTask[];
+  /** Module IDs that must be completed before this one */
+  prerequisites: string[];
+  /** If true, content is not yet available (Units 2-5 stubs) */
+  comingSoon?: boolean;
+}
+
+/** Milestone content shown when a unit is completed */
+export interface CurriculumMilestone {
+  skillsSummary: string[];
+  bridgeText: string;
+  tryThisQuery: string;
+  tryThisLabel: string;
+  tryThisPrompt: string;
+}
+
+/** Curriculum completion content for Unit 5 */
+export interface CurriculumCompletionContent {
+  startedWith: string;
+  journeySummary: string[];
+  whatsNext: string;
+  tryThisQuery: string;
+  tryThisLabel: string;
+  tryThisPrompt: string;
+}
+
+/** A unit containing 4 modules */
+export interface CurriculumUnit {
+  id: string;
+  title: string;
+  description: string;
+  /** Icon key for the unit header (mapped to SVG in CurriculumIcons) */
+  icon: string;
+  modules: CurriculumModule[];
+  /** Milestone shown when all modules in the unit are completed */
+  milestone?: CurriculumMilestone;
+  /** Completion content shown when the final unit (Unit 5) is completed */
+  completionContent?: CurriculumCompletionContent;
+}
+
+/** Persistent progress tracked in localStorage */
+export interface CurriculumProgress {
+  completedModules: string[];
+  /** Per-module task completion: moduleId -> set of completed task IDs */
+  moduleProgress: Record<string, string[]>;
+  /** Module IDs where prerequisites are waived (skipped by experienced users) */
+  exemptedModules?: string[];
+}
