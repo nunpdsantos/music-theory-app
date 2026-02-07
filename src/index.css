@@ -42,8 +42,9 @@ body {
   background: #52525b;
 }
 
-/* Hide scrollbar on piano keyboard (drag-to-scroll instead) */
-.piano-scroll::-webkit-scrollbar {
+/* Hide scrollbar on piano keyboard and fretboard (drag-to-scroll instead) */
+.piano-scroll::-webkit-scrollbar,
+.fretboard-scroll::-webkit-scrollbar {
   display: none;
 }
 

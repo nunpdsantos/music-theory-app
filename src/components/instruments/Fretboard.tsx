@@ -163,6 +163,45 @@ export function Fretboard() {
     });
   }, [chordShapes]);
 
+  // Drag-to-scroll state
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const dragState = useRef({ startX: 0, startScroll: 0, dragged: false });
+
+  const onDragMove = useCallback((e: MouseEvent) => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const dx = e.clientX - dragState.current.startX;
+    if (Math.abs(dx) > 5) {
+      dragState.current.dragged = true;
+      el.scrollLeft = dragState.current.startScroll - dx;
+    }
+  }, []);
+
+  const onDragEnd = useCallback(() => {
+    document.removeEventListener('mousemove', onDragMove);
+    document.removeEventListener('mouseup', onDragEnd);
+  }, [onDragMove]);
+
+  const handleFretboardMouseDown = useCallback((e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('button')) return;
+    if (e.button !== 0) return;
+    e.preventDefault(); // prevent text selection / default drag
+    dragState.current.dragged = false;
+    dragState.current.startX = e.clientX;
+    dragState.current.startScroll = scrollContainerRef.current?.scrollLeft ?? 0;
+    document.addEventListener('mousemove', onDragMove);
+    document.addEventListener('mouseup', onDragEnd);
+  }, [onDragMove, onDragEnd]);
+
+  // Suppress fret cell clicks when a drag just occurred
+  const handleFretboardClickCapture = useCallback((e: React.MouseEvent) => {
+    if (dragState.current.dragged) {
+      e.stopPropagation();
+      e.preventDefault();
+      dragState.current.dragged = false;
+    }
+  }, []);
+
   // Barre bar measurement
   const fretboardRef = useRef<HTMLDivElement>(null);
   const [barreStyle, setBarreStyle] = useState<React.CSSProperties | null>(null);
@@ -223,7 +262,13 @@ export function Fretboard() {
     : (mobile ? 34 : 44);
 
   return (
-    <div className="w-full overflow-x-auto bg-zinc-900 border-t border-zinc-800">
+    <div
+      ref={scrollContainerRef}
+      className="w-full overflow-x-auto bg-zinc-900 border-t border-zinc-800 fretboard-scroll"
+      style={{ cursor: 'grab', scrollbarWidth: 'none', userSelect: 'none' }}
+      onMouseDown={handleFretboardMouseDown}
+      onClickCapture={handleFretboardClickCapture}
+    >
       <div className="px-4 py-2" style={{ minWidth: isChordView ? 0 : (mobile ? 500 : 800) }}>
         {/* Position selector when chord is selected */}
         {selectedChord && chordShapes.length > 0 && (
