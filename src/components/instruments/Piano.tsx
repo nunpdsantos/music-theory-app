@@ -7,10 +7,28 @@ import { PianoKeyComponent } from './PianoKey.tsx';
 import { useAudio } from '../../hooks/useAudio.ts';
 import { useAppStore } from '../../state/store.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
+import { useIsMobile, useIsCompact } from '../../hooks/useMediaQuery.ts';
 
 const START_OCTAVE = 2;
 const END_OCTAVE = 6;
-const KEY_WIDTH = 46;
+
+// Responsive key widths
+const KEY_WIDTH_DESKTOP = 46;
+const KEY_WIDTH_TABLET = 36;
+const KEY_WIDTH_MOBILE = 30;
+
+// Responsive container/key heights
+const CONTAINER_H_DESKTOP = 220;
+const CONTAINER_H_TABLET = 170;
+const CONTAINER_H_MOBILE = 140;
+
+const WHITE_H_DESKTOP = 210;
+const WHITE_H_TABLET = 160;
+const WHITE_H_MOBILE = 130;
+
+const BLACK_OFFSET_DESKTOP = 30;
+const BLACK_OFFSET_TABLET = 22;
+const BLACK_OFFSET_MOBILE = 18;
 
 export function Piano() {
   const { noteOn, noteOff } = useAudio();
@@ -20,6 +38,17 @@ export function Piano() {
   const { scaleMidiNumbers, getNoteColor, chordVoicingMidi, hasSelectedChord } = useKeyContext();
   const containerRef = useRef<HTMLDivElement>(null);
   const activeMidiMap = useRef<Map<number, number>>(new Map());
+
+  const mobile = useIsMobile();
+  const compact = useIsCompact();
+
+  const keyWidth = mobile ? KEY_WIDTH_MOBILE : compact ? KEY_WIDTH_TABLET : KEY_WIDTH_DESKTOP;
+  const containerHeight = mobile ? CONTAINER_H_MOBILE : compact ? CONTAINER_H_TABLET : CONTAINER_H_DESKTOP;
+  const whiteKeyHeight = mobile ? WHITE_H_MOBILE : compact ? WHITE_H_TABLET : WHITE_H_DESKTOP;
+  const blackKeyOffset = mobile ? BLACK_OFFSET_MOBILE : compact ? BLACK_OFFSET_TABLET : BLACK_OFFSET_DESKTOP;
+
+  // Sizing mode passed to PianoKey
+  const sizeMode: 'mobile' | 'tablet' | 'desktop' = mobile ? 'mobile' : compact ? 'tablet' : 'desktop';
 
   // Drag-to-scroll state
   const isDragging = useRef(false);
@@ -38,7 +67,6 @@ export function Piano() {
     [chordVoicingMidi]
   );
 
-  // When a chord is selected, scale notes that aren't part of the voicing get dimmed
   const isDimmed = useCallback(
     (key: PianoKey) =>
       hasSelectedChord &&
@@ -75,13 +103,11 @@ export function Piano() {
   const whiteKeys = useMemo(() => keys.filter((k) => !k.isBlack), [keys]);
   const blackKeys = useMemo(() => keys.filter((k) => k.isBlack), [keys]);
 
-  // Build a map: MIDI number → white key index (for positioning)
   const midiToWhiteKeyIndex = useMemo(() => {
     const m = new Map<number, number>();
     whiteKeys.forEach((wk, idx) => {
       m.set(wk.midiNumber, idx);
     });
-    // Also map black keys to the index of their preceding white key
     blackKeys.forEach((bk) => {
       const bkIdx = keys.indexOf(bk);
       for (let i = bkIdx - 1; i >= 0; i--) {
@@ -95,7 +121,6 @@ export function Piano() {
     return m;
   }, [whiteKeys, blackKeys, keys]);
 
-  // Scroll to center a set of MIDI numbers in view
   const scrollToMidiRange = useCallback(
     (midiSet: Set<number>) => {
       if (!containerRef.current || midiSet.size === 0) return;
@@ -104,21 +129,18 @@ export function Piano() {
       const minMidi = midiArr[0];
       const maxMidi = midiArr[midiArr.length - 1];
 
-      // Find closest white key indices
       const minIdx = midiToWhiteKeyIndex.get(minMidi);
       const maxIdx = midiToWhiteKeyIndex.get(maxMidi);
       if (minIdx === undefined || maxIdx === undefined) return;
 
       const centerIdx = (minIdx + maxIdx) / 2;
-      const scrollTo = centerIdx * KEY_WIDTH - containerRef.current.clientWidth / 2 + KEY_WIDTH / 2;
+      const scrollTo = centerIdx * keyWidth - containerRef.current.clientWidth / 2 + keyWidth / 2;
       containerRef.current.scrollTo({ left: Math.max(0, scrollTo), behavior: 'smooth' });
     },
-    [midiToWhiteKeyIndex]
+    [midiToWhiteKeyIndex, keyWidth]
   );
 
-  // Auto-scroll when highlighted notes change — center on the actual notes
   useEffect(() => {
-    // Chord voicing takes priority over scale
     if (chordVoicingMidi.size > 0) {
       scrollToMidiRange(chordVoicingMidi);
     } else if (scaleMidiNumbers.size > 0) {
@@ -126,10 +148,7 @@ export function Piano() {
     }
   }, [scaleMidiNumbers, chordVoicingMidi, scrollToMidiRange]);
 
-  // Also scroll when baseOctave changes (the MIDI sets will update via useKeyContext,
-  // but we need a fallback for the initial mount)
   useEffect(() => {
-    // Small delay to let the MIDI sets recompute first
     const t = setTimeout(() => {
       if (chordVoicingMidi.size > 0) {
         scrollToMidiRange(chordVoicingMidi);
@@ -141,7 +160,6 @@ export function Piano() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [baseOctave]);
 
-  // Drag-to-scroll handlers (on the container, not on keys)
   const handleContainerPointerDown = useCallback((e: React.PointerEvent) => {
     if ((e.target as HTMLElement).closest('[role="button"]')) return;
     isDragging.current = true;
@@ -170,9 +188,9 @@ export function Piano() {
           break;
         }
       }
-      return { key: bk, left: precedingWhiteIdx * KEY_WIDTH + 30 };
+      return { key: bk, left: precedingWhiteIdx * keyWidth + blackKeyOffset };
     });
-  }, [blackKeys, keys]);
+  }, [blackKeys, keys, keyWidth, blackKeyOffset]);
 
   return (
     <div className="w-full bg-zinc-900 border-t border-zinc-800">
@@ -202,7 +220,7 @@ export function Piano() {
         ref={containerRef}
         className="overflow-x-auto overflow-y-hidden relative piano-scroll"
         style={{
-          height: 220,
+          height: containerHeight,
           cursor: 'grab',
           scrollbarWidth: 'none',
         }}
@@ -213,7 +231,7 @@ export function Piano() {
       >
         <div
           className="relative flex"
-          style={{ width: whiteKeys.length * KEY_WIDTH, height: 210 }}
+          style={{ width: whiteKeys.length * keyWidth, height: whiteKeyHeight }}
         >
           {whiteKeys.map((wk) => (
             <PianoKeyComponent
@@ -228,6 +246,7 @@ export function Piano() {
               onNoteOn={handleNoteOn}
               onNoteOff={handleNoteOff}
               showLabel={true}
+              sizeMode={sizeMode}
             />
           ))}
 
@@ -248,6 +267,7 @@ export function Piano() {
                 onNoteOn={handleNoteOn}
                 onNoteOff={handleNoteOff}
                 showLabel={true}
+                sizeMode={sizeMode}
               />
             </div>
           ))}

@@ -44,7 +44,7 @@ export function ChordGrid() {
   }
 
   return (
-    <div className="grid grid-cols-4 sm:grid-cols-7 gap-2" role="group" aria-label="Diatonic chords">
+    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2" role="group" aria-label="Diatonic chords">
       {diatonicChords.map(({ chord, numeral, degree }, i) => {
         const color = DEGREE_COLORS[degree as keyof typeof DEGREE_COLORS];
         const rootLabel = noteToString(chord.root);
@@ -59,7 +59,7 @@ export function ChordGrid() {
           <motion.button
             key={degree}
             onClick={() => setSelectedChord(isSelected ? null : chord)}
-            className="relative flex flex-col items-center gap-1.5 p-3 rounded-xl overflow-hidden group"
+            className="relative flex flex-col items-center gap-1.5 p-3 max-sm:p-2 rounded-xl overflow-hidden group"
             style={{
               backgroundColor: isSelected ? `${color}18` : '#18181b',
               border: isSelected ? `1.5px solid ${color}60` : '1.5px solid #27272a',

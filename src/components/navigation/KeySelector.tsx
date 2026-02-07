@@ -67,7 +67,7 @@ export function KeySelector() {
         <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest block mb-1.5">
           Root
         </span>
-        <div className="inline-flex items-center rounded-xl bg-zinc-900/80 border border-zinc-800/60 p-1 gap-0.5">
+        <div className="inline-flex items-center rounded-xl bg-zinc-900/80 border border-zinc-800/60 p-1 gap-0.5 max-sm:max-w-full max-sm:overflow-x-auto max-sm:snap-x max-sm:snap-mandatory">
           {ROOTS.map((root) => {
             const label = noteToString(root);
             const isSelected =
@@ -111,7 +111,7 @@ export function KeySelector() {
         <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest block mb-1.5">
           Scale
         </span>
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 max-sm:gap-x-1.5 max-sm:gap-y-1">
           {SCALE_GROUPS.map((group) => (
             <div key={group.label} className="flex items-center gap-1">
               {group.options.map((opt) => {

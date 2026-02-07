@@ -8,6 +8,7 @@ import { getPitchClass } from '../../core/constants/notes.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
 import { useAudio } from '../../hooks/useAudio.ts';
 import { useAppStore } from '../../state/store.ts';
+import { useIsMobile } from '../../hooks/useMediaQuery.ts';
 
 const FULL_FRETS = 15;
 const CHORD_FRET_WINDOW = 5;
@@ -34,6 +35,7 @@ export function Fretboard() {
   const activeNotes = useAppStore((s) => s.activeNotes);
   const selectedChord = useAppStore((s) => s.selectedChord);
   const [selectedShapeIdx, setSelectedShapeIdx] = useState(0);
+  const mobile = useIsMobile();
 
   const tuningPitchClasses = useMemo(() => getTuningPitchClasses(TUNING_STANDARD), []);
 
@@ -215,12 +217,14 @@ export function Fretboard() {
   // Lowest visible fret number for fret indicator
   const lowestVisibleFret = isChordView ? visibleFrets[visibleFrets.length - 1] : null;
 
-  // Min fret width depends on view mode
-  const fretMinWidth = isChordView ? 56 : 44;
+  // Min fret width depends on view mode and screen size
+  const fretMinWidth = isChordView
+    ? (mobile ? 44 : 56)
+    : (mobile ? 34 : 44);
 
   return (
     <div className="w-full overflow-x-auto bg-zinc-900 border-t border-zinc-800">
-      <div className="px-4 py-2" style={{ minWidth: isChordView ? 0 : 800 }}>
+      <div className="px-4 py-2" style={{ minWidth: isChordView ? 0 : (mobile ? 500 : 800) }}>
         {/* Position selector when chord is selected */}
         {selectedChord && chordShapes.length > 0 && (
           <div className="flex items-center gap-2 mb-2 flex-wrap">
@@ -306,7 +310,7 @@ export function Fretboard() {
               voicingInfo.fret === 0;
 
             return (
-              <div key={stringIdx} className="flex items-center" style={{ height: isChordView ? 30 : 28 }}>
+              <div key={stringIdx} className="flex items-center" style={{ height: mobile ? 24 : (isChordView ? 30 : 28) }}>
                 {/* String label */}
                 <div
                   className="text-right pr-2 text-[10px] font-mono"

@@ -142,7 +142,7 @@ export function PlayView() {
         variants={stagger}
         initial="hidden"
         animate="show"
-        className="max-w-3xl mx-auto px-5 py-5 space-y-6"
+        className="max-w-3xl mx-auto px-5 max-sm:px-3 py-5 max-sm:py-3 space-y-6 max-sm:space-y-4"
       >
         {/* ─── Key Context ──────────────────────────────────────── */}
         <motion.div
@@ -182,7 +182,7 @@ export function PlayView() {
           <h3 className="text-[10px] font-bold text-zinc-600 mb-2.5 uppercase tracking-widest">
             Sound
           </h3>
-          <div className="flex gap-1.5" role="radiogroup" aria-label="Synth preset">
+          <div className="flex gap-1.5 max-sm:grid max-sm:grid-cols-3" role="radiogroup" aria-label="Synth preset">
             {PRESET_ORDER.map((preset) => {
               const isActive = synthPreset === preset;
               const meta = PRESET_META[preset];
@@ -230,7 +230,7 @@ export function PlayView() {
         </motion.div>
 
         {/* ─── Controls: Volume + Octave ────────────────────────── */}
-        <motion.div variants={fadeUp} className="grid grid-cols-2 gap-5">
+        <motion.div variants={fadeUp} className="grid grid-cols-2 max-sm:grid-cols-1 gap-5">
           {/* Volume */}
           <div>
             <h3 className="text-[10px] font-bold text-zinc-600 mb-2.5 uppercase tracking-widest">
@@ -376,7 +376,7 @@ export function PlayView() {
             <h3 className="text-[10px] font-bold text-zinc-600 mb-2.5 uppercase tracking-widest">
               Scale Reference
             </h3>
-            <div className="flex items-stretch gap-1" role="group" aria-label="Scale notes reference">
+            <div className="flex items-stretch gap-1 max-sm:grid max-sm:grid-cols-4 max-sm:gap-1" role="group" aria-label="Scale notes reference">
               {scale.notes.map((note, i) => {
                 const degree = i + 1;
                 const color = DEGREE_COLORS[degree as keyof typeof DEGREE_COLORS];

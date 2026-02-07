@@ -25,7 +25,7 @@ export function ScaleDegreeBar() {
   if (scale.notes.length !== 7) return null;
 
   return (
-    <div className="flex items-stretch gap-1.5" role="group" aria-label="Scale degrees">
+    <div className="flex items-stretch gap-1.5 max-sm:gap-0.5" role="group" aria-label="Scale degrees">
       {scale.notes.map((note, i) => {
         const degree = i + 1;
         const isSelected = selectedDegree === degree;
@@ -35,7 +35,7 @@ export function ScaleDegreeBar() {
           <motion.button
             key={`${noteToString(note)}-${i}`}
             onClick={() => setSelectedDegree(isSelected ? null : degree)}
-            className="flex flex-col items-center gap-1 px-3 py-2.5 rounded-xl flex-1 min-w-0 group transition-colors"
+            className="flex flex-col items-center gap-1 px-3 max-sm:px-1.5 py-2.5 max-sm:py-2 rounded-xl flex-1 min-w-0 group transition-colors"
             style={{
               backgroundColor: isSelected ? `${color}18` : 'transparent',
               border: isSelected ? `1px solid ${color}40` : '1px solid transparent',
@@ -57,7 +57,7 @@ export function ScaleDegreeBar() {
               {noteToString(note)}
             </span>
             <span
-              className={`text-[9px] leading-none transition-colors ${
+              className={`text-[9px] leading-none transition-colors max-sm:hidden ${
                 isSelected ? 'text-zinc-400' : 'text-zinc-600 group-hover:text-zinc-500'
               }`}
             >

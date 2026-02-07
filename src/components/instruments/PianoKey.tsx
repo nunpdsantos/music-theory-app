@@ -2,17 +2,26 @@ import { useCallback, useRef } from 'react';
 import type { PianoKey as PianoKeyData } from '../../core/utils/pianoLayout.ts';
 import { noteToString } from '../../core/types/music.ts';
 
+type SizeMode = 'mobile' | 'tablet' | 'desktop';
+
+const DIMS: Record<SizeMode, { white: [number, number]; black: [number, number]; labelSize: string }> = {
+  desktop: { white: [44, 210], black: [28, 130], labelSize: '10px' },
+  tablet:  { white: [36, 160], black: [22, 100], labelSize: '9px' },
+  mobile:  { white: [30, 130], black: [18, 80],  labelSize: '8px' },
+};
+
 interface PianoKeyProps {
   keyData: PianoKeyData;
   isHighlighted: boolean;
   highlightColor?: string;
   isActive: boolean;
   isChordTone: boolean;
-  isVoicingNote: boolean; // exact MIDI match for current inversion
+  isVoicingNote: boolean;
   isDimmed: boolean;
   onNoteOn: (keyData: PianoKeyData) => void;
   onNoteOff: (keyData: PianoKeyData) => void;
   showLabel: boolean;
+  sizeMode?: SizeMode;
 }
 
 export function PianoKeyComponent({
@@ -26,8 +35,10 @@ export function PianoKeyComponent({
   onNoteOn,
   onNoteOff,
   showLabel,
+  sizeMode = 'desktop',
 }: PianoKeyProps) {
   const isPressed = useRef(false);
+  const dims = DIMS[sizeMode];
 
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
@@ -65,15 +76,8 @@ export function PianoKeyComponent({
   const isC = keyData.note.natural === 'C' && keyData.note.accidental === '';
   const color = highlightColor ?? '#60A5FA';
 
-  // Visual priority:
-  // 1. isActive (user pressing) — full color
-  // 2. isVoicingNote (exact MIDI in chord voicing) — full vivid color + strong glow + depression
-  // 3. isChordTone (pitch class match, not exact voicing) — subtle tint
-  // 4. isHighlighted + !isDimmed (scale note, no chord selected) — normal scale color
-  // 5. isDimmed (scale note, chord selected, not chord tone) — revert to default
-  // 6. default — white/black key
-
   if (keyData.isBlack) {
+    const [bw, bh] = dims.black;
     let bg: string;
     let opacity = 1;
     let border = '1px solid #000';
@@ -112,8 +116,8 @@ export function PianoKeyComponent({
         aria-label={`${label}${keyData.octave}`}
         className="absolute z-10 cursor-pointer select-none touch-none"
         style={{
-          width: 28,
-          height: 130,
+          width: bw,
+          height: bh,
           backgroundColor: bg,
           opacity,
           borderRadius: '0 0 4px 4px',
@@ -129,8 +133,8 @@ export function PianoKeyComponent({
       >
         {showLabel && (isHighlighted || isChordTone || isVoicingNote) && (
           <span
-            className="absolute bottom-1 left-1/2 -translate-x-1/2 text-[9px] font-bold"
-            style={{ color: labelColor }}
+            className="absolute bottom-1 left-1/2 -translate-x-1/2 font-bold"
+            style={{ color: labelColor, fontSize: dims.labelSize }}
           >
             {label}
           </span>
@@ -140,6 +144,7 @@ export function PianoKeyComponent({
   }
 
   // White key
+  const [ww, wh] = dims.white;
   let bg: string;
   let opacity = 1;
   let border = '1px solid #bbb';
@@ -178,8 +183,8 @@ export function PianoKeyComponent({
       aria-label={`${label}${keyData.octave}`}
       className="relative shrink-0 cursor-pointer select-none touch-none"
       style={{
-        width: 44,
-        height: 210,
+        width: ww,
+        height: wh,
         backgroundColor: bg,
         opacity,
         borderRadius: '0 0 6px 6px',
@@ -195,8 +200,8 @@ export function PianoKeyComponent({
       onPointerCancel={handlePointerUp}
     >
       <span
-        className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] font-bold"
-        style={{ color: labelColor }}
+        className="absolute bottom-2 left-1/2 -translate-x-1/2 font-bold"
+        style={{ color: labelColor, fontSize: dims.labelSize }}
       >
         {showLabel && (isC ? `C${keyData.octave}` : (isHighlighted || isChordTone || isVoicingNote) ? label : '')}
       </span>

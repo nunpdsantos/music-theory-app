@@ -128,7 +128,7 @@ export function LearnView() {
   // ─── Overview Screen ─────────────────────────────────────────────────────
   return (
     <div ref={scrollRef} className="h-full overflow-y-auto" role="region" aria-label="Learn music theory">
-      <div className="max-w-2xl mx-auto px-5 py-6 pb-24">
+      <div className="max-w-2xl mx-auto px-5 max-sm:px-3 py-6 max-sm:py-4 pb-24">
 
         {/* ─── Header ──────────────────────────────────────────── */}
         <motion.div
@@ -217,7 +217,7 @@ export function LearnView() {
         <div className="relative">
           {/* Vertical connecting line */}
           <div
-            className="absolute left-[19px] top-6 bottom-6 w-px"
+            className="absolute left-[19px] max-sm:left-[15px] top-6 bottom-6 w-px"
             style={{
               background: `linear-gradient(to bottom, ${UNIT_ACCENTS.u1}30, ${UNIT_ACCENTS.u2}30, ${UNIT_ACCENTS.u3}30, ${UNIT_ACCENTS.u4}30, ${UNIT_ACCENTS.u5}30)`,
             }}
@@ -262,11 +262,11 @@ function UnitCard({ unit, unitIndex, completedCount, isModuleCompleted, onOpenMo
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: unitIndex * 0.06 }}
-      className="relative pl-10"
+      className="relative pl-10 max-sm:pl-8"
     >
       {/* Node on the vertical line */}
       <div
-        className={`absolute left-[11px] top-5 w-[17px] h-[17px] rounded-full border-2 flex items-center justify-center z-10 ${
+        className={`absolute left-[11px] max-sm:left-[7px] top-5 w-[17px] h-[17px] rounded-full border-2 flex items-center justify-center z-10 ${
           isUnitComplete ? '' : 'bg-zinc-950'
         }`}
         style={{

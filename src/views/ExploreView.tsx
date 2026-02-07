@@ -59,7 +59,7 @@ export function ExploreView() {
           variants={stagger}
           initial="hidden"
           animate="show"
-          className="max-w-4xl mx-auto px-5 py-5 space-y-7"
+          className="max-w-4xl mx-auto px-5 max-sm:px-3 py-5 max-sm:py-3 space-y-7 max-sm:space-y-4"
         >
           {/* ─── Key / Scale Selector ──────────────────────────── */}
           <motion.div variants={fadeUp}>
@@ -83,7 +83,7 @@ export function ExploreView() {
               }}
             />
 
-            <div className="relative px-5 py-4 flex items-center justify-between">
+            <div className="relative px-5 max-sm:px-3 py-4 max-sm:py-3 flex items-center justify-between max-sm:flex-col max-sm:items-start max-sm:gap-3">
               <div>
                 <h2 className="text-xl font-bold text-zinc-100 learn-serif">
                   {noteToString(scale.root)}{' '}
@@ -97,7 +97,7 @@ export function ExploreView() {
                 </p>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 max-sm:flex-col max-sm:items-start">
                 <button
                   onClick={handleQuickPlay}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 hover:scale-[1.03]"

@@ -13,6 +13,19 @@ body {
   overflow: hidden;
 }
 
+@supports (height: 100dvh) {
+  body {
+    min-height: 100dvh;
+  }
+}
+
+/* On mobile, allow natural vertical overflow instead of trapping scroll */
+@media (max-width: 639px) {
+  body {
+    overflow: visible;
+  }
+}
+
 /* Custom scrollbar for dark theme */
 ::-webkit-scrollbar {
   height: 6px;

@@ -30,7 +30,7 @@ function App() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.15 }}
-            className="h-full"
+            className="h-full flex flex-col min-h-0"
             id={`${view}-panel`}
             role="tabpanel"
             aria-label={`${view} view`}
