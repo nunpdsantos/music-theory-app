@@ -1,6 +1,6 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { noteToString, type Note } from '../../core/types/music.ts';
+import { noteToString, type Note, type ModeName } from '../../core/types/music.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
 import {
@@ -10,8 +10,22 @@ import {
 } from '../../core/services/audio.ts';
 import { getPitchClass } from '../../core/constants/notes.ts';
 import { getMidiNumber } from '../../core/utils/pianoLayout.ts';
-import { SCALE_TYPE_NAMES } from '../../core/constants/scales.ts';
+import { SCALE_TYPE_NAMES, SCALE_FORMULAS } from '../../core/constants/scales.ts';
+import { INTERVAL_SHORT_LABELS, buildChord, CHORD_QUALITY_NAMES, CHORD_SYMBOLS } from '../../core/constants/chords.ts';
+import { MODE_INFO } from '../../core/constants/modes.ts';
+import { getChordsForScale } from '../../core/constants/chordScaleRelationships.ts';
 import { useAppStore } from '../../state/store.ts';
+
+// Scales that correspond to modes
+const SCALE_TO_MODE: Partial<Record<string, ModeName>> = {
+  major: 'ionian',
+  dorian: 'dorian',
+  phrygian: 'phrygian',
+  lydian: 'lydian',
+  mixolydian: 'mixolydian',
+  natural_minor: 'aeolian',
+  locrian: 'locrian',
+};
 
 function computeScaleSequenceMidi(
   notes: Note[],
@@ -51,6 +65,12 @@ function computeScaleSequenceMidi(
   return sequence;
 }
 
+const FIT_COLORS = {
+  primary: '#60A5FA',
+  secondary: '#A78BFA',
+  color: '#F472B6',
+} as const;
+
 export function ScaleDetail() {
   const { scale } = useKeyContext();
   const synthPreset = useAppStore((s) => s.synthPreset);
@@ -60,6 +80,7 @@ export function ScaleDetail() {
   const baseOctave = useAppStore((s) => s.baseOctave);
   const addActiveNote = useAppStore((s) => s.addActiveNote);
   const removeActiveNote = useAppStore((s) => s.removeActiveNote);
+  const setSelectedChord = useAppStore((s) => s.setSelectedChord);
 
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const prevMidiRef = useRef<number | null>(null);
@@ -72,6 +93,23 @@ export function ScaleDetail() {
       prevMidiRef.current = null;
     }
   }, [removeActiveNote]);
+
+  // Formula from core
+  const formula = SCALE_FORMULAS[selectedScale];
+  const formulaLabels = useMemo(
+    () => formula.map((s) => INTERVAL_SHORT_LABELS[s] ?? `${s}`),
+    [formula],
+  );
+
+  // Mode info (if this scale corresponds to a mode)
+  const modeName = SCALE_TO_MODE[selectedScale];
+  const modeInfo = modeName ? MODE_INFO[modeName] : null;
+
+  // Compatible chords
+  const chordSuggestions = useMemo(
+    () => getChordsForScale(selectedScale),
+    [selectedScale],
+  );
 
   const playWithVisuals = useCallback(
     async (ascending: boolean, descending: boolean, noteDuration: number) => {
@@ -164,6 +202,74 @@ export function ScaleDetail() {
           })}
         </div>
       </div>
+
+      {/* Formula */}
+      <div>
+        <h3 className="text-[10px] font-bold text-zinc-600 mb-2 uppercase tracking-widest">
+          Formula
+        </h3>
+        <div className="flex flex-wrap items-center gap-1.5">
+          {formulaLabels.map((label, i) => (
+            <span
+              key={i}
+              className="text-xs font-mono text-zinc-400 bg-zinc-800/60 px-2 py-1 rounded-md"
+            >
+              {label}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Mode info */}
+      {modeInfo && (
+        <div>
+          <h3 className="text-[10px] font-bold text-zinc-600 mb-2 uppercase tracking-widest">
+            Mode
+          </h3>
+          <div className="rounded-xl bg-zinc-800/40 border border-zinc-700/40 px-3 py-2.5 space-y-1.5">
+            <p className="text-xs text-zinc-300">{modeInfo.description}</p>
+            <p className="text-[10px] text-zinc-500">
+              Mood: <span className="text-zinc-400">{modeInfo.mood}</span>
+            </p>
+            <p className="text-[10px] text-zinc-500">
+              Degree {modeInfo.degree} of the parent major scale
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Compatible Chords */}
+      {chordSuggestions.length > 0 && (
+        <div>
+          <h3 className="text-[10px] font-bold text-zinc-600 mb-2 uppercase tracking-widest">
+            Compatible Chords
+          </h3>
+          <div className="flex flex-wrap gap-1.5">
+            {chordSuggestions.slice(0, 12).map((s) => {
+              const fitColor = FIT_COLORS[s.fit];
+              const symbol = CHORD_SYMBOLS[s.quality];
+              return (
+                <button
+                  key={s.quality}
+                  onClick={() => {
+                    const chord = buildChord(scale.root, s.quality);
+                    setSelectedChord(chord);
+                  }}
+                  className="px-2 py-1 rounded-lg text-[11px] font-medium transition-all hover:brightness-125"
+                  style={{
+                    backgroundColor: `${fitColor}12`,
+                    color: fitColor,
+                    border: `1px solid ${fitColor}30`,
+                  }}
+                  title={s.context}
+                >
+                  {noteToString(scale.root)}{symbol}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Octave range */}
       <div>

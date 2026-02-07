@@ -1,8 +1,9 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
 import { KeySelector } from '../components/navigation/KeySelector.tsx';
 import { ScaleDegreeBar } from '../components/theory/ScaleDegreeBar.tsx';
 import { ChordGrid } from '../components/theory/ChordGrid.tsx';
+import { ChordBrowser } from '../components/theory/ChordBrowser.tsx';
 import { CircleOfFifths } from '../components/theory/CircleOfFifths.tsx';
 import { DetailPanel } from '../components/panels/DetailPanel.tsx';
 import { useKeyContext } from '../hooks/useKeyContext.ts';
@@ -37,6 +38,7 @@ export function ExploreView() {
   const detailPanelOpen = useAppStore((s) => s.detailPanelOpen);
   const synthPreset = useAppStore((s) => s.synthPreset);
   const baseOctave = useAppStore((s) => s.baseOctave);
+  const [chordMode, setChordMode] = useState<'diatonic' | 'all'>('diatonic');
 
   const handleShowScale = () => {
     setSelectedChord(null);
@@ -140,10 +142,34 @@ export function ExploreView() {
             className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6"
           >
             <div>
-              <h3 className="text-[10px] font-bold text-zinc-600 mb-2.5 uppercase tracking-widest">
-                Diatonic Chords
-              </h3>
-              <ChordGrid />
+              <div className="flex items-center gap-3 mb-2.5">
+                <h3 className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">
+                  Chords
+                </h3>
+                <div className="flex rounded-lg overflow-hidden border border-zinc-800">
+                  <button
+                    onClick={() => setChordMode('diatonic')}
+                    className="px-2 py-0.5 text-[10px] font-medium transition-colors"
+                    style={{
+                      backgroundColor: chordMode === 'diatonic' ? '#3f3f46' : 'transparent',
+                      color: chordMode === 'diatonic' ? '#fafafa' : '#71717a',
+                    }}
+                  >
+                    Diatonic
+                  </button>
+                  <button
+                    onClick={() => setChordMode('all')}
+                    className="px-2 py-0.5 text-[10px] font-medium transition-colors"
+                    style={{
+                      backgroundColor: chordMode === 'all' ? '#3f3f46' : 'transparent',
+                      color: chordMode === 'all' ? '#fafafa' : '#71717a',
+                    }}
+                  >
+                    All Chords
+                  </button>
+                </div>
+              </div>
+              {chordMode === 'diatonic' ? <ChordGrid /> : <ChordBrowser />}
             </div>
             <div>
               <h3 className="text-[10px] font-bold text-zinc-600 mb-2.5 uppercase tracking-widest">

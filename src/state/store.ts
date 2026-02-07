@@ -28,6 +28,8 @@ interface InstrumentState {
   activeNotes: Set<number>; // MIDI numbers
   // Highlighted notes (from key/chord/scale context)
   highlightedNotes: PitchedNote[];
+  // Guitar CAGED scale position (null = show all notes, 0-4 = specific box)
+  guitarScalePosition: number | null;
 }
 
 interface AudioState {
@@ -62,6 +64,7 @@ export interface AppState extends MusicState, InstrumentState, AudioState, Navig
   removeActiveNote: (midi: number) => void;
   clearActiveNotes: () => void;
   setHighlightedNotes: (notes: PitchedNote[]) => void;
+  setGuitarScalePosition: (position: number | null) => void;
 
   // Audio actions
   setSynthPreset: (preset: SynthPresetName) => void;
@@ -95,6 +98,7 @@ export const useAppStore = create<AppState>((set) => ({
   instrument: 'piano',
   activeNotes: new Set<number>(),
   highlightedNotes: [],
+  guitarScalePosition: null,
 
   // Audio defaults
   synthPreset: 'piano',
@@ -112,8 +116,8 @@ export const useAppStore = create<AppState>((set) => ({
   baseOctave: 4,
 
   // Music actions
-  setKey: (key) => set({ selectedKey: key, selectedChord: null, selectedDegree: null }),
-  setScale: (scale) => set({ selectedScale: scale, selectedChord: null, selectedDegree: null }),
+  setKey: (key) => set({ selectedKey: key, selectedChord: null, selectedDegree: null, guitarScalePosition: null }),
+  setScale: (scale) => set({ selectedScale: scale, selectedChord: null, selectedDegree: null, guitarScalePosition: null }),
   setSelectedChord: (chord) => set({ selectedChord: chord, chordInversion: 0, detailPanelOpen: chord !== null }),
   setSelectedDegree: (degree) => set({ selectedDegree: degree }),
   setChordInversion: (inversion) => set({ chordInversion: inversion }),
@@ -134,6 +138,7 @@ export const useAppStore = create<AppState>((set) => ({
     }),
   clearActiveNotes: () => set({ activeNotes: new Set<number>() }),
   setHighlightedNotes: (notes) => set({ highlightedNotes: notes }),
+  setGuitarScalePosition: (position) => set({ guitarScalePosition: position }),
 
   // Audio actions
   setSynthPreset: (preset) => set({ synthPreset: preset }),

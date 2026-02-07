@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { noteToString, type Chord, type Note } from '../../core/types/music.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
@@ -12,20 +12,12 @@ import {
 import { getPitchClass } from '../../core/constants/notes.ts';
 import { getMidiNumber } from '../../core/utils/pianoLayout.ts';
 import { useAppStore } from '../../state/store.ts';
-
-const QUALITY_DISPLAY: Record<string, string> = {
-  major: 'Major',
-  minor: 'Minor',
-  diminished: 'Diminished',
-  augmented: 'Augmented',
-  major7: 'Major 7th',
-  minor7: 'Minor 7th',
-  dominant7: 'Dominant 7th',
-  half_diminished7: 'Half-Diminished 7th',
-  diminished7: 'Diminished 7th',
-  augmented_major7: 'Augmented Major 7th',
-  minor_major7: 'Minor-Major 7th',
-};
+import {
+  CHORD_QUALITY_NAMES,
+  getChordShortIntervalLabels,
+} from '../../core/constants/chords.ts';
+import { getScaleSuggestions } from '../../core/constants/chordScaleRelationships.ts';
+import { SCALE_TYPE_NAMES } from '../../core/constants/scales.ts';
 
 interface ChordDetailProps {
   chord: Chord;
@@ -49,6 +41,12 @@ function computeVoicedMidi(notes: Note[], startOctave: number): number[] {
   return midiNumbers;
 }
 
+const FIT_COLORS = {
+  primary: '#60A5FA',
+  secondary: '#A78BFA',
+  color: '#F472B6',
+} as const;
+
 export function ChordDetail({ chord }: ChordDetailProps) {
   const { getNoteDegree, invertedNotes } = useKeyContext();
   const synthPreset = useAppStore((s) => s.synthPreset);
@@ -57,6 +55,8 @@ export function ChordDetail({ chord }: ChordDetailProps) {
   const baseOctave = useAppStore((s) => s.baseOctave);
   const addActiveNote = useAppStore((s) => s.addActiveNote);
   const removeActiveNote = useAppStore((s) => s.removeActiveNote);
+  const setScale = useAppStore((s) => s.setScale);
+  const setKey = useAppStore((s) => s.setKey);
   const degree = getNoteDegree(chord.root);
   const color = degree ? DEGREE_COLORS[degree as keyof typeof DEGREE_COLORS] : '#a1a1aa';
 
@@ -69,6 +69,18 @@ export function ChordDetail({ chord }: ChordDetailProps) {
 
   const maxInversion = chord.notes.length - 1;
   const notesForPlayback = invertedNotes.length > 0 ? invertedNotes : chord.notes;
+
+  // Real interval labels from core
+  const intervalLabels = useMemo(
+    () => chord.algorithmicIntervalLabels ?? getChordShortIntervalLabels(chord.quality),
+    [chord],
+  );
+
+  // Compatible scales
+  const scaleSuggestions = useMemo(
+    () => getScaleSuggestions(chord.quality),
+    [chord.quality],
+  );
 
   const handlePlayChord = useCallback(async () => {
     await resumeAudio();
@@ -122,10 +134,10 @@ export function ChordDetail({ chord }: ChordDetailProps) {
       {/* Header */}
       <div>
         <h2 className="text-xl font-bold text-zinc-100 learn-serif">
-          {noteToString(chord.root)}
-          <span className="text-zinc-400 font-normal ml-1.5">
-            {QUALITY_DISPLAY[chord.quality] ?? chord.quality}
-          </span>
+          {chord.algorithmicDisplayName
+            ? <>{noteToString(chord.root)}<span className="text-zinc-400 font-normal ml-1.5">{chord.algorithmicDisplayName}</span></>
+            : <>{noteToString(chord.root)}<span className="text-zinc-400 font-normal ml-1.5">{CHORD_QUALITY_NAMES[chord.quality]}</span></>
+          }
         </h2>
         {degree && (
           <span
@@ -194,22 +206,54 @@ export function ChordDetail({ chord }: ChordDetailProps) {
         </div>
       </div>
 
-      {/* Formula */}
+      {/* Formula — real interval labels */}
       <div>
         <h3 className="text-[10px] font-bold text-zinc-600 mb-2 uppercase tracking-widest">
           Formula
         </h3>
         <div className="flex items-center gap-1.5">
-          {chord.notes.map((_, i) => (
+          {intervalLabels.map((label, i) => (
             <span
               key={i}
               className="text-xs font-mono text-zinc-400 bg-zinc-800/60 px-2 py-1 rounded-md"
             >
-              {i === 0 ? 'R' : `${i + 1}`}
+              {label}
             </span>
           ))}
         </div>
       </div>
+
+      {/* Compatible Scales */}
+      {scaleSuggestions.length > 0 && (
+        <div>
+          <h3 className="text-[10px] font-bold text-zinc-600 mb-2 uppercase tracking-widest">
+            Compatible Scales
+          </h3>
+          <div className="flex flex-wrap gap-1.5">
+            {scaleSuggestions.map((s) => {
+              const fitColor = FIT_COLORS[s.fit];
+              return (
+                <button
+                  key={s.scale}
+                  onClick={() => {
+                    setKey(chord.root);
+                    setScale(s.scale);
+                  }}
+                  className="px-2 py-1 rounded-lg text-[11px] font-medium transition-all hover:brightness-125"
+                  style={{
+                    backgroundColor: `${fitColor}12`,
+                    color: fitColor,
+                    border: `1px solid ${fitColor}30`,
+                  }}
+                  title={s.context}
+                >
+                  {SCALE_TYPE_NAMES[s.scale]}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Play controls */}
       <div className="flex gap-2 pt-1">

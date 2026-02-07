@@ -1,68 +1,96 @@
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { noteToString } from '../../core/types/music.ts';
-import { SCALE_DEGREE_NAMES } from '../../core/constants/scales.ts';
+import { SCALE_FORMULAS } from '../../core/constants/scales.ts';
+import { INTERVAL_SHORT_LABELS } from '../../core/constants/chords.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
 import { useAppStore } from '../../state/store.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
 
-const ROMAN = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii°'];
-
-const FUNCTION_LABELS: Record<number, string> = {
-  1: 'Tonic',
-  2: 'Super.',
-  3: 'Mediant',
-  4: 'Subdom.',
-  5: 'Dominant',
-  6: 'Submed.',
-  7: 'Leading',
+// Map interval short labels to functional names
+const FUNCTION_BY_INTERVAL: Record<string, string> = {
+  'R': 'Tonic',
+  '2': 'Super.',
+  'm2': 'Super.',
+  '3': 'Mediant',
+  'm3': 'Mediant',
+  '4': 'Subdom.',
+  'b5': 'Tritone',
+  '5': 'Dominant',
+  '#5': 'Aug. 5th',
+  '6': 'Submed.',
+  'b7': 'Subtonic',
+  '7': 'Leading',
 };
 
 export function ScaleDegreeBar() {
   const { scale } = useKeyContext();
+  const selectedScale = useAppStore((s) => s.selectedScale);
   const selectedDegree = useAppStore((s) => s.selectedDegree);
   const setSelectedDegree = useAppStore((s) => s.setSelectedDegree);
 
-  if (scale.notes.length !== 7) return null;
+  const formula = SCALE_FORMULAS[selectedScale];
+
+  const degreeLabels = useMemo(
+    () => formula.map((semitones) => INTERVAL_SHORT_LABELS[semitones] ?? `${semitones}`),
+    [formula],
+  );
+
+  const noteCount = scale.notes.length;
+  const isCompact = noteCount > 8;
 
   return (
     <div className="flex items-stretch gap-1.5 max-sm:gap-0.5" role="group" aria-label="Scale degrees">
       {scale.notes.map((note, i) => {
         const degree = i + 1;
         const isSelected = selectedDegree === degree;
-        const color = DEGREE_COLORS[degree as keyof typeof DEGREE_COLORS];
+        // For 5-7 note scales, direct degree mapping; for >7 notes, cycle through colors
+        const colorKey = noteCount <= 7
+          ? (degree as keyof typeof DEGREE_COLORS)
+          : (((i % 7) + 1) as keyof typeof DEGREE_COLORS);
+        const color = DEGREE_COLORS[colorKey] ?? '#a1a1aa';
+        const intervalLabel = degreeLabels[i] ?? `${i + 1}`;
+        const funcLabel = FUNCTION_BY_INTERVAL[intervalLabel] ?? '';
 
         return (
           <motion.button
             key={`${noteToString(note)}-${i}`}
             onClick={() => setSelectedDegree(isSelected ? null : degree)}
-            className="flex flex-col items-center gap-1 px-3 max-sm:px-1.5 py-2.5 max-sm:py-2 rounded-xl flex-1 min-w-0 group transition-colors"
+            className="flex flex-col items-center gap-1 py-2.5 max-sm:py-2 rounded-xl flex-1 min-w-0 group transition-colors"
             style={{
+              padding: isCompact ? '0.5rem 0.25rem' : undefined,
+              paddingLeft: isCompact ? '0.375rem' : undefined,
+              paddingRight: isCompact ? '0.375rem' : undefined,
               backgroundColor: isSelected ? `${color}18` : 'transparent',
               border: isSelected ? `1px solid ${color}40` : '1px solid transparent',
             }}
             whileTap={{ scale: 0.94 }}
             animate={isSelected ? { scale: 1.04 } : { scale: 1 }}
             transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-            title={SCALE_DEGREE_NAMES[i]}
+            title={funcLabel}
             aria-pressed={isSelected}
-            aria-label={`Degree ${degree}, ${ROMAN[i]}, ${noteToString(note)}`}
+            aria-label={`Degree ${degree}, ${intervalLabel}, ${noteToString(note)}`}
           >
             <span
               className="text-sm font-bold leading-none"
-              style={{ color }}
+              style={{ color, fontSize: isCompact ? 11 : undefined }}
             >
-              {ROMAN[i]}
+              {intervalLabel}
             </span>
-            <span className="text-xs font-medium text-zinc-300 leading-none">
+            <span className="text-xs font-medium text-zinc-300 leading-none"
+              style={{ fontSize: isCompact ? 10 : undefined }}
+            >
               {noteToString(note)}
             </span>
-            <span
-              className={`text-[9px] leading-none transition-colors max-sm:hidden ${
-                isSelected ? 'text-zinc-400' : 'text-zinc-600 group-hover:text-zinc-500'
-              }`}
-            >
-              {FUNCTION_LABELS[degree]}
-            </span>
+            {!isCompact && (
+              <span
+                className={`text-[9px] leading-none transition-colors max-sm:hidden ${
+                  isSelected ? 'text-zinc-400' : 'text-zinc-600 group-hover:text-zinc-500'
+                }`}
+              >
+                {funcLabel}
+              </span>
+            )}
           </motion.button>
         );
       })}

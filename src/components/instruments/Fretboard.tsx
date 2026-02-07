@@ -4,6 +4,8 @@ import { noteToString } from '../../core/types/music.ts';
 import { midiToNote } from '../../core/utils/pianoLayout.ts';
 import { getChordShapesWithFallback } from '../../core/constants/guitarChordShapes.ts';
 import type { ChordShape, FingerNumber } from '../../core/constants/guitarChordShapes.ts';
+import { getScalePositions, hasScalePositions } from '../../core/constants/guitarScalePositions.ts';
+import type { ScalePosition, ScalePositionNote } from '../../core/constants/guitarScalePositions.ts';
 import { getPitchClass } from '../../core/constants/notes.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
 import { useAudio } from '../../hooks/useAudio.ts';
@@ -34,18 +36,21 @@ export function Fretboard() {
   const { noteOn, noteOff } = useAudio();
   const activeNotes = useAppStore((s) => s.activeNotes);
   const selectedChord = useAppStore((s) => s.selectedChord);
+  const selectedKey = useAppStore((s) => s.selectedKey);
+  const selectedScale = useAppStore((s) => s.selectedScale);
+  const guitarScalePosition = useAppStore((s) => s.guitarScalePosition);
+  const setGuitarScalePosition = useAppStore((s) => s.setGuitarScalePosition);
   const [selectedShapeIdx, setSelectedShapeIdx] = useState(0);
   const mobile = useIsMobile();
 
   const tuningPitchClasses = useMemo(() => getTuningPitchClasses(TUNING_STANDARD), []);
 
-  // Get pre-defined chord shapes (with algorithmic fallback for exotic chords)
+  // ─── Chord shapes ─────────────────────────────────────
   const chordShapes = useMemo(() => {
     if (!selectedChord) return [];
     return getChordShapesWithFallback(selectedChord);
   }, [selectedChord]);
 
-  // Reset to first shape when chord changes
   useEffect(() => {
     setSelectedShapeIdx(0);
   }, [selectedChord]);
@@ -55,11 +60,49 @@ export function Fretboard() {
 
   // Root pitch class for highlighting root notes
   const rootPitchClass = useMemo(() => {
-    if (!selectedChord) return null;
-    return getPitchClass(selectedChord.root);
-  }, [selectedChord]);
+    if (selectedChord) return getPitchClass(selectedChord.root);
+    return getPitchClass(selectedKey);
+  }, [selectedChord, selectedKey]);
 
-  // Build voicing lookup: stringIndex → { absoluteFret, finger } or null (muted)
+  // ─── Scale positions (CAGED) ──────────────────────────
+  const scalePositions = useMemo(() => {
+    if (selectedChord) return []; // don't show scale positions when chord is selected
+    if (!hasScalePositions(selectedScale)) return [];
+    return getScalePositions(selectedKey, selectedScale);
+  }, [selectedKey, selectedScale, selectedChord]);
+
+  const hasPositions = scalePositions.length > 0;
+
+  // Current scale position data
+  const currentScalePos = useMemo(() => {
+    if (guitarScalePosition === null || !hasPositions) return null;
+    return scalePositions[guitarScalePosition] ?? null;
+  }, [guitarScalePosition, scalePositions, hasPositions]);
+
+  // Build lookup: stringIndex (0-5) → { absoluteFret, degree, finger, isRoot }[]
+  const scalePositionLookup = useMemo(() => {
+    const map = new Map<number, { fret: number; degree: string; finger?: number; isRoot?: boolean }[]>();
+    if (!currentScalePos) return map;
+
+    const { position, baseFret } = currentScalePos;
+    for (const note of position.notes) {
+      // ScalePositionNote.string: 1=high E, 6=low E
+      // Fretboard stringIndex: 0=low E, 5=high E
+      const stringIdx = 6 - note.string;
+      const absoluteFret = baseFret + note.fret;
+      const existing = map.get(stringIdx) ?? [];
+      existing.push({
+        fret: absoluteFret,
+        degree: note.degree,
+        finger: note.finger,
+        isRoot: note.isRoot,
+      });
+      map.set(stringIdx, existing);
+    }
+    return map;
+  }, [currentScalePos]);
+
+  // ─── Voicing lookup (chords) ──────────────────────────
   const voicingLookup = useMemo(() => {
     const map = new Map<number, { fret: number; finger: FingerNumber | undefined } | null>();
     if (!currentShape) return map;
@@ -67,7 +110,7 @@ export function Fretboard() {
     const { shape, baseFret } = currentShape;
     shape.strings.forEach((pos, stringIndex) => {
       if (pos.fret === null) {
-        map.set(stringIndex, null); // muted
+        map.set(stringIndex, null);
       } else {
         const absoluteFret = baseFret + (pos.fret as number);
         map.set(stringIndex, { fret: absoluteFret, finger: pos.finger });
@@ -76,8 +119,18 @@ export function Fretboard() {
     return map;
   }, [currentShape]);
 
-  // Dynamic fret range: focused when chord selected, full when scale-only
+  // ─── Dynamic fret range ───────────────────────────────
   const { visibleFrets, isChordView } = useMemo(() => {
+    // Scale position view: narrow to position span
+    if (currentScalePos) {
+      const { position, baseFret } = currentScalePos;
+      const start = Math.max(1, baseFret);
+      const end = Math.min(FULL_FRETS, baseFret + position.fretSpan + 1);
+      const frets: number[] = [];
+      for (let f = end; f >= start; f--) frets.push(f);
+      return { visibleFrets: frets, isChordView: true };
+    }
+
     if (!currentShape) {
       const frets: number[] = [];
       for (let f = FULL_FRETS; f >= 1; f--) frets.push(f);
@@ -85,7 +138,6 @@ export function Fretboard() {
     }
 
     const { shape, baseFret } = currentShape;
-    // Find absolute fret bounds (excluding open strings)
     let minUsed = Infinity;
     let maxUsed = -Infinity;
     shape.strings.forEach((pos) => {
@@ -99,7 +151,6 @@ export function Fretboard() {
     });
 
     if (minUsed === Infinity) {
-      // Pure open chord — show first few frets
       minUsed = 1;
       maxUsed = 3;
     }
@@ -110,7 +161,7 @@ export function Fretboard() {
     const frets: number[] = [];
     for (let f = end; f >= start; f--) frets.push(f);
     return { visibleFrets: frets, isChordView: true };
-  }, [currentShape]);
+  }, [currentShape, currentScalePos]);
 
   // Generate all notes on the fretboard
   const fretNotes = useMemo(() => {
@@ -144,13 +195,12 @@ export function Fretboard() {
     [noteOn, noteOff]
   );
 
-  // Position labels: use shortName from pre-defined shapes, fallback to "Fret N" with dedup
+  // Position labels for chord shapes
   const positionLabels = useMemo(() => {
     const baseLabels = chordShapes.map(({ shape, baseFret }) => {
       if (shape.shortName) return shape.shortName;
       return baseFret === 0 ? 'Open' : `Fret ${baseFret}`;
     });
-    // Deduplicate
     const counts = new Map<string, number>();
     for (const l of baseLabels) counts.set(l, (counts.get(l) ?? 0) + 1);
     const indexTracker = new Map<string, number>();
@@ -185,7 +235,7 @@ export function Fretboard() {
   const handleFretboardMouseDown = useCallback((e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest('button')) return;
     if (e.button !== 0) return;
-    e.preventDefault(); // prevent text selection / default drag
+    e.preventDefault();
     dragState.current.dragged = false;
     dragState.current.startX = e.clientX;
     dragState.current.startScroll = scrollContainerRef.current?.scrollLeft ?? 0;
@@ -193,7 +243,6 @@ export function Fretboard() {
     document.addEventListener('mouseup', onDragEnd);
   }, [onDragMove, onDragEnd]);
 
-  // Suppress fret cell clicks when a drag just occurred
   const handleFretboardClickCapture = useCallback((e: React.MouseEvent) => {
     if (dragState.current.dragged) {
       e.stopPropagation();
@@ -215,7 +264,6 @@ export function Fretboard() {
     const { barreInfo } = currentShape.shape;
     const barreFret = currentShape.baseFret + barreInfo.fret;
 
-    // Convert string numbers (6=low E → 1=high E) to row indices (0=low E → 5=high E)
     const fromRow = 6 - barreInfo.fromString;
     const toRow = 6 - barreInfo.toString;
     const topRow = Math.min(fromRow, toRow);
@@ -224,7 +272,6 @@ export function Fretboard() {
     const container = fretboardRef.current;
     const containerRect = container.getBoundingClientRect();
 
-    // Find the target fret cell for the top and bottom rows
     const topCell = container.querySelector(`[data-string-row="${topRow}"][data-fret="${barreFret}"]`);
     const bottomCell = container.querySelector(`[data-string-row="${bottomRow}"][data-fret="${barreFret}"]`);
 
@@ -250,13 +297,10 @@ export function Fretboard() {
     });
   }, [currentShape, visibleFrets]);
 
-  // Whether this is an open-position chord (show thick nut) vs. barre/higher position
   const isOpenPosition = currentShape !== null && currentShape.baseFret === 0;
+  const isScalePosView = currentScalePos !== null;
+  const lowestVisibleFret = (isChordView || isScalePosView) ? visibleFrets[visibleFrets.length - 1] : null;
 
-  // Lowest visible fret number for fret indicator
-  const lowestVisibleFret = isChordView ? visibleFrets[visibleFrets.length - 1] : null;
-
-  // Min fret width depends on view mode and screen size
   const fretMinWidth = isChordView
     ? (mobile ? 44 : 56)
     : (mobile ? 34 : 44);
@@ -270,7 +314,7 @@ export function Fretboard() {
       onClickCapture={handleFretboardClickCapture}
     >
       <div className="px-4 py-2" style={{ minWidth: isChordView ? 0 : (mobile ? 500 : 800) }}>
-        {/* Position selector when chord is selected */}
+        {/* Position selector: chord shapes */}
         {selectedChord && chordShapes.length > 0 && (
           <div className="flex items-center gap-2 mb-2 flex-wrap">
             <span className="text-[10px] text-zinc-500 uppercase tracking-wider">Position:</span>
@@ -288,6 +332,41 @@ export function Fretboard() {
                   }}
                 >
                   {positionLabels[idx]}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Position selector: scale CAGED positions */}
+        {!selectedChord && hasPositions && (
+          <div className="flex items-center gap-2 mb-2 flex-wrap">
+            <span className="text-[10px] text-zinc-500 uppercase tracking-wider">Scale pos:</span>
+            <button
+              onClick={() => setGuitarScalePosition(null)}
+              className="text-[10px] px-2 py-0.5 rounded transition-colors"
+              style={{
+                backgroundColor: guitarScalePosition === null ? '#60A5FA' : 'transparent',
+                color: guitarScalePosition === null ? '#000' : '#71717a',
+                border: guitarScalePosition === null ? '1px solid #60A5FA' : '1px solid #3f3f46',
+              }}
+            >
+              All
+            </button>
+            {scalePositions.map((sp, idx) => {
+              const isActive = guitarScalePosition === idx;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => setGuitarScalePosition(idx)}
+                  className="text-[10px] px-2 py-0.5 rounded transition-colors"
+                  style={{
+                    backgroundColor: isActive ? '#60A5FA' : 'transparent',
+                    color: isActive ? '#000' : '#71717a',
+                    border: isActive ? '1px solid #60A5FA' : '1px solid #3f3f46',
+                  }}
+                >
+                  {sp.position.shortName} ({sp.position.cagedShape})
                 </button>
               );
             })}
@@ -318,7 +397,7 @@ export function Fretboard() {
 
         {/* Fretboard grid with barre overlay */}
         <div ref={fretboardRef} className="relative">
-          {/* Continuous fret lines overlay — spans full height, no sub-pixel gaps */}
+          {/* Continuous fret lines overlay */}
           <div className="absolute inset-0 flex pointer-events-none" style={{ zIndex: 1, left: 32 , right: 46 }}>
             {visibleFrets.map((f) => (
               <div
@@ -345,7 +424,7 @@ export function Fretboard() {
             const openPc = (tuningPitchClasses[stringIdx]) % 12;
             const isOpenRoot = rootPitchClass !== null && openPc === rootPitchClass;
 
-            // Voicing info for this string
+            // Chord voicing info
             const voicingInfo = voicingLookup.get(stringIdx);
             const isMuted = currentShape !== null && voicingInfo === null;
             const isOpenVoicing =
@@ -353,6 +432,9 @@ export function Fretboard() {
               voicingInfo !== undefined &&
               voicingInfo !== null &&
               voicingInfo.fret === 0;
+
+            // Scale position notes for this string
+            const scalePosNotes = scalePositionLookup.get(stringIdx);
 
             return (
               <div key={stringIdx} className="flex items-center" style={{ height: mobile ? 24 : (isChordView ? 30 : 28) }}>
@@ -376,18 +458,21 @@ export function Fretboard() {
                     const isActive = activeNotes.has(fn.midiNumber);
                     const isInScale = color !== undefined;
 
-                    // Is this the chord voicing position for this string?
+                    // Chord voicing position
                     const isVoicingPosition =
                       voicingInfo !== undefined && voicingInfo !== null && voicingInfo.fret === fret;
                     const finger = isVoicingPosition ? voicingInfo.finger : undefined;
 
+                    // Scale position note at this fret
+                    const scalePosNote = scalePosNotes?.find((n) => n.fret === fret);
+                    const isScalePosNote = !!scalePosNote;
+
                     // What to show
                     const showVoicing = isVoicingPosition;
-                    const showScaleDot = !currentShape && isInScale;
+                    const showScalePos = !currentShape && isScalePosNote;
+                    const showScaleDot = !currentShape && !currentScalePos && isInScale;
 
                     const dotColor = color ?? '#60A5FA';
-
-                    // Root note detection
                     const isRoot = rootPitchClass !== null && fn.pitchClass === rootPitchClass;
 
                     return (
@@ -401,7 +486,7 @@ export function Fretboard() {
                         }}
                         onClick={() => handleFretClick(fn)}
                       >
-                        {/* String line — always visible, dimmer when muted */}
+                        {/* String line */}
                         <div
                           className="absolute w-full"
                           style={{
@@ -432,7 +517,28 @@ export function Fretboard() {
                             {fingerLabel(finger) || noteToString(pitched)}
                           </div>
                         )}
-                        {/* Scale dot (no chord selected) */}
+                        {/* Scale position dot */}
+                        {showScalePos && (
+                          <div
+                            className="relative z-10 rounded-full flex items-center justify-center font-bold"
+                            style={{
+                              width: 24,
+                              height: 24,
+                              fontSize: 9,
+                              backgroundColor: dotColor,
+                              color: '#000',
+                              boxShadow: scalePosNote?.isRoot
+                                ? `0 0 16px ${dotColor}aa, 0 0 6px ${dotColor}88`
+                                : `0 0 10px ${dotColor}88`,
+                              border: scalePosNote?.isRoot
+                                ? '3px solid #ffffff'
+                                : `2px solid ${dotColor}`,
+                            }}
+                          >
+                            {scalePosNote?.degree ?? noteToString(pitched)}
+                          </div>
+                        )}
+                        {/* Scale dot (no chord, no position selected) */}
                         {showScaleDot && (
                           <div
                             className="relative z-10 rounded-full flex items-center justify-center font-bold transition-all"
@@ -454,7 +560,7 @@ export function Fretboard() {
                   })}
                 </div>
 
-                {/* Nut — thick for open position, thin border for barre/higher positions */}
+                {/* Nut */}
                 <div
                   style={{
                     width: !isChordView || isOpenPosition ? 6 : 2,
@@ -538,7 +644,7 @@ export function Fretboard() {
           </div>
           <div style={{ width: isChordView && !isOpenPosition ? 2 : 6 }} />
           <div style={{ width: 40 }} className="flex items-center justify-center">
-            {isChordView && !isOpenPosition ? (
+            {(isChordView || isScalePosView) && !isOpenPosition ? (
               <span className="text-[9px] text-zinc-500 font-mono">{lowestVisibleFret}fr</span>
             ) : (
               <span className="text-[9px] text-zinc-600">0</span>
