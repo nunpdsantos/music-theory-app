@@ -446,12 +446,18 @@ export function parseChordSymbol(symbol: string): ParsedChordSymbol | null {
       { match: '+5', replace: /#5|\+5/g, degree: '5', type: 'sharp' },
       { match: 'b5', replace: /b5|-5/g, degree: '5', type: 'flat' },
       { match: '-5', replace: /b5|-5/g, degree: '5', type: 'flat' },
-      { match: '#9', replace: /#9/g, degree: '9', type: 'sharp' },
-      { match: 'b9', replace: /b9/g, degree: '9', type: 'flat' },
-      { match: '#11', replace: /#11/g, degree: '11', type: 'sharp' },
-      { match: 'b11', replace: /b11/g, degree: '11', type: 'flat' },
-      { match: '#13', replace: /#13/g, degree: '13', type: 'sharp' },
-      { match: 'b13', replace: /b13/g, degree: '13', type: 'flat' },
+      { match: '#9', replace: /#9|\+9/g, degree: '9', type: 'sharp' },
+      { match: '+9', replace: /#9|\+9/g, degree: '9', type: 'sharp' },
+      { match: 'b9', replace: /b9|-9/g, degree: '9', type: 'flat' },
+      { match: '-9', replace: /b9|-9/g, degree: '9', type: 'flat' },
+      { match: '#11', replace: /#11|\+11/g, degree: '11', type: 'sharp' },
+      { match: '+11', replace: /#11|\+11/g, degree: '11', type: 'sharp' },
+      { match: 'b11', replace: /b11|-11/g, degree: '11', type: 'flat' },
+      { match: '-11', replace: /b11|-11/g, degree: '11', type: 'flat' },
+      { match: '#13', replace: /#13|\+13/g, degree: '13', type: 'sharp' },
+      { match: '+13', replace: /#13|\+13/g, degree: '13', type: 'sharp' },
+      { match: 'b13', replace: /b13|-13/g, degree: '13', type: 'flat' },
+      { match: '-13', replace: /b13|-13/g, degree: '13', type: 'flat' },
     ];
 
   for (const { match, replace, degree, type } of altPatterns) {
@@ -492,6 +498,13 @@ export function parseChordSymbol(symbol: string): ParsedChordSymbol | null {
     result.alterations['5'] = 'flat';
     result.alterations['9'] = 'flat';
     if (!result.extensions.includes('9')) result.extensions.push('9');
+  }
+
+  // Trailing '+' means augmented (e.g., C7+ = C aug7)
+  // Check after all other parsing so it doesn't conflict with +5/+9/+11/+13
+  qLower = q.toLowerCase();
+  if (/\+$/.test(q.trim()) && result.triadQuality === 'major') {
+    result.triadQuality = 'augmented';
   }
 
   // Ensure extensions are in ascending order (9, 11, 13).
@@ -548,9 +561,14 @@ export function buildChordFromParsed(parsed: ParsedChordSymbol): Note[] {
   // Add extensions
   for (const ext of parsed.extensions) {
     if (ext === '9') {
+      // Skip if sus2 already added the 2nd (same pitch as 9)
+      if (intervals.includes('2')) continue;
       const alt = parsed.alterations['9'];
       intervals.push(alt === 'flat' ? 'b9' : alt === 'sharp' ? '#9' : '9');
     } else if (ext === '11') {
+      // Skip natural 11 if sus4 already added the 4th (same pitch)
+      // Altered 11 (#11) is a different pitch and should still be added
+      if (intervals.includes('4') && parsed.alterations['11'] !== 'sharp') continue;
       const alt = parsed.alterations['11'];
       intervals.push(alt === 'sharp' ? '#11' : '11');
     } else if (ext === '13') {
