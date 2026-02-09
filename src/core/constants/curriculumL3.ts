@@ -61,7 +61,7 @@ const l3u9m1: CurriculumModule = {
       query: 'Cdim7',
     },
   ],
-  prerequisites: ['l2u8m3'],
+  prerequisites: ['l2u7m5'],
 };
 
 const l3u9m2: CurriculumModule = {
@@ -297,7 +297,7 @@ const l3u10m1: CurriculumModule = {
     },
   ],
   prerequisites: ['l3u9m4'],
-  comingSoon: true,
+
 };
 
 const l3u10m2: CurriculumModule = {
@@ -353,7 +353,7 @@ const l3u10m2: CurriculumModule = {
     },
   ],
   prerequisites: ['l3u10m1'],
-  comingSoon: true,
+
 };
 
 const l3u10m3: CurriculumModule = {
@@ -409,7 +409,7 @@ const l3u10m3: CurriculumModule = {
     },
   ],
   prerequisites: ['l3u10m2'],
-  comingSoon: true,
+
 };
 
 const l3u10m4: CurriculumModule = {
@@ -590,7 +590,7 @@ const l3u11m2: CurriculumModule = {
     },
   ],
   prerequisites: ['l3u11m1'],
-  comingSoon: true,
+
 };
 
 const l3u11m3: CurriculumModule = {
@@ -646,7 +646,7 @@ const l3u11m3: CurriculumModule = {
     },
   ],
   prerequisites: ['l3u11m2'],
-  comingSoon: true,
+
 };
 
 const l3u11m4: CurriculumModule = {
@@ -702,7 +702,7 @@ const l3u11m4: CurriculumModule = {
     },
   ],
   prerequisites: ['l3u11m3'],
-  comingSoon: true,
+
 };
 
 const l3u11m5: CurriculumModule = {

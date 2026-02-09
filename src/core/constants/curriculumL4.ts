@@ -53,7 +53,7 @@ const l4u12m1: CurriculumModule = {
     },
   ],
   prerequisites: ['l3u11m5'],
-  comingSoon: true,
+
 };
 
 const l4u12m2: CurriculumModule = {
@@ -105,7 +105,7 @@ const l4u12m2: CurriculumModule = {
     },
   ],
   prerequisites: ['l4u12m1'],
-  comingSoon: true,
+
 };
 
 const l4u12m3: CurriculumModule = {
@@ -157,7 +157,7 @@ const l4u12m3: CurriculumModule = {
     },
   ],
   prerequisites: ['l4u12m2'],
-  comingSoon: true,
+
 };
 
 const l4u12m4: CurriculumModule = {
@@ -530,7 +530,7 @@ const l4u13m5: CurriculumModule = {
     },
   ],
   prerequisites: ['l4u13m4'],
-  comingSoon: true,
+
 };
 
 // ---------------------------------------------------------------------------
@@ -587,7 +587,7 @@ const l4u14m1: CurriculumModule = {
     },
   ],
   prerequisites: ['l4u13m5'],
-  comingSoon: true,
+
 };
 
 const l4u14m2: CurriculumModule = {
@@ -639,7 +639,7 @@ const l4u14m2: CurriculumModule = {
     },
   ],
   prerequisites: ['l4u14m1'],
-  comingSoon: true,
+
 };
 
 const l4u14m3: CurriculumModule = {

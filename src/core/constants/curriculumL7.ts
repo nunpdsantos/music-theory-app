@@ -458,7 +458,7 @@ const l7u22m3: CurriculumModule = {
   levelId: 'l7',
   title: 'Coltrane Changes and Advanced Jazz Harmony',
   subtitle: 'Giant Steps matrix, constant structure, and three-key-center architecture',
-  comingSoon: true,
+
   objectives: [
     'Analyze the Coltrane (Giant Steps) matrix — three major key centers a major third apart',
     'Understand why each key center is approached by its V7 dominant chord',
@@ -569,7 +569,7 @@ const l7u22m5: CurriculumModule = {
   levelId: 'l7',
   title: 'Quartal/Quintal Voicings and Drones',
   subtitle: 'Stacking fourths and fifths for ambiguous, open modal sounds',
-  comingSoon: true,
+
   objectives: [
     'Build quartal voicings (stacked perfect fourths) and understand their harmonic ambiguity',
     'Understand quintal voicings as inverted quartal — stacked perfect fifths for an open, spacious sound',

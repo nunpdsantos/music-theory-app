@@ -225,7 +225,7 @@ const l5u15m4: CurriculumModule = {
     },
   ],
   prerequisites: ['l5u15m3'],
-  comingSoon: true,
+
 };
 
 const l5u15m5: CurriculumModule = {
@@ -281,7 +281,7 @@ const l5u15m5: CurriculumModule = {
     },
   ],
   prerequisites: ['l5u15m4'],
-  comingSoon: true,
+
 };
 
 // ---------------------------------------------------------------------------
@@ -342,7 +342,7 @@ const l5u16m1: CurriculumModule = {
     },
   ],
   prerequisites: ['l5u15m5'],
-  comingSoon: true,
+
 };
 
 const l5u16m2: CurriculumModule = {
@@ -399,7 +399,7 @@ const l5u16m2: CurriculumModule = {
     },
   ],
   prerequisites: ['l5u16m1'],
-  comingSoon: true,
+
 };
 
 const l5u16m3: CurriculumModule = {
@@ -455,7 +455,7 @@ const l5u16m3: CurriculumModule = {
     },
   ],
   prerequisites: ['l5u16m2'],
-  comingSoon: true,
+
 };
 
 const l5u16m4: CurriculumModule = {
@@ -624,7 +624,7 @@ const l5u17m1: CurriculumModule = {
     },
   ],
   prerequisites: ['l5u16m5'],
-  comingSoon: true,
+
 };
 
 const l5u17m2: CurriculumModule = {
@@ -679,7 +679,7 @@ const l5u17m2: CurriculumModule = {
     },
   ],
   prerequisites: ['l5u17m1'],
-  comingSoon: true,
+
 };
 
 const l5u17m3: CurriculumModule = {
@@ -734,7 +734,7 @@ const l5u17m3: CurriculumModule = {
     },
   ],
   prerequisites: ['l5u17m2'],
-  comingSoon: true,
+
 };
 
 const l5u17m4: CurriculumModule = {

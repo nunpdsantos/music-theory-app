@@ -8,18 +8,18 @@ import type { CurriculumUnit, CurriculumModule } from '../types/curriculum';
 // sight singing, and contextual listening modules.
 //
 // 15 modules across 3 units:
-//   u27 (5 modules) — Pitch and Interval Training       [engine: PARTIAL]
-//   u28 (5 modules) — Scale, Chord, and Dictation Skills [engine: PARTIAL]
-//   u29 (5 modules) — Dictation, Sight Singing, and Contextual Listening [comingSoon]
+//   u30 (5 modules) — Pitch and Interval Training       [engine: PARTIAL]
+//   u31 (5 modules) — Scale, Chord, and Dictation Skills [engine: PARTIAL]
+//   u32 (5 modules) — Dictation, Sight Singing, and Contextual Listening [comingSoon]
 // ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
-// Unit 27: Pitch and Interval Training (5 modules)
+// Unit 30: Pitch and Interval Training (5 modules)
 // ---------------------------------------------------------------------------
 
 const l9u27m1: CurriculumModule = {
   id: 'l9u27m1',
-  unitId: 'u27',
+  unitId: 'u30',
   levelId: 'l9',
   title: 'Pitch Matching and Direction',
   subtitle: 'Match pitch by ear, identify melodic direction, and perceive register differences',
@@ -69,12 +69,12 @@ const l9u27m1: CurriculumModule = {
         'Play a note in the low register, then the same note name two octaves higher. Hear how the pitch quality changes but the note identity remains. This is register perception',
     },
   ],
-  prerequisites: ['u5m5'],
+  prerequisites: [],
 };
 
 const l9u27m2: CurriculumModule = {
   id: 'l9u27m2',
-  unitId: 'u27',
+  unitId: 'u30',
   levelId: 'l9',
   title: 'Major vs Minor Recognition',
   subtitle: 'Distinguishing major and minor tonality by ear — chords, scales, and overall color',
@@ -131,7 +131,7 @@ const l9u27m2: CurriculumModule = {
 
 const l9u27m3: CurriculumModule = {
   id: 'l9u27m3',
-  unitId: 'u27',
+  unitId: 'u30',
   levelId: 'l9',
   title: 'Interval Recognition: P1-P5',
   subtitle: 'Identifying perfect and small intervals by ear using song associations and direct recognition',
@@ -187,7 +187,7 @@ const l9u27m3: CurriculumModule = {
 
 const l9u27m4: CurriculumModule = {
   id: 'l9u27m4',
-  unitId: 'u27',
+  unitId: 'u30',
   levelId: 'l9',
   title: 'Interval Recognition: m6-P8',
   subtitle: 'Identifying large intervals by ear — sixths, sevenths, and the octave',
@@ -242,7 +242,7 @@ const l9u27m4: CurriculumModule = {
 
 const l9u27m5: CurriculumModule = {
   id: 'l9u27m5',
-  unitId: 'u27',
+  unitId: 'u30',
   levelId: 'l9',
   title: 'Harmonic Intervals and Compounds',
   subtitle: 'Simultaneous interval recognition and compound intervals beyond the octave',
@@ -296,12 +296,12 @@ const l9u27m5: CurriculumModule = {
 };
 
 // ---------------------------------------------------------------------------
-// Unit 28: Scale, Chord, and Dictation Skills (5 modules)
+// Unit 31: Scale, Chord, and Dictation Skills (5 modules)
 // ---------------------------------------------------------------------------
 
 const l9u28m1: CurriculumModule = {
   id: 'l9u28m1',
-  unitId: 'u28',
+  unitId: 'u31',
   levelId: 'l9',
   title: 'Scale Recognition: Major and Minor Forms',
   subtitle: 'Distinguishing major, natural minor, harmonic minor, and melodic minor by ear',
@@ -358,7 +358,7 @@ const l9u28m1: CurriculumModule = {
 
 const l9u28m2: CurriculumModule = {
   id: 'l9u28m2',
-  unitId: 'u28',
+  unitId: 'u31',
   levelId: 'l9',
   title: 'Scale Recognition: Modes',
   subtitle: 'Identifying all seven church modes by their characteristic tones',
@@ -415,7 +415,7 @@ const l9u28m2: CurriculumModule = {
 
 const l9u28m3: CurriculumModule = {
   id: 'l9u28m3',
-  unitId: 'u28',
+  unitId: 'u31',
   levelId: 'l9',
   title: 'Scale Recognition: Pentatonic, Blues, Symmetric',
   subtitle: 'Recognizing special scales by ear — pentatonic, blues, whole-tone, and diminished',
@@ -472,7 +472,7 @@ const l9u28m3: CurriculumModule = {
 
 const l9u28m4: CurriculumModule = {
   id: 'l9u28m4',
-  unitId: 'u28',
+  unitId: 'u31',
   levelId: 'l9',
   title: 'Triad Quality Recognition',
   subtitle: 'Identifying major, minor, diminished, and augmented triads by ear',
@@ -529,7 +529,7 @@ const l9u28m4: CurriculumModule = {
 
 const l9u28m5: CurriculumModule = {
   id: 'l9u28m5',
-  unitId: 'u28',
+  unitId: 'u31',
   levelId: 'l9',
   title: 'Seventh Chord Quality Recognition',
   subtitle: 'Identifying all seventh chord qualities by ear — from warm major 7th to tense diminished 7th',
@@ -585,13 +585,13 @@ const l9u28m5: CurriculumModule = {
 };
 
 // ---------------------------------------------------------------------------
-// Unit 29: Dictation, Sight Singing, and Contextual Listening (5 modules)
+// Unit 32: Dictation, Sight Singing, and Contextual Listening (5 modules)
 // All comingSoon — need dictation input UI, microphone, and audio library
 // ---------------------------------------------------------------------------
 
 const l9u29m1: CurriculumModule = {
   id: 'l9u29m1',
-  unitId: 'u29',
+  unitId: 'u32',
   levelId: 'l9',
   title: 'Melodic Dictation: Diatonic',
   subtitle: 'Transcribing short diatonic melodies by ear — stepwise and triadic motion',
@@ -641,12 +641,12 @@ const l9u29m1: CurriculumModule = {
     },
   ],
   prerequisites: ['l9u28m5'],
-  comingSoon: true,
+
 };
 
 const l9u29m2: CurriculumModule = {
   id: 'l9u29m2',
-  unitId: 'u29',
+  unitId: 'u32',
   levelId: 'l9',
   title: 'Melodic Dictation: Chromatic',
   subtitle: 'Transcribing melodies with chromatic passing tones, neighbor tones, and secondary dominants',
@@ -696,12 +696,12 @@ const l9u29m2: CurriculumModule = {
     },
   ],
   prerequisites: ['l9u29m1'],
-  comingSoon: true,
+
 };
 
 const l9u29m3: CurriculumModule = {
   id: 'l9u29m3',
-  unitId: 'u29',
+  unitId: 'u32',
   levelId: 'l9',
   title: 'Harmonic Dictation: Cadences and Progressions',
   subtitle: 'Identifying cadences, transcribing progressions, and bass line dictation',
@@ -751,12 +751,12 @@ const l9u29m3: CurriculumModule = {
     },
   ],
   prerequisites: ['l9u29m2'],
-  comingSoon: true,
+
 };
 
 const l9u29m4: CurriculumModule = {
   id: 'l9u29m4',
-  unitId: 'u29',
+  unitId: 'u32',
   levelId: 'l9',
   title: 'Sight Singing Fundamentals',
   subtitle: 'Movable-do solfege for sight singing in major and minor keys',
@@ -806,12 +806,12 @@ const l9u29m4: CurriculumModule = {
     },
   ],
   prerequisites: ['l9u29m3'],
-  comingSoon: true,
+
 };
 
 const l9u29m5: CurriculumModule = {
   id: 'l9u29m5',
-  unitId: 'u29',
+  unitId: 'u32',
   levelId: 'l9',
   title: 'Contextual Listening',
   subtitle: 'Identifying texture, form, instruments, and style periods by ear',
@@ -861,7 +861,7 @@ const l9u29m5: CurriculumModule = {
     },
   ],
   prerequisites: ['l9u29m4'],
-  comingSoon: true,
+
 };
 
 // ---------------------------------------------------------------------------
@@ -870,7 +870,7 @@ const l9u29m5: CurriculumModule = {
 
 export const L9_UNITS: CurriculumUnit[] = [
   {
-    id: 'u27',
+    id: 'u30',
     levelId: 'l9',
     title: 'Pitch and Interval Training',
     description:
@@ -892,7 +892,7 @@ export const L9_UNITS: CurriculumUnit[] = [
     },
   },
   {
-    id: 'u28',
+    id: 'u31',
     levelId: 'l9',
     title: 'Scale, Chord, and Dictation Skills',
     description:
@@ -913,7 +913,7 @@ export const L9_UNITS: CurriculumUnit[] = [
     },
   },
   {
-    id: 'u29',
+    id: 'u32',
     levelId: 'l9',
     title: 'Dictation, Sight Singing, and Contextual Listening',
     description:

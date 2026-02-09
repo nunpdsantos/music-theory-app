@@ -1,5 +1,5 @@
 import type { CurriculumLevel } from '../types/curriculum';
-import { CURRICULUM_UNITS } from './curriculum';
+import { L1_UNITS } from './curriculumL1';
 import { L2_UNITS } from './curriculumL2';
 import { L3_UNITS } from './curriculumL3';
 import { L4_UNITS } from './curriculumL4';
@@ -14,18 +14,18 @@ export const CURRICULUM_LEVELS: CurriculumLevel[] = [
     id: 'l1',
     number: 1,
     title: 'Foundations of Music Literacy',
-    description: 'Notes, intervals, scales, and the building blocks of all music.',
+    description: 'Staff notation, pitch fundamentals, rhythm and meter, the major scale, basic intervals, and major triads.',
     difficulty: 'beginner',
     difficultyLabel: 'Absolute Beginner',
     accentColor: '#60A5FA',
     prerequisites: [],
-    units: CURRICULUM_UNITS,
+    units: L1_UNITS,
   },
   {
     id: 'l2',
     number: 2,
     title: 'Expanding Fundamentals',
-    description: 'All key signatures, scale degree names, the three minor forms, interval quality, and diatonic harmony.',
+    description: 'All key signatures, scale degree names, minor scales, compound meter, syncopation, interval quality, all triad types, inversions, and diatonic harmony.',
     difficulty: 'beginner',
     difficultyLabel: 'Beginner',
     accentColor: '#38BDF8',
@@ -35,7 +35,6 @@ export const CURRICULUM_LEVELS: CurriculumLevel[] = [
   {
     id: 'l3',
     number: 3,
-    comingSoon: true,
     title: 'Harmony Foundations',
     description: 'Seventh chords, voice leading, cadences, phrase structure, and non-chord tones.',
     difficulty: 'beginner',
@@ -47,7 +46,6 @@ export const CURRICULUM_LEVELS: CurriculumLevel[] = [
   {
     id: 'l4',
     number: 4,
-    comingSoon: true,
     title: 'Diatonic Mastery',
     description: 'Advanced non-chord tones, dominant seventh mastery, harmonic function, sequences, and counterpoint.',
     difficulty: 'intermediate',
@@ -59,7 +57,6 @@ export const CURRICULUM_LEVELS: CurriculumLevel[] = [
   {
     id: 'l5',
     number: 5,
-    comingSoon: true,
     title: 'Chromaticism & Modulation',
     description: 'Secondary dominants, tonicization, modulation, mode mixture, and musical form.',
     difficulty: 'intermediate',
@@ -71,7 +68,6 @@ export const CURRICULUM_LEVELS: CurriculumLevel[] = [
   {
     id: 'l6',
     number: 6,
-    comingSoon: true,
     title: 'Chromatic Harmony',
     description: 'Neapolitan chord, augmented sixths, enharmonic modulation, and advanced counterpoint.',
     difficulty: 'intermediate',
@@ -83,7 +79,6 @@ export const CURRICULUM_LEVELS: CurriculumLevel[] = [
   {
     id: 'l7',
     number: 7,
-    comingSoon: true,
     title: 'Jazz, Pop & Modal Harmony',
     description: 'Jazz chord symbols, ii-V-I progressions, modal harmony, pop analysis, and complete scale/chord taxonomy.',
     difficulty: 'advanced',
@@ -95,7 +90,6 @@ export const CURRICULUM_LEVELS: CurriculumLevel[] = [
   {
     id: 'l8',
     number: 8,
-    comingSoon: true,
     title: 'Analysis, Counterpoint & Post-Tonal',
     description: 'Fugue analysis, large form, orchestration, set theory, and twentieth-century techniques.',
     difficulty: 'advanced',
@@ -107,7 +101,6 @@ export const CURRICULUM_LEVELS: CurriculumLevel[] = [
   {
     id: 'l9',
     number: 9,
-    comingSoon: true,
     parallel: true,
     title: 'Ear Training & Aural Skills',
     description: 'Interval recognition, chord identification, melodic dictation, sight singing, and contextual listening.',
