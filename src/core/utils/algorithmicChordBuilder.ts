@@ -356,13 +356,14 @@ export function parseChordSymbol(symbol: string): ParsedChordSymbol | null {
   qLower = q.toLowerCase();
 
   // Check for "add" tones (no 7th implied)
-  const addMatches = q.match(/add(\d+)/gi);
+  // Handles plain (add9) and altered (add#11, addb9, add#9) variants
+  const addMatches = q.match(/add[#b]?\d+/gi);
   if (addMatches) {
     for (const m of addMatches) {
-      const num = m.replace(/add/i, '');
-      result.addedTones.push(num);
+      const tone = m.replace(/add/i, '');
+      result.addedTones.push(tone);
     }
-    q = q.replace(/add\d+/gi, '');
+    q = q.replace(/add[#b]?\d+/gi, '');
     qLower = q.toLowerCase();
   }
 
@@ -552,22 +553,16 @@ export function buildChordFromParsed(parsed: ParsedChordSymbol): Note[] {
     }
   }
 
-  // Add "add" tones
+  // Add "add" tones (plain: "9", altered: "#11", "b9", "#9")
   for (const add of parsed.addedTones) {
     if (add === '6' && !intervals.includes('6')) intervals.push('6');
-    else if (
-      add === '9' &&
-      !intervals.includes('9') &&
-      !intervals.includes('b9') &&
-      !intervals.includes('#9')
-    )
-      intervals.push('9');
-    else if (add === '11' && !intervals.includes('11') && !intervals.includes('#11'))
-      intervals.push('11');
-    else if (add === '13' && !intervals.includes('13') && !intervals.includes('b13'))
-      intervals.push('13');
     else if (add === '2' && !intervals.includes('2')) intervals.push('2');
     else if (add === '4' && !intervals.includes('4')) intervals.push('4');
+    else if (/^[#b]?\d+$/.test(add)) {
+      // Determine the interval name (e.g., "9", "b9", "#11")
+      const interval = add.startsWith('#') || add.startsWith('b') ? add : add;
+      if (!intervals.includes(interval)) intervals.push(interval);
+    }
   }
 
   // Build notes from intervals
