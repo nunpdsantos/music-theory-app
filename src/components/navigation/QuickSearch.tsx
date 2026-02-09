@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useAppStore } from '../../state/store.ts';
 import { noteToString, stringToNote, type Note, type ScaleType } from '../../core/types/music.ts';
 import { buildChord, CHORD_QUALITY_NAMES, CHORD_SYMBOLS } from '../../core/constants/chords.ts';
+import { getPitchClass } from '../../core/constants/notes.ts';
 import { SCALE_TYPE_NAMES } from '../../core/constants/scales.ts';
 import { parseChordSymbol, formatParsedChordName } from '../../core/utils/chordParser.ts';
 import { parseScaleSymbol, formatParsedScaleName } from '../../core/utils/scaleParser.ts';
@@ -53,13 +54,26 @@ function getResults(query: string): SearchResult[] {
     const key = `chord:${noteToString(parsedChord.root)}:${parsedChord.quality}`;
     if (!seen.has(key)) {
       seen.add(key);
-      const chord = buildChord(parsedChord.root, parsedChord.quality);
-      // Carry over algorithmic data
+      // Use algorithmically computed notes for complex chords (e.g., Cmaj7#9, G7b9#11)
+      // that don't map cleanly to one of the 42 explicit qualities.
+      // Fall back to buildChord for standard qualities.
+      const chord = parsedChord.algorithmicNotes && parsedChord.algorithmicNotes.length > 0
+        ? { root: parsedChord.root, quality: parsedChord.quality, notes: parsedChord.algorithmicNotes }
+        : buildChord(parsedChord.root, parsedChord.quality);
       if (parsedChord.algorithmicDisplayName) {
         chord.algorithmicDisplayName = parsedChord.algorithmicDisplayName;
       }
       if (parsedChord.algorithmicIntervalLabels) {
         chord.algorithmicIntervalLabels = parsedChord.algorithmicIntervalLabels;
+      }
+      if (parsedChord.bassNote) {
+        chord.bassNote = parsedChord.bassNote;
+        // Prepend bass note to chord.notes if its pitch class isn't already present
+        const bassPc = getPitchClass(parsedChord.bassNote);
+        const alreadyPresent = chord.notes.some((n) => getPitchClass(n) === bassPc);
+        if (!alreadyPresent) {
+          chord.notes = [parsedChord.bassNote, ...chord.notes];
+        }
       }
       results.push({
         type: 'Chord',

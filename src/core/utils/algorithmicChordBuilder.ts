@@ -340,11 +340,15 @@ export function parseChordSymbol(symbol: string): ParsedChordSymbol | null {
     }
   } else if (qLower.startsWith('maj') || q.startsWith('M')) {
     result.triadQuality = 'major';
-    if (qLower.startsWith('major')) {
+    // Only consume the prefix when it's purely a triad quality marker.
+    // When followed by a digit (7, 9, 11, 13), 'maj'/'M' is part of
+    // the seventh type token (e.g., 'maj7' = major 7th) and must be
+    // left in q for the 7th type handler below.
+    if (qLower.startsWith('major') && !/^major\d/.test(qLower)) {
       q = q.substring(5);
-    } else if (qLower.startsWith('maj')) {
+    } else if (qLower.startsWith('maj') && !/^maj\d/.test(qLower)) {
       q = q.substring(3);
-    } else if (q.startsWith('M')) {
+    } else if (q.startsWith('M') && !/^M\d/.test(q)) {
       q = q.substring(1);
     }
   }

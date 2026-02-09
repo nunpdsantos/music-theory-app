@@ -107,6 +107,7 @@ export function useKeyContext(): KeyContextValue {
     const s = new Set<number>();
     if (selectedChord) {
       for (const n of selectedChord.notes) s.add(getPitchClass(n));
+      if (selectedChord.bassNote) s.add(getPitchClass(selectedChord.bassNote));
     }
     return s;
   }, [selectedChord]);
@@ -125,6 +126,11 @@ export function useKeyContext(): KeyContextValue {
     const pitched = getVoicedChordNotes(invertedNotes, baseOctave);
     for (const p of pitched) {
       s.add(getMidiNumber(p, p.octave));
+    }
+    // Add slash chord bass note one octave below the chord voicing
+    if (selectedChord.bassNote) {
+      const bassMidi = getMidiNumber(selectedChord.bassNote, baseOctave - 1);
+      s.add(bassMidi);
     }
     return s;
   }, [selectedChord, invertedNotes, baseOctave]);

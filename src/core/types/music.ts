@@ -137,6 +137,8 @@ export interface Chord {
   quality: ChordQuality;
   notes: Note[];
   inversion?: number;
+  // Slash chord bass note (e.g., the G in Dm7/G)
+  bassNote?: Note;
   // For algorithmically-built chords with complex names (e.g., G7#5b9)
   algorithmicDisplayName?: string;
   algorithmicIntervalLabels?: string[];

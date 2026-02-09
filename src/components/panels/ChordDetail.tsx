@@ -138,6 +138,9 @@ export function ChordDetail({ chord }: ChordDetailProps) {
             ? <>{noteToString(chord.root)}<span className="text-zinc-400 font-normal ml-1.5">{chord.algorithmicDisplayName}</span></>
             : <>{noteToString(chord.root)}<span className="text-zinc-400 font-normal ml-1.5">{CHORD_QUALITY_NAMES[chord.quality]}</span></>
           }
+          {chord.bassNote && (
+            <span className="text-zinc-500 font-normal ml-0.5">/{noteToString(chord.bassNote)}</span>
+          )}
         </h2>
         {degree && (
           <span
@@ -161,6 +164,8 @@ export function ChordDetail({ chord }: ChordDetailProps) {
               ? DEGREE_COLORS[noteDegree as keyof typeof DEGREE_COLORS]
               : '#a1a1aa';
             const isBass = i === 0 && chordInversion > 0;
+            const isSlashBass = chord.bassNote &&
+              noteToString(note) === noteToString(chord.bassNote) && i === 0;
             return (
               <span
                 key={i}
@@ -168,8 +173,11 @@ export function ChordDetail({ chord }: ChordDetailProps) {
                 style={{
                   backgroundColor: `${noteColor}15`,
                   color: noteColor,
-                  border: isBass ? `1.5px solid ${noteColor}` : `1px solid ${noteColor}30`,
+                  border: isSlashBass
+                    ? `1.5px dashed ${noteColor}`
+                    : isBass ? `1.5px solid ${noteColor}` : `1px solid ${noteColor}30`,
                 }}
+                title={isSlashBass ? 'Slash bass note' : undefined}
               >
                 {noteToString(note)}
               </span>
