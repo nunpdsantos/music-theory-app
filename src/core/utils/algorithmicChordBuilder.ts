@@ -792,9 +792,11 @@ export function getAlgorithmicChordIntervalLabels(parsed: ParsedChordSymbol): st
   // Extensions
   for (const ext of parsed.extensions) {
     if (ext === '9') {
+      if (labels.includes('2')) continue; // sus2 already covers this pitch
       const alt = parsed.alterations['9'];
       labels.push(alt === 'flat' ? 'b9' : alt === 'sharp' ? '#9' : '9');
     } else if (ext === '11') {
+      if (labels.includes('4') && parsed.alterations['11'] !== 'sharp') continue; // sus4
       const alt = parsed.alterations['11'];
       labels.push(alt === 'sharp' ? '#11' : '11');
     } else if (ext === '13') {
@@ -803,14 +805,14 @@ export function getAlgorithmicChordIntervalLabels(parsed: ParsedChordSymbol): st
     }
   }
 
-  // Added tones
+  // Added tones (plain: "9", altered: "#11", "b9", "#9")
   for (const add of parsed.addedTones) {
     if (add === '6') labels.push('6');
-    else if (add === '9' && !parsed.extensions.includes('9')) labels.push('9');
-    else if (add === '11' && !parsed.extensions.includes('11')) labels.push('11');
-    else if (add === '13' && !parsed.extensions.includes('13')) labels.push('13');
     else if (add === '2' && parsed.suspended !== 'sus2') labels.push('2');
     else if (add === '4' && parsed.suspended !== 'sus4') labels.push('4');
+    else if (/^[#b]?\d+$/.test(add)) {
+      if (!labels.includes(add)) labels.push(add);
+    }
   }
 
   return labels;
