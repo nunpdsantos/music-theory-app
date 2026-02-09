@@ -1,0 +1,25 @@
+import { motion } from 'framer-motion';
+
+interface ProgressBarProps {
+  percent: number;
+  color: string;
+  height?: number;
+  delay?: number;
+}
+
+export function ProgressBar({ percent, color, height = 6, delay = 0 }: ProgressBarProps) {
+  return (
+    <div
+      className="w-full rounded-full overflow-hidden bg-zinc-800"
+      style={{ height }}
+    >
+      <motion.div
+        className="h-full rounded-full"
+        style={{ backgroundColor: color }}
+        initial={{ width: 0 }}
+        animate={{ width: `${Math.min(100, Math.max(0, percent))}%` }}
+        transition={{ duration: 0.6, ease: 'easeOut', delay }}
+      />
+    </div>
+  );
+}

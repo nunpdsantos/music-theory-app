@@ -1,4 +1,6 @@
-import type { CurriculumUnit, CurriculumModule, CurriculumProgress } from '../types/curriculum';
+import type { CurriculumUnit, CurriculumModule, CurriculumLevel, CurriculumProgress } from '../types/curriculum';
+export { CURRICULUM_LEVELS } from './levels';
+export { getLevelById, getLevelForUnit, getLevelForModule } from './levelHelpers';
 
 // ---------------------------------------------------------------------------
 // Unit 1: The Building Blocks (fully authored)
@@ -7,6 +9,7 @@ import type { CurriculumUnit, CurriculumModule, CurriculumProgress } from '../ty
 const u1m1: CurriculumModule = {
   id: 'u1m1',
   unitId: 'u1',
+  levelId: 'l1',
   title: 'Meet the Notes',
   subtitle: 'The 12 sounds in Western music',
   objectives: [
@@ -61,6 +64,7 @@ const u1m1: CurriculumModule = {
 const u1m2: CurriculumModule = {
   id: 'u1m2',
   unitId: 'u1',
+  levelId: 'l1',
   title: 'Half Steps and Whole Steps',
   subtitle: 'The distance between notes',
   objectives: [
@@ -120,6 +124,7 @@ const u1m2: CurriculumModule = {
 const u1m3: CurriculumModule = {
   id: 'u1m3',
   unitId: 'u1',
+  levelId: 'l1',
   title: 'Intervals — Naming Distances',
   subtitle: 'How musicians measure distance between notes',
   objectives: [
@@ -180,6 +185,7 @@ const u1m3: CurriculumModule = {
 const u1m4: CurriculumModule = {
   id: 'u1m4',
   unitId: 'u1',
+  levelId: 'l1',
   title: 'Major and Minor Thirds',
   subtitle: 'The intervals that build chords',
   objectives: [
@@ -244,6 +250,7 @@ const u1m4: CurriculumModule = {
 const u2m1: CurriculumModule = {
   id: 'u2m1',
   unitId: 'u2',
+  levelId: 'l1',
   title: 'The Major Scale',
   subtitle: 'Building scales with the W-W-H pattern',
   objectives: [
@@ -294,6 +301,7 @@ const u2m1: CurriculumModule = {
 const u2m2: CurriculumModule = {
   id: 'u2m2',
   unitId: 'u2',
+  levelId: 'l1',
   title: 'The Natural Minor Scale',
   subtitle: 'A different pattern, a different mood',
   objectives: [
@@ -347,6 +355,7 @@ const u2m2: CurriculumModule = {
 const u2m3: CurriculumModule = {
   id: 'u2m3',
   unitId: 'u2',
+  levelId: 'l1',
   title: 'Key Signatures',
   subtitle: 'How sharps and flats define a key',
   objectives: [
@@ -397,6 +406,7 @@ const u2m3: CurriculumModule = {
 const u2m4: CurriculumModule = {
   id: 'u2m4',
   unitId: 'u2',
+  levelId: 'l1',
   title: 'The Circle of Fifths',
   subtitle: 'A map of all major and minor keys',
   objectives: [
@@ -451,6 +461,7 @@ const u2m4: CurriculumModule = {
 const u2m5: CurriculumModule = {
   id: 'u2m5',
   unitId: 'u2',
+  levelId: 'l1',
   title: 'Relative Major and Minor',
   subtitle: 'Two sides of the same key',
   objectives: [
@@ -509,6 +520,7 @@ const u2m5: CurriculumModule = {
 const u3m1: CurriculumModule = {
   id: 'u3m1',
   unitId: 'u3',
+  levelId: 'l1',
   title: 'Major and Minor Triads',
   subtitle: 'Your first chords: three notes, two flavors',
   objectives: [
@@ -561,6 +573,7 @@ const u3m1: CurriculumModule = {
 const u3m2: CurriculumModule = {
   id: 'u3m2',
   unitId: 'u3',
+  levelId: 'l1',
   title: 'Diminished and Augmented',
   subtitle: 'Triads with a twist',
   objectives: [
@@ -614,6 +627,7 @@ const u3m2: CurriculumModule = {
 const u3m3: CurriculumModule = {
   id: 'u3m3',
   unitId: 'u3',
+  levelId: 'l1',
   title: 'Chord Inversions',
   subtitle: 'Same notes, different order',
   objectives: [
@@ -667,6 +681,7 @@ const u3m3: CurriculumModule = {
 const u3m4: CurriculumModule = {
   id: 'u3m4',
   unitId: 'u3',
+  levelId: 'l1',
   title: 'Seventh Chords',
   subtitle: 'Adding a fourth note for richer harmony',
   objectives: [
@@ -724,6 +739,7 @@ const u3m4: CurriculumModule = {
 const u4m1: CurriculumModule = {
   id: 'u4m1',
   unitId: 'u4',
+  levelId: 'l1',
   title: 'Building Chords from a Scale',
   subtitle: 'The seven chords that belong together',
   objectives: [
@@ -777,6 +793,7 @@ const u4m1: CurriculumModule = {
 const u4m2: CurriculumModule = {
   id: 'u4m2',
   unitId: 'u4',
+  levelId: 'l1',
   title: 'Chord Functions',
   subtitle: 'Home, tension, and departure',
   objectives: [
@@ -830,6 +847,7 @@ const u4m2: CurriculumModule = {
 const u4m3: CurriculumModule = {
   id: 'u4m3',
   unitId: 'u4',
+  levelId: 'l1',
   title: 'Roman Numeral Analysis',
   subtitle: 'A universal language for chord function',
   objectives: [
@@ -883,6 +901,7 @@ const u4m3: CurriculumModule = {
 const u4m4: CurriculumModule = {
   id: 'u4m4',
   unitId: 'u4',
+  levelId: 'l1',
   title: 'Common Progressions',
   subtitle: 'I-IV-V, the pop progression, and more',
   objectives: [
@@ -936,6 +955,7 @@ const u4m4: CurriculumModule = {
 const u4m5: CurriculumModule = {
   id: 'u4m5',
   unitId: 'u4',
+  levelId: 'l1',
   title: 'Cadences',
   subtitle: 'How phrases end',
   objectives: [
@@ -993,6 +1013,7 @@ const u4m5: CurriculumModule = {
 const u5m1: CurriculumModule = {
   id: 'u5m1',
   unitId: 'u5',
+  levelId: 'l1',
   title: 'Extended Chords',
   subtitle: '9ths, 11ths, and beyond',
   objectives: [
@@ -1046,6 +1067,7 @@ const u5m1: CurriculumModule = {
 const u5m2: CurriculumModule = {
   id: 'u5m2',
   unitId: 'u5',
+  levelId: 'l1',
   title: 'Introduction to Modes',
   subtitle: 'New colors from familiar scales',
   objectives: [
@@ -1098,6 +1120,7 @@ const u5m2: CurriculumModule = {
 const u5m3: CurriculumModule = {
   id: 'u5m3',
   unitId: 'u5',
+  levelId: 'l1',
   title: 'Dorian and Mixolydian',
   subtitle: 'The two most versatile modes',
   objectives: [
@@ -1151,6 +1174,7 @@ const u5m3: CurriculumModule = {
 const u5m4: CurriculumModule = {
   id: 'u5m4',
   unitId: 'u5',
+  levelId: 'l1',
   title: 'Lydian and Phrygian',
   subtitle: 'Bright extremes and dark extremes',
   objectives: [
@@ -1204,6 +1228,7 @@ const u5m4: CurriculumModule = {
 const u5m5: CurriculumModule = {
   id: 'u5m5',
   unitId: 'u5',
+  levelId: 'l1',
   title: 'Putting It All Together',
   subtitle: 'Connecting scales, chords, modes, and harmony',
   objectives: [
@@ -1261,6 +1286,7 @@ const u5m5: CurriculumModule = {
 export const CURRICULUM_UNITS: CurriculumUnit[] = [
   {
     id: 'u1',
+    levelId: 'l1',
     title: 'The Building Blocks',
     description: 'Notes, intervals, and the foundations of pitch',
     icon: 'building-blocks',
@@ -1281,6 +1307,7 @@ export const CURRICULUM_UNITS: CurriculumUnit[] = [
   },
   {
     id: 'u2',
+    levelId: 'l1',
     title: 'Scales and Keys',
     description: 'Major and minor scales, key signatures, and how keys organize music',
     icon: 'scales',
@@ -1301,6 +1328,7 @@ export const CURRICULUM_UNITS: CurriculumUnit[] = [
   },
   {
     id: 'u3',
+    levelId: 'l1',
     title: 'Chords',
     description: 'How chords are built, named, and connected',
     icon: 'chords',
@@ -1321,6 +1349,7 @@ export const CURRICULUM_UNITS: CurriculumUnit[] = [
   },
   {
     id: 'u4',
+    levelId: 'l1',
     title: 'Diatonic Harmony',
     description: 'How chords work together within a key',
     icon: 'harmony',
@@ -1343,6 +1372,7 @@ export const CURRICULUM_UNITS: CurriculumUnit[] = [
   },
   {
     id: 'u5',
+    levelId: 'l1',
     title: 'Modes and Beyond',
     description: 'Expanding your palette with modes and extended harmony',
     icon: 'modes',
@@ -1421,29 +1451,47 @@ export function arePrerequisitesMet(moduleId: string, progress: CurriculumProgre
   return module.prerequisites.every((prereq) => progress.completedModules.includes(prereq));
 }
 
-/** Get the next incomplete module for resume — prioritizes in-progress modules */
+/** Get the next incomplete module for resume — prioritizes in-progress modules.
+ *  Accepts levels array to avoid circular dependency with levels.ts.
+ */
 export function getNextIncompleteModule(
-  progress: CurriculumProgress
-): { module: CurriculumModule; unit: CurriculumUnit } | undefined {
-  const candidates: { module: CurriculumModule; unit: CurriculumUnit }[] = [];
+  progress: CurriculumProgress,
+  levels?: CurriculumLevel[]
+): { module: CurriculumModule; unit: CurriculumUnit; level: CurriculumLevel } | undefined {
+  if (levels) {
+    const candidates: { module: CurriculumModule; unit: CurriculumUnit; level: CurriculumLevel }[] = [];
+    for (const level of levels) {
+      if (level.comingSoon) continue;
+      for (const unit of level.units) {
+        for (const mod of unit.modules) {
+          if (mod.comingSoon) continue;
+          if (progress.completedModules.includes(mod.id)) continue;
+          if (!arePrerequisitesMet(mod.id, progress)) continue;
+          candidates.push({ module: mod, unit, level });
+        }
+      }
+    }
+    if (candidates.length === 0) return undefined;
+    const inProgress = candidates.find((c) => progress.moduleProgress[c.module.id]?.length > 0);
+    return inProgress ?? candidates[0];
+  }
 
+  // Fallback: flat search across CURRICULUM_UNITS (no level info — for backward compat)
   for (const unit of CURRICULUM_UNITS) {
     for (const mod of unit.modules) {
       if (mod.comingSoon) continue;
       if (progress.completedModules.includes(mod.id)) continue;
       if (!arePrerequisitesMet(mod.id, progress)) continue;
-      candidates.push({ module: mod, unit });
+      // Synthesize a minimal level for the return type
+      const syntheticLevel: CurriculumLevel = {
+        id: 'l1', number: 1, title: '', description: '',
+        difficulty: 'beginner', difficultyLabel: '', accentColor: '#60A5FA',
+        prerequisites: [], units: CURRICULUM_UNITS,
+      };
+      return { module: mod, unit, level: syntheticLevel };
     }
   }
-
-  if (candidates.length === 0) return undefined;
-
-  // Phase 1: Prefer module with existing task progress (user started but didn't finish)
-  const inProgress = candidates.find((c) => progress.moduleProgress[c.module.id]?.length > 0);
-  if (inProgress) return inProgress;
-
-  // Phase 2: First unlocked incomplete module in sequence
-  return candidates[0];
+  return undefined;
 }
 
 /** Get the default (empty) progress object */

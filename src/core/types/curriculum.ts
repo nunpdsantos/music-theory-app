@@ -1,5 +1,22 @@
 // Curriculum domain types
 
+export type DifficultyTier = 'beginner' | 'intermediate' | 'advanced';
+export type LevelState = 'locked' | 'coming-soon' | 'available' | 'in-progress' | 'completed';
+
+export interface CurriculumLevel {
+  id: string;
+  number: number;
+  title: string;
+  description: string;
+  difficulty: DifficultyTier;
+  difficultyLabel: string;
+  accentColor: string;
+  units: CurriculumUnit[];
+  prerequisites: string[];
+  comingSoon?: boolean;
+  parallel?: boolean;
+}
+
 /** A single concept within a module — explained and explorable */
 export interface CurriculumConcept {
   title: string;
@@ -26,6 +43,7 @@ export interface CurriculumTask {
 export interface CurriculumModule {
   id: string;
   unitId: string;
+  levelId: string;
   title: string;
   subtitle: string;
   objectives: string[];
@@ -56,9 +74,10 @@ export interface CurriculumCompletionContent {
   tryThisPrompt: string;
 }
 
-/** A unit containing 4 modules */
+/** A unit containing modules */
 export interface CurriculumUnit {
   id: string;
+  levelId: string;
   title: string;
   description: string;
   /** Icon key for the unit header (mapped to SVG in CurriculumIcons) */

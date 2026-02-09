@@ -1,21 +1,14 @@
 import { useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { CurriculumModule, CurriculumUnit } from '../../core/types/curriculum';
+import type { CurriculumModule, CurriculumUnit, CurriculumLevel } from '../../core/types/curriculum';
 import { getNextModule, getPreviousModule } from '../../core/constants/curriculum';
 import { executeTheoryQuery } from '../../utils/queryExecutor';
-
-// ─── Unit accent colors (maps to DEGREE_COLORS) ─────────────────────────────
-const UNIT_ACCENTS: Record<string, string> = {
-  u1: '#60A5FA',
-  u2: '#34D399',
-  u3: '#FBBF24',
-  u4: '#A78BFA',
-  u5: '#FB923C',
-};
+import { LearnBreadcrumb } from './LearnBreadcrumb';
 
 interface ModuleViewProps {
   module: CurriculumModule;
   unit: CurriculumUnit;
+  level: CurriculumLevel;
   unitIndex: number;
   moduleIndex: number;
   isModuleCompleted: boolean;
@@ -24,12 +17,14 @@ interface ModuleViewProps {
   onToggleTask: (moduleId: string, taskId: string) => void;
   onCompleteModule: (moduleId: string) => void;
   onBack: () => void;
+  onBackToLevels: () => void;
   onNavigateModule: (moduleId: string) => void;
 }
 
 export function ModuleView({
   module,
   unit,
+  level,
   unitIndex,
   moduleIndex,
   isModuleCompleted,
@@ -38,9 +33,10 @@ export function ModuleView({
   onToggleTask,
   onCompleteModule,
   onBack,
+  onBackToLevels,
   onNavigateModule,
 }: ModuleViewProps) {
-  const accent = UNIT_ACCENTS[unit.id] ?? '#60A5FA';
+  const accent = level.accentColor;
   const prevModule = getPreviousModule(module.id);
   const nextModule = getNextModule(module.id);
   const allTasksDone = completedTaskCount >= module.tasks.length;
@@ -50,43 +46,31 @@ export function ModuleView({
   }, []);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 40 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -40 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 35 }}
-      className="h-full overflow-y-auto"
-    >
-      <div className="max-w-2xl mx-auto px-5 py-6 pb-32">
+    <div className="h-full overflow-y-auto">
+      <div className="max-w-2xl mx-auto px-5 max-sm:px-3 py-6 max-sm:py-4 pb-32">
         {/* ─── Breadcrumb + Back ──────────────────────────────────── */}
         <div className="flex items-center gap-2 mb-8">
           <button
             onClick={onBack}
-            className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors group"
+            className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 transition-colors group"
           >
             <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
               className="group-hover:-translate-x-0.5 transition-transform"
             >
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
-            All Units
           </button>
-          <span className="text-zinc-700 text-xs">/</span>
-          <span className="text-xs text-zinc-600">
-            Unit {unitIndex + 1}
-          </span>
-          <span className="text-zinc-700 text-xs">/</span>
-          <span className="text-xs" style={{ color: accent }}>
-            Module {moduleIndex + 1}
-          </span>
+          <LearnBreadcrumb
+            accentColor={accent}
+            segments={[
+              { label: 'Learn', onClick: onBackToLevels },
+              { label: `Level ${level.number}`, onClick: onBack },
+              { label: unit.title, onClick: onBack },
+              { label: `Module ${moduleIndex + 1}` },
+            ]}
+          />
         </div>
 
         {/* ─── Module Header ─────────────────────────────────────── */}
@@ -208,14 +192,8 @@ export function ModuleView({
                         }}
                       >
                         <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
+                          width="16" height="16" viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                         >
                           <polygon points="5 3 19 12 5 21 5 3" />
                         </svg>
@@ -230,14 +208,8 @@ export function ModuleView({
                       </div>
                     </div>
                     <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                      width="16" height="16" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                       className="text-zinc-600 group-hover:text-zinc-400 group-hover:translate-x-0.5 transition-all"
                     >
                       <path d="M5 12h14M12 5l7 7-7 7" />
@@ -293,14 +265,8 @@ export function ModuleView({
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0, opacity: 0 }}
                             transition={{ type: 'spring', stiffness: 500, damping: 25 }}
-                            width="10"
-                            height="10"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#34D399"
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
+                            width="10" height="10" viewBox="0 0 24 24" fill="none"
+                            stroke="#34D399" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
                           >
                             <polyline points="20 6 9 17 4 12" />
                           </motion.svg>
@@ -364,14 +330,8 @@ export function ModuleView({
               className="flex items-center gap-2 text-xs text-zinc-500 hover:text-zinc-300 transition-colors group"
             >
               <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                 className="group-hover:-translate-x-0.5 transition-transform"
               >
                 <path d="M19 12H5M12 19l-7-7 7-7" />
@@ -394,14 +354,8 @@ export function ModuleView({
                 <span>{nextModule.title}</span>
               </div>
               <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                 className="group-hover:translate-x-0.5 transition-transform"
               >
                 <path d="M5 12h14M12 5l7 7-7 7" />
@@ -412,6 +366,6 @@ export function ModuleView({
           )}
         </motion.div>
       </div>
-    </motion.div>
+    </div>
   );
 }

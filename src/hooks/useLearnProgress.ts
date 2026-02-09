@@ -1,6 +1,13 @@
 import { useState, useCallback, useEffect } from 'react';
-import type { CurriculumProgress } from '../core/types/curriculum';
+import type { CurriculumProgress, CurriculumLevel, CurriculumUnit, LevelState } from '../core/types/curriculum';
 import { getDefaultProgress } from '../core/constants/curriculum';
+import {
+  getLevelCompletedModuleCount as _getLevelCompleted,
+  getLevelModuleCount,
+  isLevelCompleted as _isLevelCompleted,
+  isUnitCompleted as _isUnitCompleted,
+  computeLevelState,
+} from '../core/constants/levelHelpers';
 
 const STORAGE_KEY = 'music-theory-progress';
 
@@ -79,6 +86,27 @@ export function useLearnProgress() {
     [progress.completedModules],
   );
 
+  // Level-aware helpers
+  const getLevelCompletedModuleCount = useCallback(
+    (level: CurriculumLevel) => _getLevelCompleted(level, progress.completedModules),
+    [progress.completedModules],
+  );
+
+  const isLevelCompleted = useCallback(
+    (level: CurriculumLevel) => _isLevelCompleted(level, progress.completedModules),
+    [progress.completedModules],
+  );
+
+  const isUnitCompleted = useCallback(
+    (unit: CurriculumUnit) => _isUnitCompleted(unit, progress.completedModules),
+    [progress.completedModules],
+  );
+
+  const getLevelState = useCallback(
+    (level: CurriculumLevel): LevelState => computeLevelState(level, progress.completedModules),
+    [progress.completedModules],
+  );
+
   return {
     progress,
     toggleTask,
@@ -88,5 +116,9 @@ export function useLearnProgress() {
     isTaskCompleted,
     getModuleCompletedTaskCount,
     getUnitCompletedModuleCount,
+    getLevelCompletedModuleCount,
+    isLevelCompleted,
+    isUnitCompleted,
+    getLevelState,
   };
 }
