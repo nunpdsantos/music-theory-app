@@ -494,6 +494,12 @@ export function parseChordSymbol(symbol: string): ParsedChordSymbol | null {
     if (!result.extensions.includes('9')) result.extensions.push('9');
   }
 
+  // Ensure extensions are in ascending order (9, 11, 13).
+  // Alterations push their degree before the extension handler runs,
+  // so e.g. #11 can end up before 9 in the array.
+  const extOrder: Record<string, number> = { '9': 0, '11': 1, '13': 2 };
+  result.extensions.sort((a, b) => (extOrder[a] ?? 9) - (extOrder[b] ?? 9));
+
   return result;
 }
 
