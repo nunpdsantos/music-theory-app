@@ -276,10 +276,11 @@ export function QuickSearch() {
                   }
                 }
               }}
-              className="bg-zinc-900 border border-zinc-700 rounded-xl shadow-2xl overflow-hidden"
+              className="rounded-xl shadow-2xl overflow-hidden"
+              style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)' }}
             >
-              <div className="flex items-center px-4 py-3 border-b border-zinc-800">
-                <span className="text-zinc-500 mr-2 text-sm">&#128270;</span>
+              <div className="flex items-center px-4 py-3" style={{ borderBottom: '1px solid var(--card)' }}>
+                <span className="mr-2 text-sm" style={{ color: 'var(--text-dim)' }}>&#128270;</span>
                 <input
                   ref={inputRef}
                   type="text"
@@ -287,9 +288,10 @@ export function QuickSearch() {
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder='Try "Cmaj7#11", "D harmonic minor", "lydian dominant"...'
-                  className="flex-1 bg-transparent text-zinc-100 text-sm outline-none placeholder:text-zinc-500"
+                  className="flex-1 bg-transparent text-sm outline-none"
+                  style={{ color: 'var(--text)' }}
                 />
-                <kbd className="text-[10px] text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">
+                <kbd className="text-[10px] px-1.5 py-0.5 rounded" style={{ color: 'var(--text-dim)', backgroundColor: 'var(--card)' }}>
                   ESC
                 </kbd>
               </div>
@@ -301,11 +303,11 @@ export function QuickSearch() {
                       onClick={() => executeResult(i)}
                       className="w-full text-left px-4 py-2.5 transition-colors flex items-center justify-between"
                       style={{
-                        backgroundColor: i === selectedIdx ? '#27272a' : 'transparent',
+                        backgroundColor: i === selectedIdx ? 'var(--card-hover)' : 'transparent',
                       }}
                       onMouseEnter={() => setSelectedIdx(i)}
                     >
-                      <span className="text-sm text-zinc-200">{r.label}</span>
+                      <span className="text-sm" style={{ color: 'var(--text)' }}>{r.label}</span>
                       <span
                         className="text-[10px] px-1.5 py-0.5 rounded font-medium"
                         style={{
@@ -326,7 +328,7 @@ export function QuickSearch() {
                 </div>
               )}
               {query && results.length === 0 && (
-                <div className="px-4 py-3 text-sm text-zinc-500">
+                <div className="px-4 py-3 text-sm" style={{ color: 'var(--text-dim)' }}>
                   No match. Try a chord (Cmaj7#11), scale (D harmonic minor), or note (Ab).
                 </div>
               )}

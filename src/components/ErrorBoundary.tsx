@@ -50,8 +50,8 @@ export class ErrorBoundary extends Component<Props, State> {
             alignItems: 'center',
             justifyContent: 'center',
             height: '100vh',
-            backgroundColor: '#09090b',
-            color: '#fafafa',
+            backgroundColor: 'var(--bg)',
+            color: 'var(--text)',
             fontFamily: 'system-ui, sans-serif',
           }}
         >
@@ -60,15 +60,15 @@ export class ErrorBoundary extends Component<Props, State> {
               maxWidth: 420,
               padding: 32,
               borderRadius: 16,
-              border: '1px solid #27272a',
-              backgroundColor: '#18181b',
+              border: '1px solid var(--border)',
+              backgroundColor: 'var(--card)',
               textAlign: 'center',
             }}
           >
             <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>
               Something went wrong
             </h1>
-            <p style={{ fontSize: 14, color: '#a1a1aa', marginBottom: 20 }}>
+            <p style={{ fontSize: 14, color: 'var(--text-muted)', marginBottom: 20 }}>
               {error.message}
             </p>
             <button

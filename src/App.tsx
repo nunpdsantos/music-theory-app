@@ -1,9 +1,13 @@
 import { lazy, Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 import { LazyMotion, domAnimation, AnimatePresence, m } from 'framer-motion';
 import { AppShell } from './components/layout/AppShell.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 import { QuickSearch } from './components/navigation/QuickSearch.tsx';
+import { PWAPrompts } from './components/layout/PWAPrompts.tsx';
 import { useMidi } from './hooks/useMidi.ts';
+import { useTheme } from './hooks/useTheme.ts';
+import { useLanguage } from './hooks/useLanguage.ts';
 import { useAppStore } from './state/store.ts';
 
 function ViewLoadingFallback() {
@@ -15,19 +19,30 @@ function ViewLoadingFallback() {
 }
 
 function ViewErrorFallback(_error: Error, reset: () => void) {
+  // Called as a render function, not a component — use i18n instance directly
   return (
     <div className="flex-1 flex items-center justify-center">
       <div className="text-center p-8">
-        <p className="text-zinc-400 text-sm mb-4">This view encountered an error.</p>
+        <p className="text-zinc-400 text-sm mb-4"><ViewErrorText /></p>
         <button
           onClick={reset}
           className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-500 transition-colors"
         >
-          Try again
+          <TryAgainText />
         </button>
       </div>
     </div>
   );
+}
+
+function ViewErrorText() {
+  const { t } = useTranslation();
+  return <>{t('error.viewError')}</>;
+}
+
+function TryAgainText() {
+  const { t } = useTranslation();
+  return <>{t('common.tryAgain')}</>;
 }
 
 const ExploreView = lazy(() => import('./views/ExploreView.tsx').then((m) => ({ default: m.ExploreView })));
@@ -46,6 +61,10 @@ function App() {
 
   // Wire MIDI input globally
   useMidi();
+  // Sync theme preference to <html> class
+  useTheme();
+  // Sync language preference to i18next
+  useLanguage();
 
   return (
     <LazyMotion features={domAnimation}>
@@ -71,6 +90,7 @@ function App() {
         </AnimatePresence>
       </AppShell>
       <QuickSearch />
+      <PWAPrompts />
     </LazyMotion>
   );
 }

@@ -74,7 +74,7 @@ export const FretCell = memo(function FretCell({
         className="absolute w-full"
         style={{
           height: 1 + (5 - stringIdx) * 0.3,
-          backgroundColor: isMuted ? '#3f3f46' : '#71717a',
+          backgroundColor: isMuted ? 'var(--border)' : 'var(--text-dim)',
           top: '50%',
           transform: 'translateY(-50%)',
         }}

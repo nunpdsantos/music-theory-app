@@ -190,20 +190,121 @@ Interactive exercise system with real-time validation across all 118 modules.
 
 ---
 
-## Phase 6: Future Features — Priority: BACKLOG
+## Phase 6: Feature Expansion
 
-Ideas captured for future consideration. Not prioritized.
+### 6.1 Metronome (COMPLETE)
 
-- [ ] **MIDI output** — Send notes to external synths/DAWs
-- [ ] **Custom tunings** — Drop D, DADGAD, open G, etc.
-- [ ] **Chord progression builder** — Drag-and-drop chord sequence with playback
-- [ ] **Scale comparison** — Side-by-side view of two scales highlighting differences
-- [ ] **Print/export** — Export scale/chord diagrams as PDF or image
-- [ ] **Metronome** — Adjustable BPM with accent patterns
-- [ ] **Audio recording** — Record and playback user performances
-- [ ] **Theme/appearance** — Light mode, colorblind-friendly palette options
-- [ ] **i18n** — Multi-language support for international users
-- [ ] **PWA enhancements** — Offline support verification, install prompt, app icon
+- [x] **Metronome engine** — Web Audio API look-ahead scheduler with sample-accurate timing (`src/services/metronome.ts`)
+- [x] **Store integration** — `metronomeBPM`, `metronomeBeats`, `metronomeVolume` persisted to localStorage
+- [x] **UI component** — Play/stop toggle, BPM slider (30–300), time signature selector (2/4, 3/4, 4/4, 6/8), volume slider, beat indicator dots (`src/components/play/MetronomeControl.tsx`)
+- [x] **React hook** — `useMetronome` bridges engine to store with live param updates (`src/hooks/useMetronome.ts`)
+- [x] **PlayView integration** — Metronome section between Sound and Controls
+- [x] **Tests** — 4 new store tests (BPM clamping, beats, volume clamping, defaults). **330 tests passing.**
+
+### 6.2 Custom Tunings (COMPLETE)
+
+- [x] **Store integration** — `guitarTuningId` persisted to localStorage, resets scale position on change
+- [x] **6 tunings** — Standard, Drop D, Half Step Down, Open G, Open D, DADGAD (from existing `guitarTunings.ts`)
+- [x] **Fretboard wiring** — `Fretboard.tsx` and `FretboardString.tsx` use dynamic tuning from store instead of hardcoded `TUNING_STANDARD`
+- [x] **Tuning selector UI** — Pill row in fretboard area with radiogroup ARIA
+- [x] **Chord/scale position gating** — Chord shapes and CAGED scale positions disabled for non-standard tunings (they're standard-tuning-specific); scale note highlighting still works in all tunings
+- [x] **Tests** — 2 new store tests (tuning change + reset, default). **332 tests passing.**
+
+### 6.3 Theme/Appearance (COMPLETE)
+
+- [x] **CSS custom properties** — Dark/light theme tokens in `:root` / `:root.light` (bg, card, card-hover, border, border-light, text, text-muted, text-dim, input-bg, scrollbar)
+- [x] **Store integration** — `themeMode: 'dark' | 'light' | 'system'` persisted to localStorage
+- [x] **useTheme hook** — Syncs store preference to `<html>` class, listens to `prefers-color-scheme` media query for system mode
+- [x] **Theme toggle** — Dark → Light → System cycle button in TopBar with moon/sun/monitor icons
+- [x] **Full migration** — ~120 hardcoded hex colors across 20+ component files replaced with `var()` CSS custom properties and `color-mix()` for opacity variants
+- [x] **SURFACE tokens** — `src/design/tokens/colors.ts` SURFACE object now uses CSS var references
+- [x] **Tests** — 2 new store tests (theme change, default). **334 tests passing.**
+
+### 6.4 PWA Enhancements (COMPLETE)
+
+- [x] **Google Fonts offline** — Workbox runtime caching for `fonts.googleapis.com` and `fonts.gstatic.com` (CacheFirst, 1-year expiry)
+- [x] **Dynamic theme-color** — `<meta name="theme-color">` syncs with dark/light theme via `useTheme` hook
+- [x] **Install prompt** — Captures `beforeinstallprompt` event, shows dismissable "Install Music Theory?" toast
+- [x] **Update notification** — Registers SW with `onNeedRefresh` callback, shows "New version available" toast with reload action
+- [x] **Offline ready indicator** — Shows "App ready for offline use" toast when SW activates
+- [x] **PWA prompt component** — `src/components/layout/PWAPrompts.tsx` + `src/hooks/usePWA.ts` wired into App.tsx
+- [x] **PWA types** — Added `vite-plugin-pwa/client` to tsconfig for `virtual:pwa-register` typing
+- [x] **Build verified** — 32 precache entries, SW generated. **334 tests passing.**
+
+### 6.5 Scale Comparison (COMPLETE)
+
+- [x] **Store state** — `comparisonScale: ScaleType | null` in NavigationState, resets on scale change
+- [x] **ScaleComparison component** — Chromatic 12-slot grid showing both scales with color-coded degree dots
+- [x] **Diff visualization** — Shared notes (green), scale A only (blue), scale B only (amber) with legend
+- [x] **Scale selector** — Dropdown to pick comparison scale, filterable (excludes current scale)
+- [x] **ExploreView integration** — New section between Scale Degrees and Chords
+- [x] **Tests** — 2 new store tests (set/clear comparison, reset on scale change). **336 tests passing.**
+
+### 6.6 Ear Training Exercises (COMPLETE)
+
+- [x] **EarTrainingConfig type** — New `ear_training` exercise type with modes: `note`, `interval`, `chord`
+- [x] **Validation** — Delegates to existing note_id, interval_id, and multiple_choice validators
+- [x] **Audio playback** — Auto-plays audio on exercise mount; Replay button for re-listening
+- [x] **Choice generation** — Reuses `generateNoteChoices`, `generateIntervalChoices`, plus new `generateEarChoices`
+- [x] **ExerciseRunner integration** — Handles ear_training as choice-based with audio playback via `playNote` / `playChord`
+- [x] **Exercise content** — 12 ear training exercises across L1 (notes), L2 (intervals), L3 (chords)
+- [x] **Tests** — 3 new validation tests (note/interval/chord modes). **339 tests passing.**
+
+### 6.7 Scale Degree ID Exercises (COMPLETE)
+
+- [x] **ScaleDegreeIdConfig type** — New `scale_degree_id` exercise type with root/scale/note/correctDegree fields
+- [x] **Validation** — Compares user-selected degree (1-7) against correct answer, descriptive feedback with degree names
+- [x] **Choice generation** — `generateDegreeChoices()` produces 4 degree options with nearby distractors
+- [x] **ExerciseRunner integration** — Handles scale_degree_id as choice-based
+- [x] **Exercise content** — 4 scale degree exercises in L1 (C major and G major contexts)
+- [x] **Tests** — 2 new validation tests (correct/incorrect). **341 tests passing.**
+
+### 6.8 MIDI Output (COMPLETE)
+
+- [x] **MIDI output service** — `src/services/midiOutput.ts` with `sendNoteOn`, `sendNoteOff`, `sendAllNotesOff`, device discovery
+- [x] **Store integration** — `midiOutputEnabled` + `midiOutputDeviceId` persisted to localStorage
+- [x] **useAudio integration** — Note-on/off messages sent to selected MIDI output alongside Web Audio playback
+- [x] **Device selector UI** — `src/components/play/MidiOutputControl.tsx` with enable toggle + output device dropdown
+- [x] **PlayView integration** — MIDI Output section between Metronome and Controls
+- [x] **Hot-plug support** — `onStateChange` listener refreshes device list when devices connect/disconnect
+- [x] **Tests** — 2 new store tests (enable toggle, device selection). **343 tests passing.**
+
+### 6.9 Chord Progression Builder (COMPLETE)
+
+- [x] **ChordProgressionBuilder component** — `src/components/play/ChordProgressionBuilder.tsx`
+- [x] **Chord palette** — Diatonic chords from current key context, color-coded by degree
+- [x] **Sequence editor** — Click to add chords, click to remove, Clear button
+- [x] **Playback** — Play/Stop buttons, sequential chord playback with `playChord()` and configurable timing
+- [x] **Synth integration** — Uses current synthPreset and baseOctave from store
+- [x] **PlayView integration** — New section between Metronome and MIDI Output. **343 tests passing.**
+
+### 6.10 Print/Export (COMPLETE)
+
+- [x] **Print stylesheet** — `@media print` rules in `index.css`: hides nav/instrument bar, forces light colors, enables overflow
+- [x] **Copy to clipboard** — `generateScaleSummary()` produces plain-text scale+chord reference, `copyToClipboard()` via Clipboard API
+- [x] **Export helpers** — `src/utils/exportHelpers.ts` with summary generator and clipboard wrapper
+- [x] **ExploreView integration** — Copy and Print buttons in hero card alongside Play/Details
+- [x] **No extra dependencies** — Uses native `window.print()` and `navigator.clipboard`. **343 tests passing.**
+
+### 6.11 Audio Recording (COMPLETE)
+
+- [x] **Note event recorder** — `src/services/noteRecorder.ts` captures MIDI note-on/off events with `performance.now()` timestamps
+- [x] **useAudio integration** — `recordNoteOn` / `recordNoteOff` calls wired into `noteOn` / `noteOff` paths
+- [x] **RecordingControl component** — `src/components/play/RecordingControl.tsx` with record/stop toggle, take list, playback, delete
+- [x] **Playback engine** — Replays recorded note events through `useAudio` with `setTimeout` scheduling, matching original timing
+- [x] **PlayView integration** — Recording section between Chord Progression Builder and MIDI Output. **343 tests passing.**
+
+### 6.12 i18n (COMPLETE)
+
+- [x] **i18next infrastructure** — `react-i18next` + `i18next` with `src/i18n/index.ts` config, localStorage-synced language persistence
+- [x] **English locale** — `src/i18n/locales/en.json` with ~170 translation keys across 18 namespaces (nav, common, explore, play, learn, exercise, etc.)
+- [x] **Portuguese locale** — `src/i18n/locales/pt.json` — complete translation
+- [x] **Store integration** — `language` field in PreferencesState, persisted to localStorage, synced to i18next via `useLanguage` hook
+- [x] **Language selector** — Dropdown in TopBar for switching languages
+- [x] **Component migration** — All ~20 component files migrated to `useTranslation()` + `t()` calls
+- [x] **Musical nomenclature preserved** — Scale types, chord symbols, intervals stay universal (not translated)
+- [x] **Test setup** — `setupFiles: ['./src/i18n/index.ts']` in vitest config; i18n available in all tests
+- [x] **Tests** — 2 new store tests (setLanguage, default). **345 tests passing.**
 
 ---
 

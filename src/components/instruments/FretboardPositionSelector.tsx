@@ -20,8 +20,8 @@ const btnBase = 'text-[10px] px-2 py-0.5 rounded transition-colors';
 function selectorStyle(isActive: boolean) {
   return {
     backgroundColor: isActive ? '#60A5FA' : 'transparent',
-    color: isActive ? '#000' : '#71717a',
-    border: isActive ? '1px solid #60A5FA' : '1px solid #3f3f46',
+    color: isActive ? '#000' : 'var(--text-dim)',
+    border: isActive ? '1px solid #60A5FA' : '1px solid var(--border)',
   };
 }
 

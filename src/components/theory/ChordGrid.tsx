@@ -37,7 +37,14 @@ export function ChordGrid() {
 
   if (diatonicChords.length === 0) {
     return (
-      <div className="text-xs text-zinc-500 px-4 py-8 text-center rounded-xl border border-zinc-800/50 bg-zinc-900/30">
+      <div
+        className="text-xs px-4 py-8 text-center rounded-xl border"
+        style={{
+          color: 'var(--text-dim)',
+          borderColor: 'color-mix(in srgb, var(--card-hover) 50%, transparent)',
+          backgroundColor: 'color-mix(in srgb, var(--bg) 30%, transparent)',
+        }}
+      >
         No diatonic chords for this scale type
       </div>
     );
@@ -61,8 +68,8 @@ export function ChordGrid() {
             onClick={() => setSelectedChord(isSelected ? null : chord)}
             className="relative flex flex-col items-center gap-1.5 p-3 max-sm:p-2 rounded-xl overflow-hidden group"
             style={{
-              backgroundColor: isSelected ? `${color}18` : '#18181b',
-              border: isSelected ? `1.5px solid ${color}60` : '1.5px solid #27272a',
+              backgroundColor: isSelected ? `${color}18` : 'var(--card)',
+              border: isSelected ? `1.5px solid ${color}60` : '1.5px solid var(--card-hover)',
               boxShadow: isSelected ? `0 0 20px ${color}10` : 'none',
             }}
             initial={{ opacity: 0, y: 12 }}
@@ -85,11 +92,11 @@ export function ChordGrid() {
             >
               {numeral}
             </span>
-            <span className="text-sm font-semibold text-zinc-200">
+            <span className="text-sm font-semibold" style={{ color: 'var(--text)' }}>
               {rootLabel}
-              <span className="text-zinc-500 font-normal">{qualityLabel}</span>
+              <span className="font-normal" style={{ color: 'var(--text-dim)' }}>{qualityLabel}</span>
             </span>
-            <span className="text-[9px] text-zinc-500 group-hover:text-zinc-400 transition-colors">
+            <span className="text-[9px] transition-colors" style={{ color: 'var(--text-dim)' }}>
               {qualityFull}
             </span>
           </m.button>

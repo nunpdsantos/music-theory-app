@@ -4,5 +4,6 @@ export default defineConfig({
   test: {
     include: ['src/**/__tests__/**/*.test.{ts,tsx}'],
     environment: 'jsdom',
+    setupFiles: ['./src/i18n/index.ts'],
   },
 })

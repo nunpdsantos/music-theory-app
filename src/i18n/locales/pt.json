@@ -1,0 +1,199 @@
+{
+  "nav": {
+    "musicTheory": "Teoria Musical",
+    "explore": "Explorar",
+    "play": "Tocar",
+    "learn": "Aprender",
+    "search": "Pesquisar",
+    "appViews": "Vistas da app",
+    "skipToContent": "Ir para o conte\u00fado",
+    "clickKeysToPlay": "Clique nas teclas para tocar",
+    "showInstrument": "Mostrar instrumento",
+    "hideInstrument": "Esconder instrumento",
+    "themeLabel": "Tema: {{mode}}. Clique para alterar.",
+    "quickSearchLabel": "Pesquisa r\u00e1pida, Command+K"
+  },
+  "theme": {
+    "dark": "Escuro",
+    "light": "Claro",
+    "system": "Sistema"
+  },
+  "common": {
+    "play": "Tocar",
+    "stop": "Parar",
+    "start": "Iniciar",
+    "clear": "Limpar",
+    "submit": "Enviar",
+    "reload": "Recarregar",
+    "dismiss": "Fechar",
+    "install": "Instalar",
+    "continue": "Continuar",
+    "next": "Seguinte",
+    "previous": "Anterior",
+    "tryAgain": "Tentar Novamente",
+    "copy": "Copiar",
+    "copied": "Copiado!",
+    "print": "Imprimir",
+    "details": "Detalhes",
+    "replay": "Repetir",
+    "record": "Gravar"
+  },
+  "status": {
+    "completed": "Conclu\u00eddo",
+    "complete": "Completo",
+    "comingSoon": "Em Breve",
+    "contentInDevelopment": "Conte\u00fado em desenvolvimento"
+  },
+  "explore": {
+    "scaleDegrees": "Graus da Escala",
+    "chords": "Acordes",
+    "diatonic": "Diat\u00f3nicos",
+    "allChords": "Todos os Acordes",
+    "circleOfFifths": "C\u00edrculo de Quintas",
+    "notes": "{{count}} notas",
+    "playScaleAscending": "Tocar escala ascendente",
+    "copyScaleSummary": "Copiar resumo da escala",
+    "printScaleDiagram": "Imprimir diagrama da escala",
+    "compareScales": "Comparar Escalas",
+    "scaleComparison": "Compara\u00e7\u00e3o de Escalas",
+    "chooseScale": "Escolha uma escala\u2026",
+    "selectScaleToCompare": "Selecionar escala para comparar",
+    "changeComparisonScale": "Alterar escala de compara\u00e7\u00e3o",
+    "closeComparison": "Fechar compara\u00e7\u00e3o",
+    "chromaticComparison": "Compara\u00e7\u00e3o crom\u00e1tica de escalas",
+    "shared": "comuns",
+    "uniqueToA": "\u00fanicas em A",
+    "uniqueToB": "\u00fanicas em B",
+    "sharedLegend": "Comuns",
+    "onlyLegend": "Apenas {{name}}",
+    "vs": "vs"
+  },
+  "play": {
+    "performanceMode": "Modo Performance",
+    "sound": "Som",
+    "volume": "Volume",
+    "octave": "Oitava",
+    "nowPlaying": "A Tocar",
+    "playInstrumentBelow": "Toque o instrumento abaixo",
+    "scaleReference": "Refer\u00eancia da Escala",
+    "activeNotes": "Notas ativas",
+    "synthPreset": "Preset do sintetizador",
+    "baseOctave": "Oitava base"
+  },
+  "preset": {
+    "piano": "Piano",
+    "pianoDesc": "S\u00edntese FM, percussivo",
+    "classic": "Cl\u00e1ssico",
+    "classicDesc": "Onda triangular, quente",
+    "organ": "\u00d3rg\u00e3o",
+    "organDesc": "Sinusoidal sustentada, harm\u00f3nico",
+    "strings": "Cordas",
+    "stringsDesc": "Dente de serra filtrado, ataque lento",
+    "pluck": "Pizzicato",
+    "pluckDesc": "Decaimento r\u00e1pido, ataque brilhante"
+  },
+  "metronome": {
+    "title": "Metr\u00f3nomo",
+    "startLabel": "Iniciar metr\u00f3nomo",
+    "stopLabel": "Parar metr\u00f3nomo",
+    "bpm": "BPM",
+    "tempo": "Tempo em BPM",
+    "volume": "Volume do metr\u00f3nomo",
+    "timeSig": "Compasso"
+  },
+  "chordProg": {
+    "title": "Progress\u00e3o de Acordes",
+    "clickToAdd": "Clique nos acordes abaixo para criar uma progress\u00e3o.",
+    "addChord": "Adicionar acorde \u00e0 progress\u00e3o",
+    "removeChord": "Remover acorde {{numeral}}",
+    "addChordLabel": "Adicionar acorde {{numeral}} {{root}}",
+    "clickToRemove": "Clique para remover"
+  },
+  "recording": {
+    "title": "Grava\u00e7\u00e3o",
+    "startRecording": "Iniciar grava\u00e7\u00e3o",
+    "stopRecording": "Parar grava\u00e7\u00e3o",
+    "recordingActive": "A gravar... Toque notas no instrumento.",
+    "emptyState": "Grave as suas performances e reproduza-as.",
+    "playRecording": "Reproduzir grava\u00e7\u00e3o {{n}}",
+    "deleteRecording": "Apagar grava\u00e7\u00e3o {{n}}",
+    "take": "Take {{n}}"
+  },
+  "midi": {
+    "title": "Sa\u00edda MIDI",
+    "enable": "Ativar sa\u00edda MIDI",
+    "selectDevice": "Selecionar dispositivo de sa\u00edda MIDI",
+    "noDevice": "Nenhum dispositivo selecionado",
+    "noDevices": "Nenhum dispositivo de sa\u00edda MIDI encontrado. Conecte um dispositivo MIDI e atualize."
+  },
+  "degree": {
+    "tonic": "T\u00f3nica",
+    "supertonic": "Supert\u00f3nica",
+    "mediant": "Mediante",
+    "subdominant": "Subdominante",
+    "dominant": "Dominante",
+    "submediant": "Submediante",
+    "leading": "Sens\u00edvel"
+  },
+  "keySelector": {
+    "root": "Fundamental",
+    "scale": "Escala",
+    "moreScales": "Mais escalas\u2026 \u25be",
+    "less": "Menos \u25b4",
+    "label": "Seletor de tonalidade e escala"
+  },
+  "scaleGroup": {
+    "core": "Principais",
+    "minorVariants": "Variantes Menores",
+    "modes": "Modos",
+    "pentatonicBlues": "Pentat\u00f3nica / Blues",
+    "symmetric": "Sim\u00e9tricas",
+    "melMinorModes": "Modos Mel. Menor",
+    "bebop": "Bebop",
+    "world": "Mundo"
+  },
+  "learn": {
+    "title": "Aprender Teoria Musical",
+    "subtitle": "Um caminho estruturado desde o b\u00e1sico at\u00e9 \u00e0 harmonia avan\u00e7ada",
+    "parallelTrack": "Percurso Paralelo",
+    "level": "N\u00edvel {{n}}",
+    "unit": "Unidade {{n}}",
+    "module": "M\u00f3dulo {{n}}",
+    "learningObjectives": "Objetivos de Aprendizagem",
+    "practiceTasks": "Tarefas Pr\u00e1ticas",
+    "tryThis": "Experimenta Isto",
+    "markModuleComplete": "Marcar M\u00f3dulo como Conclu\u00eddo",
+    "unitsModules": "{{units}} {{unitLabel}} \u00b7 {{modules}} m\u00f3dulos",
+    "unitSingular": "unidade",
+    "unitPlural": "unidades"
+  },
+  "exercise": {
+    "title": "Exerc\u00edcios",
+    "score": "Pontua\u00e7\u00e3o: {{score}}/{{total}}",
+    "correct": "Correto!",
+    "correctPartial": "Correto \u2014 cr\u00e9dito parcial",
+    "notQuite": "Quase",
+    "incorrect": "Incorreto",
+    "hint": "Dica: {{hint}}",
+    "exercisesComplete": "Exerc\u00edcios Conclu\u00eddos!",
+    "keepPracticing": "Continue a Praticar",
+    "passed": "Passou!",
+    "needToPass": "Precisa de {{score}} para passar",
+    "replayAudio": "Repetir \u00e1udio"
+  },
+  "pwa": {
+    "newVersion": "Nova vers\u00e3o dispon\u00edvel",
+    "offlineReady": "App pronta para uso offline",
+    "installPrompt": "Instalar Teoria Musical?"
+  },
+  "error": {
+    "somethingWentWrong": "Algo correu mal",
+    "unexpectedError": "Ocorreu um erro inesperado.",
+    "viewError": "Esta vista encontrou um erro."
+  },
+  "instrument": {
+    "piano": "Piano",
+    "guitar": "Guitarra",
+    "label": "Instrumento {{name}}"
+  }
+}

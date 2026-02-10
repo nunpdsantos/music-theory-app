@@ -1,7 +1,9 @@
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import { KeySelector } from '../components/navigation/KeySelector.tsx';
 import { ScaleDegreeBar } from '../components/theory/ScaleDegreeBar.tsx';
+import { ScaleComparison } from '../components/theory/ScaleComparison.tsx';
 import { ChordGrid } from '../components/theory/ChordGrid.tsx';
 import { ChordBrowser } from '../components/theory/ChordBrowser.tsx';
 import { CircleOfFifths } from '../components/theory/CircleOfFifths.tsx';
@@ -16,6 +18,7 @@ import {
   SYNTH_PRESETS,
   resumeAudio,
 } from '../core/services/audio.ts';
+import { generateScaleSummary, copyToClipboard } from '../utils/exportHelpers.ts';
 
 const stagger = {
   hidden: { opacity: 0 },
@@ -31,14 +34,17 @@ const fadeUp = {
 };
 
 export function ExploreView() {
-  const { scale } = useKeyContext();
+  const { t } = useTranslation();
+  const { scale, diatonicChords } = useKeyContext();
   const selectedScale = useAppStore((s) => s.selectedScale);
+  const selectedChord = useAppStore((s) => s.selectedChord);
   const setDetailPanelOpen = useAppStore((s) => s.setDetailPanelOpen);
   const setSelectedChord = useAppStore((s) => s.setSelectedChord);
   const detailPanelOpen = useAppStore((s) => s.detailPanelOpen);
   const synthPreset = useAppStore((s) => s.synthPreset);
   const baseOctave = useAppStore((s) => s.baseOctave);
   const [chordMode, setChordMode] = useState<'diatonic' | 'all'>('diatonic');
+  const [copied, setCopied] = useState(false);
 
   const handleShowScale = () => {
     setSelectedChord(null);
@@ -87,14 +93,14 @@ export function ExploreView() {
 
             <div className="relative px-5 max-sm:px-3 py-4 max-sm:py-3 flex items-center justify-between max-sm:flex-col max-sm:items-start max-sm:gap-3">
               <div>
-                <h2 className="text-xl font-bold text-zinc-100 learn-serif">
+                <h2 className="text-xl font-bold learn-serif" style={{ color: 'var(--text)' }}>
                   {noteToString(scale.root)}{' '}
-                  <span className="text-zinc-400 font-normal">
+                  <span className="font-normal" style={{ color: 'var(--text-muted)' }}>
                     {SCALE_TYPE_NAMES[selectedScale]}
                   </span>
                 </h2>
-                <p className="text-xs text-zinc-500 mt-1">
-                  {scale.notes.length} notes &middot;{' '}
+                <p className="text-xs mt-1" style={{ color: 'var(--text-dim)' }}>
+                  {t('explore.notes', { count: scale.notes.length })} &middot;{' '}
                   {scale.notes.map((n) => noteToString(n)).join(' ')}
                 </p>
               </div>
@@ -108,21 +114,60 @@ export function ExploreView() {
                     color: tonicColor,
                     border: `1px solid ${tonicColor}30`,
                   }}
-                  aria-label="Play scale ascending"
+                  aria-label={t('explore.playScaleAscending')}
                 >
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
                     <polygon points="5 3 19 12 5 21 5 3" />
                   </svg>
-                  Play
+                  {t('common.play')}
                 </button>
                 <button
                   onClick={handleShowScale}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-zinc-400 hover:text-zinc-200 bg-zinc-800/40 border border-zinc-700/40 hover:border-zinc-600/60 transition-all duration-150"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all duration-150"
+                  style={{
+                    color: 'var(--text-muted)',
+                    backgroundColor: 'color-mix(in srgb, var(--card) 40%, transparent)',
+                    border: '1px solid color-mix(in srgb, var(--border) 40%, transparent)',
+                  }}
                 >
-                  Details
+                  {t('common.details')}
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M9 18l6-6-6-6" />
                   </svg>
+                </button>
+                <button
+                  onClick={async () => {
+                    const text = generateScaleSummary(scale, diatonicChords, selectedChord);
+                    const ok = await copyToClipboard(text);
+                    if (ok) { setCopied(true); setTimeout(() => setCopied(false), 2000); }
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all duration-150"
+                  style={{
+                    color: 'var(--text-muted)',
+                    backgroundColor: 'color-mix(in srgb, var(--card) 40%, transparent)',
+                    border: '1px solid color-mix(in srgb, var(--border) 40%, transparent)',
+                  }}
+                  aria-label={t('explore.copyScaleSummary')}
+                >
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                  {t(copied ? 'common.copied' : 'common.copy')}
+                </button>
+                <button
+                  onClick={() => window.print()}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all duration-150 no-print"
+                  style={{
+                    color: 'var(--text-muted)',
+                    backgroundColor: 'color-mix(in srgb, var(--card) 40%, transparent)',
+                    border: '1px solid color-mix(in srgb, var(--border) 40%, transparent)',
+                  }}
+                  aria-label={t('explore.printScaleDiagram')}
+                >
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="6 9 6 2 18 2 18 9" /><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /><rect x="6" y="14" width="12" height="8" />
+                  </svg>
+                  {t('common.print')}
                 </button>
               </div>
             </div>
@@ -130,10 +175,15 @@ export function ExploreView() {
 
           {/* ─── Scale Degrees ──────────────────────────────────── */}
           <m.div variants={fadeUp}>
-            <h3 className="text-[10px] font-bold text-zinc-500 mb-2.5 uppercase tracking-widest">
-              Scale Degrees
+            <h3 className="text-[10px] font-bold mb-2.5 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+              {t('explore.scaleDegrees')}
             </h3>
             <ScaleDegreeBar />
+          </m.div>
+
+          {/* ─── Scale Comparison ────────────────────────────────── */}
+          <m.div variants={fadeUp}>
+            <ScaleComparison />
           </m.div>
 
           {/* ─── Chord Grid + Circle of Fifths ─────────────────── */}
@@ -143,39 +193,39 @@ export function ExploreView() {
           >
             <div>
               <div className="flex items-center gap-3 mb-2.5">
-                <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-                  Chords
+                <h3 className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+                  {t('explore.chords')}
                 </h3>
-                <div className="flex rounded-lg overflow-hidden border border-zinc-800">
+                <div className="flex rounded-lg overflow-hidden" style={{ border: '1px solid var(--card)' }}>
                   <button
                     onClick={() => setChordMode('diatonic')}
                     className="px-2 py-0.5 text-[10px] font-medium transition-colors"
                     style={{
-                      backgroundColor: chordMode === 'diatonic' ? '#3f3f46' : 'transparent',
-                      color: chordMode === 'diatonic' ? '#fafafa' : '#71717a',
+                      backgroundColor: chordMode === 'diatonic' ? 'var(--card-hover)' : 'transparent',
+                      color: chordMode === 'diatonic' ? 'var(--text)' : 'var(--text-dim)',
                     }}
                   >
-                    Diatonic
+                    {t('explore.diatonic')}
                   </button>
                   <button
                     onClick={() => setChordMode('all')}
                     className="px-2 py-0.5 text-[10px] font-medium transition-colors"
                     style={{
-                      backgroundColor: chordMode === 'all' ? '#3f3f46' : 'transparent',
-                      color: chordMode === 'all' ? '#fafafa' : '#71717a',
+                      backgroundColor: chordMode === 'all' ? 'var(--card-hover)' : 'transparent',
+                      color: chordMode === 'all' ? 'var(--text)' : 'var(--text-dim)',
                     }}
                   >
-                    All Chords
+                    {t('explore.allChords')}
                   </button>
                 </div>
               </div>
               {chordMode === 'diatonic' ? <ChordGrid /> : <ChordBrowser />}
             </div>
             <div>
-              <h3 className="text-[10px] font-bold text-zinc-500 mb-2.5 uppercase tracking-widest">
-                Circle of Fifths
+              <h3 className="text-[10px] font-bold mb-2.5 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+                {t('explore.circleOfFifths')}
               </h3>
-              <div className="rounded-xl border border-zinc-800/50 bg-zinc-900/30 p-3">
+              <div className="rounded-xl p-3" style={{ border: '1px solid color-mix(in srgb, var(--card) 50%, transparent)', backgroundColor: 'color-mix(in srgb, var(--bg) 30%, transparent)' }}>
                 <CircleOfFifths />
               </div>
             </div>

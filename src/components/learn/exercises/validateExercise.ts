@@ -9,6 +9,8 @@ import type {
   ScaleBuildConfig,
   ChordBuildConfig,
   MultipleChoiceConfig,
+  EarTrainingConfig,
+  ScaleDegreeIdConfig,
   ValidationResult,
 } from '../../../core/types/exercise';
 import type { Note, NaturalNote, Accidental, ScaleType, ChordQuality } from '../../../core/types/music';
@@ -112,6 +114,47 @@ function validateChordBuild(config: ChordBuildConfig, answer: Set<number>): Vali
   };
 }
 
+function validateEarTraining(config: EarTrainingConfig, answer: string): ValidationResult {
+  if (config.mode === 'note' && config.note) {
+    return validateNoteId(
+      { type: 'note_id', note: config.note, accidental: config.accidental ?? '', octave: config.octave ?? 4, acceptEnharmonic: config.acceptEnharmonic },
+      answer,
+    );
+  }
+  if (config.mode === 'interval' && config.root && config.targetSemitones !== undefined) {
+    return validateIntervalId(
+      { type: 'interval_id', root: config.root, rootAccidental: config.rootAccidental ?? '', rootOctave: config.rootOctave ?? 4, targetSemitones: config.targetSemitones, direction: config.direction ?? 'ascending' },
+      answer,
+    );
+  }
+  if (config.mode === 'chord' && config.choices) {
+    return validateMultipleChoice(
+      { type: 'multiple_choice', choices: config.choices },
+      answer,
+    );
+  }
+  return { correct: false, explanation: 'Invalid ear training configuration.', expected: '' };
+}
+
+const DEGREE_NAMES = ['', 'Tonic (1st)', 'Supertonic (2nd)', 'Mediant (3rd)', 'Subdominant (4th)', 'Dominant (5th)', 'Submediant (6th)', 'Leading tone (7th)'];
+
+function validateScaleDegreeId(config: ScaleDegreeIdConfig, answer: string): ValidationResult {
+  const userDegree = parseInt(answer, 10);
+  const expected = config.correctDegree;
+  const degreeName = DEGREE_NAMES[expected] || `Degree ${expected}`;
+
+  if (userDegree === expected) {
+    return { correct: true, explanation: `Correct! That note is the ${degreeName} of the scale.`, expected: degreeName };
+  }
+
+  const userDegreeName = DEGREE_NAMES[userDegree] || `Degree ${userDegree}`;
+  return {
+    correct: false,
+    explanation: `That note is the ${degreeName}, not the ${userDegreeName}.`,
+    expected: degreeName,
+  };
+}
+
 function validateMultipleChoice(config: MultipleChoiceConfig, answer: string): ValidationResult {
   const correctChoice = config.choices.find((c) => c.correct);
   if (!correctChoice) {
@@ -149,6 +192,10 @@ export function validateAnswer(
       return validateChordBuild(config, answer as Set<number>);
     case 'multiple_choice':
       return validateMultipleChoice(config, answer as string);
+    case 'ear_training':
+      return validateEarTraining(config, answer as string);
+    case 'scale_degree_id':
+      return validateScaleDegreeId(config, answer as string);
   }
 }
 

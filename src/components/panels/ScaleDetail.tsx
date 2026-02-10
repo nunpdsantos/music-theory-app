@@ -166,26 +166,26 @@ export function ScaleDetail() {
       className="space-y-5"
     >
       <div>
-        <h2 className="text-xl font-bold text-zinc-100 learn-serif">
+        <h2 className="text-xl font-bold learn-serif" style={{ color: 'var(--text)' }}>
           {noteToString(scale.root)}{' '}
-          <span className="text-zinc-400 font-normal">
+          <span className="font-normal" style={{ color: 'var(--text-muted)' }}>
             {SCALE_TYPE_NAMES[selectedScale]}
           </span>
         </h2>
-        <span className="text-[10px] font-semibold text-zinc-500 bg-zinc-800/60 px-2 py-0.5 rounded-full mt-2 inline-block">
+        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full mt-2 inline-block" style={{ color: 'var(--text-dim)', backgroundColor: 'color-mix(in srgb, var(--card) 60%, transparent)' }}>
           {scale.notes.length} notes
         </span>
       </div>
 
       {/* Notes with degree colors */}
       <div>
-        <h3 className="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">
+        <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
           Notes
         </h3>
         <div className="flex flex-wrap gap-1.5">
           {scale.notes.map((note, i) => {
             const degree = (i + 1) as keyof typeof DEGREE_COLORS;
-            const color = DEGREE_COLORS[degree] ?? '#a1a1aa';
+            const color = DEGREE_COLORS[degree] ?? 'var(--text-muted)';
             return (
               <span
                 key={i}
@@ -205,14 +205,15 @@ export function ScaleDetail() {
 
       {/* Formula */}
       <div>
-        <h3 className="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">
+        <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
           Formula
         </h3>
         <div className="flex flex-wrap items-center gap-1.5">
           {formulaLabels.map((label, i) => (
             <span
               key={i}
-              className="text-xs font-mono text-zinc-400 bg-zinc-800/60 px-2 py-1 rounded-md"
+              className="text-xs font-mono px-2 py-1 rounded-md"
+              style={{ color: 'var(--text-muted)', backgroundColor: 'color-mix(in srgb, var(--card) 60%, transparent)' }}
             >
               {label}
             </span>
@@ -223,15 +224,15 @@ export function ScaleDetail() {
       {/* Mode info */}
       {modeInfo && (
         <div>
-          <h3 className="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">
+          <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
             Mode
           </h3>
-          <div className="rounded-xl bg-zinc-800/40 border border-zinc-700/40 px-3 py-2.5 space-y-1.5">
-            <p className="text-xs text-zinc-300">{modeInfo.description}</p>
-            <p className="text-[10px] text-zinc-500">
-              Mood: <span className="text-zinc-400">{modeInfo.mood}</span>
+          <div className="rounded-xl px-3 py-2.5 space-y-1.5" style={{ backgroundColor: 'color-mix(in srgb, var(--card) 40%, transparent)', border: '1px solid color-mix(in srgb, var(--border) 40%, transparent)' }}>
+            <p className="text-xs" style={{ color: 'var(--text)' }}>{modeInfo.description}</p>
+            <p className="text-[10px]" style={{ color: 'var(--text-dim)' }}>
+              Mood: <span style={{ color: 'var(--text-muted)' }}>{modeInfo.mood}</span>
             </p>
-            <p className="text-[10px] text-zinc-500">
+            <p className="text-[10px]" style={{ color: 'var(--text-dim)' }}>
               Degree {modeInfo.degree} of the parent major scale
             </p>
           </div>
@@ -241,7 +242,7 @@ export function ScaleDetail() {
       {/* Compatible Chords */}
       {chordSuggestions.length > 0 && (
         <div>
-          <h3 className="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">
+          <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
             Compatible Chords
           </h3>
           <div className="flex flex-wrap gap-1.5">
@@ -273,7 +274,7 @@ export function ScaleDetail() {
 
       {/* Octave range */}
       <div>
-        <h3 className="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">
+        <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
           Piano Range
         </h3>
         <div className="flex gap-1.5" role="radiogroup" aria-label="Scale octave range">
@@ -287,9 +288,9 @@ export function ScaleDetail() {
                 onClick={() => setScaleOctaves(n)}
                 className="px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-150"
                 style={{
-                  backgroundColor: isActive ? `${tonicColor}20` : '#18181b',
-                  color: isActive ? tonicColor : '#a1a1aa',
-                  border: isActive ? `1px solid ${tonicColor}50` : '1px solid #27272a',
+                  backgroundColor: isActive ? `${tonicColor}20` : 'var(--card)',
+                  color: isActive ? tonicColor : 'var(--text-muted)',
+                  border: isActive ? `1px solid ${tonicColor}50` : '1px solid var(--border)',
                 }}
               >
                 {n} Octave{n > 1 ? 's' : ''}
@@ -317,7 +318,12 @@ export function ScaleDetail() {
         </button>
         <button
           onClick={handlePlayBoth}
-          className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold text-zinc-300 bg-zinc-800/60 border border-zinc-700/50 hover:bg-zinc-800 hover:text-zinc-100 transition-all duration-150 hover:scale-[1.02]"
+          className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-150 hover:scale-[1.02]"
+          style={{
+            color: 'var(--text)',
+            backgroundColor: 'color-mix(in srgb, var(--card) 60%, transparent)',
+            border: '1px solid color-mix(in srgb, var(--border) 50%, transparent)',
+          }}
         >
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
             <polygon points="5 3 19 12 5 21 5 3" />

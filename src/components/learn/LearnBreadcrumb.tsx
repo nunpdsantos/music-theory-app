@@ -15,18 +15,21 @@ export function LearnBreadcrumb({ segments, accentColor }: LearnBreadcrumbProps)
         const isLast = i === segments.length - 1;
         return (
           <span key={i} className="flex items-center gap-1.5">
-            {i > 0 && <span className="text-zinc-700">/</span>}
+            {i > 0 && <span style={{ color: 'var(--border)' }}>/</span>}
             {isLast ? (
               <span style={{ color: accentColor }}>{seg.label}</span>
             ) : seg.onClick ? (
               <button
                 onClick={seg.onClick}
-                className="text-zinc-500 hover:text-zinc-300 transition-colors"
+                className="transition-colors"
+                style={{ color: 'var(--text-dim)' }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-dim)'; }}
               >
                 {seg.label}
               </button>
             ) : (
-              <span className="text-zinc-500">{seg.label}</span>
+              <span style={{ color: 'var(--text-dim)' }}>{seg.label}</span>
             )}
           </span>
         );

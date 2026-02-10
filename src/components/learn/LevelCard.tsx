@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import type { LevelState } from '../../core/types/curriculum';
 import type { LevelMeta } from '../../data/curriculumLoader';
@@ -13,6 +14,7 @@ interface LevelCardProps {
 }
 
 export function LevelCard({ level, state, completedModuleCount, index, onClick }: LevelCardProps) {
+  const { t } = useTranslation();
   const accent = level.accentColor;
   const totalModules = level.moduleCount;
   const progressPercent = totalModules > 0 ? (completedModuleCount / totalModules) * 100 : 0;
@@ -63,13 +65,13 @@ export function LevelCard({ level, state, completedModuleCount, index, onClick }
           </div>
           <div className="flex items-center gap-2">
             {state === 'coming-soon' && (
-              <span className="text-[10px] font-medium text-zinc-500 bg-zinc-800 px-2 py-0.5 rounded-full">
-                Coming Soon
+              <span className="text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ color: 'var(--text-dim)', backgroundColor: 'var(--card-hover)' }}>
+                {t('status.comingSoon')}
               </span>
             )}
             {state === 'completed' && (
               <span className="text-[10px] font-medium text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full">
-                Complete
+                {t('status.complete')}
               </span>
             )}
             <DifficultyBadge difficulty={level.difficulty} label={level.difficultyLabel} />
@@ -77,22 +79,21 @@ export function LevelCard({ level, state, completedModuleCount, index, onClick }
         </div>
 
         {/* Title + description */}
-        <h3 className="text-sm font-semibold text-zinc-200 learn-serif mb-1">
+        <h3 className="text-sm font-semibold learn-serif mb-1" style={{ color: 'var(--text)' }}>
           {level.title}
         </h3>
-        <p className="text-xs text-zinc-500 line-clamp-2 mb-3">
+        <p className="text-xs line-clamp-2 mb-3" style={{ color: 'var(--text-dim)' }}>
           {level.description}
         </p>
 
         {/* Stats */}
-        <div className="text-[10px] text-zinc-500 mb-3">
+        <div className="text-[10px] mb-3" style={{ color: 'var(--text-dim)' }}>
           {level.unitCount > 0 ? (
             <span>
-              {level.unitCount} {level.unitCount === 1 ? 'unit' : 'units'} &middot;{' '}
-              {totalModules} modules
+              {t('learn.unitsModules', { units: level.unitCount, unitLabel: level.unitCount === 1 ? t('learn.unitSingular') : t('learn.unitPlural'), modules: totalModules })}
             </span>
           ) : (
-            <span>Content in development</span>
+            <span>{t('status.contentInDevelopment')}</span>
           )}
         </div>
 
@@ -102,7 +103,7 @@ export function LevelCard({ level, state, completedModuleCount, index, onClick }
             <div className="flex-1">
               <ProgressBar percent={progressPercent} color={accent} height={4} delay={index * 0.06} />
             </div>
-            <span className="text-[10px] text-zinc-500 tabular-nums">
+            <span className="text-[10px] tabular-nums" style={{ color: 'var(--text-dim)' }}>
               {completedModuleCount}/{totalModules}
             </span>
           </div>

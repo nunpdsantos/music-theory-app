@@ -26,7 +26,7 @@ export function ExercisePrompt({ exercise }: ExercisePromptProps) {
   }, [exercise.id, exercise.config, setHighlightedNotes]);
 
   return (
-    <p className="text-sm text-zinc-200 mb-4 leading-relaxed">
+    <p className="text-sm mb-4 leading-relaxed" style={{ color: 'var(--text)' }}>
       {exercise.prompt}
     </p>
   );

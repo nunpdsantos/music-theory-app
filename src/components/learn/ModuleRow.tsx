@@ -27,10 +27,9 @@ export function ModuleRow({ module, index, isCompleted, isLocked, isComingSoon, 
         className={`w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-bold shrink-0 transition-colors ${
           isCompleted
             ? 'bg-emerald-500/20 text-emerald-400'
-            : disabled
-              ? 'bg-zinc-800 text-zinc-500'
-              : 'bg-zinc-800 text-zinc-500 group-hover:text-zinc-300'
+            : ''
         }`}
+        style={!isCompleted ? { backgroundColor: 'var(--card-hover)', color: 'var(--text-dim)' } : undefined}
       >
         {isCompleted ? (
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -48,23 +47,18 @@ export function ModuleRow({ module, index, isCompleted, isLocked, isComingSoon, 
 
       <div className="flex-1 min-w-0">
         <span
-          className={`text-xs font-medium block truncate transition-colors ${
-            isCompleted
-              ? 'text-zinc-500'
-              : disabled
-                ? 'text-zinc-500'
-                : 'text-zinc-300 group-hover:text-zinc-100'
-          }`}
+          className="text-xs font-medium block truncate transition-colors"
+          style={{ color: isCompleted || disabled ? 'var(--text-dim)' : 'var(--text-muted)' }}
         >
           {module.title}
         </span>
-        <span className="text-[11px] text-zinc-500 block truncate">
+        <span className="text-[11px] block truncate" style={{ color: 'var(--text-dim)' }}>
           {module.subtitle}
         </span>
       </div>
 
       {isComingSoon && (
-        <span className="text-[9px] font-medium text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded-full shrink-0">
+        <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full shrink-0" style={{ color: 'var(--text-dim)', backgroundColor: 'var(--card-hover)' }}>
           Soon
         </span>
       )}
@@ -79,7 +73,8 @@ export function ModuleRow({ module, index, isCompleted, isLocked, isComingSoon, 
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="text-zinc-700 group-hover:text-zinc-500 shrink-0 group-hover:translate-x-0.5 transition-all"
+          className="shrink-0 group-hover:translate-x-0.5 transition-all"
+          style={{ color: 'var(--border)' }}
         >
           <path d="M9 18l6-6-6-6" />
         </svg>

@@ -271,10 +271,10 @@ export function Piano() {
   }, [blackKeys, keys, keyWidth, blackKeyOffset]);
 
   return (
-    <div role="group" aria-label="Piano keyboard" className="w-full bg-zinc-900 border-t border-zinc-800">
+    <div role="group" aria-label="Piano keyboard" className="w-full" style={{ backgroundColor: 'var(--bg)', borderTop: '1px solid var(--card)' }}>
       {/* Octave selector strip */}
-      <div role="tablist" aria-label="Base octave" className="flex items-center gap-1 px-3 py-1.5 border-b border-zinc-800">
-        <span className="text-[10px] text-zinc-500 uppercase tracking-wider mr-1">Octave</span>
+      <div role="tablist" aria-label="Base octave" className="flex items-center gap-1 px-3 py-1.5" style={{ borderBottom: '1px solid var(--card)' }}>
+        <span className="text-[10px] uppercase tracking-wider mr-1" style={{ color: 'var(--text-dim)' }}>Octave</span>
         {[2, 3, 4, 5, 6].map((oct) => {
           const isActive = baseOctave === oct;
           return (
@@ -286,7 +286,7 @@ export function Piano() {
               className="px-2 py-0.5 rounded text-[10px] font-medium transition-colors"
               style={{
                 backgroundColor: isActive ? '#60A5FA' : 'transparent',
-                color: isActive ? '#000' : '#71717a',
+                color: isActive ? '#000' : 'var(--text-dim)',
               }}
             >
               C{oct}

@@ -1,4 +1,5 @@
 import { m } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import type { ValidationResult } from '../../../core/types/exercise';
 
 interface ExerciseFeedbackProps {
@@ -18,6 +19,7 @@ export function ExerciseFeedback({
   onNext,
   accentColor,
 }: ExerciseFeedbackProps) {
+  const { t } = useTranslation();
   const isCorrect = result.correct;
   const canRetry = !isCorrect && attempt === 1;
 
@@ -51,22 +53,22 @@ export function ExerciseFeedback({
           <p className={`text-sm font-medium mb-1 ${isCorrect ? 'text-emerald-300' : 'text-red-300'}`}>
             {isCorrect
               ? attempt === 1
-                ? 'Correct!'
-                : 'Correct — partial credit'
+                ? t('exercise.correct')
+                : t('exercise.correctPartial')
               : canRetry
-                ? 'Not quite'
-                : 'Incorrect'}
+                ? t('exercise.notQuite')
+                : t('exercise.incorrect')}
           </p>
 
           {/* Explanation */}
-          <p className="text-xs text-zinc-400 leading-relaxed">
+          <p className="text-xs leading-relaxed" style={{ color: 'var(--text-muted)' }}>
             {result.explanation}
           </p>
 
           {/* Hint on first wrong attempt */}
           {canRetry && hint && (
             <p className="text-xs text-amber-400/80 mt-2 leading-relaxed">
-              Hint: {hint}
+              {t('exercise.hint', { hint })}
             </p>
           )}
         </div>
@@ -83,7 +85,7 @@ export function ExerciseFeedback({
               color: accentColor,
             }}
           >
-            Try Again
+            {t('common.tryAgain')}
           </button>
         ) : (
           <button
@@ -94,7 +96,7 @@ export function ExerciseFeedback({
               color: accentColor,
             }}
           >
-            {isCorrect ? 'Continue' : 'Next'}
+            {isCorrect ? t('common.continue') : t('common.next')}
           </button>
         )}
       </div>

@@ -35,6 +35,15 @@ beforeEach(() => {
     colorMode: 'functional',
     scaleOctaves: 1,
     baseOctave: 4,
+    guitarTuningId: 'standard',
+    metronomeBPM: 120,
+    metronomeBeats: 4,
+    metronomeVolume: 0.7,
+    themeMode: 'dark',
+    comparisonScale: null,
+    midiOutputEnabled: false,
+    midiOutputDeviceId: null,
+    language: 'en',
   });
 });
 
@@ -185,6 +194,19 @@ describe('instrument actions', () => {
     useAppStore.getState().setGuitarScalePosition(null);
     expect(useAppStore.getState().guitarScalePosition).toBeNull();
   });
+
+  it('setGuitarTuningId changes tuning and resets scale position', () => {
+    useAppStore.getState().setGuitarScalePosition(2);
+    expect(useAppStore.getState().guitarScalePosition).toBe(2);
+
+    useAppStore.getState().setGuitarTuningId('drop-d');
+    expect(useAppStore.getState().guitarTuningId).toBe('drop-d');
+    expect(useAppStore.getState().guitarScalePosition).toBeNull();
+  });
+
+  it('has standard tuning as default', () => {
+    expect(useAppStore.getState().guitarTuningId).toBe('standard');
+  });
 });
 
 describe('navigation actions', () => {
@@ -219,6 +241,22 @@ describe('navigation actions', () => {
     useAppStore.getState().setQuickSearchOpen(false);
     expect(useAppStore.getState().quickSearchOpen).toBe(false);
   });
+
+  it('setComparisonScale sets and clears comparison', () => {
+    useAppStore.getState().setComparisonScale('natural_minor');
+    expect(useAppStore.getState().comparisonScale).toBe('natural_minor');
+
+    useAppStore.getState().setComparisonScale(null);
+    expect(useAppStore.getState().comparisonScale).toBeNull();
+  });
+
+  it('setScale resets comparisonScale', () => {
+    useAppStore.getState().setComparisonScale('dorian');
+    expect(useAppStore.getState().comparisonScale).toBe('dorian');
+
+    useAppStore.getState().setScale('harmonic_minor');
+    expect(useAppStore.getState().comparisonScale).toBeNull();
+  });
 });
 
 describe('audio actions', () => {
@@ -236,6 +274,61 @@ describe('audio actions', () => {
     useAppStore.getState().setIsPlaying(true);
     expect(useAppStore.getState().isPlaying).toBe(true);
   });
+
+  it('setMidiOutputEnabled toggles MIDI output', () => {
+    useAppStore.getState().setMidiOutputEnabled(true);
+    expect(useAppStore.getState().midiOutputEnabled).toBe(true);
+
+    useAppStore.getState().setMidiOutputEnabled(false);
+    expect(useAppStore.getState().midiOutputEnabled).toBe(false);
+  });
+
+  it('setMidiOutputDeviceId selects device', () => {
+    useAppStore.getState().setMidiOutputDeviceId('device-1');
+    expect(useAppStore.getState().midiOutputDeviceId).toBe('device-1');
+
+    useAppStore.getState().setMidiOutputDeviceId(null);
+    expect(useAppStore.getState().midiOutputDeviceId).toBeNull();
+  });
+});
+
+describe('metronome actions', () => {
+  it('setMetronomeBPM updates BPM with clamping', () => {
+    useAppStore.getState().setMetronomeBPM(60);
+    expect(useAppStore.getState().metronomeBPM).toBe(60);
+
+    useAppStore.getState().setMetronomeBPM(10); // below min
+    expect(useAppStore.getState().metronomeBPM).toBe(30);
+
+    useAppStore.getState().setMetronomeBPM(400); // above max
+    expect(useAppStore.getState().metronomeBPM).toBe(300);
+  });
+
+  it('setMetronomeBeats updates time signature', () => {
+    useAppStore.getState().setMetronomeBeats(3);
+    expect(useAppStore.getState().metronomeBeats).toBe(3);
+
+    useAppStore.getState().setMetronomeBeats(6);
+    expect(useAppStore.getState().metronomeBeats).toBe(6);
+  });
+
+  it('setMetronomeVolume updates volume with clamping', () => {
+    useAppStore.getState().setMetronomeVolume(0.5);
+    expect(useAppStore.getState().metronomeVolume).toBe(0.5);
+
+    useAppStore.getState().setMetronomeVolume(-0.1);
+    expect(useAppStore.getState().metronomeVolume).toBe(0);
+
+    useAppStore.getState().setMetronomeVolume(1.5);
+    expect(useAppStore.getState().metronomeVolume).toBe(1);
+  });
+
+  it('has correct defaults', () => {
+    const s = useAppStore.getState();
+    expect(s.metronomeBPM).toBe(120);
+    expect(s.metronomeBeats).toBe(4);
+    expect(s.metronomeVolume).toBe(0.7);
+  });
 });
 
 describe('preferences actions', () => {
@@ -252,5 +345,32 @@ describe('preferences actions', () => {
   it('setBaseOctave changes base octave', () => {
     useAppStore.getState().setBaseOctave(3);
     expect(useAppStore.getState().baseOctave).toBe(3);
+  });
+
+  it('setThemeMode changes theme', () => {
+    useAppStore.getState().setThemeMode('light');
+    expect(useAppStore.getState().themeMode).toBe('light');
+
+    useAppStore.getState().setThemeMode('system');
+    expect(useAppStore.getState().themeMode).toBe('system');
+
+    useAppStore.getState().setThemeMode('dark');
+    expect(useAppStore.getState().themeMode).toBe('dark');
+  });
+
+  it('has dark theme as default', () => {
+    expect(useAppStore.getState().themeMode).toBe('dark');
+  });
+
+  it('setLanguage changes language', () => {
+    useAppStore.getState().setLanguage('pt');
+    expect(useAppStore.getState().language).toBe('pt');
+
+    useAppStore.getState().setLanguage('en');
+    expect(useAppStore.getState().language).toBe('en');
+  });
+
+  it('has English as default language', () => {
+    expect(useAppStore.getState().language).toBe('en');
   });
 });

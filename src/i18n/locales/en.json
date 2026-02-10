@@ -1,0 +1,199 @@
+{
+  "nav": {
+    "musicTheory": "Music Theory",
+    "explore": "Explore",
+    "play": "Play",
+    "learn": "Learn",
+    "search": "Search",
+    "appViews": "App views",
+    "skipToContent": "Skip to content",
+    "clickKeysToPlay": "Click keys to play",
+    "showInstrument": "Show instrument",
+    "hideInstrument": "Hide instrument",
+    "themeLabel": "Theme: {{mode}}. Click to change.",
+    "quickSearchLabel": "Quick search, Command+K"
+  },
+  "theme": {
+    "dark": "Dark",
+    "light": "Light",
+    "system": "System"
+  },
+  "common": {
+    "play": "Play",
+    "stop": "Stop",
+    "start": "Start",
+    "clear": "Clear",
+    "submit": "Submit",
+    "reload": "Reload",
+    "dismiss": "Dismiss",
+    "install": "Install",
+    "continue": "Continue",
+    "next": "Next",
+    "previous": "Previous",
+    "tryAgain": "Try Again",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "print": "Print",
+    "details": "Details",
+    "replay": "Replay",
+    "record": "Record"
+  },
+  "status": {
+    "completed": "Completed",
+    "complete": "Complete",
+    "comingSoon": "Coming Soon",
+    "contentInDevelopment": "Content in development"
+  },
+  "explore": {
+    "scaleDegrees": "Scale Degrees",
+    "chords": "Chords",
+    "diatonic": "Diatonic",
+    "allChords": "All Chords",
+    "circleOfFifths": "Circle of Fifths",
+    "notes": "{{count}} notes",
+    "playScaleAscending": "Play scale ascending",
+    "copyScaleSummary": "Copy scale summary to clipboard",
+    "printScaleDiagram": "Print scale diagram",
+    "compareScales": "Compare Scales",
+    "scaleComparison": "Scale Comparison",
+    "chooseScale": "Choose a scale\u2026",
+    "selectScaleToCompare": "Select scale to compare",
+    "changeComparisonScale": "Change comparison scale",
+    "closeComparison": "Close comparison",
+    "chromaticComparison": "Chromatic scale comparison",
+    "shared": "shared",
+    "uniqueToA": "unique to A",
+    "uniqueToB": "unique to B",
+    "sharedLegend": "Shared",
+    "onlyLegend": "{{name}} only",
+    "vs": "vs"
+  },
+  "play": {
+    "performanceMode": "Performance Mode",
+    "sound": "Sound",
+    "volume": "Volume",
+    "octave": "Octave",
+    "nowPlaying": "Now Playing",
+    "playInstrumentBelow": "Play the instrument below",
+    "scaleReference": "Scale Reference",
+    "activeNotes": "Active notes",
+    "synthPreset": "Synth preset",
+    "baseOctave": "Base octave"
+  },
+  "preset": {
+    "piano": "Piano",
+    "pianoDesc": "FM synthesis, percussive",
+    "classic": "Classic",
+    "classicDesc": "Triangle wave, warm",
+    "organ": "Organ",
+    "organDesc": "Sustained sine, harmonic",
+    "strings": "Strings",
+    "stringsDesc": "Filtered sawtooth, slow attack",
+    "pluck": "Pluck",
+    "pluckDesc": "Quick decay, bright attack"
+  },
+  "metronome": {
+    "title": "Metronome",
+    "startLabel": "Start metronome",
+    "stopLabel": "Stop metronome",
+    "bpm": "BPM",
+    "tempo": "Tempo in BPM",
+    "volume": "Metronome volume",
+    "timeSig": "Time signature"
+  },
+  "chordProg": {
+    "title": "Chord Progression",
+    "clickToAdd": "Click chords below to build a progression.",
+    "addChord": "Add chord to progression",
+    "removeChord": "Remove {{numeral}} chord",
+    "addChordLabel": "Add {{numeral}} {{root}} chord",
+    "clickToRemove": "Click to remove"
+  },
+  "recording": {
+    "title": "Recording",
+    "startRecording": "Start recording",
+    "stopRecording": "Stop recording",
+    "recordingActive": "Recording... Play notes on the instrument.",
+    "emptyState": "Record your performances and play them back.",
+    "playRecording": "Play recording {{n}}",
+    "deleteRecording": "Delete recording {{n}}",
+    "take": "Take {{n}}"
+  },
+  "midi": {
+    "title": "MIDI Output",
+    "enable": "Enable MIDI output",
+    "selectDevice": "Select MIDI output device",
+    "noDevice": "No device selected",
+    "noDevices": "No MIDI output devices found. Connect a MIDI device and refresh."
+  },
+  "degree": {
+    "tonic": "Tonic",
+    "supertonic": "Supertonic",
+    "mediant": "Mediant",
+    "subdominant": "Subdominant",
+    "dominant": "Dominant",
+    "submediant": "Submediant",
+    "leading": "Leading"
+  },
+  "keySelector": {
+    "root": "Root",
+    "scale": "Scale",
+    "moreScales": "More scales\u2026 \u25be",
+    "less": "Less \u25b4",
+    "label": "Key and scale selector"
+  },
+  "scaleGroup": {
+    "core": "Core",
+    "minorVariants": "Minor Variants",
+    "modes": "Modes",
+    "pentatonicBlues": "Pentatonic / Blues",
+    "symmetric": "Symmetric",
+    "melMinorModes": "Mel. Minor Modes",
+    "bebop": "Bebop",
+    "world": "World"
+  },
+  "learn": {
+    "title": "Learn Music Theory",
+    "subtitle": "A structured path from the basics to advanced harmony",
+    "parallelTrack": "Parallel Track",
+    "level": "Level {{n}}",
+    "unit": "Unit {{n}}",
+    "module": "Module {{n}}",
+    "learningObjectives": "Learning Objectives",
+    "practiceTasks": "Practice Tasks",
+    "tryThis": "Try This",
+    "markModuleComplete": "Mark Module Complete",
+    "unitsModules": "{{units}} {{unitLabel}} \u00b7 {{modules}} modules",
+    "unitSingular": "unit",
+    "unitPlural": "units"
+  },
+  "exercise": {
+    "title": "Exercises",
+    "score": "Score: {{score}}/{{total}}",
+    "correct": "Correct!",
+    "correctPartial": "Correct \u2014 partial credit",
+    "notQuite": "Not quite",
+    "incorrect": "Incorrect",
+    "hint": "Hint: {{hint}}",
+    "exercisesComplete": "Exercises Complete!",
+    "keepPracticing": "Keep Practicing",
+    "passed": "You passed!",
+    "needToPass": "Need {{score}} to pass",
+    "replayAudio": "Replay audio"
+  },
+  "pwa": {
+    "newVersion": "New version available",
+    "offlineReady": "App ready for offline use",
+    "installPrompt": "Install Music Theory?"
+  },
+  "error": {
+    "somethingWentWrong": "Something went wrong",
+    "unexpectedError": "An unexpected error occurred.",
+    "viewError": "This view encountered an error."
+  },
+  "instrument": {
+    "piano": "Piano",
+    "guitar": "Guitar",
+    "label": "{{name}} instrument"
+  }
+}

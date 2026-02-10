@@ -1,7 +1,7 @@
 import { noteToString } from '../../core/types/music.ts';
 import type { PitchedNote } from '../../core/types/music.ts';
 import type { ChordShape, FingerNumber } from '../../core/constants/guitarChordShapes.ts';
-import { TUNING_STANDARD } from '../../core/constants/guitarTunings.ts';
+import type { GuitarTuning } from '../../core/constants/guitarTunings.ts';
 import { midiToNote } from '../../core/utils/pianoLayout.ts';
 import { FretCell } from './FretCell.tsx';
 import type { FretNote } from './fretboardConstants.ts';
@@ -14,6 +14,7 @@ interface FretboardStringProps {
   isChordView: boolean;
   isOpenPosition: boolean;
   // Data
+  tuning: GuitarTuning;
   tuningPitchClasses: number[];
   activeNotes: Set<number>;
   rootPitchClass: number | null;
@@ -38,6 +39,7 @@ export function FretboardString({
   mobile,
   isChordView,
   isOpenPosition,
+  tuning,
   tuningPitchClasses,
   activeNotes,
   rootPitchClass,
@@ -50,7 +52,7 @@ export function FretboardString({
   scalePositionLookup,
   focusedFret,
 }: FretboardStringProps) {
-  const openLabel = noteToString(TUNING_STANDARD.strings[stringIdx]);
+  const openLabel = noteToString(tuning.strings[stringIdx]);
   const openFretNote = getFretNote(stringIdx, 0);
   const openPitched = midiToNote(openFretNote.midiNumber);
   const openColor = getNoteColor(openPitched);
@@ -75,7 +77,7 @@ export function FretboardString({
       {/* String label */}
       <div
         className="text-right pr-2 text-[10px] font-mono"
-        style={{ width: 32, color: isMuted ? '#71717a' : '#a1a1aa' }}
+        style={{ width: 32, color: isMuted ? 'var(--text-dim)' : 'var(--text-muted)' }}
       >
         {openLabel}
       </div>
@@ -136,7 +138,7 @@ export function FretboardString({
       <div
         style={{
           width: !isChordView || isOpenPosition ? 6 : 2,
-          backgroundColor: !isChordView || isOpenPosition ? '#a1a1aa' : '#3f3f46',
+          backgroundColor: !isChordView || isOpenPosition ? 'var(--text-muted)' : 'var(--border)',
           height: '100%',
         }}
       />

@@ -25,15 +25,15 @@ export function UnitCard({ unit, index, completedCount, accentColor, isComplete,
       {/* Node on the vertical line */}
       <div
         className={`absolute left-[11px] max-sm:left-[7px] top-5 w-[17px] h-[17px] rounded-full border-2 flex items-center justify-center z-10 ${
-          isComplete ? '' : 'bg-zinc-950'
+          isComplete ? '' : ''
         }`}
         style={{
           borderColor: accentColor,
-          backgroundColor: isComplete ? accentColor : undefined,
+          backgroundColor: isComplete ? accentColor : 'var(--bg)',
         }}
       >
         {isComplete && (
-          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#09090b" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--bg)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="20 6 9 17 4 12" />
           </svg>
         )}
@@ -59,7 +59,7 @@ export function UnitCard({ unit, index, completedCount, accentColor, isComplete,
           <div className="flex items-start justify-between mb-2">
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+                <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-dim)' }}>
                   Unit {index + 1}
                 </span>
                 {isComplete && (
@@ -68,7 +68,7 @@ export function UnitCard({ unit, index, completedCount, accentColor, isComplete,
                   </span>
                 )}
               </div>
-              <h3 className="text-sm font-semibold text-zinc-200 mt-0.5">
+              <h3 className="text-sm font-semibold mt-0.5" style={{ color: 'var(--text)' }}>
                 {unit.title}
               </h3>
             </div>
@@ -81,18 +81,19 @@ export function UnitCard({ unit, index, completedCount, accentColor, isComplete,
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="text-zinc-700 group-hover:text-zinc-500 shrink-0 mt-1 group-hover:translate-x-0.5 transition-all"
+              className="shrink-0 mt-1 group-hover:translate-x-0.5 transition-all"
+              style={{ color: 'var(--border)' }}
             >
               <path d="M9 18l6-6-6-6" />
             </svg>
           </div>
 
-          <p className="text-xs text-zinc-500 mb-3">
+          <p className="text-xs mb-3" style={{ color: 'var(--text-dim)' }}>
             {unit.description}
           </p>
 
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-[10px] text-zinc-500">
+            <span className="text-[10px]" style={{ color: 'var(--text-dim)' }}>
               {totalModules} modules
             </span>
           </div>
@@ -101,7 +102,7 @@ export function UnitCard({ unit, index, completedCount, accentColor, isComplete,
             <div className="flex-1">
               <ProgressBar percent={progressPercent} color={accentColor} height={4} delay={index * 0.08} />
             </div>
-            <span className="text-[10px] text-zinc-500 tabular-nums">
+            <span className="text-[10px] tabular-nums" style={{ color: 'var(--text-dim)' }}>
               {completedCount}/{totalModules}
             </span>
           </div>

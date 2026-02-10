@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TopBar } from './TopBar.tsx';
 import { Piano } from '../instruments/Piano.tsx';
 import { Fretboard } from '../instruments/Fretboard.tsx';
@@ -10,33 +11,38 @@ interface AppShellProps {
 }
 
 export function AppShell({ children }: AppShellProps) {
+  const { t } = useTranslation();
   const instrument = useAppStore((s) => s.instrument);
   const [instrumentCollapsed, setInstrumentCollapsed] = useState(false);
 
   return (
-    <div className="h-screen supports-[height:100dvh]:h-dvh flex flex-col bg-zinc-950 text-zinc-100">
+    <div className="h-screen supports-[height:100dvh]:h-dvh flex flex-col" style={{ backgroundColor: 'var(--bg)', color: 'var(--text)' }}>
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:px-4 focus:py-2 focus:bg-zinc-800 focus:text-zinc-100 focus:rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:px-4 focus:py-2 focus:rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        style={{ backgroundColor: 'var(--card-hover)', color: 'var(--text)' }}
       >
-        Skip to content
+        {t('nav.skipToContent')}
       </a>
       <TopBar />
       <main id="main-content" className="flex-1 overflow-hidden flex flex-col min-h-0">
         {children}
       </main>
       {/* Instrument bar */}
-      <div className="flex items-center justify-between px-3 max-sm:px-2 py-1 bg-zinc-900 border-t border-zinc-800">
+      <div
+        className="flex items-center justify-between px-3 max-sm:px-2 py-1"
+        style={{ backgroundColor: 'var(--bg)', borderTop: '1px solid var(--card)' }}
+      >
         <InstrumentSelector />
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-zinc-500 max-sm:hidden" aria-hidden="true">
-            Click keys to play
+          <span className="text-[10px] max-sm:hidden" style={{ color: 'var(--text-dim)' }} aria-hidden="true">
+            {t('nav.clickKeysToPlay')}
           </span>
-          {/* Collapse toggle — visible on tablet and below */}
           <button
             onClick={() => setInstrumentCollapsed((c) => !c)}
-            className="hidden max-lg:flex items-center justify-center w-6 h-6 rounded-md text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-colors"
-            aria-label={instrumentCollapsed ? 'Show instrument' : 'Hide instrument'}
+            className="hidden max-lg:flex items-center justify-center w-6 h-6 rounded-md transition-colors"
+            style={{ color: 'var(--text-dim)' }}
+            aria-label={instrumentCollapsed ? t('nav.showInstrument') : t('nav.hideInstrument')}
           >
             <svg
               width="14"
@@ -57,8 +63,9 @@ export function AppShell({ children }: AppShellProps) {
       {!instrumentCollapsed && (
         <div
           role="region"
-          aria-label={`${instrument} instrument`}
-          className="h-[260px] max-md:h-[200px] max-sm:h-[160px] overflow-y-auto overflow-x-hidden bg-zinc-900"
+          aria-label={t('instrument.label', { name: t(`instrument.${instrument}`) })}
+          className="h-[260px] max-md:h-[200px] max-sm:h-[160px] overflow-y-auto overflow-x-hidden"
+          style={{ backgroundColor: 'var(--bg)' }}
         >
           {instrument === 'piano' ? <Piano /> : <Fretboard />}
         </div>

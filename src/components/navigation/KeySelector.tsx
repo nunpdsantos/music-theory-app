@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useLayoutEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../../state/store.ts';
 import { noteToString, type Note, type ScaleType } from '../../core/types/music.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
@@ -103,6 +104,7 @@ const ALWAYS_VISIBLE_COUNT = 4; // first 4 groups always shown
 const TONIC_COLOR = DEGREE_COLORS[1]; // #60A5FA
 
 export function KeySelector() {
+  const { t } = useTranslation();
   const selectedKey = useAppStore((s) => s.selectedKey);
   const selectedScale = useAppStore((s) => s.selectedScale);
   const setKey = useAppStore((s) => s.setKey);
@@ -149,11 +151,11 @@ export function KeySelector() {
   }, [selectedScale, showAll]);
 
   return (
-    <div className="space-y-3" role="group" aria-label="Key and scale selector">
+    <div className="space-y-3" role="group" aria-label={t('keySelector.label')}>
       {/* ─── Root note chromatic strip ──────────────────────── */}
       <div>
         <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block mb-1.5">
-          Root
+          {t('keySelector.root')}
         </span>
         <div ref={rootContainerRef} className="relative inline-flex items-center rounded-xl bg-zinc-900/80 border border-zinc-800/60 p-1 gap-0.5 max-sm:max-w-full max-sm:overflow-x-auto max-sm:snap-x max-sm:snap-mandatory">
           <div
@@ -200,7 +202,7 @@ export function KeySelector() {
       {/* ─── Scale type pills (grouped) ─────────────────────── */}
       <div>
         <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block mb-1.5">
-          Scale
+          {t('keySelector.scale')}
         </span>
         <div ref={scaleContainerRef} className="relative flex flex-wrap items-center gap-x-3 gap-y-1.5 max-sm:gap-x-1.5 max-sm:gap-y-1">
           <div
@@ -243,7 +245,7 @@ export function KeySelector() {
               onClick={() => setExpanded(!expanded)}
               className="text-[10px] font-medium text-zinc-500 hover:text-zinc-300 px-2 py-1 rounded-lg hover:bg-white/[0.03] transition-colors"
             >
-              {showAll ? 'Less ▴' : 'More scales… ▾'}
+              {showAll ? t('keySelector.less') : t('keySelector.moreScales')}
             </button>
           )}
         </div>

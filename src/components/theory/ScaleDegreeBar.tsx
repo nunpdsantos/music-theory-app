@@ -48,7 +48,7 @@ export function ScaleDegreeBar() {
         const colorKey = noteCount <= 7
           ? (degree as keyof typeof DEGREE_COLORS)
           : (((i % 7) + 1) as keyof typeof DEGREE_COLORS);
-        const color = DEGREE_COLORS[colorKey] ?? '#a1a1aa';
+        const color = DEGREE_COLORS[colorKey] ?? 'var(--text-muted)';
         const intervalLabel = degreeLabels[i] ?? `${i + 1}`;
         const funcLabel = FUNCTION_BY_INTERVAL[intervalLabel] ?? '';
 
@@ -84,9 +84,8 @@ export function ScaleDegreeBar() {
             </span>
             {!isCompact && (
               <span
-                className={`text-[9px] leading-none transition-colors max-sm:hidden ${
-                  isSelected ? 'text-zinc-400' : 'text-zinc-500 group-hover:text-zinc-400'
-                }`}
+                className="text-[9px] leading-none transition-colors max-sm:hidden"
+                style={{ color: isSelected ? 'var(--text-muted)' : 'var(--text-dim)' }}
               >
                 {funcLabel}
               </span>

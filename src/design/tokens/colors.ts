@@ -19,13 +19,16 @@ export const DEGREE_COLORS_DIM = {
   7: 'rgba(248, 113, 113, 0.15)',
 } as const;
 
+// Surface tokens — resolve to CSS custom properties for theme support
+// Usage: style={{ backgroundColor: SURFACE.card }}
 export const SURFACE = {
-  bg: '#09090b',
-  card: '#18181b',
-  cardHover: '#27272a',
-  border: '#3f3f46',
-  borderLight: '#52525b',
-  text: '#fafafa',
-  textMuted: '#a1a1aa',
-  textDim: '#71717a',
+  bg: 'var(--bg)',
+  card: 'var(--card)',
+  cardHover: 'var(--card-hover)',
+  border: 'var(--border)',
+  borderLight: 'var(--border-light)',
+  text: 'var(--text)',
+  textMuted: 'var(--text-muted)',
+  textDim: 'var(--text-dim)',
+  inputBg: 'var(--input-bg)',
 } as const;

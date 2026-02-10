@@ -62,10 +62,10 @@ export function InstrumentInput({ expectedCount, submitted, onSubmit, accentColo
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <span className="text-xs text-zinc-500">
+        <span className="text-xs" style={{ color: 'var(--text-dim)' }}>
           Selected {toggledPCs.size} of {expectedCount} notes
         </span>
-        <span className="text-[10px] text-zinc-600">
+        <span className="text-[10px]" style={{ color: 'var(--text-dim)' }}>
           Play notes on the instrument to toggle
         </span>
       </div>
@@ -96,7 +96,10 @@ export function InstrumentInput({ expectedCount, submitted, onSubmit, accentColo
         <div className="flex gap-2">
           <button
             onClick={handleClear}
-            className="px-3 py-1.5 rounded-lg text-xs text-zinc-500 border border-zinc-700/50 hover:bg-zinc-800 transition-colors"
+            className="px-3 py-1.5 rounded-lg text-xs border border-zinc-700/50 transition-colors"
+            style={{ color: 'var(--text-dim)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--card-hover)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = ''; }}
           >
             Clear
           </button>

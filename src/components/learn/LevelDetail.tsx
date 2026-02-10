@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import type { CurriculumLevel, CurriculumProgress } from '../../core/types/curriculum';
 import { findNextIncompleteModule, getLevelModuleCount } from '../../data/curriculumLoader';
@@ -25,6 +26,7 @@ export function LevelDetail({
   onOpenUnit,
   onBack,
 }: LevelDetailProps) {
+  const { t } = useTranslation();
   const accent = level.accentColor;
   const totalModules = getLevelModuleCount(level);
   const completedModules = level.units.reduce(
@@ -45,7 +47,10 @@ export function LevelDetail({
       <div className="mb-6 flex items-center gap-2">
         <button
           onClick={onBack}
-          className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 transition-colors group"
+          className="flex items-center gap-1 text-xs transition-colors group"
+          style={{ color: 'var(--text-dim)' }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-dim)'; }}
         >
           <svg
             width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -58,8 +63,8 @@ export function LevelDetail({
         <LearnBreadcrumb
           accentColor={accent}
           segments={[
-            { label: 'Learn', onClick: onBack },
-            { label: `Level ${level.number}` },
+            { label: t('nav.learn'), onClick: onBack },
+            { label: t('learn.level', { n: level.number }) },
           ]}
         />
       </div>
@@ -79,23 +84,23 @@ export function LevelDetail({
             {level.number}
           </div>
           {level.comingSoon && (
-            <span className="text-[10px] font-medium text-zinc-500 bg-zinc-800 px-2 py-0.5 rounded-full">
-              Coming Soon
+            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ color: 'var(--text-dim)', backgroundColor: 'var(--card-hover)' }}>
+              {t('status.comingSoon')}
             </span>
           )}
           <DifficultyBadge difficulty={level.difficulty} label={level.difficultyLabel} />
         </div>
-        <h1 className="text-2xl font-bold text-zinc-100 learn-serif mb-1.5">
+        <h1 className="text-2xl font-bold learn-serif mb-1.5" style={{ color: 'var(--text)' }}>
           {level.title}
         </h1>
-        <p className="text-sm text-zinc-500 mb-4">
+        <p className="text-sm mb-4" style={{ color: 'var(--text-dim)' }}>
           {level.description}
         </p>
         <div className="flex items-center gap-3">
           <div className="flex-1">
             <ProgressBar percent={progressPercent} color={accent} />
           </div>
-          <span className="text-xs text-zinc-500 tabular-nums">
+          <span className="text-xs tabular-nums" style={{ color: 'var(--text-dim)' }}>
             {completedModules}/{totalModules}
           </span>
         </div>

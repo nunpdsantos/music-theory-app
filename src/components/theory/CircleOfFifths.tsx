@@ -82,7 +82,7 @@ const DIST_STROKE_MAJOR = [
   '#1e1e22',
 ];
 const DIST_TEXT_MAJOR = [
-  '#000', '#e4e4e7', '#c4c4ca', '#a1a1aa', '#71717a', '#52525b', '#3f3f46',
+  '#000', '#e4e4e7', '#c4c4ca', 'var(--text-muted)', 'var(--text-dim)', 'var(--border-light)', 'var(--border)',
 ];
 
 // Minor ring — slightly subtler
@@ -102,10 +102,10 @@ const DIST_STROKE_MINOR = [
   TONIC_HUE + '18',
   '#222226',
   '#1c1c20',
-  '#18181b',
+  'var(--card)',
 ];
 const DIST_TEXT_MINOR = [
-  '#000', '#c4c4ca', '#a1a1aa', '#71717a', '#52525b', '#3f3f46', '#3f3f46',
+  '#000', '#c4c4ca', 'var(--text-muted)', 'var(--text-dim)', 'var(--border-light)', 'var(--border)', 'var(--border)',
 ];
 
 const DISTANCE_LABELS = [
@@ -290,7 +290,7 @@ export function CircleOfFifths() {
             textAnchor="middle"
             dominantBaseline="central"
             className="text-[7px] select-none pointer-events-none"
-            fill="#52525b"
+            fill="var(--border-light)"
           >
             {sig}
           </text>
@@ -374,7 +374,7 @@ export function CircleOfFifths() {
         <line
           x1={connLine.x1} y1={connLine.y1}
           x2={connLine.x2} y2={connLine.y2}
-          stroke="#fafafa"
+          stroke="var(--text)"
           strokeWidth={1}
           strokeDasharray="3 2"
           opacity={0.35}
@@ -389,7 +389,7 @@ export function CircleOfFifths() {
             x={CENTER} y={CENTER - 18}
             textAnchor="middle" dominantBaseline="central"
             className="text-[13px] font-bold select-none pointer-events-none"
-            fill="#fafafa"
+            fill="var(--text)"
           >
             {hoveredRing === 'minor' ? hoverInfo.minor : hoverInfo.major}
           </text>
@@ -397,7 +397,7 @@ export function CircleOfFifths() {
             x={CENTER} y={CENTER - 2}
             textAnchor="middle" dominantBaseline="central"
             className="text-[7px] select-none pointer-events-none"
-            fill={hoverInfo.dist <= 2 ? '#a1a1aa' : '#71717a'}
+            fill={hoverInfo.dist <= 2 ? 'var(--text-muted)' : 'var(--text-dim)'}
           >
             {hoverInfo.distLabel}
           </text>
@@ -405,7 +405,7 @@ export function CircleOfFifths() {
             x={CENTER} y={CENTER + 12}
             textAnchor="middle" dominantBaseline="central"
             className="text-[7px] select-none pointer-events-none"
-            fill="#52525b"
+            fill="var(--border-light)"
           >
             {hoverInfo.keySig || 'no \u266F/\u266D'} · {hoveredRing === 'minor' ? `rel: ${hoverInfo.major}` : `rel: ${hoverInfo.minor}`}
           </text>
@@ -416,7 +416,7 @@ export function CircleOfFifths() {
             x={CENTER} y={CENTER - 8}
             textAnchor="middle" dominantBaseline="central"
             className="text-[15px] font-bold select-none"
-            fill="#fafafa"
+            fill="var(--text)"
           >
             {noteToString(selectedKey)}{isMinorSel ? 'm' : ''}
           </text>
@@ -424,7 +424,7 @@ export function CircleOfFifths() {
             x={CENTER} y={CENTER + 10}
             textAnchor="middle" dominantBaseline="central"
             className="text-[8px] select-none"
-            fill="#71717a"
+            fill="var(--text-dim)"
           >
             {selectedMajorIdx >= 0 ? KEY_SIGNATURES[selectedMajorIdx] || 'no \u266F/\u266D' : ''}
           </text>
@@ -447,8 +447,8 @@ export function CircleOfFifths() {
                 className="px-2.5 py-1 rounded-md text-[10px] font-medium transition-colors"
                 style={{
                   backgroundColor: active ? TONIC_HUE : '#1a1a1e',
-                  color: active ? '#000' : '#a1a1aa',
-                  border: `1px solid ${active ? TONIC_HUE : '#27272a'}`,
+                  color: active ? '#000' : 'var(--text-muted)',
+                  border: `1px solid ${active ? TONIC_HUE : 'var(--card-hover)'}`,
                 }}
               >
                 {MINOR_SCALE_LABELS[st]}

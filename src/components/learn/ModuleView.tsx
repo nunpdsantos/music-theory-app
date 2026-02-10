@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { m, AnimatePresence } from 'framer-motion';
 import type { CurriculumModule, CurriculumUnit, CurriculumLevel } from '../../core/types/curriculum';
 import type { ExerciseDefinition } from '../../core/types/exercise';
@@ -46,6 +47,7 @@ export function ModuleView({
   onBackToLevels,
   onNavigateModule,
 }: ModuleViewProps) {
+  const { t } = useTranslation();
   const accent = level.accentColor;
   const prevModule = getPreviousModuleInLevel(module.id, level);
   const nextModule = getNextModuleInLevel(module.id, level);
@@ -64,7 +66,10 @@ export function ModuleView({
         <div className="flex items-center gap-2 mb-8">
           <button
             onClick={onBack}
-            className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 transition-colors group"
+            className="flex items-center gap-1 text-xs transition-colors group"
+            style={{ color: 'var(--text-dim)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-dim)'; }}
           >
             <svg
               width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -77,10 +82,10 @@ export function ModuleView({
           <LearnBreadcrumb
             accentColor={accent}
             segments={[
-              { label: 'Learn', onClick: onBackToLevels },
-              { label: `Level ${level.number}`, onClick: onBack },
+              { label: t('nav.learn'), onClick: onBackToLevels },
+              { label: t('learn.level', { n: level.number }), onClick: onBack },
               { label: unit.title, onClick: onBack },
-              { label: `Module ${moduleIndex + 1}` },
+              { label: t('learn.module', { n: moduleIndex + 1 }) },
             ]}
           />
         </div>
@@ -104,14 +109,14 @@ export function ModuleView({
             </span>
             {isModuleCompleted && (
               <span className="text-[10px] font-medium text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full">
-                Completed
+                {t('status.completed')}
               </span>
             )}
           </div>
-          <h1 className="text-2xl font-bold text-zinc-100 mb-1.5 learn-serif">
+          <h1 className="text-2xl font-bold mb-1.5 learn-serif" style={{ color: 'var(--text)' }}>
             {module.title}
           </h1>
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm" style={{ color: 'var(--text-dim)' }}>
             {module.subtitle}
           </p>
         </m.div>
@@ -131,11 +136,11 @@ export function ModuleView({
             className="text-[10px] font-bold uppercase tracking-widest mb-3"
             style={{ color: accent }}
           >
-            Learning Objectives
+            {t('learn.learningObjectives')}
           </h2>
           <ul className="space-y-2">
             {module.objectives.map((obj, i) => (
-              <li key={i} className="flex items-start gap-2.5 text-sm text-zinc-300">
+              <li key={i} className="flex items-start gap-2.5 text-sm" style={{ color: 'var(--text-muted)' }}>
                 <span
                   className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0"
                   style={{ backgroundColor: accent }}
@@ -166,7 +171,7 @@ export function ModuleView({
                 >
                   {i + 1}
                 </span>
-                <h3 className="text-base font-semibold text-zinc-200">
+                <h3 className="text-base font-semibold" style={{ color: 'var(--text)' }}>
                   {concept.title}
                 </h3>
               </div>
@@ -212,9 +217,9 @@ export function ModuleView({
                       </span>
                       <div>
                         <span className="text-[10px] font-bold uppercase tracking-widest block mb-0.5" style={{ color: accent }}>
-                          Try This
+                          {t('learn.tryThis')}
                         </span>
-                        <span className="text-sm text-zinc-300 group-hover:text-zinc-100 transition-colors">
+                        <span className="text-sm transition-colors" style={{ color: 'var(--text-muted)' }}>
                           {concept.tryThisLabel}
                         </span>
                       </div>
@@ -222,7 +227,8 @@ export function ModuleView({
                     <svg
                       width="16" height="16" viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                      className="text-zinc-500 group-hover:text-zinc-400 group-hover:translate-x-0.5 transition-all"
+                      className="group-hover:translate-x-0.5 transition-all"
+                      style={{ color: 'var(--text-dim)' }}
                     >
                       <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
@@ -261,13 +267,14 @@ export function ModuleView({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="mb-10 rounded-xl border border-zinc-800 overflow-hidden"
+            className="mb-10 rounded-xl border overflow-hidden"
+            style={{ borderColor: 'var(--card-hover)' }}
           >
-            <div className="px-4 py-3 border-b border-zinc-800 bg-zinc-900/50 flex items-center justify-between">
-              <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-400">
-                Practice Tasks
+            <div className="px-4 py-3 border-b bg-zinc-900/50 flex items-center justify-between" style={{ borderColor: 'var(--card-hover)' }}>
+              <h2 className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
+                {t('learn.practiceTasks')}
               </h2>
-              <span className="text-[10px] text-zinc-500">
+              <span className="text-[10px]" style={{ color: 'var(--text-dim)' }}>
                 {completedTaskCount}/{module.tasks.length}
               </span>
             </div>
@@ -284,8 +291,9 @@ export function ModuleView({
                       className={`mt-0.5 w-4 h-4 rounded-md border flex items-center justify-center shrink-0 transition-all duration-200 ${
                         done
                           ? 'border-emerald-500 bg-emerald-500/20'
-                          : 'border-zinc-700 group-hover:border-zinc-500'
+                          : ''
                       }`}
+                      style={!done ? { borderColor: 'var(--border)' } : undefined}
                     >
                       <AnimatePresence>
                         {done && (
@@ -303,11 +311,8 @@ export function ModuleView({
                       </AnimatePresence>
                     </span>
                     <span
-                      className={`text-sm transition-colors ${
-                        done
-                          ? 'text-zinc-500 line-through'
-                          : 'text-zinc-300 group-hover:text-zinc-100'
-                      }`}
+                      className={`text-sm transition-colors ${done ? 'line-through' : ''}`}
+                      style={{ color: done ? 'var(--text-dim)' : 'var(--text-muted)' }}
                     >
                       {task.instruction}
                     </span>
@@ -341,7 +346,7 @@ export function ModuleView({
                 e.currentTarget.style.backgroundColor = `${accent}20`;
               }}
             >
-              Mark Module Complete
+              {t('learn.markModuleComplete')}
             </button>
           </m.div>
         )}
@@ -351,12 +356,16 @@ export function ModuleView({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.55 }}
-          className="flex items-center justify-between pt-6 border-t border-zinc-800"
+          className="flex items-center justify-between pt-6 border-t"
+          style={{ borderColor: 'var(--card-hover)' }}
         >
           {prevModule ? (
             <button
               onClick={() => onNavigateModule(prevModule.id)}
-              className="flex items-center gap-2 text-xs text-zinc-500 hover:text-zinc-300 transition-colors group"
+              className="flex items-center gap-2 text-xs transition-colors group"
+              style={{ color: 'var(--text-dim)' }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-dim)'; }}
             >
               <svg
                 width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -366,7 +375,7 @@ export function ModuleView({
                 <path d="M19 12H5M12 19l-7-7 7-7" />
               </svg>
               <div className="text-left">
-                <span className="block text-[10px] text-zinc-500">Previous</span>
+                <span className="block text-[10px]" style={{ color: 'var(--text-dim)' }}>{t('common.previous')}</span>
                 <span>{prevModule.title}</span>
               </div>
             </button>
@@ -376,10 +385,13 @@ export function ModuleView({
           {nextModule ? (
             <button
               onClick={() => onNavigateModule(nextModule.id)}
-              className="flex items-center gap-2 text-xs text-zinc-500 hover:text-zinc-300 transition-colors group text-right"
+              className="flex items-center gap-2 text-xs transition-colors group text-right"
+              style={{ color: 'var(--text-dim)' }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-dim)'; }}
             >
               <div>
-                <span className="block text-[10px] text-zinc-500">Next</span>
+                <span className="block text-[10px]" style={{ color: 'var(--text-dim)' }}>{t('common.next')}</span>
                 <span>{nextModule.title}</span>
               </div>
               <svg

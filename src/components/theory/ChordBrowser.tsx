@@ -71,9 +71,9 @@ export function ChordBrowser() {
               onClick={() => setActiveCategory(i)}
               className="px-2 py-1 text-[10px] font-medium rounded-lg transition-colors"
               style={{
-                backgroundColor: isActive ? '#3f3f46' : 'transparent',
-                color: isActive ? '#fafafa' : '#71717a',
-                border: isActive ? '1px solid #52525b' : '1px solid transparent',
+                backgroundColor: isActive ? 'var(--border)' : 'transparent',
+                color: isActive ? 'var(--text)' : 'var(--text-dim)',
+                border: isActive ? '1px solid var(--border-light)' : '1px solid transparent',
               }}
             >
               {g.label}
@@ -101,8 +101,8 @@ export function ChordBrowser() {
               }}
               className="flex flex-col items-start px-2.5 py-2 rounded-xl transition-all text-left"
               style={{
-                backgroundColor: isActive ? '#60A5FA15' : '#18181b',
-                border: isActive ? '1px solid #60A5FA40' : '1px solid #27272a',
+                backgroundColor: isActive ? '#60A5FA15' : 'var(--card)',
+                border: isActive ? '1px solid #60A5FA40' : '1px solid var(--card-hover)',
               }}
             >
               <span
@@ -111,7 +111,7 @@ export function ChordBrowser() {
               >
                 {rootLabel}{symbol}
               </span>
-              <span className="text-[9px] text-zinc-500 leading-tight mt-0.5">
+              <span className="text-[9px] leading-tight mt-0.5" style={{ color: 'var(--text-dim)' }}>
                 {name}
               </span>
             </button>

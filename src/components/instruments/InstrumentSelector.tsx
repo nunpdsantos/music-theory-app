@@ -10,22 +10,30 @@ export function InstrumentSelector() {
   const setInstrument = useAppStore((s) => s.setInstrument);
 
   return (
-    <div role="tablist" aria-label="Instrument" className="flex items-center gap-0.5 bg-zinc-800/60 rounded-md p-0.5">
-      {INSTRUMENTS.map((inst) => (
-        <button
-          key={inst.id}
-          role="tab"
-          aria-selected={instrument === inst.id}
-          onClick={() => setInstrument(inst.id)}
-          className={`px-2 py-0.5 text-[10px] font-medium rounded transition-colors ${
-            instrument === inst.id
-              ? 'bg-zinc-700 text-white'
-              : 'text-zinc-500 hover:text-zinc-300'
-          }`}
-        >
-          {inst.label}
-        </button>
-      ))}
+    <div
+      role="tablist"
+      aria-label="Instrument"
+      className="flex items-center gap-0.5 rounded-md p-0.5"
+      style={{ backgroundColor: 'color-mix(in srgb, var(--card-hover) 60%, transparent)' }}
+    >
+      {INSTRUMENTS.map((inst) => {
+        const isActive = instrument === inst.id;
+        return (
+          <button
+            key={inst.id}
+            role="tab"
+            aria-selected={isActive}
+            onClick={() => setInstrument(inst.id)}
+            className="px-2 py-0.5 text-[10px] font-medium rounded transition-colors"
+            style={{
+              backgroundColor: isActive ? 'var(--border)' : 'transparent',
+              color: isActive ? 'var(--text)' : 'var(--text-dim)',
+            }}
+          >
+            {inst.label}
+          </button>
+        );
+      })}
     </div>
   );
 }

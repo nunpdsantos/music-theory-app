@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import type { CurriculumLevel, CurriculumProgress } from '../../core/types/curriculum';
 import {
@@ -24,6 +25,7 @@ export function LevelsOverview({
   onOpenLevel,
   onOpenModule,
 }: LevelsOverviewProps) {
+  const { t } = useTranslation();
   // Async-load full levels for continue banner
   const [allLevels, setAllLevels] = useState<CurriculumLevel[] | null>(null);
   useEffect(() => {
@@ -61,11 +63,11 @@ export function LevelsOverview({
         transition={{ duration: 0.3 }}
         className="mb-8"
       >
-        <h1 className="text-2xl font-bold text-zinc-100 learn-serif mb-1.5">
-          Learn Music Theory
+        <h1 className="text-2xl font-bold learn-serif mb-1.5" style={{ color: 'var(--text)' }}>
+          {t('learn.title')}
         </h1>
-        <p className="text-sm text-zinc-500">
-          A structured path from the basics to advanced harmony
+        <p className="text-sm" style={{ color: 'var(--text-dim)' }}>
+          {t('learn.subtitle')}
         </p>
 
         <div className="mt-4 flex items-center gap-4">
@@ -76,7 +78,7 @@ export function LevelsOverview({
               height={6}
             />
           </div>
-          <span className="text-xs text-zinc-500 tabular-nums shrink-0">
+          <span className="text-xs tabular-nums shrink-0" style={{ color: 'var(--text-dim)' }}>
             {totalCompleted}/{totalModules}
           </span>
         </div>
@@ -115,11 +117,11 @@ export function LevelsOverview({
             transition={{ delay: 0.5 }}
             className="flex items-center gap-4 mb-4"
           >
-            <div className="flex-1 h-px bg-zinc-800" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
-              Parallel Track
+            <div className="flex-1 h-px" style={{ backgroundColor: 'var(--card-hover)' }} />
+            <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+              {t('learn.parallelTrack')}
             </span>
-            <div className="flex-1 h-px bg-zinc-800" />
+            <div className="flex-1 h-px" style={{ backgroundColor: 'var(--card-hover)' }} />
           </m.div>
 
           <div className="grid grid-cols-3 max-lg:grid-cols-2 max-sm:grid-cols-1 gap-4">

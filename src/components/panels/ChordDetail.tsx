@@ -58,7 +58,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
   const setScale = useAppStore((s) => s.setScale);
   const setKey = useAppStore((s) => s.setKey);
   const degree = getNoteDegree(chord.root);
-  const color = degree ? DEGREE_COLORS[degree as keyof typeof DEGREE_COLORS] : '#a1a1aa';
+  const color = degree ? DEGREE_COLORS[degree as keyof typeof DEGREE_COLORS] : 'var(--text-muted)';
 
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
@@ -133,13 +133,13 @@ export function ChordDetail({ chord }: ChordDetailProps) {
     >
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-zinc-100 learn-serif">
+        <h2 className="text-xl font-bold learn-serif" style={{ color: 'var(--text)' }}>
           {chord.algorithmicDisplayName
-            ? <>{noteToString(chord.root)}<span className="text-zinc-400 font-normal ml-1.5">{chord.algorithmicDisplayName}</span></>
-            : <>{noteToString(chord.root)}<span className="text-zinc-400 font-normal ml-1.5">{CHORD_QUALITY_NAMES[chord.quality]}</span></>
+            ? <>{noteToString(chord.root)}<span className="font-normal ml-1.5" style={{ color: 'var(--text-muted)' }}>{chord.algorithmicDisplayName}</span></>
+            : <>{noteToString(chord.root)}<span className="font-normal ml-1.5" style={{ color: 'var(--text-muted)' }}>{CHORD_QUALITY_NAMES[chord.quality]}</span></>
           }
           {chord.bassNote && (
-            <span className="text-zinc-500 font-normal ml-0.5">/{noteToString(chord.bassNote)}</span>
+            <span className="font-normal ml-0.5" style={{ color: 'var(--text-dim)' }}>/{noteToString(chord.bassNote)}</span>
           )}
         </h2>
         {degree && (
@@ -154,7 +154,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
 
       {/* Notes */}
       <div>
-        <h3 className="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">
+        <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
           Notes
         </h3>
         <div className="flex gap-1.5">
@@ -162,7 +162,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
             const noteDegree = getNoteDegree(note);
             const noteColor = noteDegree
               ? DEGREE_COLORS[noteDegree as keyof typeof DEGREE_COLORS]
-              : '#a1a1aa';
+              : 'var(--text-muted)';
             const isBass = i === 0 && chordInversion > 0;
             const isSlashBass = chord.bassNote &&
               noteToString(note) === noteToString(chord.bassNote) && i === 0;
@@ -188,7 +188,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
 
       {/* Inversions */}
       <div>
-        <h3 className="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">
+        <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
           Voicing
         </h3>
         <div className="flex gap-1.5" role="radiogroup" aria-label="Chord inversion">
@@ -202,9 +202,9 @@ export function ChordDetail({ chord }: ChordDetailProps) {
                 onClick={() => setChordInversion(i)}
                 className="relative px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-150"
                 style={{
-                  backgroundColor: isActive ? `${color}20` : '#18181b',
-                  color: isActive ? color : '#a1a1aa',
-                  border: isActive ? `1px solid ${color}50` : '1px solid #27272a',
+                  backgroundColor: isActive ? `${color}20` : 'var(--card)',
+                  color: isActive ? color : 'var(--text-muted)',
+                  border: isActive ? `1px solid ${color}50` : '1px solid var(--border)',
                 }}
               >
                 {INVERSION_LABELS[i] ?? `${i}th Inv`}
@@ -216,14 +216,15 @@ export function ChordDetail({ chord }: ChordDetailProps) {
 
       {/* Formula — real interval labels */}
       <div>
-        <h3 className="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">
+        <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
           Formula
         </h3>
         <div className="flex items-center gap-1.5">
           {intervalLabels.map((label, i) => (
             <span
               key={i}
-              className="text-xs font-mono text-zinc-400 bg-zinc-800/60 px-2 py-1 rounded-md"
+              className="text-xs font-mono px-2 py-1 rounded-md"
+              style={{ color: 'var(--text-muted)', backgroundColor: 'color-mix(in srgb, var(--card) 60%, transparent)' }}
             >
               {label}
             </span>
@@ -234,7 +235,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
       {/* Compatible Scales */}
       {scaleSuggestions.length > 0 && (
         <div>
-          <h3 className="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">
+          <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
             Compatible Scales
           </h3>
           <div className="flex flex-wrap gap-1.5">
@@ -281,7 +282,12 @@ export function ChordDetail({ chord }: ChordDetailProps) {
         </button>
         <button
           onClick={handlePlayArpeggio}
-          className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold text-zinc-300 bg-zinc-800/60 border border-zinc-700/50 hover:bg-zinc-800 hover:text-zinc-100 transition-all duration-150 hover:scale-[1.02]"
+          className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-150 hover:scale-[1.02]"
+          style={{
+            color: 'var(--text)',
+            backgroundColor: 'color-mix(in srgb, var(--card) 60%, transparent)',
+            border: '1px solid color-mix(in srgb, var(--border) 50%, transparent)',
+          }}
         >
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
             <polygon points="5 3 19 12 5 21 5 3" />

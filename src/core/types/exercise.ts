@@ -1,6 +1,6 @@
 // Exercise system types for curriculum engine
 
-export type ExerciseType = 'note_id' | 'interval_id' | 'scale_build' | 'chord_build' | 'multiple_choice';
+export type ExerciseType = 'note_id' | 'interval_id' | 'scale_build' | 'chord_build' | 'multiple_choice' | 'ear_training' | 'scale_degree_id';
 
 // Config types per exercise — plain serializable objects (no Note type imports)
 // Runtime converts to Note at validation time
@@ -55,12 +55,50 @@ export interface MultipleChoiceConfig {
   choices: { label: string; correct: boolean }[];
 }
 
+export interface EarTrainingConfig {
+  type: 'ear_training';
+  /** What to play and identify */
+  mode: 'note' | 'interval' | 'chord';
+  /** For note mode: note to play, user identifies by name */
+  note?: string;
+  accidental?: string;
+  octave?: number;
+  acceptEnharmonic?: boolean;
+  /** For interval mode: play root + interval, user identifies interval */
+  root?: string;
+  rootAccidental?: string;
+  rootOctave?: number;
+  targetSemitones?: number;
+  direction?: 'ascending' | 'descending';
+  /** For chord mode: play chord, user identifies quality via choices */
+  chordRoot?: string;
+  chordRootAccidental?: string;
+  quality?: string;
+  choices?: { label: string; correct: boolean }[];
+}
+
+export interface ScaleDegreeIdConfig {
+  type: 'scale_degree_id';
+  /** Scale root */
+  root: string;
+  rootAccidental: string;
+  /** Scale type (e.g. 'major', 'natural_minor') */
+  scaleType: string;
+  /** The note to identify */
+  note: string;
+  noteAccidental: string;
+  /** Correct degree (1-7) */
+  correctDegree: number;
+}
+
 export type ExerciseConfig =
   | NoteIdConfig
   | IntervalIdConfig
   | ScaleBuildConfig
   | ChordBuildConfig
-  | MultipleChoiceConfig;
+  | MultipleChoiceConfig
+  | EarTrainingConfig
+  | ScaleDegreeIdConfig;
 
 export interface ExerciseDefinition {
   /** Unique ID: 'l1u3m1e1' */

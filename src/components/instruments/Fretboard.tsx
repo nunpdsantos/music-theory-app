@@ -1,5 +1,6 @@
 import { useMemo, useCallback, useState, useEffect, useRef, useLayoutEffect } from 'react';
-import { TUNING_STANDARD, getTuningPitchClasses } from '../../core/constants/guitarTunings.ts';
+import { getTuningById, getTuningPitchClasses, GUITAR_TUNINGS } from '../../core/constants/guitarTunings.ts';
+import type { GuitarTuning } from '../../core/constants/guitarTunings.ts';
 import { midiToNote } from '../../core/utils/pianoLayout.ts';
 import { getChordShapesWithFallback } from '../../core/constants/guitarChordShapes.ts';
 import { getScalePositions, hasScalePositions } from '../../core/constants/guitarScalePositions.ts';
@@ -24,16 +25,20 @@ export function Fretboard() {
   const guitarScalePosition = useAppStore((s) => s.guitarScalePosition);
   const setGuitarScalePosition = useAppStore((s) => s.setGuitarScalePosition);
   const quickSearchOpen = useAppStore((s) => s.quickSearchOpen);
+  const guitarTuningId = useAppStore((s) => s.guitarTuningId);
+  const setGuitarTuningId = useAppStore((s) => s.setGuitarTuningId);
   const [selectedShapeIdx, setSelectedShapeIdx] = useState(0);
   const mobile = useIsMobile();
 
-  const tuningPitchClasses = useMemo(() => getTuningPitchClasses(TUNING_STANDARD), []);
+  const tuning: GuitarTuning = useMemo(() => getTuningById(guitarTuningId), [guitarTuningId]);
+  const isStandardTuning = tuning.id === 'standard';
+  const tuningPitchClasses = useMemo(() => getTuningPitchClasses(tuning), [tuning]);
 
-  // ─── Chord shapes ─────────────────────────────────────
+  // ─── Chord shapes (standard tuning only) ─────────────
   const chordShapes = useMemo(() => {
-    if (!selectedChord) return [];
+    if (!selectedChord || !isStandardTuning) return [];
     return getChordShapesWithFallback(selectedChord);
-  }, [selectedChord]);
+  }, [selectedChord, isStandardTuning]);
 
   useEffect(() => {
     setSelectedShapeIdx(0);
@@ -47,12 +52,12 @@ export function Fretboard() {
     return getPitchClass(selectedKey);
   }, [selectedChord, selectedKey]);
 
-  // ─── Scale positions (CAGED) ──────────────────────────
+  // ─── Scale positions (CAGED, standard tuning only) ───
   const scalePositions = useMemo(() => {
-    if (selectedChord) return [];
+    if (selectedChord || !isStandardTuning) return [];
     if (!hasScalePositions(selectedScale)) return [];
     return getScalePositions(selectedKey, selectedScale);
-  }, [selectedKey, selectedScale, selectedChord]);
+  }, [selectedKey, selectedScale, selectedChord, isStandardTuning]);
 
   const hasPositions = scalePositions.length > 0;
 
@@ -147,7 +152,7 @@ export function Fretboard() {
     const map = new Map<number, FretNote>();
     for (let s = 0; s < 6; s++) {
       const openPc = tuningPitchClasses[s];
-      const openOctave = TUNING_STANDARD.strings[s].octave;
+      const openOctave = tuning.strings[s].octave;
       for (let f = 0; f <= FULL_FRETS; f++) {
         const pc = (openPc + f) % 12;
         const midi = 12 + openOctave * 12 + openPc + f;
@@ -155,7 +160,7 @@ export function Fretboard() {
       }
     }
     return map;
-  }, [tuningPitchClasses]);
+  }, [tuningPitchClasses, tuning]);
 
   const getFretNote = useCallback(
     (stringIndex: number, fret: number) => {
@@ -389,6 +394,30 @@ export function Fretboard() {
           onSelectScalePosition={setGuitarScalePosition}
         />
 
+        {/* Tuning selector */}
+        <div role="radiogroup" aria-label="Guitar tuning" className="flex items-center gap-2 mb-2 flex-wrap">
+          <span className="text-[10px] text-zinc-500 uppercase tracking-wider">Tuning:</span>
+          {GUITAR_TUNINGS.map((t) => {
+            const isActive = tuning.id === t.id;
+            return (
+              <button
+                key={t.id}
+                role="radio"
+                aria-checked={isActive}
+                onClick={() => setGuitarTuningId(t.id)}
+                className="text-[10px] px-2 py-0.5 rounded transition-colors"
+                style={{
+                  backgroundColor: isActive ? '#60A5FA' : 'transparent',
+                  color: isActive ? '#000' : 'var(--text-dim)',
+                  border: isActive ? '1px solid #60A5FA' : '1px solid var(--border)',
+                }}
+              >
+                {t.shortName}
+              </button>
+            );
+          })}
+        </div>
+
         {/* Fret markers row */}
         <div className="flex mb-1">
           <div style={{ width: 32 }} />
@@ -419,7 +448,7 @@ export function Fretboard() {
               <div
                 key={f}
                 className="flex-1"
-                style={{ minWidth: fretMinWidth, borderRight: '1px solid #3f3f46' }}
+                style={{ minWidth: fretMinWidth, borderRight: '1px solid var(--border)' }}
               />
             ))}
           </div>
@@ -437,6 +466,7 @@ export function Fretboard() {
               mobile={mobile}
               isChordView={isChordView}
               isOpenPosition={isOpenPosition}
+              tuning={tuning}
               tuningPitchClasses={tuningPitchClasses}
               activeNotes={activeNotes}
               rootPitchClass={rootPitchClass}

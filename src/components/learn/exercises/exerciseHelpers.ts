@@ -86,6 +86,47 @@ export function generateIntervalChoices(correctSemitones: number): ChoiceOption[
   return shuffle(options);
 }
 
+const DEGREE_LABELS = ['', '1st (Tonic)', '2nd (Supertonic)', '3rd (Mediant)', '4th (Subdominant)', '5th (Dominant)', '6th (Submediant)', '7th (Leading)'];
+
+/**
+ * Generate 4 scale-degree choices: the correct degree + 3 distractors.
+ */
+export function generateDegreeChoices(correctDegree: number): ChoiceOption[] {
+  const correctLabel = DEGREE_LABELS[correctDegree] || `${correctDegree}th`;
+  const distractors: ChoiceOption[] = [];
+  const used = new Set<number>([correctDegree]);
+
+  // Nearby degrees as plausible distractors
+  const offsets = [1, -1, 2, -2, 3, -3];
+  for (const offset of offsets) {
+    if (distractors.length >= 3) break;
+    const d = correctDegree + offset;
+    if (d >= 1 && d <= 7 && !used.has(d)) {
+      used.add(d);
+      const label = DEGREE_LABELS[d] || `${d}th`;
+      distractors.push({ label, value: String(d), correct: false });
+    }
+  }
+
+  const options: ChoiceOption[] = [
+    { label: correctLabel, value: String(correctDegree), correct: true },
+    ...distractors.slice(0, 3),
+  ];
+
+  return shuffle(options);
+}
+
+/**
+ * Generate choices from a multiple-choice-style config embedded in ear training.
+ */
+export function generateEarChoices(
+  choices: { label: string; correct: boolean }[],
+): ChoiceOption[] {
+  return shuffle(
+    choices.map((c) => ({ label: c.label, value: c.label, correct: c.correct })),
+  );
+}
+
 function shuffle<T>(arr: T[]): T[] {
   const out = [...arr];
   for (let i = out.length - 1; i > 0; i--) {

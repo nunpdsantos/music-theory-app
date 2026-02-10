@@ -6,6 +6,8 @@ import type {
   ScaleBuildConfig,
   ChordBuildConfig,
   MultipleChoiceConfig,
+  EarTrainingConfig,
+  ScaleDegreeIdConfig,
 } from '../../../../core/types/exercise';
 
 describe('validateAnswer', () => {
@@ -168,6 +170,84 @@ describe('validateAnswer', () => {
       const result = validateAnswer(config, 'False');
       expect(result.correct).toBe(false);
       expect(result.expected).toBe('True');
+    });
+  });
+
+  describe('ear_training', () => {
+    it('validates note mode (delegates to note_id)', () => {
+      const config: EarTrainingConfig = {
+        type: 'ear_training',
+        mode: 'note',
+        note: 'E',
+        accidental: 'b',
+        octave: 4,
+      };
+      expect(validateAnswer(config, 'Eb').correct).toBe(true);
+      expect(validateAnswer(config, 'D#').correct).toBe(true); // enharmonic
+      expect(validateAnswer(config, 'F').correct).toBe(false);
+    });
+
+    it('validates interval mode (delegates to interval_id)', () => {
+      const config: EarTrainingConfig = {
+        type: 'ear_training',
+        mode: 'interval',
+        root: 'C',
+        rootAccidental: '',
+        rootOctave: 4,
+        targetSemitones: 4,
+        direction: 'ascending',
+      };
+      expect(validateAnswer(config, '4').correct).toBe(true); // Major 3rd
+      expect(validateAnswer(config, '3').correct).toBe(false);
+    });
+
+    it('validates chord mode (delegates to multiple_choice)', () => {
+      const config: EarTrainingConfig = {
+        type: 'ear_training',
+        mode: 'chord',
+        chordRoot: 'A',
+        chordRootAccidental: '',
+        quality: 'minor',
+        choices: [
+          { label: 'Major', correct: false },
+          { label: 'Minor', correct: true },
+          { label: 'Diminished', correct: false },
+          { label: 'Augmented', correct: false },
+        ],
+      };
+      expect(validateAnswer(config, 'Minor').correct).toBe(true);
+      expect(validateAnswer(config, 'Major').correct).toBe(false);
+    });
+  });
+
+  describe('scale_degree_id', () => {
+    it('accepts correct degree', () => {
+      const config: ScaleDegreeIdConfig = {
+        type: 'scale_degree_id',
+        root: 'C',
+        rootAccidental: '',
+        scaleType: 'major',
+        note: 'E',
+        noteAccidental: '',
+        correctDegree: 3,
+      };
+      expect(validateAnswer(config, '3').correct).toBe(true);
+      expect(validateAnswer(config, '3').explanation).toContain('Mediant');
+    });
+
+    it('rejects wrong degree', () => {
+      const config: ScaleDegreeIdConfig = {
+        type: 'scale_degree_id',
+        root: 'C',
+        rootAccidental: '',
+        scaleType: 'major',
+        note: 'G',
+        noteAccidental: '',
+        correctDegree: 5,
+      };
+      const result = validateAnswer(config, '4');
+      expect(result.correct).toBe(false);
+      expect(result.expected).toContain('Dominant');
     });
   });
 });

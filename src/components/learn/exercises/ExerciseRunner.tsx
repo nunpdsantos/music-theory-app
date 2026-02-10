@@ -1,14 +1,18 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { m, AnimatePresence } from 'framer-motion';
-import type { ExerciseDefinition, ValidationResult } from '../../../core/types/exercise';
+import type { ExerciseDefinition, ValidationResult, EarTrainingConfig } from '../../../core/types/exercise';
 import { validateAnswer } from './validateExercise';
-import { generateNoteChoices, generateIntervalChoices } from './exerciseHelpers';
+import { generateNoteChoices, generateIntervalChoices, generateEarChoices, generateDegreeChoices } from './exerciseHelpers';
 import type { ChoiceOption } from './exerciseHelpers';
 import { ExerciseProgress } from './ExerciseProgress';
 import { ExercisePrompt } from './ExercisePrompt';
 import { ExerciseFeedback } from './ExerciseFeedback';
 import { ChoiceInput } from './inputs/ChoiceInput';
 import { InstrumentInput } from './inputs/InstrumentInput';
+import { playNote, playChord, resumeAudio } from '../../../core/services/audio';
+import type { NaturalNote, Accidental, Note } from '../../../core/types/music';
+import { buildChord } from '../../../core/constants/chords';
 
 type Phase = 'active' | 'submitted';
 
@@ -20,6 +24,7 @@ interface ExerciseRunnerProps {
 }
 
 export function ExerciseRunner({ exercises, accentColor, onRecordResult, onComplete }: ExerciseRunnerProps) {
+  const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [phase, setPhase] = useState<Phase>('active');
   const [attempt, setAttempt] = useState(1);
@@ -41,10 +46,68 @@ export function ExerciseRunner({ exercises, accentColor, onRecordResult, onCompl
         return generateIntervalChoices(cfg.targetSemitones);
       case 'multiple_choice':
         return cfg.choices.map((c) => ({ label: c.label, value: c.label, correct: c.correct }));
+      case 'ear_training': {
+        if (cfg.mode === 'note') return generateNoteChoices(cfg.note ?? 'C', cfg.accidental ?? '');
+        if (cfg.mode === 'interval') return generateIntervalChoices(cfg.targetSemitones ?? 7);
+        if (cfg.mode === 'chord' && cfg.choices) return generateEarChoices(cfg.choices);
+        return [];
+      }
+      case 'scale_degree_id':
+        return generateDegreeChoices(cfg.correctDegree);
       default:
         return [];
     }
   }, [exercise?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Ear training: play audio on mount and provide replay
+  const playingRef = useRef(false);
+  const playEarAudio = useCallback(async () => {
+    if (!exercise || exercise.config.type !== 'ear_training' || playingRef.current) return;
+    playingRef.current = true;
+    try {
+      await resumeAudio();
+      const cfg = exercise.config as EarTrainingConfig;
+      if (cfg.mode === 'note' && cfg.note) {
+        const note: Note = { natural: cfg.note as NaturalNote, accidental: (cfg.accidental ?? '') as Accidental };
+        playNote(note, cfg.octave ?? 4, 1.0);
+      } else if (cfg.mode === 'interval' && cfg.root && cfg.targetSemitones !== undefined) {
+        const rootNote: Note = { natural: cfg.root as NaturalNote, accidental: (cfg.rootAccidental ?? '') as Accidental };
+        const oct = cfg.rootOctave ?? 4;
+        playNote(rootNote, oct, 0.6);
+        // Play second note after a short delay via AudioContext scheduling
+        setTimeout(() => {
+          // Compute the interval note pitch class
+          const semitones = cfg.direction === 'descending' ? -cfg.targetSemitones! : cfg.targetSemitones!;
+          // Play raw MIDI-based note using the root as reference
+          const NATURALS: NaturalNote[] = ['C', 'C', 'D', 'D', 'E', 'F', 'F', 'G', 'G', 'A', 'A', 'B'];
+          const ACCIDENTALS: Accidental[] = ['', '#', '', '#', '', '', '#', '', '#', '', '#', ''];
+          const rootPCs: Record<string, number> = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+          let rootPC = rootPCs[cfg.root!] ?? 0;
+          if (cfg.rootAccidental === '#') rootPC += 1;
+          if (cfg.rootAccidental === 'b') rootPC -= 1;
+          const targetPC = ((rootPC + semitones) % 12 + 12) % 12;
+          const targetNote: Note = { natural: NATURALS[targetPC], accidental: ACCIDENTALS[targetPC] };
+          const targetOct = oct + (rootPC + semitones >= 12 ? 1 : rootPC + semitones < 0 ? -1 : 0);
+          playNote(targetNote, targetOct, 0.6);
+        }, 700);
+      } else if (cfg.mode === 'chord' && cfg.chordRoot && cfg.quality) {
+        const root: Note = { natural: cfg.chordRoot as NaturalNote, accidental: (cfg.chordRootAccidental ?? '') as Accidental };
+        const chord = buildChord(root, cfg.quality as any);
+        playChord(chord.notes, 4, 1.2);
+      }
+    } finally {
+      setTimeout(() => { playingRef.current = false; }, 800);
+    }
+  }, [exercise?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Auto-play ear training audio when exercise changes
+  useEffect(() => {
+    if (exercise?.config.type === 'ear_training' && phase === 'active') {
+      // Small delay to let the UI render first
+      const t = setTimeout(playEarAudio, 300);
+      return () => clearTimeout(t);
+    }
+  }, [exercise?.id, playEarAudio]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSelectChoice = useCallback((value: string) => {
     setSelected(value);
@@ -110,7 +173,8 @@ export function ExerciseRunner({ exercises, accentColor, onRecordResult, onCompl
       <m.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-xl border border-zinc-800 p-5"
+        className="rounded-xl border p-5"
+        style={{ borderColor: 'var(--card-hover)' }}
       >
         <div className="text-center">
           <span className={`text-3xl mb-3 block ${passed ? '' : ''}`}>
@@ -124,29 +188,30 @@ export function ExerciseRunner({ exercises, accentColor, onRecordResult, onCompl
               </svg>
             )}
           </span>
-          <h3 className="text-base font-semibold text-zinc-200 mb-1">
-            {passed ? 'Exercises Complete!' : 'Keep Practicing'}
+          <h3 className="text-base font-semibold mb-1" style={{ color: 'var(--text)' }}>
+            {passed ? t('exercise.exercisesComplete') : t('exercise.keepPracticing')}
           </h3>
-          <p className="text-xs text-zinc-500 mb-3">
+          <p className="text-xs mb-3" style={{ color: 'var(--text-dim)' }}>
             Score: {accumulatedScore % 1 === 0 ? accumulatedScore : accumulatedScore.toFixed(1)}/{exercises.length}
             {passed
-              ? ' — You passed!'
-              : ` — Need ${Math.ceil(exercises.length * 0.8)} to pass`}
+              ? ' — ' + t('exercise.passed')
+              : ' — ' + t('exercise.needToPass', { score: Math.ceil(exercises.length * 0.8) })}
           </p>
         </div>
       </m.div>
     );
   }
 
-  const isChoiceBased = exercise.config.type === 'note_id' || exercise.config.type === 'interval_id' || exercise.config.type === 'multiple_choice';
+  const isEarTraining = exercise.config.type === 'ear_training';
+  const isChoiceBased = exercise.config.type === 'note_id' || exercise.config.type === 'interval_id' || exercise.config.type === 'multiple_choice' || exercise.config.type === 'scale_degree_id' || isEarTraining;
   const isInstrumentBased = exercise.config.type === 'scale_build' || exercise.config.type === 'chord_build';
 
   return (
-    <div className="rounded-xl border border-zinc-800 overflow-hidden">
+    <div className="rounded-xl border overflow-hidden" style={{ borderColor: 'var(--card-hover)' }}>
       {/* Header */}
-      <div className="px-4 py-3 border-b border-zinc-800 bg-zinc-900/50">
-        <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-2">
-          Exercises
+      <div className="px-4 py-3 border-b bg-zinc-900/50" style={{ borderColor: 'var(--card-hover)' }}>
+        <h2 className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-muted)' }}>
+          {t('exercise.title')}
         </h2>
         <ExerciseProgress
           current={currentIndex}
@@ -167,6 +232,27 @@ export function ExerciseRunner({ exercises, accentColor, onRecordResult, onCompl
             transition={{ duration: 0.2 }}
           >
             <ExercisePrompt exercise={exercise} />
+
+            {/* Ear training replay button */}
+            {isEarTraining && phase === 'active' && (
+              <div className="mb-3 flex justify-center">
+                <button
+                  onClick={playEarAudio}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all hover:scale-[1.03]"
+                  style={{
+                    backgroundColor: `${accentColor}15`,
+                    color: accentColor,
+                    border: `1px solid ${accentColor}30`,
+                  }}
+                  aria-label={t('exercise.replayAudio')}
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" />
+                  </svg>
+                  {t('common.replay')}
+                </button>
+              </div>
+            )}
 
             {/* Input */}
             {isChoiceBased && (
@@ -192,7 +278,7 @@ export function ExerciseRunner({ exercises, accentColor, onRecordResult, onCompl
                         color: accentColor,
                       }}
                     >
-                      Submit
+                      {t('common.submit')}
                     </button>
                   </m.div>
                 )}

@@ -19,7 +19,7 @@ export function ChoiceInput({ options, selected, submitted, onSelect, accentColo
 
         let bg = 'bg-zinc-800/60 hover:bg-zinc-800';
         let border = 'border-zinc-700/50';
-        let textColor = 'text-zinc-300';
+        let textColor = '';
 
         if (isSelected && !submitted) {
           bg = '';
@@ -53,7 +53,9 @@ export function ChoiceInput({ options, selected, submitted, onSelect, accentColo
                     borderColor: `${accentColor}50`,
                     color: accentColor,
                   }
-                : undefined
+                : !showCorrect && !showIncorrect
+                  ? { color: 'var(--text-muted)' }
+                  : undefined
             }
           >
             {opt.label}

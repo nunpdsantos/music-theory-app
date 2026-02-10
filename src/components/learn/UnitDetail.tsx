@@ -37,7 +37,10 @@ export function UnitDetail({
       <div className="mb-6 flex items-center gap-2">
         <button
           onClick={onBack}
-          className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-300 transition-colors group"
+          className="flex items-center gap-1 text-xs transition-colors group"
+          style={{ color: 'var(--text-dim)' }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-dim)'; }}
         >
           <svg
             width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -64,20 +67,20 @@ export function UnitDetail({
         transition={{ duration: 0.3 }}
         className="mb-8"
       >
-        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+        <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-dim)' }}>
           Unit {unitIndex + 1}
         </span>
-        <h1 className="text-2xl font-bold text-zinc-100 learn-serif mt-1 mb-1.5">
+        <h1 className="text-2xl font-bold learn-serif mt-1 mb-1.5" style={{ color: 'var(--text)' }}>
           {unit.title}
         </h1>
-        <p className="text-sm text-zinc-500 mb-4">
+        <p className="text-sm mb-4" style={{ color: 'var(--text-dim)' }}>
           {unit.description}
         </p>
         <div className="flex items-center gap-3">
           <div className="flex-1">
             <ProgressBar percent={progressPercent} color={accent} />
           </div>
-          <span className="text-xs text-zinc-500 tabular-nums">
+          <span className="text-xs tabular-nums" style={{ color: 'var(--text-dim)' }}>
             {completedCount}/{unit.modules.length}
           </span>
         </div>

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import type { CurriculumModule, CurriculumUnit, CurriculumLevel } from '../../core/types/curriculum';
 
@@ -9,6 +10,7 @@ interface ContinueBannerProps {
 }
 
 export function ContinueBanner({ module, unit, level, onClick }: ContinueBannerProps) {
+  const { t } = useTranslation();
   const accent = level.accentColor;
 
   return (
@@ -37,13 +39,13 @@ export function ContinueBanner({ module, unit, level, onClick }: ContinueBannerP
             className="text-[10px] font-bold uppercase tracking-widest"
             style={{ color: accent }}
           >
-            Continue
+            {t('common.continue')}
           </span>
-          <h3 className="text-sm font-semibold text-zinc-200 mt-0.5">
+          <h3 className="text-sm font-semibold mt-0.5" style={{ color: 'var(--text)' }}>
             {module.title}
           </h3>
-          <p className="text-xs text-zinc-500 mt-0.5">
-            Level {level.number} &middot; {unit.title} &middot; {module.subtitle}
+          <p className="text-xs mt-0.5" style={{ color: 'var(--text-dim)' }}>
+            {t('learn.level', { n: level.number })} &middot; {unit.title} &middot; {module.subtitle}
           </p>
         </div>
         <svg
