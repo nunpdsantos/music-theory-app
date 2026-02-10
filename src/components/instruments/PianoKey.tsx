@@ -7,7 +7,7 @@ type SizeMode = 'mobile' | 'tablet' | 'desktop';
 const DIMS: Record<SizeMode, { white: [number, number]; black: [number, number]; labelSize: string }> = {
   desktop: { white: [44, 210], black: [28, 130], labelSize: '10px' },
   tablet:  { white: [36, 160], black: [22, 100], labelSize: '9px' },
-  mobile:  { white: [46, 150], black: [28, 92],  labelSize: '9px' },
+  mobile:  { white: [36, 130], black: [22, 80],  labelSize: '8px' },
 };
 
 interface PianoKeyProps {
@@ -42,34 +42,36 @@ export function PianoKeyComponent({
 
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
-      e.preventDefault();
-      (e.target as HTMLElement).setPointerCapture(e.pointerId);
+      if (sizeMode !== 'mobile') {
+        e.preventDefault();
+        (e.target as HTMLElement).setPointerCapture(e.pointerId);
+      }
       isPressed.current = true;
       onNoteOn(keyData);
     },
-    [keyData, onNoteOn]
+    [keyData, onNoteOn, sizeMode]
   );
 
   const handlePointerUp = useCallback(
     (e: React.PointerEvent) => {
-      e.preventDefault();
+      if (sizeMode !== 'mobile') e.preventDefault();
       if (isPressed.current) {
         isPressed.current = false;
         onNoteOff(keyData);
       }
     },
-    [keyData, onNoteOff]
+    [keyData, onNoteOff, sizeMode]
   );
 
   const handlePointerLeave = useCallback(
     (e: React.PointerEvent) => {
-      e.preventDefault();
+      if (sizeMode !== 'mobile') e.preventDefault();
       if (isPressed.current) {
         isPressed.current = false;
         onNoteOff(keyData);
       }
     },
-    [keyData, onNoteOff]
+    [keyData, onNoteOff, sizeMode]
   );
 
   const label = noteToString(keyData.note);
@@ -117,7 +119,7 @@ export function PianoKeyComponent({
       <div
         role="button"
         aria-label={`${label}${keyData.octave}`}
-        className="absolute z-10 cursor-pointer select-none touch-none"
+        className={`absolute z-10 cursor-pointer select-none ${sizeMode === 'mobile' ? 'touch-pan-x' : 'touch-none'}`}
         style={{
           width: bw + touchPad * 2,
           height: bh + touchPad,
@@ -194,7 +196,7 @@ export function PianoKeyComponent({
     <div
       role="button"
       aria-label={`${label}${keyData.octave}`}
-      className="relative shrink-0 cursor-pointer select-none touch-none"
+      className={`relative shrink-0 cursor-pointer select-none ${sizeMode === 'mobile' ? 'touch-pan-x' : 'touch-none'}`}
       style={{
         width: ww,
         height: wh,
