@@ -107,11 +107,11 @@ src/
 - **Exercise generation:** Seeded PRNG templates for 118 modules (~627 generated, ~1,000+ total)
 - **Staff notation:** VexFlow 5.0 lazy-loaded (~1,128 KB separate chunk), theme-reactive, integrated in Explore/panels/exercises
 
-### Polish & Reach (Phase 8) — COMPLETE (except 8C.1)
+### Polish & Reach (Phase 8) — COMPLETE
 - **8A:** Self-hosted fonts, toast system, typography tokens
 - **8B:** Mobile responsiveness (all views + instruments WCAG-compliant)
-- **8C:** Card elevation, empty states, micro-interactions, completion celebrations
-- **8C.1 remaining:** First-run guided tour (4-step tooltip sequence)
+- **8C:** Card elevation, empty states, micro-interactions, completion celebrations, first-run guided tour
+- Small-screen optimization: piano keys 46→36px, fretboard cells 44→36px, reduced container heights
 
 ### Gamification (Phase 9) — COMPLETE
 - Streak tracking with 1-day grace period, XP system, 20 achievements, progress dashboard
@@ -132,4 +132,4 @@ src/
 
 ## Current Phase: See ROADMAP.md
 
-Next: Phase 8C.1 (guided tour) → Phase 11+ (adaptive difficulty, MIDI input, distribution).
+Next: Phase 11 (adaptive difficulty) → Phase 12+ (MIDI input, distribution).

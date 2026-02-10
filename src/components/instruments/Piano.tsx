@@ -291,7 +291,7 @@ export function Piano() {
               role="tab"
               aria-selected={isActive}
               onClick={() => setBaseOctave(oct)}
-              className="px-2 max-sm:px-3 py-0.5 max-sm:py-1.5 rounded text-[10px] max-sm:text-xs font-medium transition-colors"
+              className="px-2 py-0.5 rounded text-[10px] font-medium transition-colors"
               style={{
                 backgroundColor: isActive ? 'var(--accent)' : 'transparent',
                 color: isActive ? '#000' : 'var(--text-dim)',

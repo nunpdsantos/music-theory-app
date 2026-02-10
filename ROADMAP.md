@@ -62,8 +62,8 @@
 
 #### 8B — Mobile Responsiveness ✓
 - All views WCAG 44px touch target compliant
-- Piano mobile (wider keys, reduced octave range, hidden labels)
-- Fretboard mobile (position snapping, proportional dots, 44px touch targets)
+- Piano mobile (36px keys, 130px height, 2-octave range, hidden labels)
+- Fretboard mobile (36px fret cells, 160px container, position snapping, proportional dots)
 
 #### 8C — Onboarding + Visual Polish ✓
 - First-run guided tour (4-step tooltip/spotlight sequence, auto-advance on note play, skip/escape)

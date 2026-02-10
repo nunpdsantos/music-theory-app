@@ -426,23 +426,25 @@ export function Fretboard() {
 
         {/* Tuning selector — native <select> on mobile, chip row on desktop */}
         {mobile ? (
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-dim)' }}>Tuning:</span>
-            <select
-              value={guitarTuningId}
-              onChange={(e) => setGuitarTuningId(e.target.value)}
-              className="text-[10px] px-2 py-1 rounded appearance-none cursor-pointer bg-transparent"
-              style={{
-                color: 'var(--text-muted)',
-                border: '1px solid var(--border)',
-              }}
-              aria-label="Guitar tuning"
-            >
-              {GUITAR_TUNINGS.map((t) => (
-                <option key={t.id} value={t.id}>{t.shortName}</option>
-              ))}
-            </select>
-          </div>
+          !isStandardTuning ? (
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-dim)' }}>Tuning:</span>
+              <select
+                value={guitarTuningId}
+                onChange={(e) => setGuitarTuningId(e.target.value)}
+                className="text-[10px] px-2 py-1 rounded appearance-none cursor-pointer bg-transparent"
+                style={{
+                  color: 'var(--text-muted)',
+                  border: '1px solid var(--border)',
+                }}
+                aria-label="Guitar tuning"
+              >
+                {GUITAR_TUNINGS.map((t) => (
+                  <option key={t.id} value={t.id}>{t.shortName}</option>
+                ))}
+              </select>
+            </div>
+          ) : null
         ) : (
           <div role="radiogroup" aria-label="Guitar tuning" className="flex items-center gap-2 mb-2 flex-wrap">
             <span className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-dim)' }}>Tuning:</span>

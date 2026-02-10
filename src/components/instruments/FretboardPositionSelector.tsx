@@ -17,7 +17,7 @@ interface FretboardPositionSelectorProps {
 }
 
 const btnBase = 'text-[10px] px-2 py-0.5 rounded transition-colors';
-const btnMobile = 'text-xs px-3 py-1.5 rounded transition-colors min-h-[36px]';
+const btnMobile = 'text-[10px] px-2 py-0.5 rounded transition-colors';
 
 function selectorStyle(isActive: boolean) {
   return {
