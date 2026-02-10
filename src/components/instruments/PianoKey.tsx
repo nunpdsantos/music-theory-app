@@ -7,7 +7,7 @@ type SizeMode = 'mobile' | 'tablet' | 'desktop';
 const DIMS: Record<SizeMode, { white: [number, number]; black: [number, number]; labelSize: string }> = {
   desktop: { white: [44, 210], black: [28, 130], labelSize: '10px' },
   tablet:  { white: [36, 160], black: [22, 100], labelSize: '9px' },
-  mobile:  { white: [36, 180], black: [22, 112], labelSize: '8px' },
+  mobile:  { white: [36, 130], black: [22, 80],  labelSize: '8px' },
 };
 
 interface PianoKeyProps {
