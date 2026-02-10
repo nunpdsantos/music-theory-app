@@ -1,4 +1,4 @@
-import { useCallback, useRef, useMemo } from 'react';
+import { useCallback, useRef, useMemo, Suspense, lazy } from 'react';
 import { m } from 'framer-motion';
 import { noteToString, type Note, type ModeName } from '../../core/types/music.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
@@ -15,6 +15,13 @@ import { INTERVAL_SHORT_LABELS, buildChord, CHORD_QUALITY_NAMES, CHORD_SYMBOLS }
 import { MODE_INFO } from '../../core/constants/modes.ts';
 import { getChordsForScale } from '../../core/constants/chordScaleRelationships.ts';
 import { useAppStore } from '../../state/store.ts';
+import { getScaleNotesWithOctaves } from '../../core/utils/pianoLayout.ts';
+import { getKeySignatureForScale } from '../../utils/notationHelpers.ts';
+import { StaffNotationSkeleton } from '../notation/StaffNotationSkeleton.tsx';
+
+const StaffNotation = lazy(() =>
+  import('../notation/StaffNotation.tsx').then((m) => ({ default: m.StaffNotation }))
+);
 
 // Scales that correspond to modes
 const SCALE_TO_MODE: Partial<Record<string, ModeName>> = {
@@ -201,6 +208,24 @@ export function ScaleDetail() {
             );
           })}
         </div>
+      </div>
+
+      {/* Staff Notation */}
+      <div>
+        <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+          Staff
+        </h3>
+        <Suspense fallback={<StaffNotationSkeleton height={120} />}>
+          <StaffNotation
+            notes={getScaleNotesWithOctaves(scale.notes, baseOctave)}
+            keySignature={getKeySignatureForScale(scale.root, selectedScale) ?? undefined}
+            noteColors={Object.fromEntries(
+              scale.notes.map((_, i) => [i, DEGREE_COLORS[(i + 1) as keyof typeof DEGREE_COLORS] ?? 'var(--text-muted)'])
+            )}
+            height={120}
+            duration="q"
+          />
+        </Suspense>
       </div>
 
       {/* Formula */}

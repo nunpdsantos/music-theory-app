@@ -242,5 +242,5 @@ export function findNextIncompleteModule(
 }
 
 export function getDefaultProgress(): CurriculumProgress {
-  return { completedModules: [], moduleProgress: {}, exerciseResults: {} };
+  return { completedModules: [], moduleProgress: {}, exerciseResults: {}, reviewSchedules: {} };
 }

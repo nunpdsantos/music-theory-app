@@ -1,0 +1,239 @@
+/**
+ * Programmatic Exercise Generator — seeded PRNG for deterministic generation.
+ * Seed = hash of moduleId → same user sees same exercises every time.
+ */
+import type { ExerciseDefinition, ExerciseConfig } from '../../core/types/exercise';
+import type { ModuleTemplateConfig, ExerciseTemplate } from './exerciseTemplates';
+
+// ─── Seeded PRNG (mulberry32) ───────────────────────────────────────────────
+
+function mulberry32(seed: number): () => number {
+  let s = seed | 0;
+  return () => {
+    s = (s + 0x6D2B79F5) | 0;
+    let t = Math.imul(s ^ (s >>> 15), 1 | s);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/** Simple string hash → 32-bit integer */
+function hashString(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
+  }
+  return hash;
+}
+
+/** Pick a random element from an array using the PRNG */
+function pick<T>(arr: readonly T[], rand: () => number): T {
+  return arr[Math.floor(rand() * arr.length)];
+}
+
+// ─── Config Builders ────────────────────────────────────────────────────────
+
+function buildConfig(template: ExerciseTemplate, rand: () => number): ExerciseConfig | null {
+  const p = template.params;
+
+  switch (template.type) {
+    case 'note_id': {
+      const roots = p.roots ?? ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+      const accidentals = p.accidentals ?? roots.map(() => '');
+      const octaves = p.octaves ?? [4];
+      const idx = Math.floor(rand() * roots.length);
+      return {
+        type: 'note_id',
+        note: roots[idx],
+        accidental: accidentals[idx] ?? '',
+        octave: pick(octaves, rand),
+      };
+    }
+
+    case 'interval_id': {
+      const roots = p.roots ?? ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+      const accidentals = p.accidentals ?? roots.map(() => '');
+      const intervals = p.intervals ?? [3, 4, 5, 7];
+      const directions = p.directions ?? ['ascending'];
+      const octaves = p.octaves ?? [4];
+      const idx = Math.floor(rand() * roots.length);
+      return {
+        type: 'interval_id',
+        root: roots[idx],
+        rootAccidental: accidentals[idx] ?? '',
+        rootOctave: pick(octaves, rand),
+        targetSemitones: pick(intervals, rand),
+        direction: pick(directions, rand),
+      };
+    }
+
+    case 'scale_build': {
+      const roots = p.roots ?? ['C', 'G', 'D', 'F'];
+      const accidentals = p.accidentals ?? roots.map(() => '');
+      const scaleTypes = p.scaleTypes ?? ['major'];
+      const noteCounts = p.noteCounts ?? [7];
+      const idx = Math.floor(rand() * roots.length);
+      return {
+        type: 'scale_build',
+        root: roots[idx],
+        rootAccidental: accidentals[idx] ?? '',
+        scaleType: pick(scaleTypes, rand),
+        noteCount: pick(noteCounts, rand),
+      };
+    }
+
+    case 'chord_build': {
+      const roots = p.roots ?? ['C', 'G', 'D', 'F'];
+      const accidentals = p.accidentals ?? roots.map(() => '');
+      const qualities = p.chordQualities ?? ['major'];
+      const noteCounts = p.noteCounts ?? [3];
+      const idx = Math.floor(rand() * roots.length);
+      return {
+        type: 'chord_build',
+        root: roots[idx],
+        rootAccidental: accidentals[idx] ?? '',
+        quality: pick(qualities, rand),
+        noteCount: pick(noteCounts, rand),
+      };
+    }
+
+    case 'multiple_choice': {
+      if (!p.choiceSets?.length) return null;
+      return {
+        type: 'multiple_choice',
+        choices: pick(p.choiceSets, rand),
+      };
+    }
+
+    case 'scale_degree_id': {
+      const roots = p.roots ?? ['C', 'G', 'D'];
+      const accidentals = p.accidentals ?? roots.map(() => '');
+      const scaleTypes = p.scaleTypes ?? ['major'];
+      const degrees = p.degrees ?? [1, 2, 3, 4, 5, 6, 7];
+      const idx = Math.floor(rand() * roots.length);
+      const degree = pick(degrees, rand);
+      // Note: the actual note for a given degree depends on the scale,
+      // but the template system can't compute that. Use root as placeholder;
+      // the validation engine resolves from root + scaleType + degree.
+      return {
+        type: 'scale_degree_id',
+        root: roots[idx],
+        rootAccidental: accidentals[idx] ?? '',
+        scaleType: pick(scaleTypes, rand),
+        note: roots[idx], // placeholder — overridden below
+        noteAccidental: accidentals[idx] ?? '',
+        correctDegree: degree,
+      };
+    }
+
+    default:
+      return null;
+  }
+}
+
+/** Fill {param} placeholders in a template string with values from config */
+function fillTemplate(template: string, config: ExerciseConfig): string {
+  let result = template;
+  const replacements: Record<string, string> = {};
+
+  switch (config.type) {
+    case 'note_id':
+      replacements['root'] = config.note + config.accidental;
+      replacements['note'] = config.note + config.accidental;
+      replacements['octave'] = String(config.octave);
+      break;
+    case 'interval_id':
+      replacements['root'] = config.root + config.rootAccidental;
+      replacements['semitones'] = String(config.targetSemitones);
+      replacements['direction'] = config.direction;
+      break;
+    case 'scale_build':
+      replacements['root'] = config.root + config.rootAccidental;
+      replacements['scaleType'] = config.scaleType.replace(/_/g, ' ');
+      break;
+    case 'chord_build':
+      replacements['root'] = config.root + config.rootAccidental;
+      replacements['quality'] = config.quality.replace(/_/g, ' ');
+      break;
+    case 'scale_degree_id':
+      replacements['root'] = config.root + config.rootAccidental;
+      replacements['scaleType'] = config.scaleType.replace(/_/g, ' ');
+      replacements['degree'] = String(config.correctDegree);
+      break;
+  }
+
+  for (const [key, value] of Object.entries(replacements)) {
+    result = result.replace(new RegExp(`\\{${key}\\}`, 'g'), value);
+  }
+
+  return result;
+}
+
+// ─── Main Generator ─────────────────────────────────────────────────────────
+
+/** Generate exercises for a single module from its template config. */
+export function generateExercises(
+  config: ModuleTemplateConfig,
+  seed?: number,
+): ExerciseDefinition[] {
+  const actualSeed = seed ?? hashString(config.moduleId);
+  const rand = mulberry32(actualSeed);
+  const exercises: ExerciseDefinition[] = [];
+  const seenKeys = new Set<string>();
+
+  let attempts = 0;
+  const maxAttempts = config.targetCount * 5; // prevent infinite loops
+
+  while (exercises.length < config.targetCount && attempts < maxAttempts) {
+    attempts++;
+    const template = pick(config.templates, rand);
+    const exerciseConfig = buildConfig(template, rand);
+    if (!exerciseConfig) continue;
+
+    // Deduplication: create a key from the config to avoid identical exercises
+    const dedupeKey = JSON.stringify(exerciseConfig);
+    if (seenKeys.has(dedupeKey)) continue;
+    seenKeys.add(dedupeKey);
+
+    const index = exercises.length + 1;
+    const id = `${config.moduleId}g${index}`;
+
+    exercises.push({
+      id,
+      type: template.type,
+      prompt: fillTemplate(template.promptTemplate, exerciseConfig),
+      config: exerciseConfig,
+      hint: fillTemplate(template.hintTemplate, exerciseConfig),
+      points: template.points ?? 1,
+    });
+  }
+
+  return exercises;
+}
+
+/** Generate all exercises for a level's template configs. Returns moduleId → exercises. */
+export function generateAllForLevel(
+  configs: ModuleTemplateConfig[],
+): Record<string, ExerciseDefinition[]> {
+  const result: Record<string, ExerciseDefinition[]> = {};
+  for (const config of configs) {
+    const exercises = generateExercises(config);
+    if (exercises.length > 0) {
+      result[config.moduleId] = exercises;
+    }
+  }
+  return result;
+}
+
+/** Merge hand-authored exercises with generated exercises. */
+export function mergeExerciseMaps(
+  authored: Record<string, ExerciseDefinition[]>,
+  generated: Record<string, ExerciseDefinition[]>,
+): Record<string, ExerciseDefinition[]> {
+  const merged: Record<string, ExerciseDefinition[]> = { ...authored };
+  for (const [moduleId, genExercises] of Object.entries(generated)) {
+    const existing = merged[moduleId] ?? [];
+    merged[moduleId] = [...existing, ...genExercises];
+  }
+  return merged;
+}

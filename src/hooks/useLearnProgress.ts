@@ -1,6 +1,6 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import type { CurriculumProgress, CurriculumLevel, CurriculumUnit, LevelState } from '../core/types/curriculum';
-import type { ModuleExerciseResult } from '../core/types/exercise';
+import type { ModuleExerciseResult, ModuleReviewSchedule } from '../core/types/exercise';
 import {
   getDefaultProgress,
   getLevelCompletedModuleCount as _getLevelCompleted,
@@ -9,6 +9,13 @@ import {
   isUnitCompleted as _isUnitCompleted,
   computeLevelState,
 } from '../data/curriculumLoader';
+import {
+  createInitialSchedule,
+  updateScheduleAfterReview,
+  getDueReviewModuleIds,
+  getDueReviewCount,
+  backfillSchedules,
+} from '../services/spacedRepetition';
 
 const STORAGE_KEY = 'music-theory-progress';
 
@@ -50,12 +57,17 @@ export function useLearnProgress() {
   }, []);
 
   const completeModule = useCallback((moduleId: string) => {
-    setProgress((prev) => ({
-      ...prev,
-      completedModules: prev.completedModules.includes(moduleId)
-        ? prev.completedModules
-        : [...prev.completedModules, moduleId],
-    }));
+    setProgress((prev) => {
+      if (prev.completedModules.includes(moduleId)) return prev;
+      return {
+        ...prev,
+        completedModules: [...prev.completedModules, moduleId],
+        reviewSchedules: {
+          ...(prev.reviewSchedules ?? {}),
+          [moduleId]: createInitialSchedule(Date.now()),
+        },
+      };
+    });
   }, []);
 
   const uncompleteModule = useCallback((moduleId: string) => {
@@ -189,6 +201,66 @@ export function useLearnProgress() {
     [progress.completedModules],
   );
 
+  // ─── Spaced repetition ──────────────────────────────────────────────────────
+
+  // One-time backfill for modules completed before SRS existed
+  const backfillDone = useRef(false);
+  useEffect(() => {
+    if (backfillDone.current) return;
+    if (progress.completedModules.length === 0) return;
+
+    const existing = progress.reviewSchedules ?? {};
+    const needsBackfill = progress.completedModules.some((id) => !existing[id]);
+    if (!needsBackfill) return;
+
+    backfillDone.current = true;
+    setProgress((prev) => ({
+      ...prev,
+      reviewSchedules: backfillSchedules(prev, Date.now()),
+    }));
+  }, [progress.completedModules, progress.reviewSchedules]);
+
+  const scheduleModuleReview = useCallback((moduleId: string) => {
+    setProgress((prev) => ({
+      ...prev,
+      reviewSchedules: {
+        ...(prev.reviewSchedules ?? {}),
+        [moduleId]: createInitialSchedule(Date.now()),
+      },
+    }));
+  }, []);
+
+  const recordReviewResult = useCallback((moduleId: string, passed: boolean) => {
+    setProgress((prev) => {
+      const schedules = prev.reviewSchedules ?? {};
+      const existing = schedules[moduleId];
+      if (!existing) return prev;
+      return {
+        ...prev,
+        reviewSchedules: {
+          ...schedules,
+          [moduleId]: updateScheduleAfterReview(existing, passed, Date.now()),
+        },
+      };
+    });
+  }, []);
+
+  const getReviewQueue = useCallback(
+    () => getDueReviewModuleIds(progress, Date.now()),
+    [progress],
+  );
+
+  const reviewDueCount = useMemo(
+    () => getDueReviewCount(progress, Date.now()),
+    [progress],
+  );
+
+  const getModuleReviewSchedule = useCallback(
+    (moduleId: string): ModuleReviewSchedule | undefined =>
+      (progress.reviewSchedules ?? {})[moduleId],
+    [progress.reviewSchedules],
+  );
+
   return {
     progress,
     toggleTask,
@@ -208,5 +280,11 @@ export function useLearnProgress() {
     getModuleExerciseResult,
     getModuleExerciseScore,
     isModuleExercisesPassed,
+    // Spaced repetition
+    scheduleModuleReview,
+    recordReviewResult,
+    getReviewQueue,
+    reviewDueCount,
+    getModuleReviewSchedule,
   };
 }

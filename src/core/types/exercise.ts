@@ -130,3 +130,14 @@ export interface ValidationResult {
   /** String describing the expected answer */
   expected: string;
 }
+
+// ─── Spaced Repetition ──────────────────────────────────────────────────────
+
+export interface ModuleReviewSchedule {
+  completedAt: number;
+  nextReviewAt: number;
+  /** 0-5 → [1d, 3d, 7d, 14d, 30d, 90d] */
+  intervalLevel: number;
+  reviewCount: number;
+  lastReviewedAt: number;
+}

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, Suspense, lazy } from 'react';
 import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import { KeySelector } from '../components/navigation/KeySelector.tsx';
@@ -19,6 +19,13 @@ import {
   resumeAudio,
 } from '../core/services/audio.ts';
 import { generateScaleSummary, copyToClipboard } from '../utils/exportHelpers.ts';
+import { getScaleNotesWithOctaves } from '../core/utils/pianoLayout.ts';
+import { getKeySignatureForScale } from '../utils/notationHelpers.ts';
+import { StaffNotationSkeleton } from '../components/notation/StaffNotationSkeleton.tsx';
+
+const StaffNotation = lazy(() =>
+  import('../components/notation/StaffNotation.tsx').then((m) => ({ default: m.StaffNotation }))
+);
 
 const stagger = {
   hidden: { opacity: 0 },
@@ -179,6 +186,26 @@ export function ExploreView() {
               {t('explore.scaleDegrees')}
             </h3>
             <ScaleDegreeBar />
+          </m.div>
+
+          {/* ─── Staff Notation ─────────────────────────────────── */}
+          <m.div variants={fadeUp}>
+            <h3 className="text-[10px] font-bold mb-2.5 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+              {t('explore.staffNotation')}
+            </h3>
+            <div className="rounded-xl p-3" style={{ border: '1px solid color-mix(in srgb, var(--card) 50%, transparent)', backgroundColor: 'color-mix(in srgb, var(--bg) 30%, transparent)' }}>
+              <Suspense fallback={<StaffNotationSkeleton height={130} />}>
+                <StaffNotation
+                  notes={getScaleNotesWithOctaves(scale.notes, baseOctave)}
+                  keySignature={getKeySignatureForScale(scale.root, selectedScale) ?? undefined}
+                  noteColors={Object.fromEntries(
+                    scale.notes.map((_, i) => [i, DEGREE_COLORS[(i + 1) as keyof typeof DEGREE_COLORS] ?? 'var(--text-muted)'])
+                  )}
+                  height={130}
+                  duration="q"
+                />
+              </Suspense>
+            </div>
           </m.div>
 
           {/* ─── Scale Comparison ────────────────────────────────── */}

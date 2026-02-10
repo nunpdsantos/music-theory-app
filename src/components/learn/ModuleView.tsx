@@ -19,6 +19,8 @@ interface ModuleViewProps {
   completedTaskCount: number;
   exercises: ExerciseDefinition[];
   exercisesPassed: boolean;
+  /** When true, shows only exercises in review mode (hides concepts/tasks) */
+  isReviewMode?: boolean;
   onToggleTask: (moduleId: string, taskId: string) => void;
   onCompleteModule: (moduleId: string) => void;
   onRecordExerciseResult: (exerciseId: string, score: 0 | 0.5 | 1) => void;
@@ -39,6 +41,7 @@ export function ModuleView({
   completedTaskCount,
   exercises,
   exercisesPassed,
+  isReviewMode = false,
   onToggleTask,
   onCompleteModule,
   onRecordExerciseResult,
@@ -107,7 +110,12 @@ export function ModuleView({
             >
               {unit.title}
             </span>
-            {isModuleCompleted && (
+            {isReviewMode && (
+              <span className="text-[10px] font-medium text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-full">
+                {t('review.badge')}
+              </span>
+            )}
+            {!isReviewMode && isModuleCompleted && (
               <span className="text-[10px] font-medium text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full">
                 {t('status.completed')}
               </span>
@@ -151,8 +159,8 @@ export function ModuleView({
           </ul>
         </m.div>
 
-        {/* ─── Concepts ──────────────────────────────────────────── */}
-        <div className="space-y-8 mb-12">
+        {/* ─── Concepts (hidden in review mode) ─────────────────── */}
+        {!isReviewMode && <div className="space-y-8 mb-12">
           {module.concepts.map((concept, i) => (
             <m.div
               key={i}
@@ -242,7 +250,7 @@ export function ModuleView({
               )}
             </m.div>
           ))}
-        </div>
+        </div>}
 
         {/* ─── Exercises ───────────────────────────────────────────── */}
         {hasExercises && (
@@ -255,14 +263,15 @@ export function ModuleView({
             <ExerciseRunner
               exercises={exercises}
               accentColor={accent}
+              reviewMode={isReviewMode}
               onRecordResult={(exerciseId, score) => onRecordExerciseResult(exerciseId, score)}
               onComplete={onExercisesComplete}
             />
           </m.div>
         )}
 
-        {/* ─── Practice Tasks ────────────────────────────────────── */}
-        {module.tasks.length > 0 && (
+        {/* ─── Practice Tasks (hidden in review mode) ─────────── */}
+        {!isReviewMode && module.tasks.length > 0 && (
           <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -323,8 +332,8 @@ export function ModuleView({
           </m.div>
         )}
 
-        {/* ─── Complete Module Button ────────────────────────────── */}
-        {!isModuleCompleted && canComplete && (
+        {/* ─── Complete Module Button (hidden in review mode) ─── */}
+        {!isReviewMode && !isModuleCompleted && canComplete && (
           <m.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}

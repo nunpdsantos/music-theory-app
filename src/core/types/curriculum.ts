@@ -98,4 +98,6 @@ export interface CurriculumProgress {
   exemptedModules?: string[];
   /** Per-module exercise results: moduleId -> scores, attempts, passed */
   exerciseResults?: Record<string, import('./exercise').ModuleExerciseResult>;
+  /** Spaced repetition review schedules: moduleId -> schedule */
+  reviewSchedules?: Record<string, import('./exercise').ModuleReviewSchedule>;
 }

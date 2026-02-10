@@ -1,4 +1,4 @@
-import { useCallback, useRef, useMemo } from 'react';
+import { useCallback, useRef, useMemo, Suspense, lazy } from 'react';
 import { m } from 'framer-motion';
 import { noteToString, type Chord, type Note } from '../../core/types/music.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
@@ -16,6 +16,12 @@ import {
   CHORD_QUALITY_NAMES,
   getChordShortIntervalLabels,
 } from '../../core/constants/chords.ts';
+import { getVoicedChordNotes } from '../../core/utils/pianoLayout.ts';
+import { StaffNotationSkeleton } from '../notation/StaffNotationSkeleton.tsx';
+
+const StaffNotation = lazy(() =>
+  import('../notation/StaffNotation.tsx').then((m) => ({ default: m.StaffNotation }))
+);
 import { getScaleSuggestions } from '../../core/constants/chordScaleRelationships.ts';
 import { SCALE_TYPE_NAMES } from '../../core/constants/scales.ts';
 
@@ -184,6 +190,20 @@ export function ChordDetail({ chord }: ChordDetailProps) {
             );
           })}
         </div>
+      </div>
+
+      {/* Staff Notation */}
+      <div>
+        <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+          Staff
+        </h3>
+        <Suspense fallback={<StaffNotationSkeleton height={120} />}>
+          <StaffNotation
+            notes={getVoicedChordNotes(notesForPlayback, baseOctave)}
+            height={120}
+            duration="w"
+          />
+        </Suspense>
       </div>
 
       {/* Inversions */}

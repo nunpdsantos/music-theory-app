@@ -19,11 +19,13 @@ type Phase = 'active' | 'submitted';
 interface ExerciseRunnerProps {
   exercises: ExerciseDefinition[];
   accentColor: string;
+  /** When true, shows review-specific completion messages */
+  reviewMode?: boolean;
   onRecordResult: (exerciseId: string, score: 0 | 0.5 | 1) => void;
   onComplete: (passed: boolean) => void;
 }
 
-export function ExerciseRunner({ exercises, accentColor, onRecordResult, onComplete }: ExerciseRunnerProps) {
+export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onRecordResult, onComplete }: ExerciseRunnerProps) {
   const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [phase, setPhase] = useState<Phase>('active');
@@ -189,7 +191,9 @@ export function ExerciseRunner({ exercises, accentColor, onRecordResult, onCompl
             )}
           </span>
           <h3 className="text-base font-semibold mb-1" style={{ color: 'var(--text)' }}>
-            {passed ? t('exercise.exercisesComplete') : t('exercise.keepPracticing')}
+            {reviewMode
+              ? (passed ? t('review.reviewComplete') : t('review.reviewAgainSoon'))
+              : (passed ? t('exercise.exercisesComplete') : t('exercise.keepPracticing'))}
           </h3>
           <p className="text-xs mb-3" style={{ color: 'var(--text-dim)' }}>
             Score: {accumulatedScore % 1 === 0 ? accumulatedScore : accumulatedScore.toFixed(1)}/{exercises.length}

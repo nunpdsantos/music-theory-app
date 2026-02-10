@@ -16,7 +16,8 @@ type LearnScreen =
   | { type: 'levels' }
   | { type: 'level'; levelId: string }
   | { type: 'unit'; levelId: string; unitId: string }
-  | { type: 'module'; levelId: string; unitId: string; moduleId: string };
+  | { type: 'module'; levelId: string; unitId: string; moduleId: string }
+  | { type: 'review'; levelId: string; unitId: string; moduleId: string };
 
 const SPRING = { type: 'spring' as const, stiffness: 400, damping: 35 };
 
@@ -38,6 +39,8 @@ export function LearnView() {
     recordExerciseResult,
     markExercisesPassed,
     isModuleExercisesPassed,
+    scheduleModuleReview,
+    recordReviewResult,
   } = useLearnProgress();
 
   // Navigation helpers
@@ -52,6 +55,7 @@ export function LearnView() {
   const goToUnit = useCallback((levelId: string, unitId: string) => navigate({ type: 'unit', levelId, unitId }, 'forward'), [navigate]);
   const goToUnitBack = useCallback((levelId: string, unitId: string) => navigate({ type: 'unit', levelId, unitId }, 'back'), [navigate]);
   const goToModule = useCallback((levelId: string, unitId: string, moduleId: string) => navigate({ type: 'module', levelId, unitId, moduleId }, 'forward'), [navigate]);
+  const goToReview = useCallback((levelId: string, unitId: string, moduleId: string) => navigate({ type: 'review', levelId, unitId, moduleId }, 'forward'), [navigate]);
 
   // Scroll to top on screen change
   useEffect(() => {
@@ -136,6 +140,14 @@ export function LearnView() {
               progress={progress}
               onOpenLevel={goToLevel}
               onOpenModule={(moduleId, unitId, levelId) => goToModule(levelId, unitId, moduleId)}
+              onStartReview={(moduleId) => {
+                // Resolve levelId/unitId from module ID prefix
+                const levelId = moduleId.slice(0, 2);
+                // Extract unit number from pattern l{n}u{n}m{n}
+                const unitMatch = moduleId.match(/^(l\d+)(u\d+)/);
+                const unitId = unitMatch ? unitMatch[1] + unitMatch[2] : '';
+                goToReview(levelId, unitId, moduleId);
+              }}
             />
           </m.div>
         )}
@@ -224,6 +236,51 @@ export function LearnView() {
                   onRecordExerciseResult={(exerciseId, score) => recordExerciseResult(mod.id, exerciseId, score)}
                   onExercisesComplete={(passed) => { if (passed) markExercisesPassed(mod.id); }}
                   onBack={() => goToUnitBack(screen.levelId, screen.unitId)}
+                  onBackToLevels={goToLevels}
+                  onNavigateModule={(moduleId) => goToModule(screen.levelId, screen.unitId, moduleId)}
+                />
+              );
+            })()}
+          </m.div>
+        )}
+        {screen.type === 'review' && (
+          <m.div
+            key={`review-${screen.moduleId}`}
+            initial={{ opacity: 0, x: xOffset }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -xOffset }}
+            transition={SPRING}
+          >
+            {!loadedLevel ? loadingSpinner : (() => {
+              const unit = loadedLevel.units.find((u) => u.id === screen.unitId);
+              if (!unit) return null;
+              const moduleIndex = unit.modules.findIndex((m) => m.id === screen.moduleId);
+              const mod = unit.modules[moduleIndex];
+              if (!mod) return null;
+              const unitIndex = loadedLevel.units.indexOf(unit);
+
+              const modExercises = exercisesByModule[mod.id] ?? [];
+
+              return (
+                <ModuleView
+                  module={mod}
+                  unit={unit}
+                  level={loadedLevel}
+                  unitIndex={unitIndex}
+                  moduleIndex={moduleIndex}
+                  isModuleCompleted={isModuleCompleted(mod.id)}
+                  isTaskCompleted={isTaskCompleted}
+                  completedTaskCount={getModuleCompletedTaskCount(mod.id)}
+                  exercises={modExercises}
+                  exercisesPassed={false}
+                  isReviewMode
+                  onToggleTask={toggleTask}
+                  onCompleteModule={completeModule}
+                  onRecordExerciseResult={(exerciseId, score) => recordExerciseResult(mod.id, exerciseId, score)}
+                  onExercisesComplete={(passed) => {
+                    recordReviewResult(mod.id, passed);
+                  }}
+                  onBack={() => goToLevels()}
                   onBackToLevels={goToLevels}
                   onNavigateModule={(moduleId) => goToModule(screen.levelId, screen.unitId, moduleId)}
                 />

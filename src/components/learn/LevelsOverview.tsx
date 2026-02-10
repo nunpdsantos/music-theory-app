@@ -11,6 +11,7 @@ import {
 } from '../../data/curriculumLoader';
 import type { LevelMeta } from '../../data/curriculumLoader';
 import { ContinueBanner } from './ContinueBanner';
+import { ReviewQueue } from './ReviewQueue';
 import { LevelCard } from './LevelCard';
 import { ProgressBar } from './ProgressBar';
 
@@ -18,12 +19,14 @@ interface LevelsOverviewProps {
   progress: CurriculumProgress;
   onOpenLevel: (levelId: string) => void;
   onOpenModule: (moduleId: string, unitId: string, levelId: string) => void;
+  onStartReview?: (moduleId: string) => void;
 }
 
 export function LevelsOverview({
   progress,
   onOpenLevel,
   onOpenModule,
+  onStartReview,
 }: LevelsOverviewProps) {
   const { t } = useTranslation();
   // Async-load full levels for continue banner
@@ -92,6 +95,11 @@ export function LevelsOverview({
           level={nextUp.level}
           onClick={() => onOpenModule(nextUp.module.id, nextUp.unit.id, nextUp.level.id)}
         />
+      )}
+
+      {/* Review Queue */}
+      {onStartReview && (
+        <ReviewQueue progress={progress} onStartReview={onStartReview} />
       )}
 
       {/* Level cards grid */}

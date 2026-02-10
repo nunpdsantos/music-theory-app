@@ -66,7 +66,8 @@
     "uniqueToB": "\u00fanicas em B",
     "sharedLegend": "Comuns",
     "onlyLegend": "Apenas {{name}}",
-    "vs": "vs"
+    "vs": "vs",
+    "staffNotation": "Nota\u00e7\u00e3o em Pauta"
   },
   "play": {
     "performanceMode": "Modo Performance",
@@ -195,5 +196,15 @@
     "piano": "Piano",
     "guitar": "Guitarra",
     "label": "Instrumento {{name}}"
+  },
+  "review": {
+    "title": "Fila de Revis\u00e3o",
+    "badge": "Revis\u00e3o",
+    "interval": "Intervalo: {{interval}}",
+    "moreItems": "+{{count}} mais para revis\u00e3o",
+    "reviewComplete": "Revis\u00e3o Completa!",
+    "reviewAgainSoon": "Rever Novamente em Breve",
+    "dueNow": "Agora",
+    "startReview": "Iniciar Revis\u00e3o"
   }
 }
