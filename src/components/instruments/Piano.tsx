@@ -309,13 +309,14 @@ export function Piano() {
         className="overflow-x-auto overflow-y-hidden relative piano-scroll"
         style={{
           height: containerHeight,
-          cursor: 'grab',
+          cursor: mobile ? undefined : 'grab',
           scrollbarWidth: 'none',
+          WebkitOverflowScrolling: 'touch',
         }}
-        onPointerDown={handleContainerPointerDown}
-        onPointerMove={handleContainerPointerMove}
-        onPointerUp={handleContainerPointerUp}
-        onPointerCancel={handleContainerPointerUp}
+        onPointerDown={mobile ? undefined : handleContainerPointerDown}
+        onPointerMove={mobile ? undefined : handleContainerPointerMove}
+        onPointerUp={mobile ? undefined : handleContainerPointerUp}
+        onPointerCancel={mobile ? undefined : handleContainerPointerUp}
       >
         <div
           className="relative flex"

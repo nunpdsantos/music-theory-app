@@ -393,15 +393,15 @@ export function Fretboard() {
       tabIndex={0}
       className="w-full overflow-x-auto fretboard-scroll focus:outline-none"
       style={{
-        cursor: 'grab',
+        cursor: mobile ? undefined : 'grab',
         scrollbarWidth: 'none',
         userSelect: 'none',
         backgroundColor: 'var(--bg)',
         borderTop: '1px solid var(--border-subtle)',
-        ...(mobile ? { scrollSnapType: 'x proximity' } : {}),
+        ...(mobile ? { scrollSnapType: 'x proximity', WebkitOverflowScrolling: 'touch' } : {}),
       }}
-      onPointerDown={handleFretboardPointerDown}
-      onClickCapture={handleFretboardClickCapture}
+      onPointerDown={mobile ? undefined : handleFretboardPointerDown}
+      onClickCapture={mobile ? undefined : handleFretboardClickCapture}
       onKeyDown={handleKeyDown}
     >
       {/* Screen reader live region */}
