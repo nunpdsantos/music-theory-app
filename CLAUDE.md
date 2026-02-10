@@ -111,7 +111,8 @@ src/
 - **8A:** Self-hosted fonts, toast system, typography tokens
 - **8B:** Mobile responsiveness (all views + instruments WCAG-compliant)
 - **8C:** Card elevation, empty states, micro-interactions, completion celebrations, first-run guided tour
-- Small-screen optimization: piano keys 46→36px, fretboard cells 44→36px, reduced container heights
+- Small-screen optimization: piano keys 36px/130px, fretboard cells 36px/32px rows, compacted chrome, native touch scroll
+- AppShell containers: guitar 240px, piano 195px (`overflow-x-hidden overflow-y-auto`), drag-to-scroll disabled on mobile
 
 ### Gamification (Phase 9) — COMPLETE
 - Streak tracking with 1-day grace period, XP system, 20 achievements, progress dashboard
