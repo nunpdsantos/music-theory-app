@@ -89,6 +89,7 @@ export function TopBar() {
   const themeLabel = t(THEME_KEYS[themeMode]);
 
   return (
+    <>
     <header
       className="flex items-center justify-between px-4 max-sm:px-2.5 h-12 backdrop-blur-md shrink-0"
       style={{
@@ -236,9 +237,10 @@ export function TopBar() {
           </kbd>
         </button>
       </div>
-      {isAvailable && (
-        <AuthModal open={authModalOpen} onClose={() => setAuthModalOpen(false)} onSignIn={signIn} />
-      )}
     </header>
+    {isAvailable && (
+      <AuthModal open={authModalOpen} onClose={() => setAuthModalOpen(false)} onSignIn={signIn} />
+    )}
+    </>
   );
 }

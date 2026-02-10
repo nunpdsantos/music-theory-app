@@ -3,11 +3,11 @@
 ## Start Here (Session Handoff)
 
 **Last updated:** 2026-02-10
-**Tests:** 445 passing | **Build:** clean | **TypeScript:** clean
+**Tests:** 511 passing | **Build:** clean | **TypeScript:** clean
 
-**Completed:** Phases 1–9 + Phase 8A–8C (except 8C.1).
+**Completed:** Phases 1–10 + Phase 8A–8C (all complete). Supabase backend live.
 
-**Next up:** Phase 8C.1 (guided tour — Medium effort), then Phase 10 (Supabase backend + auth + cloud sync).
+**Next up:** Phase 11 (Adaptive Difficulty Engine).
 
 **To start a new session:** Say "Continue with the roadmap" and point to this file. Everything needed is in CLAUDE.md (architecture) + this ROADMAP (plan + status).
 
@@ -65,7 +65,8 @@
 - Piano mobile (wider keys, reduced octave range, hidden labels)
 - Fretboard mobile (position snapping, proportional dots, 44px touch targets)
 
-#### 8C — Onboarding + Visual Polish ✓ (except 8C.1)
+#### 8C — Onboarding + Visual Polish ✓
+- First-run guided tour (4-step tooltip/spotlight sequence, auto-advance on note play, skip/escape)
 - Card elevation + depth (shadow scale, glassmorphism, hover elevation)
 - Empty state design (ChordGrid, Learn view, ReviewQueue)
 - Micro-interactions (button press scale, correct/incorrect animations)
@@ -79,56 +80,18 @@
 - Standalone Zustand store with localStorage persistence
 - 41 gamification tests, 445 total passing
 
----
-
-## Remaining: Phase 8C.1
-
-### 8C.1 — First-run guided tour
-- 4-step tooltip/spotlight sequence:
-  1. "Pick your instrument" (Piano/Guitar toggle)
-  2. "Choose a key and scale" (root + scale selectors)
-  3. "Play a note to hear it" (tap a key/fret)
-  4. "Ready to learn? Start here" (Learn tab)
-- Persist `onboarding_complete` flag in localStorage
-- Skip button on every step
-- Effort: Medium
-
----
-
-## Phase 10: Backend + Auth + Cloud Sync
-
-Supabase (Postgres + Auth + Row-Level Security). Optional sign-in via magic link (email). Bidirectional cloud sync with offline-first priority.
-
-### Database Schema
-4 Postgres tables with JSONB `data` columns for future-proof schema:
-- `profiles` — id, display_name, created_at, updated_at
-- `user_preferences` — user_id, data (JSONB), updated_at
-- `curriculum_progress` — user_id, data (JSONB), updated_at
-- `gamification_data` — user_id, data (JSONB), updated_at
-
-RLS: `auth.uid() = user_id` on all tables. Trigger auto-creates rows on signup.
-
-### Key Design Decisions
-- `supabase === null` when env vars missing — zero breaking changes for anonymous users
-- JSONB data columns — schema stays stable as TypeScript types evolve
-- Convert `useLearnProgress` to Zustand — enables `.subscribe()` for sync
-- Debounced push (2s) — coalesces rapid changes, low Supabase request volume
-- No Supabase Realtime — pull-on-login + push-on-change is sufficient for single-user sync
-- Offline queue in localStorage — max 3 entries (one per store), survives page reload
-
-### Conflict Resolution
-| Domain | Strategy |
-|---|---|
-| Preferences | Last-write-wins (compare `updated_at`) |
-| Curriculum progress | Union `completedModules`, higher score per exercise, higher `reviewCount` |
-| Gamification | Max counters, union activity/achievements, higher streak |
-
-### Success Criteria
-- Anonymous users: zero behavioral changes, zero network calls
-- Authenticated: sync within 2s of any change
-- Cross-device: sign in on new device, all progress appears
-- Offline: changes queue, flush on reconnect
-- ~55 new tests, ~500 total passing
+### Phase 10: Backend + Auth + Cloud Sync ✓
+- Supabase (Postgres + Auth + RLS) — optional, zero breaking changes without env vars
+- Magic link authentication (email OTP, no passwords)
+- Bidirectional cloud sync: pull-on-login, debounced push (2s), offline queue
+- Conflict resolution: LWW preferences, union progress, max gamification counters
+- Converted useLearnProgress from useState to Zustand store (same API surface)
+- Pure merge functions for 3 domains (50 tests)
+- Auth UI: AuthModal + AccountMenu in TopBar
+- SQL migration with RLS policies and auto-provisioning triggers
+- PWA: Workbox NetworkOnly for Supabase URLs
+- i18n: 18 auth/sync keys (en + pt)
+- 66 new tests, 511 total passing
 
 ---
 
@@ -196,7 +159,7 @@ These are valid directions but explicitly deferred. Do not start without a separ
 ## Competitive Context (Feb 2026 Audit)
 
 ### Market Position
-Modern, free, instrument-first music theory platform. No competitor combines: interactive piano+guitar, color-coded functional harmony, 1,000+ exercises with SRS, staff notation, gamification, offline PWA, and accessibility.
+Modern, free, instrument-first music theory platform. No competitor combines: interactive piano+guitar, color-coded functional harmony, 1,000+ exercises with SRS, staff notation, gamification, cloud sync, offline PWA, and accessibility.
 
 ### Competitor Landscape (7 apps evaluated)
 
