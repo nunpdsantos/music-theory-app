@@ -4,10 +4,11 @@
 
 **Name:** Music Theory App
 **Domain:** Music theory education / interactive instrument
-**Stack:** React 19 + TypeScript 5.9 + Vite 7 + Tailwind CSS v4 + Zustand 5 + Framer Motion 12
-**Tests:** 404 passing (Vitest + React Testing Library)
+**Stack:** React 19 + TypeScript 5.9 + Vite 7 + Tailwind CSS v4 + Zustand 5 + Framer Motion 12 + Supabase
+**Tests:** 511 passing (Vitest + React Testing Library)
 **Languages:** English + Portuguese (react-i18next)
 **PWA:** Offline-capable with Workbox precaching
+**Backend:** Supabase (optional — app works fully without env vars)
 
 ### Commands
 
@@ -32,9 +33,13 @@
 src/
   core/              ~40 files, framework-agnostic music theory engine (types, constants, utils)
   design/tokens/     Color system (degree colors, surface colors) + motion tokens
+  lib/               supabase.ts (client singleton, null when no env vars), database.types.ts
   state/store.ts     Single Zustand store (music, instrument, audio, navigation, preferences)
+  state/progressStore.ts  Zustand curriculum progress (persisted, sync-ready)
   state/toastStore.ts  Standalone toast queue (Zustand, not in main store)
-  i18n/              i18next config + locales (en.json, pt.json) — ~170 keys, 18 namespaces
+  state/syncStore.ts   Sync UI state (not persisted)
+  state/gamificationStore.ts  Streaks, XP, achievements (persisted)
+  i18n/              i18next config + locales (en.json, pt.json) — ~190 keys, 19 namespaces
   components/
     instruments/     Piano, PianoKey, Fretboard, FretCell, InstrumentSelector
     theory/          ScaleDegreeBar, ChordGrid, CircleOfFifths
@@ -45,9 +50,10 @@ src/
     play/            MetronomeControl, MidiOutputControl, RecordingControl, ChordProgressionBuilder
     learn/           LevelsOverview, LevelCard, ModuleView, ReviewQueue, ContinueBanner
       exercises/     ExerciseRunner, ExercisePrompt, ExerciseFeedback, ExerciseProgress, ChoiceInput
+    auth/            AuthModal (magic link), AccountMenu (dropdown)
   views/             ExploreView, PlayView, LearnView
-  hooks/             useAudio, useMidi, useKeyContext, useMetronome, useTheme, usePWA, useLanguage, useLearnProgress
-  services/          metronome, midiOutput, noteRecorder, spacedRepetition
+  hooks/             useAudio, useMidi, useKeyContext, useMetronome, useTheme, usePWA, useLanguage, useLearnProgress, useAuth, useSync
+  services/          metronome, midiOutput, noteRecorder, spacedRepetition, sync, syncMerge
   utils/             exportHelpers, notationHelpers, vexflowLoader
   data/
     curriculumL1-L9.ts       Curriculum content per level (lazy-loaded)
@@ -63,7 +69,7 @@ src/
 
 ---
 
-## What's Built (Phases 1–7)
+## What's Built (Phases 1–10)
 
 ### Foundation (Phase 1–3)
 - Error boundaries (app-level + per-view with auto-recovery)
@@ -101,20 +107,29 @@ src/
 - **Exercise generation:** Seeded PRNG templates for 118 modules (~627 generated, ~1,000+ total)
 - **Staff notation:** VexFlow 5.0 lazy-loaded (~1,128 KB separate chunk), theme-reactive, integrated in Explore/panels/exercises
 
-### Polish & Reach (Phase 8A–8B) — COMPLETE
-- **8A.1:** Self-hosted fonts (Inter + Source Serif 4 WOFF2, `@font-face`, SW precache)
-- **8A.2:** Toast notification system (standalone Zustand store, `m.div` + AnimatePresence, auto-dismiss)
-- **8A.3:** Typography tokens (`text-2xs` custom utility, `type-section`/`learn-serif` classes)
-- **8B.1–8B.4:** View mobile responsiveness (AppShell, Explore, Play, Learn — WCAG 44px touch targets, scroll snap, fade hints)
-- **8B.5:** Piano mobile (wider keys, reduced octave range, hidden labels)
-- **8B.6:** Fretboard mobile (position snapping, proportional dots, 44px touch targets)
-- 404 tests passing
+### Polish & Reach (Phase 8) — COMPLETE (except 8C.1)
+- **8A:** Self-hosted fonts, toast system, typography tokens
+- **8B:** Mobile responsiveness (all views + instruments WCAG-compliant)
+- **8C:** Card elevation, empty states, micro-interactions, completion celebrations
+- **8C.1 remaining:** First-run guided tour (4-step tooltip sequence)
 
-### Onboarding + Visual Polish (Phase 8C) — IN PROGRESS
-- **8C.2:** Completion celebrations — canvas confetti, Web Audio arpeggio (C5-E5-G5), LevelAchievement overlay, review toast. New files: `Confetti.tsx`, `celebrationSound.ts`, `LevelAchievement.tsx`. 5 i18n keys (en+pt).
+### Gamification (Phase 9) — COMPLETE
+- Streak tracking with 1-day grace period, XP system, 20 achievements, progress dashboard
+- Standalone Zustand store with localStorage persistence
+
+### Backend + Auth + Cloud Sync (Phase 10) — COMPLETE
+- **Supabase client:** `src/lib/supabase.ts` — null when env vars missing (zero breaking changes)
+- **Auth:** Magic link (email OTP) via `useAuth` hook, `AuthModal` + `AccountMenu` components
+- **Cloud sync:** Debounced push (2s), pull-on-login, offline queue in localStorage
+- **Merge functions:** `src/services/syncMerge.ts` — preferences (LWW), progress (union), gamification (max)
+- **Progress store:** Converted `useLearnProgress` from useState to Zustand (`progressStore.ts`)
+- **Store versioning:** `store.ts` v1→v2 migration (added `preferencesUpdatedAt`)
+- **PWA:** Workbox `NetworkOnly` for Supabase URLs
+- **i18n:** 18 auth/sync keys (en + pt)
+- 511 tests passing (66 new: 50 syncMerge + 11 progressStore + 5 syncStore)
 
 ---
 
-## Current Phase: 8C — Onboarding + Visual Polish (4 tasks remaining)
+## Current Phase: See ROADMAP.md
 
-See **ROADMAP.md § "Start Here"** for the execution plan and next steps.
+Next: Phase 8C.1 (guided tour) → Phase 11+ (adaptive difficulty, MIDI input, distribution).

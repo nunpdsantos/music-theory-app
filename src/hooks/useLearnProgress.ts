@@ -1,8 +1,12 @@
-import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
-import type { CurriculumProgress, CurriculumLevel, CurriculumUnit, LevelState } from '../core/types/curriculum';
+/**
+ * Thin wrapper around progressStore — preserves the exact same API surface
+ * that all consumers expect, but backed by Zustand for sync support.
+ */
+import { useCallback, useMemo, useEffect, useRef } from 'react';
+import { useProgressStore } from '../state/progressStore';
+import type { CurriculumLevel, CurriculumUnit, LevelState } from '../core/types/curriculum';
 import type { ModuleExerciseResult, ModuleReviewSchedule } from '../core/types/exercise';
 import {
-  getDefaultProgress,
   getLevelCompletedModuleCount as _getLevelCompleted,
   getLevelModuleCount,
   isLevelCompleted as _isLevelCompleted,
@@ -10,72 +14,32 @@ import {
   computeLevelState,
 } from '../data/curriculumLoader';
 import {
-  createInitialSchedule,
-  updateScheduleAfterReview,
   getDueReviewModuleIds,
   getDueReviewCount,
-  backfillSchedules,
 } from '../services/spacedRepetition';
 
-const STORAGE_KEY = 'music-theory-progress';
-
-function loadProgress(): CurriculumProgress {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch {
-    // corrupted data — start fresh
-  }
-  return getDefaultProgress();
-}
-
-function saveProgress(progress: CurriculumProgress) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-}
-
 export function useLearnProgress() {
-  const [progress, setProgress] = useState<CurriculumProgress>(loadProgress);
+  const progress = useProgressStore((s) => s.progress);
+  const toggleTask = useProgressStore((s) => s.toggleTask);
+  const completeModule = useProgressStore((s) => s.completeModule);
+  const uncompleteModule = useProgressStore((s) => s.uncompleteModule);
+  const recordExerciseResult = useProgressStore((s) => s.recordExerciseResult);
+  const markExercisesPassed = useProgressStore((s) => s.markExercisesPassed);
+  const scheduleModuleReview = useProgressStore((s) => s.scheduleModuleReview);
+  const recordReviewResult = useProgressStore((s) => s.recordReviewResult);
+  const backfillReviewSchedules = useProgressStore((s) => s.backfillReviewSchedules);
 
+  // One-time backfill for modules completed before SRS existed
+  const backfillDone = useRef(false);
   useEffect(() => {
-    saveProgress(progress);
-  }, [progress]);
-
-  const toggleTask = useCallback((moduleId: string, taskId: string) => {
-    setProgress((prev) => {
-      const moduleTasks = prev.moduleProgress[moduleId] ?? [];
-      const isCompleted = moduleTasks.includes(taskId);
-      return {
-        ...prev,
-        moduleProgress: {
-          ...prev.moduleProgress,
-          [moduleId]: isCompleted
-            ? moduleTasks.filter((id) => id !== taskId)
-            : [...moduleTasks, taskId],
-        },
-      };
-    });
-  }, []);
-
-  const completeModule = useCallback((moduleId: string) => {
-    setProgress((prev) => {
-      if (prev.completedModules.includes(moduleId)) return prev;
-      return {
-        ...prev,
-        completedModules: [...prev.completedModules, moduleId],
-        reviewSchedules: {
-          ...(prev.reviewSchedules ?? {}),
-          [moduleId]: createInitialSchedule(Date.now()),
-        },
-      };
-    });
-  }, []);
-
-  const uncompleteModule = useCallback((moduleId: string) => {
-    setProgress((prev) => ({
-      ...prev,
-      completedModules: prev.completedModules.filter((id) => id !== moduleId),
-    }));
-  }, []);
+    if (backfillDone.current) return;
+    if (progress.completedModules.length === 0) return;
+    const existing = progress.reviewSchedules ?? {};
+    const needsBackfill = progress.completedModules.some((id) => !existing[id]);
+    if (!needsBackfill) return;
+    backfillDone.current = true;
+    backfillReviewSchedules();
+  }, [progress.completedModules, progress.reviewSchedules, backfillReviewSchedules]);
 
   const isModuleCompleted = useCallback(
     (moduleId: string) => progress.completedModules.includes(moduleId),
@@ -99,57 +63,7 @@ export function useLearnProgress() {
     [progress.completedModules],
   );
 
-  // ─── Exercise tracking ─────────────────────────────────────────────────────
-
-  const recordExerciseResult = useCallback(
-    (moduleId: string, exerciseId: string, score: 0 | 0.5 | 1) => {
-      setProgress((prev) => {
-        const results = prev.exerciseResults ?? {};
-        const existing = results[moduleId] ?? {
-          scores: {},
-          totalAttempts: 0,
-          lastAttemptAt: 0,
-          passed: false,
-        };
-        const updatedScores = { ...existing.scores, [exerciseId]: score };
-        const totalAttempts = existing.totalAttempts + 1;
-        const lastAttemptAt = Date.now();
-
-        return {
-          ...prev,
-          exerciseResults: {
-            ...results,
-            [moduleId]: {
-              scores: updatedScores,
-              totalAttempts,
-              lastAttemptAt,
-              // passed is computed externally via isModuleExercisesPassed
-              passed: existing.passed,
-            },
-          },
-        };
-      });
-    },
-    [],
-  );
-
-  const markExercisesPassed = useCallback(
-    (moduleId: string) => {
-      setProgress((prev) => {
-        const results = prev.exerciseResults ?? {};
-        const existing = results[moduleId];
-        if (!existing) return prev;
-        return {
-          ...prev,
-          exerciseResults: {
-            ...results,
-            [moduleId]: { ...existing, passed: true },
-          },
-        };
-      });
-    },
-    [],
-  );
+  // Exercise tracking
 
   const getModuleExerciseResult = useCallback(
     (moduleId: string): ModuleExerciseResult | undefined =>
@@ -201,49 +115,7 @@ export function useLearnProgress() {
     [progress.completedModules],
   );
 
-  // ─── Spaced repetition ──────────────────────────────────────────────────────
-
-  // One-time backfill for modules completed before SRS existed
-  const backfillDone = useRef(false);
-  useEffect(() => {
-    if (backfillDone.current) return;
-    if (progress.completedModules.length === 0) return;
-
-    const existing = progress.reviewSchedules ?? {};
-    const needsBackfill = progress.completedModules.some((id) => !existing[id]);
-    if (!needsBackfill) return;
-
-    backfillDone.current = true;
-    setProgress((prev) => ({
-      ...prev,
-      reviewSchedules: backfillSchedules(prev, Date.now()),
-    }));
-  }, [progress.completedModules, progress.reviewSchedules]);
-
-  const scheduleModuleReview = useCallback((moduleId: string) => {
-    setProgress((prev) => ({
-      ...prev,
-      reviewSchedules: {
-        ...(prev.reviewSchedules ?? {}),
-        [moduleId]: createInitialSchedule(Date.now()),
-      },
-    }));
-  }, []);
-
-  const recordReviewResult = useCallback((moduleId: string, passed: boolean) => {
-    setProgress((prev) => {
-      const schedules = prev.reviewSchedules ?? {};
-      const existing = schedules[moduleId];
-      if (!existing) return prev;
-      return {
-        ...prev,
-        reviewSchedules: {
-          ...schedules,
-          [moduleId]: updateScheduleAfterReview(existing, passed, Date.now()),
-        },
-      };
-    });
-  }, []);
+  // Spaced repetition
 
   const getReviewQueue = useCallback(
     () => getDueReviewModuleIds(progress, Date.now()),

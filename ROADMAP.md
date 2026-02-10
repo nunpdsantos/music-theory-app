@@ -3,20 +3,13 @@
 ## Start Here (Session Handoff)
 
 **Last updated:** 2026-02-10
-**Tests:** 404 passing | **Build:** clean | **TypeScript:** clean
+**Tests:** 445 passing | **Build:** clean | **TypeScript:** clean
 
-**Completed:** Phases 1–7 + Phase 8A (foundation) + Phase 8B (mobile responsiveness) + Phase 8C.2 (completion celebrations).
+**Completed:** Phases 1–9 + Phase 8A–8C (except 8C.1).
 
-**Next up:** Phase 8C remaining — 1 task (Medium effort).
+**Next up:** Phase 8C.1 (guided tour — Medium effort), then Phase 10 (Supabase backend + auth + cloud sync).
 
-**Execution order for remaining 8C** (rationale: foundational visual work first, tour last):
-
-1. ~~**8C.3 — Card elevation + depth**~~ ✓ Done.
-2. ~~**8C.5 — Empty state design**~~ ✓ Done.
-3. ~~**8C.4 — Micro-interactions**~~ ✓ Done.
-4. **8C.1 — First-run guided tour** → 4-step tooltip sequence. Do last — touches every view, benefits from all polish.
-
-**To start a new session:** Say "Continue with Phase 8C" and point to this file. Everything needed is in CLAUDE.md (architecture) + this ROADMAP (plan + status).
+**To start a new session:** Say "Continue with the roadmap" and point to this file. Everything needed is in CLAUDE.md (architecture) + this ROADMAP (plan + status).
 
 ---
 
@@ -59,107 +52,169 @@
 - 7.B: Exercise generation (seeded PRNG templates, 118 modules, ~627 generated, ~1,000+ total)
 - 7.C: Staff notation (VexFlow 5.0 lazy-loaded ~1,128 KB chunk, theme-reactive, 4 integration points)
 - Design overhaul: Inter font, expanded CSS tokens, full theme reactivity
-- 399 tests passing
+
+### Phase 8: Polish & Reach
+
+#### 8A — Foundation Layer ✓
+- Self-hosted fonts (Inter + Source Serif 4 WOFF2, SW precache)
+- Toast notification system (standalone Zustand store, AnimatePresence, auto-dismiss)
+- Typography tokens (`text-2xs`, `type-section`, `learn-serif`)
+
+#### 8B — Mobile Responsiveness ✓
+- All views WCAG 44px touch target compliant
+- Piano mobile (wider keys, reduced octave range, hidden labels)
+- Fretboard mobile (position snapping, proportional dots, 44px touch targets)
+
+#### 8C — Onboarding + Visual Polish ✓ (except 8C.1)
+- Card elevation + depth (shadow scale, glassmorphism, hover elevation)
+- Empty state design (ChordGrid, Learn view, ReviewQueue)
+- Micro-interactions (button press scale, correct/incorrect animations)
+- Completion celebrations (canvas confetti, Web Audio arpeggio, level achievement overlay)
+
+### Phase 9: Gamification ✓
+- Streak tracking with 1-day grace period
+- XP system (module=10-20, exercise=1-2, review=5, level bonus=50)
+- 20 achievements across 4 categories (milestones, streaks, exercises, reviews)
+- Progress dashboard (activity heatmap, weekly chart, stat cards)
+- Standalone Zustand store with localStorage persistence
+- 41 gamification tests, 445 total passing
 
 ---
 
-## Current Phase: 8 — Polish & Reach
+## Remaining: Phase 8C.1
 
-Full competitive audit completed (Feb 2026). App scores 8.3/10 internally and surpasses every free competitor (musictheory.net, Teoria, Toned Ear) on at least 3 dimensions. Key gaps identified: mobile responsiveness, onboarding, visual polish, font hosting.
-
-### 8A — Foundation Layer ✓
-_Complete._
-
-- [x] **8A.1: Self-host fonts** — Inter + Source Serif 4 WOFF2 in `public/fonts/`, `@font-face` in `index.css`, SW precache.
-- [x] **8A.2: Toast notification system** — `src/state/toastStore.ts` (standalone Zustand), `src/components/layout/Toast.tsx` (`m.div` + AnimatePresence), auto-dismiss 3s. Used by clipboard copy + others.
-- [x] **8A.3: Spacing + typography token system** — `text-2xs` utility (10px), `type-section` / `learn-serif` classes in `index.css`. Migrated `text-[10px]` → `text-2xs` across all views.
-
-### 8B — Mobile Responsiveness ✓
-_Complete. WCAG 44px touch target compliance across all views._
-
-- [x] **8B.1: AppShell + InstrumentSelector** — collapse button `max-sm:w-8 h-8`, instrument bar padding, InstrumentSelector `max-sm:px-3 py-1.5 text-xs`.
-- [x] **8B.2: Explore view** — KeySelector root notes `max-sm:px-3 py-2 min-w-[34px]` + scroll fade overlay; ScaleDegreeBar `max-sm:overflow-x-auto snap-x min-w-[36px]`; hero buttons `max-sm:items-stretch py-2`; chord toggle `max-sm:px-3 py-1.5 text-xs`.
-- [x] **8B.3: Play view** — Token alignment only (`text-[10px]` → `text-2xs`, `text-[11px]` → `text-xs`). Already responsive.
-- [x] **8B.4: Learn view** — ChoiceInput `max-sm:py-3` (44px+), ExerciseRunner/ExerciseFeedback buttons `max-sm:py-2 px-5`.
-- [x] **8B.5: Piano mobile** — Wider key touch targets, reduced octave range, hidden labels at narrow widths.
-- [x] **8B.6: Fretboard mobile** — Position snapping, proportional dots, 44px touch targets.
-
-### 8C — Onboarding + Visual Polish ← CURRENT
-_User psychology layer. Makes the app feel alive and welcoming._
-_Execution order: 8C.3 → 8C.5 → 8C.4 → 8C.2 → 8C.1 (foundational → composite)._
-
-- [x] **8C.3: Card elevation + depth** ✓
-  - Shadow scale: `--shadow-sm`, `--shadow-md`, `--shadow-lg` + `--shadow-glow` (dark/light variants)
-  - Applied to: LevelCard, ChordGrid, ChordBrowser, ReviewQueue, ExploreView hero/staff/circle containers, DetailPanel
-  - Glassmorphism on DetailPanel (`backdrop-blur-md` + `color-mix` semi-transparent bg)
-  - Hover elevation: `shadow-sm` → `shadow-md` on LevelCard, ChordGrid, ChordBrowser, ReviewQueue
-  - Fixed ChordBrowser hardcoded colors → CSS custom properties (theme-safe)
-  - Effort: Small
-
-- [x] **8C.5: Empty state design** ✓
-  - ChordGrid empty state: music note icon + i18n text + hint ("Try a different scale")
-  - Learn view (0 progress): motivational banner with "Start Level 1" CTA → opens Level 1
-  - Review queue (empty): "All caught up" message with next review date (already existed)
-  - 4 i18n keys added (en + pt): `learn.startLevel1`, `explore.noDiatonicChords`, `explore.noDiatonicChordsHint`
-  - Effort: Small
-
-- [x] **8C.4: Micro-interactions** ✓
-  - Button press: `whileTap={{ scale: 0.97 }}` on LevelCard, ReviewQueue, ChoiceInput, ExerciseFeedback buttons; `active:scale-[0.97]` on ExploreView hero buttons
-  - Correct answer: green pulse ring (`pulse-ring-correct` CSS animation) + checkmark draw (pathLength)
-  - Incorrect answer: red shake (x oscillation) + X draw (pathLength) — already existed
-  - Instrument note-on: glow + translateY on piano keys, scale(1.2) + glow on fret dots — already existed
-  - ChordGrid: `whileTap={{ scale: 0.96 }}` — already existed
-  - Effort: Small
-
-- [x] **8C.2: Completion celebrations** ✓
-  - Module complete → canvas confetti burst (60 particles, 6 colors) + ascending C-E-G arpeggio via Web Audio
-  - Level complete → full-screen achievement overlay (trophy, stats, confetti, auto-dismiss 8s)
-  - Review session complete → toast (passed vs needs practice)
-  - New files: `Confetti.tsx`, `celebrationSound.ts`, `LevelAchievement.tsx`
-  - 5 i18n keys added (en + pt)
-  - Effort: Small
-
-- [ ] **8C.1: First-run guided tour** ← DO LAST
-  - 4-step tooltip/spotlight sequence:
-    1. "Pick your instrument" (Piano/Guitar toggle)
-    2. "Choose a key and scale" (root + scale selectors)
-    3. "Play a note to hear it" (tap a key/fret)
-    4. "Ready to learn? Start here" (Learn tab)
-  - Persist "onboarding_complete" flag in localStorage
-  - Skip button on every step
-  - Effort: Medium
+### 8C.1 — First-run guided tour
+- 4-step tooltip/spotlight sequence:
+  1. "Pick your instrument" (Piano/Guitar toggle)
+  2. "Choose a key and scale" (root + scale selectors)
+  3. "Play a note to hear it" (tap a key/fret)
+  4. "Ready to learn? Start here" (Learn tab)
+- Persist `onboarding_complete` flag in localStorage
+- Skip button on every step
+- Effort: Medium
 
 ---
 
-## Parked (Not in Phase 8)
+## Phase 10: Backend + Auth + Cloud Sync
+
+Supabase (Postgres + Auth + Row-Level Security). Optional sign-in via magic link (email). Bidirectional cloud sync with offline-first priority.
+
+### Database Schema
+4 Postgres tables with JSONB `data` columns for future-proof schema:
+- `profiles` — id, display_name, created_at, updated_at
+- `user_preferences` — user_id, data (JSONB), updated_at
+- `curriculum_progress` — user_id, data (JSONB), updated_at
+- `gamification_data` — user_id, data (JSONB), updated_at
+
+RLS: `auth.uid() = user_id` on all tables. Trigger auto-creates rows on signup.
+
+### Key Design Decisions
+- `supabase === null` when env vars missing — zero breaking changes for anonymous users
+- JSONB data columns — schema stays stable as TypeScript types evolve
+- Convert `useLearnProgress` to Zustand — enables `.subscribe()` for sync
+- Debounced push (2s) — coalesces rapid changes, low Supabase request volume
+- No Supabase Realtime — pull-on-login + push-on-change is sufficient for single-user sync
+- Offline queue in localStorage — max 3 entries (one per store), survives page reload
+
+### Conflict Resolution
+| Domain | Strategy |
+|---|---|
+| Preferences | Last-write-wins (compare `updated_at`) |
+| Curriculum progress | Union `completedModules`, higher score per exercise, higher `reviewCount` |
+| Gamification | Max counters, union activity/achievements, higher streak |
+
+### Success Criteria
+- Anonymous users: zero behavioral changes, zero network calls
+- Authenticated: sync within 2s of any change
+- Cross-device: sign in on new device, all progress appears
+- Offline: changes queue, flush on reconnect
+- ~55 new tests, ~500 total passing
+
+---
+
+## Phase 11: Adaptive Difficulty Engine
+
+Concept-level performance tracking to surface weaknesses and personalize exercise selection.
+
+- Tag exercises with concept identifiers (key signatures, intervals, chord voicing, etc.)
+- Per-concept accuracy tracking over sliding 30-day window
+- Weakness profiling: identify concepts below 70% accuracy threshold
+- Weighted exercise selection: surface weak concepts 2-3x more often
+- Extend SRS from module-level to concept-level granularity
+- Feed weakness data into exercise generator template selection
+- Dashboard visualization: concept mastery radar chart
+
+---
+
+## Phase 12: MIDI Input + Real Song References
+
+Bridge theory to practice with MIDI input and musical context.
+
+- MIDI input for exercises: accept `noteOn` messages as answers in scale_build/chord_build
+- Real-time pitch display: show incoming MIDI notes on piano/fretboard
+- Curated song references in curriculum text (2-3 callouts per module)
+- Optional: Hooktheory TheoryTab API integration for chord progressions
+- Exercise mode: "Play this chord on your MIDI keyboard"
+
+---
+
+## Phase 13: Distribution
+
+Expand reach beyond the browser.
+
+- Landing page + SEO content (Astro static site or similar)
+- Embeddable widgets (Circle of Fifths, piano, scale degree bar) as standalone web components
+- App store wrappers via Capacitor or TWA for iOS + Android
+- Social sharing: shareable progress cards, achievement badges
+
+---
+
+## Phase 14: Institutional Features
+
+Enable classroom and institutional adoption.
+
+- Teacher dashboard (class management, student progress reports)
+- Bulk licensing model
+- Assignment system (teachers assign modules/exercises with deadlines)
+- Student progress analytics (completion rates, time-on-task, weakness areas)
+- LTI integration for LMS platforms (Canvas, Blackboard, Moodle)
+
+---
+
+## Parked (Not Scheduled)
 
 These are valid directions but explicitly deferred. Do not start without a separate planning session.
 
-- **User accounts / cloud sync** — Requires backend infrastructure (Supabase/Firebase), auth flow, migration strategy for localStorage progress. Separate project.
-- **AI personalization / adaptive difficulty** — Requires data pipeline, ML models or at minimum a scoring heuristic engine. Premature until user base exists.
 - **Audio input (mic pitch detection)** — Web Audio pitch detection is unreliable (ambient noise, latency). High effort, uncertain quality. Revisit when WebCodecs API matures.
 - **Video content** — High production cost, large bandwidth, breaks offline-first model. Interactive exercises are more effective for active learning.
-- **Aggressive gamification (XP, streaks, leaderboards)** — Target audience is self-directed adults. Ethical engagement from 8C is sufficient. Revisit only if retention data demands it.
-- **Native mobile apps** — PWA provides 95% of native benefits. Native dev splits resources. Stick with web-first.
 - **More languages** — i18n infrastructure exists (en + pt). Spanish, French, German, Japanese are easy adds but need quality translation, not machine output.
-- **More instruments** — Ukulele, bass guitar fretboard layouts. Straightforward extension of existing Fretboard component but low priority vs mobile/onboarding.
+- **More instruments** — Ukulele, bass guitar fretboard layouts. Straightforward extension of existing Fretboard component but low priority.
+- **AI personalization** — Beyond adaptive difficulty (Phase 11). Full ML pipeline, recommendation engine. Premature until user base exists.
 
 ---
 
 ## Competitive Context (Feb 2026 Audit)
 
-**Your position:** Modern, free, instrument-first music theory platform. No competitor combines: interactive piano+guitar, color-coded functional harmony, 1,000+ exercises with SRS, staff notation, offline PWA, and accessibility.
+### Market Position
+Modern, free, instrument-first music theory platform. No competitor combines: interactive piano+guitar, color-coded functional harmony, 1,000+ exercises with SRS, staff notation, gamification, offline PWA, and accessibility.
 
-**Direct competitors:** musictheory.net (free, dated), Teoria (free, academic, dated), Hooktheory ($49/yr, songwriting focus), Perfect Ear (freemium, ear training only), ToneGym (freemium, gamified ear training).
+### Competitor Landscape (7 apps evaluated)
 
-**You surpass all of them on:** modern stack, dark/light theme, interactive instruments, exercise volume, spaced repetition, offline capability, accessibility, keyboard navigation.
+| App | Pricing | Strengths | Gaps vs Us |
+|---|---|---|---|
+| **Tenuto** | $3.99 one-time | Polished iOS native, clean UX | iOS-only, no instruments, no SRS |
+| **EarMaster** | $60/yr | Deep ear training, MIDI input | Desktop-only, no theory curriculum |
+| **Perfect Ear** | Freemium | Good ear training, mobile-native | No keyboard/fretboard, limited theory |
+| **Hooktheory** | $49/yr | Songwriting focus, song database | No instruments, limited exercises |
+| **ToneGym** | Freemium | Gamified ear training, social | No theory curriculum, no instruments |
+| **Waay** | Free | Theory + ear training | Limited exercises, no SRS |
+| **Teoria** | Free | Solid academic theory | Dated UI, no instruments, no progress |
 
-**Key gaps vs premium apps ($100-200/yr tier):** mobile responsiveness, onboarding, visual polish, audio input, user accounts. Phase 8 addresses the first three.
-
-**Unique differentiators (competitive moats):**
-1. Accessibility leadership (ARIA, keyboard nav, screen reader — hard to replicate)
-2. Instrument-first pedagogy (theory emerges from playing — unique approach)
-3. Free + open positioning (different business model entirely)
-4. Color-coded functional harmony (tonic=blue, dominant=amber, leading=red)
-5. Offline-first PWA with full curriculum
-6. Evidence-based SRS scheduling
+### Unique Differentiators (Competitive Moats)
+1. **Accessibility leadership** — ARIA, keyboard nav, screen reader (hard to replicate)
+2. **Instrument-first pedagogy** — Theory emerges from playing (unique approach)
+3. **Free + open positioning** — Different business model entirely
+4. **Color-coded functional harmony** — Tonic=blue, dominant=amber, leading=red
+5. **Offline-first PWA** — Full curriculum works without internet
+6. **Evidence-based SRS scheduling** — Spaced repetition across 1,000+ exercises
+7. **Gamification without paywall** — Streaks, XP, achievements, all free

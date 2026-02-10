@@ -1,7 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useLearnProgress } from '../useLearnProgress';
+import { useProgressStore } from '../../state/progressStore';
 import { CURRICULUM_LEVELS } from '../../core/constants/levels';
+import { getDefaultProgress } from '../../data/curriculumLoader';
 
 const STORAGE_KEY = 'music-theory-progress';
 const L1 = CURRICULUM_LEVELS.find(l => l.id === 'l1')!;
@@ -9,6 +11,8 @@ const UNIT1 = L1.units.find(u => u.id === 'u1')!;
 
 beforeEach(() => {
   localStorage.clear();
+  // Reset the Zustand store to default state between tests
+  useProgressStore.setState({ progress: getDefaultProgress() });
 });
 
 // ---------------------------------------------------------------------------
@@ -22,10 +26,13 @@ describe('initial state', () => {
   });
 
   it('restores progress from localStorage', () => {
+    const data = { completedModules: ['l1u1m1'], moduleProgress: { l1u1m1: ['l1u1m1t1'] } };
     localStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify({ completedModules: ['l1u1m1'], moduleProgress: { l1u1m1: ['l1u1m1t1'] } })
+      JSON.stringify({ state: { progress: data }, version: 1 })
     );
+    // Reset store so it picks up from localStorage on next hydration
+    useProgressStore.persist.rehydrate();
     const { result } = renderHook(() => useLearnProgress());
     expect(result.current.progress.completedModules).toEqual(['l1u1m1']);
     expect(result.current.progress.moduleProgress.l1u1m1).toEqual(['l1u1m1t1']);
@@ -169,14 +176,16 @@ describe('localStorage persistence', () => {
   it('persists completed modules to localStorage', () => {
     const { result } = renderHook(() => useLearnProgress());
     act(() => result.current.completeModule('l1u1m1'));
-    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY)!);
+    const raw = JSON.parse(localStorage.getItem(STORAGE_KEY)!);
+    const stored = raw.state.progress;
     expect(stored.completedModules).toContain('l1u1m1');
   });
 
   it('persists task progress to localStorage', () => {
     const { result } = renderHook(() => useLearnProgress());
     act(() => result.current.toggleTask('l1u1m1', 'l1u1m1t1'));
-    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY)!);
+    const raw = JSON.parse(localStorage.getItem(STORAGE_KEY)!);
+    const stored = raw.state.progress;
     expect(stored.moduleProgress.l1u1m1).toContain('l1u1m1t1');
   });
 });

@@ -1,10 +1,13 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useLearnProgress } from '../useLearnProgress';
+import { useProgressStore } from '../../state/progressStore';
+import { getDefaultProgress } from '../../data/curriculumLoader';
 
 describe('useLearnProgress — exercise tracking', () => {
   beforeEach(() => {
     localStorage.clear();
+    useProgressStore.setState({ progress: getDefaultProgress() });
   });
 
   it('recordExerciseResult stores a score for a module exercise', () => {

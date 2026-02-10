@@ -291,6 +291,24 @@
       "reviewMasterDesc": "Complete 50 revisões SRS"
     }
   },
+  "auth": {
+    "signIn": "Entrar",
+    "signInTitle": "Entrar",
+    "signInSubtitle": "Insira o seu email para receber um link m\u00e1gico. Sem palavra-passe.",
+    "emailLabel": "Endere\u00e7o de email",
+    "emailPlaceholder": "voce@exemplo.com",
+    "sendLink": "Enviar Link M\u00e1gico",
+    "sending": "A enviar\u2026",
+    "cancel": "Cancelar",
+    "checkEmail": "Verifique o seu email",
+    "magicLinkSent": "Envi\u00e1mos um link de acesso para {{email}}",
+    "signOut": "Sair",
+    "accountLabel": "Menu da conta",
+    "syncing": "A sincronizar\u2026",
+    "synced": "Sincronizado",
+    "syncError": "Erro de sincroniza\u00e7\u00e3o",
+    "offline": "Offline"
+  },
   "tour": {
     "step1Title": "Escolha o Instrumento",
     "step1Body": "Alterne entre piano e guitarra para ver escalas, acordes e notas em cada instrumento.",

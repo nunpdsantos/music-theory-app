@@ -291,6 +291,24 @@
       "reviewMasterDesc": "Complete 50 SRS reviews"
     }
   },
+  "auth": {
+    "signIn": "Sign In",
+    "signInTitle": "Sign In",
+    "signInSubtitle": "Enter your email to receive a magic link. No password needed.",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "you@example.com",
+    "sendLink": "Send Magic Link",
+    "sending": "Sending\u2026",
+    "cancel": "Cancel",
+    "checkEmail": "Check your email",
+    "magicLinkSent": "We sent a sign-in link to {{email}}",
+    "signOut": "Sign Out",
+    "accountLabel": "Account menu",
+    "syncing": "Syncing\u2026",
+    "synced": "Synced",
+    "syncError": "Sync error",
+    "offline": "Offline"
+  },
   "tour": {
     "step1Title": "Pick Your Instrument",
     "step1Body": "Switch between piano and guitar to see scales, chords, and notes on either instrument.",

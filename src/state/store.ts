@@ -63,6 +63,7 @@ interface PreferencesState {
   scaleOctaves: 1 | 2;
   baseOctave: number; // starting octave for scale/chord display and playback
   language: string;
+  preferencesUpdatedAt: number; // epoch ms, for sync last-write-wins
 }
 
 export interface AppState extends MusicState, InstrumentState, AudioState, NavigationState, MetronomeState, PreferencesState {
@@ -106,6 +107,7 @@ export interface AppState extends MusicState, InstrumentState, AudioState, Navig
   setScaleOctaves: (octaves: 1 | 2) => void;
   setBaseOctave: (octave: number) => void;
   setLanguage: (language: string) => void;
+  setPreferencesUpdatedAt: (at: number) => void;
 }
 
 // ============================================================================
@@ -153,6 +155,7 @@ export const useAppStore = create<AppState>()(
   scaleOctaves: 1,
   baseOctave: 4,
   language: 'en',
+  preferencesUpdatedAt: 0,
 
   // Music actions
   setKey: (key) => set({ selectedKey: key, selectedChord: null, selectedDegree: null, guitarScalePosition: null }),
@@ -162,7 +165,7 @@ export const useAppStore = create<AppState>()(
   setChordInversion: (inversion) => set({ chordInversion: inversion }),
 
   // Instrument actions
-  setInstrument: (instrument) => set({ instrument }),
+  setInstrument: (instrument) => set({ instrument, preferencesUpdatedAt: Date.now() }),
   addActiveNote: (midi) =>
     set((state) => {
       const next = new Set(state.activeNotes);
@@ -178,19 +181,19 @@ export const useAppStore = create<AppState>()(
   clearActiveNotes: () => set({ activeNotes: new Set<number>() }),
   setHighlightedNotes: (notes) => set({ highlightedNotes: notes }),
   setGuitarScalePosition: (position) => set({ guitarScalePosition: position }),
-  setGuitarTuningId: (id) => set({ guitarTuningId: id, guitarScalePosition: null }),
+  setGuitarTuningId: (id) => set({ guitarTuningId: id, guitarScalePosition: null, preferencesUpdatedAt: Date.now() }),
 
   // Audio actions
-  setSynthPreset: (preset) => set({ synthPreset: preset }),
-  setVolume: (volume) => set({ volume }),
+  setSynthPreset: (preset) => set({ synthPreset: preset, preferencesUpdatedAt: Date.now() }),
+  setVolume: (volume) => set({ volume, preferencesUpdatedAt: Date.now() }),
   setIsPlaying: (playing) => set({ isPlaying: playing }),
-  setMidiOutputEnabled: (enabled) => set({ midiOutputEnabled: enabled }),
-  setMidiOutputDeviceId: (id) => set({ midiOutputDeviceId: id }),
+  setMidiOutputEnabled: (enabled) => set({ midiOutputEnabled: enabled, preferencesUpdatedAt: Date.now() }),
+  setMidiOutputDeviceId: (id) => set({ midiOutputDeviceId: id, preferencesUpdatedAt: Date.now() }),
 
   // Metronome actions
-  setMetronomeBPM: (bpm) => set({ metronomeBPM: Math.max(30, Math.min(300, bpm)) }),
-  setMetronomeBeats: (beats) => set({ metronomeBeats: beats }),
-  setMetronomeVolume: (volume) => set({ metronomeVolume: Math.max(0, Math.min(1, volume)) }),
+  setMetronomeBPM: (bpm) => set({ metronomeBPM: Math.max(30, Math.min(300, bpm)), preferencesUpdatedAt: Date.now() }),
+  setMetronomeBeats: (beats) => set({ metronomeBeats: beats, preferencesUpdatedAt: Date.now() }),
+  setMetronomeVolume: (volume) => set({ metronomeVolume: Math.max(0, Math.min(1, volume)), preferencesUpdatedAt: Date.now() }),
 
   // Navigation actions
   setView: (view) => set({ view, detailPanelOpen: false, selectedChord: null, selectedDegree: null }),
@@ -199,15 +202,16 @@ export const useAppStore = create<AppState>()(
   setComparisonScale: (scale) => set({ comparisonScale: scale }),
 
   // Preferences actions
-  setColorMode: (mode) => set({ colorMode: mode }),
-  setThemeMode: (mode) => set({ themeMode: mode }),
-  setScaleOctaves: (octaves) => set({ scaleOctaves: octaves }),
-  setBaseOctave: (octave) => set({ baseOctave: octave }),
-  setLanguage: (language) => set({ language }),
+  setColorMode: (mode) => set({ colorMode: mode, preferencesUpdatedAt: Date.now() }),
+  setThemeMode: (mode) => set({ themeMode: mode, preferencesUpdatedAt: Date.now() }),
+  setScaleOctaves: (octaves) => set({ scaleOctaves: octaves, preferencesUpdatedAt: Date.now() }),
+  setBaseOctave: (octave) => set({ baseOctave: octave, preferencesUpdatedAt: Date.now() }),
+  setLanguage: (language) => set({ language, preferencesUpdatedAt: Date.now() }),
+  setPreferencesUpdatedAt: (at) => set({ preferencesUpdatedAt: at }),
     }),
     {
       name: 'music-theory-app',
-      version: 1,
+      version: 2,
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         selectedKey: state.selectedKey,
@@ -226,7 +230,14 @@ export const useAppStore = create<AppState>()(
         metronomeBeats: state.metronomeBeats,
         metronomeVolume: state.metronomeVolume,
         language: state.language,
+        preferencesUpdatedAt: state.preferencesUpdatedAt,
       }),
+      migrate: (persisted: unknown, version: number) => {
+        if (version < 2 && persisted && typeof persisted === 'object') {
+          return { ...(persisted as Record<string, unknown>), preferencesUpdatedAt: 0 };
+        }
+        return persisted;
+      },
     }
   )
 );
