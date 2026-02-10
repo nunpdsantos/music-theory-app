@@ -382,8 +382,8 @@ export function Fretboard() {
   const lowestVisibleFret = (isChordView || isScalePosView) ? visibleFrets[visibleFrets.length - 1] : null;
 
   const fretMinWidth = isChordView
-    ? (mobile ? 48 : 56)
-    : (mobile ? 44 : 44);
+    ? (mobile ? 40 : 56)
+    : (mobile ? 36 : 44);
 
   return (
     <div

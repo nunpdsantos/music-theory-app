@@ -39,20 +39,20 @@ const KEYBOARD_MAP: Record<string, number> = {
 // Responsive key widths
 const KEY_WIDTH_DESKTOP = 46;
 const KEY_WIDTH_TABLET = 36;
-const KEY_WIDTH_MOBILE = 46; // WCAG 44px minimum
+const KEY_WIDTH_MOBILE = 36; // height (130px) meets WCAG 44px touch target
 
 // Responsive container/key heights
 const CONTAINER_H_DESKTOP = 220;
 const CONTAINER_H_TABLET = 170;
-const CONTAINER_H_MOBILE = 160;
+const CONTAINER_H_MOBILE = 140;
 
 const WHITE_H_DESKTOP = 210;
 const WHITE_H_TABLET = 160;
-const WHITE_H_MOBILE = 150;
+const WHITE_H_MOBILE = 130;
 
 const BLACK_OFFSET_DESKTOP = 30;
 const BLACK_OFFSET_TABLET = 22;
-const BLACK_OFFSET_MOBILE = 30;
+const BLACK_OFFSET_MOBILE = 22;
 
 export function Piano() {
   const { noteOn, noteOff } = useAudio();
