@@ -44,11 +44,11 @@ const KEY_WIDTH_MOBILE = 36; // height (130px) meets WCAG 44px touch target
 // Responsive container/key heights
 const CONTAINER_H_DESKTOP = 220;
 const CONTAINER_H_TABLET = 170;
-const CONTAINER_H_MOBILE = 140;
+const CONTAINER_H_MOBILE = 190;
 
 const WHITE_H_DESKTOP = 210;
 const WHITE_H_TABLET = 160;
-const WHITE_H_MOBILE = 130;
+const WHITE_H_MOBILE = 180;
 
 const BLACK_OFFSET_DESKTOP = 30;
 const BLACK_OFFSET_TABLET = 22;
