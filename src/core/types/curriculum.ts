@@ -96,4 +96,6 @@ export interface CurriculumProgress {
   moduleProgress: Record<string, string[]>;
   /** Module IDs where prerequisites are waived (skipped by experienced users) */
   exemptedModules?: string[];
+  /** Per-module exercise results: moduleId -> scores, attempts, passed */
+  exerciseResults?: Record<string, import('./exercise').ModuleExerciseResult>;
 }

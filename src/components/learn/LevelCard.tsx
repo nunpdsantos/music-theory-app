@@ -1,11 +1,11 @@
-import { motion } from 'framer-motion';
-import type { CurriculumLevel, LevelState } from '../../core/types/curriculum';
-import { getLevelModuleCount } from '../../core/constants/levelHelpers';
+import { m } from 'framer-motion';
+import type { LevelState } from '../../core/types/curriculum';
+import type { LevelMeta } from '../../data/curriculumLoader';
 import { ProgressBar } from './ProgressBar';
 import { DifficultyBadge } from './DifficultyBadge';
 
 interface LevelCardProps {
-  level: CurriculumLevel;
+  level: LevelMeta;
   state: LevelState;
   completedModuleCount: number;
   index: number;
@@ -14,7 +14,7 @@ interface LevelCardProps {
 
 export function LevelCard({ level, state, completedModuleCount, index, onClick }: LevelCardProps) {
   const accent = level.accentColor;
-  const totalModules = getLevelModuleCount(level);
+  const totalModules = level.moduleCount;
   const progressPercent = totalModules > 0 ? (completedModuleCount / totalModules) * 100 : 0;
   const isLocked = state === 'locked';
   const isComingSoon = state === 'coming-soon';
@@ -22,7 +22,7 @@ export function LevelCard({ level, state, completedModuleCount, index, onClick }
   const isActive = !isLocked && !isComingSoon;
 
   return (
-    <motion.button
+    <m.button
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.06 }}
@@ -85,10 +85,10 @@ export function LevelCard({ level, state, completedModuleCount, index, onClick }
         </p>
 
         {/* Stats */}
-        <div className="text-[10px] text-zinc-600 mb-3">
-          {level.units.length > 0 ? (
+        <div className="text-[10px] text-zinc-500 mb-3">
+          {level.unitCount > 0 ? (
             <span>
-              {level.units.length} {level.units.length === 1 ? 'unit' : 'units'} &middot;{' '}
+              {level.unitCount} {level.unitCount === 1 ? 'unit' : 'units'} &middot;{' '}
               {totalModules} modules
             </span>
           ) : (
@@ -102,12 +102,12 @@ export function LevelCard({ level, state, completedModuleCount, index, onClick }
             <div className="flex-1">
               <ProgressBar percent={progressPercent} color={accent} height={4} delay={index * 0.06} />
             </div>
-            <span className="text-[10px] text-zinc-600 tabular-nums">
+            <span className="text-[10px] text-zinc-500 tabular-nums">
               {completedModuleCount}/{totalModules}
             </span>
           </div>
         )}
       </div>
-    </motion.button>
+    </m.button>
   );
 }

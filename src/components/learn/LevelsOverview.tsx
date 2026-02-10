@@ -1,41 +1,61 @@
-import { useMemo } from 'react';
-import { motion } from 'framer-motion';
-import type { CurriculumLevel, CurriculumProgress, LevelState } from '../../core/types/curriculum';
-import { CURRICULUM_LEVELS } from '../../core/constants/levels';
-import { getNextIncompleteModule } from '../../core/constants/curriculum';
-import { getLevelModuleCount } from '../../core/constants/levelHelpers';
+import { useMemo, useState, useEffect, useCallback } from 'react';
+import { m } from 'framer-motion';
+import type { CurriculumLevel, CurriculumProgress } from '../../core/types/curriculum';
+import {
+  LEVEL_METADATA,
+  computeLevelStateMeta,
+  getLevelCompletedCountMeta,
+  loadAllLevels,
+  findNextIncompleteModule,
+} from '../../data/curriculumLoader';
+import type { LevelMeta } from '../../data/curriculumLoader';
 import { ContinueBanner } from './ContinueBanner';
 import { LevelCard } from './LevelCard';
 import { ProgressBar } from './ProgressBar';
 
 interface LevelsOverviewProps {
   progress: CurriculumProgress;
-  getLevelCompletedModuleCount: (level: CurriculumLevel) => number;
-  getLevelState: (level: CurriculumLevel) => LevelState;
   onOpenLevel: (levelId: string) => void;
   onOpenModule: (moduleId: string, unitId: string, levelId: string) => void;
 }
 
 export function LevelsOverview({
   progress,
-  getLevelCompletedModuleCount,
-  getLevelState,
   onOpenLevel,
   onOpenModule,
 }: LevelsOverviewProps) {
-  const nextUp = useMemo(() => getNextIncompleteModule(progress, CURRICULUM_LEVELS), [progress]);
+  // Async-load full levels for continue banner
+  const [allLevels, setAllLevels] = useState<CurriculumLevel[] | null>(null);
+  useEffect(() => {
+    loadAllLevels().then(setAllLevels);
+  }, []);
 
-  const totalModules = CURRICULUM_LEVELS.reduce((s, l) => s + getLevelModuleCount(l), 0);
+  const nextUp = useMemo(() => {
+    if (!allLevels) return undefined;
+    return findNextIncompleteModule(progress, allLevels);
+  }, [progress, allLevels]);
+
+  const totalModules = LEVEL_METADATA.reduce((s, l) => s + l.moduleCount, 0);
   const totalCompleted = progress.completedModules.length;
 
   // Split levels: main track (l1-l8) and parallel (l9)
-  const mainLevels = CURRICULUM_LEVELS.filter((l) => !l.parallel);
-  const parallelLevels = CURRICULUM_LEVELS.filter((l) => l.parallel);
+  const mainLevels = LEVEL_METADATA.filter((l) => !l.parallel);
+  const parallelLevels = LEVEL_METADATA.filter((l) => l.parallel);
+
+  const getLevelState = useCallback(
+    (meta: LevelMeta) => computeLevelStateMeta(meta, LEVEL_METADATA, progress.completedModules),
+    [progress.completedModules],
+  );
+
+  const getCompletedCount = useCallback(
+    (meta: LevelMeta) => getLevelCompletedCountMeta(meta.id, progress.completedModules),
+    [progress.completedModules],
+  );
 
   return (
     <div className="max-w-3xl mx-auto px-5 max-sm:px-3 py-6 max-sm:py-4 pb-24">
       {/* Header */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
@@ -60,7 +80,7 @@ export function LevelsOverview({
             {totalCompleted}/{totalModules}
           </span>
         </div>
-      </motion.div>
+      </m.div>
 
       {/* Continue banner */}
       {nextUp && (
@@ -79,7 +99,7 @@ export function LevelsOverview({
             key={level.id}
             level={level}
             state={getLevelState(level)}
-            completedModuleCount={getLevelCompletedModuleCount(level)}
+            completedModuleCount={getCompletedCount(level)}
             index={i}
             onClick={() => onOpenLevel(level.id)}
           />
@@ -89,18 +109,18 @@ export function LevelsOverview({
       {/* Parallel track divider */}
       {parallelLevels.length > 0 && (
         <>
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
             className="flex items-center gap-4 mb-4"
           >
             <div className="flex-1 h-px bg-zinc-800" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-600">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">
               Parallel Track
             </span>
             <div className="flex-1 h-px bg-zinc-800" />
-          </motion.div>
+          </m.div>
 
           <div className="grid grid-cols-3 max-lg:grid-cols-2 max-sm:grid-cols-1 gap-4">
             {parallelLevels.map((level, i) => (
@@ -108,7 +128,7 @@ export function LevelsOverview({
                 key={level.id}
                 level={level}
                 state={getLevelState(level)}
-                completedModuleCount={getLevelCompletedModuleCount(level)}
+                completedModuleCount={getCompletedCount(level)}
                 index={mainLevels.length + i}
                 onClick={() => onOpenLevel(level.id)}
               />

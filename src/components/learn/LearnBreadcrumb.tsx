@@ -26,7 +26,7 @@ export function LearnBreadcrumb({ segments, accentColor }: LearnBreadcrumbProps)
                 {seg.label}
               </button>
             ) : (
-              <span className="text-zinc-600">{seg.label}</span>
+              <span className="text-zinc-500">{seg.label}</span>
             )}
           </span>
         );

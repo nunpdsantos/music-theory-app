@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import type { CurriculumUnit, CurriculumLevel } from '../../core/types/curriculum';
-import { arePrerequisitesMet } from '../../core/constants/curriculum';
+import { areModulePrereqsMet } from '../../data/curriculumLoader';
 import type { CurriculumProgress } from '../../core/types/curriculum';
 import { LearnBreadcrumb } from './LearnBreadcrumb';
 import { ModuleRow } from './ModuleRow';
@@ -58,13 +58,13 @@ export function UnitDetail({
       </div>
 
       {/* Unit header */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
         className="mb-8"
       >
-        <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-wider">
+        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
           Unit {unitIndex + 1}
         </span>
         <h1 className="text-2xl font-bold text-zinc-100 learn-serif mt-1 mb-1.5">
@@ -81,10 +81,10 @@ export function UnitDetail({
             {completedCount}/{unit.modules.length}
           </span>
         </div>
-      </motion.div>
+      </m.div>
 
       {/* Module list */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
@@ -92,7 +92,7 @@ export function UnitDetail({
       >
         {unit.modules.map((mod, i) => {
           const completed = isModuleCompleted(mod.id);
-          const locked = !mod.comingSoon && !arePrerequisitesMet(mod.id, progress);
+          const locked = !mod.comingSoon && !areModulePrereqsMet(mod, progress);
           return (
             <ModuleRow
               key={mod.id}
@@ -106,7 +106,7 @@ export function UnitDetail({
             />
           );
         })}
-      </motion.div>
+      </m.div>
     </div>
   );
 }

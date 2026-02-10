@@ -17,8 +17,8 @@ import type { CurriculumUnit, CurriculumModule } from '../types/curriculum';
 // Unit 30: Pitch and Interval Training (5 modules)
 // ---------------------------------------------------------------------------
 
-const l9u27m1: CurriculumModule = {
-  id: 'l9u27m1',
+const l9u30m1: CurriculumModule = {
+  id: 'l9u30m1',
   unitId: 'u30',
   levelId: 'l9',
   title: 'Pitch Matching and Direction',
@@ -53,18 +53,18 @@ const l9u27m1: CurriculumModule = {
   ],
   tasks: [
     {
-      id: 'l9u27m1t1',
+      id: 'l9u30m1t1',
       instruction:
         "Type 'C major scale' and play through it on the piano. Try to sing each note as you hear it — match your voice to the pitch. Start in a comfortable range",
       query: 'C major scale',
     },
     {
-      id: 'l9u27m1t2',
+      id: 'l9u30m1t2',
       instruction:
         'Play individual notes on the piano with your eyes closed — can you tell if the second note is higher or lower than the first? Start with wide leaps, then narrow the gap to adjacent keys',
     },
     {
-      id: 'l9u27m1t3',
+      id: 'l9u30m1t3',
       instruction:
         'Play a note in the low register, then the same note name two octaves higher. Hear how the pitch quality changes but the note identity remains. This is register perception',
     },
@@ -72,8 +72,8 @@ const l9u27m1: CurriculumModule = {
   prerequisites: [],
 };
 
-const l9u27m2: CurriculumModule = {
-  id: 'l9u27m2',
+const l9u30m2: CurriculumModule = {
+  id: 'l9u30m2',
   unitId: 'u30',
   levelId: 'l9',
   title: 'Major vs Minor Recognition',
@@ -108,29 +108,29 @@ const l9u27m2: CurriculumModule = {
   ],
   tasks: [
     {
-      id: 'l9u27m2t1',
+      id: 'l9u30m2t1',
       instruction:
         "Play 'C major chord' then 'C minor chord' back to back. Which sounds bright? Which sounds dark? Repeat until the distinction is instant",
       query: 'C major chord',
     },
     {
-      id: 'l9u27m2t2',
+      id: 'l9u30m2t2',
       instruction:
         "Play 'G major chord' then 'Gm' — same exercise, different root. The quality difference should transfer regardless of the starting note",
       query: 'G major chord',
     },
     {
-      id: 'l9u27m2t3',
+      id: 'l9u30m2t3',
       instruction:
         "Play 'C major scale' then 'C natural minor scale'. Listen to the overall color shift. Can you feel the mood change before the scale is halfway through?",
       query: 'C major scale',
     },
   ],
-  prerequisites: ['l9u27m1'],
+  prerequisites: ['l9u30m1'],
 };
 
-const l9u27m3: CurriculumModule = {
-  id: 'l9u27m3',
+const l9u30m3: CurriculumModule = {
+  id: 'l9u30m3',
   unitId: 'u30',
   levelId: 'l9',
   title: 'Interval Recognition: P1-P5',
@@ -165,28 +165,28 @@ const l9u27m3: CurriculumModule = {
   ],
   tasks: [
     {
-      id: 'l9u27m3t1',
+      id: 'l9u30m3t1',
       instruction:
         "Type 'C major chord' — the interval from C to E is a major 3rd, and C to G is a perfect 5th. Sing the two intervals separately. Memorize each sound",
       query: 'C major chord',
     },
     {
-      id: 'l9u27m3t2',
+      id: 'l9u30m3t2',
       instruction:
         'Play pairs of notes on the piano from C: C-Db (m2), C-D (M2), C-Eb (m3), C-E (M3), C-F (P4), C-Gb (tritone), C-G (P5). Name each before checking',
     },
     {
-      id: 'l9u27m3t3',
+      id: 'l9u30m3t3',
       instruction:
         "Type 'C7' — find the tritone (E to Bb). This is the most unstable interval. Contrast it with the perfect 5th (C to G) in 'C major chord'. Stable vs. tense — hear the difference",
       query: 'C7',
     },
   ],
-  prerequisites: ['l9u27m2'],
+  prerequisites: ['l9u30m2'],
 };
 
-const l9u27m4: CurriculumModule = {
-  id: 'l9u27m4',
+const l9u30m4: CurriculumModule = {
+  id: 'l9u30m4',
   unitId: 'u30',
   levelId: 'l9',
   title: 'Interval Recognition: m6-P8',
@@ -221,27 +221,27 @@ const l9u27m4: CurriculumModule = {
   ],
   tasks: [
     {
-      id: 'l9u27m4t1',
+      id: 'l9u30m4t1',
       instruction:
         "Play 'Cmaj7' — the outer interval from C to B is a major 7th. Now play C to Bb (minor 7th). The difference is one half step, but the character shifts from bright tension to bluesy pull",
       query: 'Cmaj7',
     },
     {
-      id: 'l9u27m4t2',
+      id: 'l9u30m4t2',
       instruction:
         'Play C to Ab (m6) then C to A (M6) on the piano. Minor 6th sounds darker and more poignant. Major 6th sounds warmer and more open. Repeat from different roots until you can distinguish them reliably',
     },
     {
-      id: 'l9u27m4t3',
+      id: 'l9u30m4t3',
       instruction:
         'Play C to high C (octave). The octave sounds like the "same note, different height." Now contrast with C to B (M7) — almost an octave, but with tension. That near-miss quality is the major 7th signature',
     },
   ],
-  prerequisites: ['l9u27m3'],
+  prerequisites: ['l9u30m3'],
 };
 
-const l9u27m5: CurriculumModule = {
-  id: 'l9u27m5',
+const l9u30m5: CurriculumModule = {
+  id: 'l9u30m5',
   unitId: 'u30',
   levelId: 'l9',
   title: 'Harmonic Intervals and Compounds',
@@ -276,31 +276,31 @@ const l9u27m5: CurriculumModule = {
   ],
   tasks: [
     {
-      id: 'l9u27m5t1',
+      id: 'l9u30m5t1',
       instruction:
         'Play two notes simultaneously on the piano: C and E (M3), C and G (P5), C and B (M7). Listen to how they fuse differently. Consonances blend; dissonances create beats and roughness',
     },
     {
-      id: 'l9u27m5t2',
+      id: 'l9u30m5t2',
       instruction:
         "Type 'Cmaj7' and listen to all the harmonic intervals within it: C-E (M3), C-G (P5), C-B (M7), E-G (m3), E-B (P5), G-B (M3). A single chord contains many simultaneous intervals",
       query: 'Cmaj7',
     },
     {
-      id: 'l9u27m5t3',
+      id: 'l9u30m5t3',
       instruction:
         'Play C3 and D4 on the piano (a 9th). Compare with C4 and D4 (a 2nd). The 9th sounds like a wider, more spacious version of the 2nd. This is the compound interval principle in action',
     },
   ],
-  prerequisites: ['l9u27m4'],
+  prerequisites: ['l9u30m4'],
 };
 
 // ---------------------------------------------------------------------------
 // Unit 31: Scale, Chord, and Dictation Skills (5 modules)
 // ---------------------------------------------------------------------------
 
-const l9u28m1: CurriculumModule = {
-  id: 'l9u28m1',
+const l9u31m1: CurriculumModule = {
+  id: 'l9u31m1',
   unitId: 'u31',
   levelId: 'l9',
   title: 'Scale Recognition: Major and Minor Forms',
@@ -335,29 +335,29 @@ const l9u28m1: CurriculumModule = {
   ],
   tasks: [
     {
-      id: 'l9u28m1t1',
+      id: 'l9u31m1t1',
       instruction:
         "Play 'A natural minor scale', then 'A harmonic minor scale', then 'A melodic minor scale' back to back. Listen for what changes between each — the raised 7th, then the raised 6th",
       query: 'A natural minor scale',
     },
     {
-      id: 'l9u28m1t2',
+      id: 'l9u31m1t2',
       instruction:
         "Play 'C major scale' then 'C natural minor scale'. Three degrees change. Can you hear all three shifts, or does the overall color change dominate your perception?",
       query: 'C major scale',
     },
     {
-      id: 'l9u28m1t3',
+      id: 'l9u31m1t3',
       instruction:
         "Play 'E harmonic minor scale' — listen for the augmented second between the 6th and 7th degrees (C to D#). That exotic leap is the harmonic minor fingerprint",
       query: 'E harmonic minor scale',
     },
   ],
-  prerequisites: ['l9u27m5'],
+  prerequisites: ['l9u30m5'],
 };
 
-const l9u28m2: CurriculumModule = {
-  id: 'l9u28m2',
+const l9u31m2: CurriculumModule = {
+  id: 'l9u31m2',
   unitId: 'u31',
   levelId: 'l9',
   title: 'Scale Recognition: Modes',
@@ -392,29 +392,29 @@ const l9u28m2: CurriculumModule = {
   ],
   tasks: [
     {
-      id: 'l9u28m2t1',
+      id: 'l9u31m2t1',
       instruction:
         "Play 'C phrygian' then 'C dorian' — Phrygian is dark and Spanish (flat 2nd). Dorian is warmer (natural 6th). Both are minor modes but the character difference is dramatic",
       query: 'C phrygian',
     },
     {
-      id: 'l9u28m2t2',
+      id: 'l9u31m2t2',
       instruction:
         "Play 'C lydian' then 'C major scale' (Ionian). The only difference is F vs F#. Lydian floats; Ionian settles. One note changes the entire mood",
       query: 'C lydian',
     },
     {
-      id: 'l9u28m2t3',
+      id: 'l9u31m2t3',
       instruction:
         "Play 'C mixolydian' then 'C major scale'. Mixolydian has Bb instead of B — it sounds bluesy and less conclusive. This is the dominant sound in rock and blues",
       query: 'C mixolydian',
     },
   ],
-  prerequisites: ['l9u28m1'],
+  prerequisites: ['l9u31m1'],
 };
 
-const l9u28m3: CurriculumModule = {
-  id: 'l9u28m3',
+const l9u31m3: CurriculumModule = {
+  id: 'l9u31m3',
   unitId: 'u31',
   levelId: 'l9',
   title: 'Scale Recognition: Pentatonic, Blues, Symmetric',
@@ -449,29 +449,29 @@ const l9u28m3: CurriculumModule = {
   ],
   tasks: [
     {
-      id: 'l9u28m3t1',
+      id: 'l9u31m3t1',
       instruction:
         "Play 'C pentatonic scale' then 'C blues scale' — the blues scale adds one note (Gb, the blue note). Can you hear the added grit and tension?",
       query: 'C pentatonic scale',
     },
     {
-      id: 'l9u28m3t2',
+      id: 'l9u31m3t2',
       instruction:
         "Play 'C whole tone scale' — notice how every step is the same size. There is no pull toward any particular note. The scale floats without direction",
       query: 'whole tone scale',
     },
     {
-      id: 'l9u28m3t3',
+      id: 'l9u31m3t3',
       instruction:
         "Compare 'C minor pentatonic' with 'C natural minor scale'. The pentatonic removes two notes (the 2nd and 6th), creating gaps. Those gaps give pentatonic its characteristic open sound",
       query: 'C minor pentatonic',
     },
   ],
-  prerequisites: ['l9u28m2'],
+  prerequisites: ['l9u31m2'],
 };
 
-const l9u28m4: CurriculumModule = {
-  id: 'l9u28m4',
+const l9u31m4: CurriculumModule = {
+  id: 'l9u31m4',
   unitId: 'u31',
   levelId: 'l9',
   title: 'Triad Quality Recognition',
@@ -506,29 +506,29 @@ const l9u28m4: CurriculumModule = {
   ],
   tasks: [
     {
-      id: 'l9u28m4t1',
+      id: 'l9u31m4t1',
       instruction:
         "Play all four triad qualities from C: 'C major chord', 'Cm', 'Cdim', 'Caug'. Close your eyes and replay them — can you identify each by sound alone?",
       query: 'C major chord',
     },
     {
-      id: 'l9u28m4t2',
+      id: 'l9u31m4t2',
       instruction:
         "Compare 'C major chord' with 'Cm'. The only difference is one note — E vs. Eb. That single half step changes bright to dark. Train this distinction across multiple roots",
       query: 'Cm',
     },
     {
-      id: 'l9u28m4t3',
+      id: 'l9u31m4t3',
       instruction:
         "Play 'Cdim' then 'Caug' — both have altered 5ths and sound unstable, but in different ways. Diminished contracts inward (small, anxious). Augmented expands outward (strange, floating)",
       query: 'Cdim',
     },
   ],
-  prerequisites: ['l9u28m3'],
+  prerequisites: ['l9u31m3'],
 };
 
-const l9u28m5: CurriculumModule = {
-  id: 'l9u28m5',
+const l9u31m5: CurriculumModule = {
+  id: 'l9u31m5',
   unitId: 'u31',
   levelId: 'l9',
   title: 'Seventh Chord Quality Recognition',
@@ -563,25 +563,25 @@ const l9u28m5: CurriculumModule = {
   ],
   tasks: [
     {
-      id: 'l9u28m5t1',
+      id: 'l9u31m5t1',
       instruction:
         "Play these seventh chords in sequence: 'Cmaj7', 'C7', 'Cm7', 'Cm7b5', 'Cdim7'. Each has a distinct emotional signature. Describe what you feel for each",
       query: 'Cmaj7',
     },
     {
-      id: 'l9u28m5t2',
+      id: 'l9u31m5t2',
       instruction:
         "Compare 'Cmaj7' (warm, resolved) with 'C7' (tense, needs to move). The only difference is one note — B vs. Bb. That single half step changes the entire character",
       query: 'C7',
     },
     {
-      id: 'l9u28m5t3',
+      id: 'l9u31m5t3',
       instruction:
         "Play 'Cm7' then 'Cm7b5'. Minor 7th is mellow and smooth. Half-diminished is darker and yearning — the lowered 5th adds instability. This distinction matters in jazz and classical voice leading",
       query: 'Cm7',
     },
   ],
-  prerequisites: ['l9u28m4'],
+  prerequisites: ['l9u31m4'],
 };
 
 // ---------------------------------------------------------------------------
@@ -589,8 +589,8 @@ const l9u28m5: CurriculumModule = {
 // All comingSoon — need dictation input UI, microphone, and audio library
 // ---------------------------------------------------------------------------
 
-const l9u29m1: CurriculumModule = {
-  id: 'l9u29m1',
+const l9u32m1: CurriculumModule = {
+  id: 'l9u32m1',
   unitId: 'u32',
   levelId: 'l9',
   title: 'Melodic Dictation: Diatonic',
@@ -625,27 +625,27 @@ const l9u29m1: CurriculumModule = {
   ],
   tasks: [
     {
-      id: 'l9u29m1t1',
+      id: 'l9u32m1t1',
       instruction:
         'Have a friend play 4-5 random notes from the C major scale on the piano. Try to sing them back, then find them on the keyboard. Start with stepwise motion only',
     },
     {
-      id: 'l9u29m1t2',
+      id: 'l9u32m1t2',
       instruction:
         'Listen to a short melody and identify just the contour first — does it go up, down, stay level, or arch? Contour is the skeleton of dictation and should always come before exact pitches',
     },
     {
-      id: 'l9u29m1t3',
+      id: 'l9u32m1t3',
       instruction:
         'Practice identifying the last note of a melody — is it the tonic? If so, the melody ends with resolution. If not, it feels unfinished. This single observation establishes the key',
     },
   ],
-  prerequisites: ['l9u28m5'],
+  prerequisites: ['l9u31m5'],
 
 };
 
-const l9u29m2: CurriculumModule = {
-  id: 'l9u29m2',
+const l9u32m2: CurriculumModule = {
+  id: 'l9u32m2',
   unitId: 'u32',
   levelId: 'l9',
   title: 'Melodic Dictation: Chromatic',
@@ -680,27 +680,27 @@ const l9u29m2: CurriculumModule = {
   ],
   tasks: [
     {
-      id: 'l9u29m2t1',
+      id: 'l9u32m2t1',
       instruction:
         'Play a C major scale slowly, then insert a chromatic passing tone between E and F (play E-F-F). Now try C-C#-D. Hear how the chromatic note creates momentary color without disrupting the key',
     },
     {
-      id: 'l9u29m2t2',
+      id: 'l9u32m2t2',
       instruction:
         'In a C major context, play the sequence E-F#-G. The F# is a secondary leading tone to G. It feels like a temporary tonicization — G briefly becomes the center of gravity before C reasserts itself',
     },
     {
-      id: 'l9u29m2t3',
+      id: 'l9u32m2t3',
       instruction:
         'Listen to any melody with your full attention and mark moments where a note feels "outside" the key. Does it resolve by step? If yes, it is likely a chromatic embellishment. If not, consider whether the key has shifted',
     },
   ],
-  prerequisites: ['l9u29m1'],
+  prerequisites: ['l9u32m1'],
 
 };
 
-const l9u29m3: CurriculumModule = {
-  id: 'l9u29m3',
+const l9u32m3: CurriculumModule = {
+  id: 'l9u32m3',
   unitId: 'u32',
   levelId: 'l9',
   title: 'Harmonic Dictation: Cadences and Progressions',
@@ -735,27 +735,27 @@ const l9u29m3: CurriculumModule = {
   ],
   tasks: [
     {
-      id: 'l9u29m3t1',
+      id: 'l9u32m3t1',
       instruction:
         'Listen to music you know well and try to identify the cadences. Does each phrase end with a strong V-I (authentic)? A softer IV-I (plagal)? Or an unresolved half cadence ending on V?',
     },
     {
-      id: 'l9u29m3t2',
+      id: 'l9u32m3t2',
       instruction:
         'Practice bass line dictation separately from full harmonic analysis — sing or hum the lowest note you hear in each chord of a progression. The bass is always your starting point',
     },
     {
-      id: 'l9u29m3t3',
+      id: 'l9u32m3t3',
       instruction:
         'Start with two-chord cadences: play random V-I and IV-I pairs in different keys on the piano. Can you tell which cadence type it is before checking? Then add deceptive cadences (V-vi)',
     },
   ],
-  prerequisites: ['l9u29m2'],
+  prerequisites: ['l9u32m2'],
 
 };
 
-const l9u29m4: CurriculumModule = {
-  id: 'l9u29m4',
+const l9u32m4: CurriculumModule = {
+  id: 'l9u32m4',
   unitId: 'u32',
   levelId: 'l9',
   title: 'Sight Singing Fundamentals',
@@ -790,27 +790,27 @@ const l9u29m4: CurriculumModule = {
   ],
   tasks: [
     {
-      id: 'l9u29m4t1',
+      id: 'l9u32m4t1',
       instruction:
         'Sing the major scale using solfege syllables: do-re-mi-fa-sol-la-ti-do. Start on any comfortable pitch. Then descend: do-ti-la-sol-fa-mi-re-do. Maintain a steady tempo throughout',
     },
     {
-      id: 'l9u29m4t2',
+      id: 'l9u32m4t2',
       instruction:
         "Now sing natural minor using do-based solfege: do-re-me-fa-sol-le-te-do. Notice the three lowered syllables — 'me,' 'le,' and 'te' — these are the three degrees that differ from major",
     },
     {
-      id: 'l9u29m4t3',
+      id: 'l9u32m4t3',
       instruction:
         'Practice simple arpeggio patterns: do-mi-sol (major arpeggio), do-me-sol (minor arpeggio), sol-ti-re (dominant arpeggio). Sing these in at least three different keys to internalize the function, not the absolute pitch',
     },
   ],
-  prerequisites: ['l9u29m3'],
+  prerequisites: ['l9u32m3'],
 
 };
 
-const l9u29m5: CurriculumModule = {
-  id: 'l9u29m5',
+const l9u32m5: CurriculumModule = {
+  id: 'l9u32m5',
   unitId: 'u32',
   levelId: 'l9',
   title: 'Contextual Listening',
@@ -845,22 +845,22 @@ const l9u29m5: CurriculumModule = {
   ],
   tasks: [
     {
-      id: 'l9u29m5t1',
+      id: 'l9u32m5t1',
       instruction:
         'Listen to a piece of music and identify the texture. Is there one unaccompanied melody (monophony), a melody with chords (homophony), or multiple interweaving melodies (polyphony)?',
     },
     {
-      id: 'l9u29m5t2',
+      id: 'l9u32m5t2',
       instruction:
         'Pick a song you know well and map its form. Label sections A, B, C. Is it verse-chorus (alternating AB)? ABA (departure and return)? Through-composed (no large-scale repetition)?',
     },
     {
-      id: 'l9u29m5t3',
+      id: 'l9u32m5t3',
       instruction:
         'Listen to orchestral music and identify instrument families first: strings vs. brass vs. woodwinds vs. percussion. Then narrow to specific instruments within each family — violin vs. cello, trumpet vs. trombone, flute vs. clarinet',
     },
   ],
-  prerequisites: ['l9u29m4'],
+  prerequisites: ['l9u32m4'],
 
 };
 
@@ -876,7 +876,7 @@ export const L9_UNITS: CurriculumUnit[] = [
     description:
       'Pitch matching, melodic direction, major/minor recognition, and complete interval identification by ear',
     icon: 'scales',
-    modules: [l9u27m1, l9u27m2, l9u27m3, l9u27m4, l9u27m5],
+    modules: [l9u30m1, l9u30m2, l9u30m3, l9u30m4, l9u30m5],
     milestone: {
       skillsSummary: [
         'Match pitch by ear and identify melodic direction across registers',
@@ -898,7 +898,7 @@ export const L9_UNITS: CurriculumUnit[] = [
     description:
       'Scale and mode recognition, triad and seventh chord quality identification by ear',
     icon: 'chords',
-    modules: [l9u28m1, l9u28m2, l9u28m3, l9u28m4, l9u28m5],
+    modules: [l9u31m1, l9u31m2, l9u31m3, l9u31m4, l9u31m5],
     milestone: {
       skillsSummary: [
         'Distinguish major, minor, modal, pentatonic, blues, and symmetric scales by ear',
@@ -919,7 +919,7 @@ export const L9_UNITS: CurriculumUnit[] = [
     description:
       'Melodic and harmonic dictation, movable-do solfege for sight singing, and critical listening for texture, form, and style',
     icon: 'harmony',
-    modules: [l9u29m1, l9u29m2, l9u29m3, l9u29m4, l9u29m5],
+    modules: [l9u32m1, l9u32m2, l9u32m3, l9u32m4, l9u32m5],
     milestone: {
       skillsSummary: [
         'Transcribe diatonic and chromatic melodies by ear using systematic dictation processes',

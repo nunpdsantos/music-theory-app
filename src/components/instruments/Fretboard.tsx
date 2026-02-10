@@ -1,35 +1,18 @@
 import { useMemo, useCallback, useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { TUNING_STANDARD, getTuningPitchClasses } from '../../core/constants/guitarTunings.ts';
-import { noteToString } from '../../core/types/music.ts';
 import { midiToNote } from '../../core/utils/pianoLayout.ts';
 import { getChordShapesWithFallback } from '../../core/constants/guitarChordShapes.ts';
-import type { ChordShape, FingerNumber } from '../../core/constants/guitarChordShapes.ts';
 import { getScalePositions, hasScalePositions } from '../../core/constants/guitarScalePositions.ts';
-import type { ScalePosition, ScalePositionNote } from '../../core/constants/guitarScalePositions.ts';
 import { getPitchClass } from '../../core/constants/notes.ts';
+import { noteToString } from '../../core/types/music.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
 import { useAudio } from '../../hooks/useAudio.ts';
 import { useAppStore } from '../../state/store.ts';
 import { useIsMobile } from '../../hooks/useMediaQuery.ts';
-
-const FULL_FRETS = 15;
-const CHORD_FRET_WINDOW = 5;
-const FRET_MARKERS = [3, 5, 7, 9, 12, 15];
-const DOUBLE_MARKERS = [12];
-
-interface FretNote {
-  stringIndex: number; // 0 = 6th (low E), 5 = 1st (high E)
-  fret: number;
-  pitchClass: number;
-  midiNumber: number;
-}
-
-/** Finger label for display. 0 = open/muted (no label), 'bar' = index finger (1). */
-function fingerLabel(f: FingerNumber | undefined): string {
-  if (f === undefined || f === 0) return '';
-  if (f === 'bar') return '1';
-  return String(f);
-}
+import { FULL_FRETS, CHORD_FRET_WINDOW, FRET_MARKERS, DOUBLE_MARKERS } from './fretboardConstants.ts';
+import type { FretNote } from './fretboardConstants.ts';
+import { FretboardPositionSelector } from './FretboardPositionSelector.tsx';
+import { FretboardString } from './FretboardString.tsx';
 
 export function Fretboard() {
   const { getNoteColor } = useKeyContext();
@@ -40,6 +23,7 @@ export function Fretboard() {
   const selectedScale = useAppStore((s) => s.selectedScale);
   const guitarScalePosition = useAppStore((s) => s.guitarScalePosition);
   const setGuitarScalePosition = useAppStore((s) => s.setGuitarScalePosition);
+  const quickSearchOpen = useAppStore((s) => s.quickSearchOpen);
   const [selectedShapeIdx, setSelectedShapeIdx] = useState(0);
   const mobile = useIsMobile();
 
@@ -55,8 +39,7 @@ export function Fretboard() {
     setSelectedShapeIdx(0);
   }, [selectedChord]);
 
-  const currentShape: { shape: ChordShape; baseFret: number } | null =
-    chordShapes[selectedShapeIdx] ?? null;
+  const currentShape = chordShapes[selectedShapeIdx] ?? null;
 
   // Root pitch class for highlighting root notes
   const rootPitchClass = useMemo(() => {
@@ -66,14 +49,13 @@ export function Fretboard() {
 
   // ─── Scale positions (CAGED) ──────────────────────────
   const scalePositions = useMemo(() => {
-    if (selectedChord) return []; // don't show scale positions when chord is selected
+    if (selectedChord) return [];
     if (!hasScalePositions(selectedScale)) return [];
     return getScalePositions(selectedKey, selectedScale);
   }, [selectedKey, selectedScale, selectedChord]);
 
   const hasPositions = scalePositions.length > 0;
 
-  // Current scale position data
   const currentScalePos = useMemo(() => {
     if (guitarScalePosition === null || !hasPositions) return null;
     return scalePositions[guitarScalePosition] ?? null;
@@ -86,8 +68,6 @@ export function Fretboard() {
 
     const { position, baseFret } = currentScalePos;
     for (const note of position.notes) {
-      // ScalePositionNote.string: 1=high E, 6=low E
-      // Fretboard stringIndex: 0=low E, 5=high E
       const stringIdx = 6 - note.string;
       const absoluteFret = baseFret + note.fret;
       const existing = map.get(stringIdx) ?? [];
@@ -104,7 +84,7 @@ export function Fretboard() {
 
   // ─── Voicing lookup (chords) ──────────────────────────
   const voicingLookup = useMemo(() => {
-    const map = new Map<number, { fret: number; finger: FingerNumber | undefined } | null>();
+    const map = new Map<number, { fret: number; finger: import('../../core/constants/guitarChordShapes.ts').FingerNumber | undefined } | null>();
     if (!currentShape) return map;
 
     const { shape, baseFret } = currentShape;
@@ -121,7 +101,6 @@ export function Fretboard() {
 
   // ─── Dynamic fret range ───────────────────────────────
   const { visibleFrets, isChordView } = useMemo(() => {
-    // Scale position view: narrow to position span
     if (currentScalePos) {
       const { position, baseFret } = currentScalePos;
       const start = Math.max(1, baseFret);
@@ -163,34 +142,47 @@ export function Fretboard() {
     return { visibleFrets: frets, isChordView: true };
   }, [currentShape, currentScalePos]);
 
-  // Generate all notes on the fretboard
-  const fretNotes = useMemo(() => {
-    const notes: FretNote[] = [];
+  // Generate all notes on the fretboard as a Map for O(1) lookup
+  const fretNoteMap = useMemo(() => {
+    const map = new Map<number, FretNote>();
     for (let s = 0; s < 6; s++) {
       const openPc = tuningPitchClasses[s];
       const openOctave = TUNING_STANDARD.strings[s].octave;
       for (let f = 0; f <= FULL_FRETS; f++) {
         const pc = (openPc + f) % 12;
         const midi = 12 + openOctave * 12 + openPc + f;
-        notes.push({ stringIndex: s, fret: f, pitchClass: pc, midiNumber: midi });
+        map.set(s * 100 + f, { stringIndex: s, fret: f, pitchClass: pc, midiNumber: midi });
       }
     }
-    return notes;
+    return map;
   }, [tuningPitchClasses]);
 
   const getFretNote = useCallback(
     (stringIndex: number, fret: number) => {
-      return fretNotes.find((n) => n.stringIndex === stringIndex && n.fret === fret)!;
+      return fretNoteMap.get(stringIndex * 100 + fret)!;
     },
-    [fretNotes]
+    [fretNoteMap]
   );
+
+  const activeTimeouts = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
+
+  useEffect(() => {
+    return () => { activeTimeouts.current.forEach(clearTimeout); };
+  }, []);
 
   const handleFretClick = useCallback(
     (fn: FretNote) => {
       const pitched = midiToNote(fn.midiNumber);
-      noteOn(pitched, pitched.octave).then((midi) => {
-        setTimeout(() => noteOff(midi), 800);
-      });
+      noteOn(pitched, pitched.octave).then(
+        (midi) => {
+          const t = setTimeout(() => {
+            noteOff(midi);
+            activeTimeouts.current.delete(t);
+          }, 800);
+          activeTimeouts.current.add(t);
+        },
+        (e) => { console.warn('[Fretboard] noteOn failed:', e); }
+      );
     },
     [noteOn, noteOff]
   );
@@ -213,11 +205,11 @@ export function Fretboard() {
     });
   }, [chordShapes]);
 
-  // Drag-to-scroll state
+  // ─── Drag-to-scroll ───────────────────────────────────
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const dragState = useRef({ startX: 0, startScroll: 0, dragged: false });
 
-  const onDragMove = useCallback((e: MouseEvent) => {
+  const onDragMove = useCallback((e: PointerEvent) => {
     const el = scrollContainerRef.current;
     if (!el) return;
     const dx = e.clientX - dragState.current.startX;
@@ -228,19 +220,19 @@ export function Fretboard() {
   }, []);
 
   const onDragEnd = useCallback(() => {
-    document.removeEventListener('mousemove', onDragMove);
-    document.removeEventListener('mouseup', onDragEnd);
+    document.removeEventListener('pointermove', onDragMove);
+    document.removeEventListener('pointerup', onDragEnd);
   }, [onDragMove]);
 
-  const handleFretboardMouseDown = useCallback((e: React.MouseEvent) => {
+  const handleFretboardPointerDown = useCallback((e: React.PointerEvent) => {
     if ((e.target as HTMLElement).closest('button')) return;
     if (e.button !== 0) return;
     e.preventDefault();
     dragState.current.dragged = false;
     dragState.current.startX = e.clientX;
     dragState.current.startScroll = scrollContainerRef.current?.scrollLeft ?? 0;
-    document.addEventListener('mousemove', onDragMove);
-    document.addEventListener('mouseup', onDragEnd);
+    document.addEventListener('pointermove', onDragMove);
+    document.addEventListener('pointerup', onDragEnd);
   }, [onDragMove, onDragEnd]);
 
   const handleFretboardClickCapture = useCallback((e: React.MouseEvent) => {
@@ -251,7 +243,7 @@ export function Fretboard() {
     }
   }, []);
 
-  // Barre bar measurement
+  // ─── Barre bar measurement ────────────────────────────
   const fretboardRef = useRef<HTMLDivElement>(null);
   const [barreStyle, setBarreStyle] = useState<React.CSSProperties | null>(null);
 
@@ -297,6 +289,67 @@ export function Fretboard() {
     });
   }, [currentShape, visibleFrets]);
 
+  // ─── Keyboard navigation (roving tabindex on 2D grid) ─
+  const [focusedCell, setFocusedCell] = useState<{ stringIdx: number; fret: number } | null>(null);
+  const [announcedNote, setAnnouncedNote] = useState('');
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (quickSearchOpen) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+      const { key } = e;
+      if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Enter', ' ', 'Escape'].includes(key)) return;
+
+      e.preventDefault();
+
+      if (key === 'Escape') {
+        setFocusedCell(null);
+        scrollContainerRef.current?.focus();
+        return;
+      }
+
+      setFocusedCell((prev) => {
+        // Initialize focus at first visible cell if none selected
+        if (!prev) {
+          const initFret = visibleFrets[visibleFrets.length - 1] ?? 1;
+          return { stringIdx: 0, fret: initFret };
+        }
+
+        if (key === 'Enter' || key === ' ') {
+          const fn = getFretNote(prev.stringIdx, prev.fret);
+          handleFretClick(fn);
+          return prev;
+        }
+
+        let { stringIdx, fret } = prev;
+        const minFret = visibleFrets[visibleFrets.length - 1] ?? 0;
+        const maxFret = visibleFrets[0] ?? FULL_FRETS;
+
+        if (key === 'ArrowRight') fret = Math.min(fret + 1, maxFret);
+        if (key === 'ArrowLeft') fret = Math.max(fret - 1, minFret);
+        if (key === 'ArrowUp') stringIdx = Math.max(stringIdx - 1, 0);
+        if (key === 'ArrowDown') stringIdx = Math.min(stringIdx + 1, 5);
+
+        return { stringIdx, fret };
+      });
+    },
+    [quickSearchOpen, visibleFrets, getFretNote, handleFretClick]
+  );
+
+  // Announce focused note for screen readers
+  useEffect(() => {
+    if (!focusedCell) {
+      setAnnouncedNote('');
+      return;
+    }
+    const fn = getFretNote(focusedCell.stringIdx, focusedCell.fret);
+    const pitched = midiToNote(fn.midiNumber);
+    const name = noteToString(pitched);
+    setAnnouncedNote(`String ${6 - focusedCell.stringIdx}, fret ${focusedCell.fret}, ${name}`);
+  }, [focusedCell, getFretNote]);
+
+  // ─── Display state ────────────────────────────────────
   const isOpenPosition = currentShape !== null && currentShape.baseFret === 0;
   const isScalePosView = currentScalePos !== null;
   const lowestVisibleFret = (isChordView || isScalePosView) ? visibleFrets[visibleFrets.length - 1] : null;
@@ -308,70 +361,33 @@ export function Fretboard() {
   return (
     <div
       ref={scrollContainerRef}
-      className="w-full overflow-x-auto bg-zinc-900 border-t border-zinc-800 fretboard-scroll"
+      role="grid"
+      aria-label="Guitar fretboard"
+      tabIndex={0}
+      className="w-full overflow-x-auto bg-zinc-900 border-t border-zinc-800 fretboard-scroll focus:outline-none"
       style={{ cursor: 'grab', scrollbarWidth: 'none', userSelect: 'none' }}
-      onMouseDown={handleFretboardMouseDown}
+      onPointerDown={handleFretboardPointerDown}
       onClickCapture={handleFretboardClickCapture}
+      onKeyDown={handleKeyDown}
     >
-      <div className="px-4 py-2" style={{ minWidth: isChordView ? 0 : (mobile ? 500 : 800) }}>
-        {/* Position selector: chord shapes */}
-        {selectedChord && chordShapes.length > 0 && (
-          <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <span className="text-[10px] text-zinc-500 uppercase tracking-wider">Position:</span>
-            {chordShapes.map((_entry, idx) => {
-              const isActive = selectedShapeIdx === idx;
-              return (
-                <button
-                  key={idx}
-                  onClick={() => setSelectedShapeIdx(idx)}
-                  className="text-[10px] px-2 py-0.5 rounded transition-colors"
-                  style={{
-                    backgroundColor: isActive ? '#60A5FA' : 'transparent',
-                    color: isActive ? '#000' : '#71717a',
-                    border: isActive ? '1px solid #60A5FA' : '1px solid #3f3f46',
-                  }}
-                >
-                  {positionLabels[idx]}
-                </button>
-              );
-            })}
-          </div>
-        )}
+      {/* Screen reader live region */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {announcedNote}
+      </div>
 
-        {/* Position selector: scale CAGED positions */}
-        {!selectedChord && hasPositions && (
-          <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <span className="text-[10px] text-zinc-500 uppercase tracking-wider">Scale pos:</span>
-            <button
-              onClick={() => setGuitarScalePosition(null)}
-              className="text-[10px] px-2 py-0.5 rounded transition-colors"
-              style={{
-                backgroundColor: guitarScalePosition === null ? '#60A5FA' : 'transparent',
-                color: guitarScalePosition === null ? '#000' : '#71717a',
-                border: guitarScalePosition === null ? '1px solid #60A5FA' : '1px solid #3f3f46',
-              }}
-            >
-              All
-            </button>
-            {scalePositions.map((sp, idx) => {
-              const isActive = guitarScalePosition === idx;
-              return (
-                <button
-                  key={idx}
-                  onClick={() => setGuitarScalePosition(idx)}
-                  className="text-[10px] px-2 py-0.5 rounded transition-colors"
-                  style={{
-                    backgroundColor: isActive ? '#60A5FA' : 'transparent',
-                    color: isActive ? '#000' : '#71717a',
-                    border: isActive ? '1px solid #60A5FA' : '1px solid #3f3f46',
-                  }}
-                >
-                  {sp.position.shortName} ({sp.position.cagedShape})
-                </button>
-              );
-            })}
-          </div>
-        )}
+      <div className="px-4 py-2" style={{ minWidth: isChordView ? 0 : (mobile ? 500 : 800) }}>
+        {/* Position selector */}
+        <FretboardPositionSelector
+          selectedChord={selectedChord}
+          chordShapeCount={chordShapes.length}
+          positionLabels={positionLabels}
+          selectedShapeIdx={selectedShapeIdx}
+          onSelectShape={setSelectedShapeIdx}
+          hasScalePositions={hasPositions}
+          scalePositions={scalePositions}
+          guitarScalePosition={guitarScalePosition}
+          onSelectScalePosition={setGuitarScalePosition}
+        />
 
         {/* Fret markers row */}
         <div className="flex mb-1">
@@ -380,7 +396,7 @@ export function Fretboard() {
             {visibleFrets.map((f) => (
               <div
                 key={f}
-                className="flex-1 text-center text-[9px] text-zinc-600"
+                className="flex-1 text-center text-[9px] text-zinc-500"
                 style={{ minWidth: fretMinWidth }}
               >
                 {FRET_MARKERS.includes(f) ? (
@@ -398,15 +414,12 @@ export function Fretboard() {
         {/* Fretboard grid with barre overlay */}
         <div ref={fretboardRef} className="relative">
           {/* Continuous fret lines overlay */}
-          <div className="absolute inset-0 flex pointer-events-none" style={{ zIndex: 1, left: 32 , right: 46 }}>
+          <div className="absolute inset-0 flex pointer-events-none" style={{ zIndex: 1, left: 32, right: 46 }}>
             {visibleFrets.map((f) => (
               <div
                 key={f}
                 className="flex-1"
-                style={{
-                  minWidth: fretMinWidth,
-                  borderRight: '1px solid #3f3f46',
-                }}
+                style={{ minWidth: fretMinWidth, borderRight: '1px solid #3f3f46' }}
               />
             ))}
           </div>
@@ -415,217 +428,28 @@ export function Fretboard() {
           {barreStyle && <div style={barreStyle} />}
 
           {/* Strings: 6th (low E) at top → 1st (high E) at bottom */}
-          {[0, 1, 2, 3, 4, 5].map((stringIdx) => {
-            const openLabel = noteToString(TUNING_STANDARD.strings[stringIdx]);
-            const openFretNote = getFretNote(stringIdx, 0);
-            const openPitched = midiToNote(openFretNote.midiNumber);
-            const openColor = getNoteColor(openPitched);
-            const isOpenActive = activeNotes.has(openFretNote.midiNumber);
-            const openPc = (tuningPitchClasses[stringIdx]) % 12;
-            const isOpenRoot = rootPitchClass !== null && openPc === rootPitchClass;
-
-            // Chord voicing info
-            const voicingInfo = voicingLookup.get(stringIdx);
-            const isMuted = currentShape !== null && voicingInfo === null;
-            const isOpenVoicing =
-              currentShape !== null &&
-              voicingInfo !== undefined &&
-              voicingInfo !== null &&
-              voicingInfo.fret === 0;
-
-            // Scale position notes for this string
-            const scalePosNotes = scalePositionLookup.get(stringIdx);
-
-            return (
-              <div key={stringIdx} className="flex items-center" style={{ height: mobile ? 24 : (isChordView ? 30 : 28) }}>
-                {/* String label */}
-                <div
-                  className="text-right pr-2 text-[10px] font-mono"
-                  style={{
-                    width: 32,
-                    color: isMuted ? '#52525b' : '#71717a',
-                  }}
-                >
-                  {openLabel}
-                </div>
-
-                {/* Fretboard area */}
-                <div className="flex flex-1 self-stretch items-stretch">
-                  {visibleFrets.map((fret) => {
-                    const fn = getFretNote(stringIdx, fret);
-                    const pitched = midiToNote(fn.midiNumber);
-                    const color = getNoteColor(pitched);
-                    const isActive = activeNotes.has(fn.midiNumber);
-                    const isInScale = color !== undefined;
-
-                    // Chord voicing position
-                    const isVoicingPosition =
-                      voicingInfo !== undefined && voicingInfo !== null && voicingInfo.fret === fret;
-                    const finger = isVoicingPosition ? voicingInfo.finger : undefined;
-
-                    // Scale position note at this fret
-                    const scalePosNote = scalePosNotes?.find((n) => n.fret === fret);
-                    const isScalePosNote = !!scalePosNote;
-
-                    // What to show
-                    const showVoicing = isVoicingPosition;
-                    const showScalePos = !currentShape && isScalePosNote;
-                    const showScaleDot = !currentShape && !currentScalePos && isInScale;
-
-                    const dotColor = color ?? '#60A5FA';
-                    const isRoot = rootPitchClass !== null && fn.pitchClass === rootPitchClass;
-
-                    return (
-                      <div
-                        key={fret}
-                        data-fret={fret}
-                        data-string-row={stringIdx}
-                        className="flex-1 flex items-center justify-center relative cursor-pointer"
-                        style={{
-                          minWidth: fretMinWidth,
-                        }}
-                        onClick={() => handleFretClick(fn)}
-                      >
-                        {/* String line */}
-                        <div
-                          className="absolute w-full"
-                          style={{
-                            height: 1 + (5 - stringIdx) * 0.3,
-                            backgroundColor: isMuted ? '#3f3f46' : '#71717a',
-                            top: '50%',
-                            transform: 'translateY(-50%)',
-                          }}
-                        />
-                        {/* Chord voicing dot */}
-                        {showVoicing && (
-                          <div
-                            className="relative z-10 rounded-full flex items-center justify-center font-bold"
-                            style={{
-                              width: isChordView ? 26 : 22,
-                              height: isChordView ? 26 : 22,
-                              fontSize: finger && fingerLabel(finger) ? (isChordView ? 12 : 10) : 9,
-                              backgroundColor: dotColor,
-                              color: '#000',
-                              boxShadow: isRoot
-                                ? `0 0 16px ${dotColor}aa, 0 0 6px ${dotColor}88`
-                                : `0 0 12px ${dotColor}88, 0 0 4px ${dotColor}66`,
-                              border: isRoot
-                                ? '3px solid #ffffff'
-                                : `2px solid ${dotColor}`,
-                            }}
-                          >
-                            {fingerLabel(finger) || noteToString(pitched)}
-                          </div>
-                        )}
-                        {/* Scale position dot */}
-                        {showScalePos && (
-                          <div
-                            className="relative z-10 rounded-full flex items-center justify-center font-bold"
-                            style={{
-                              width: 24,
-                              height: 24,
-                              fontSize: 9,
-                              backgroundColor: dotColor,
-                              color: '#000',
-                              boxShadow: scalePosNote?.isRoot
-                                ? `0 0 16px ${dotColor}aa, 0 0 6px ${dotColor}88`
-                                : `0 0 10px ${dotColor}88`,
-                              border: scalePosNote?.isRoot
-                                ? '3px solid #ffffff'
-                                : `2px solid ${dotColor}`,
-                            }}
-                          >
-                            {scalePosNote?.degree ?? noteToString(pitched)}
-                          </div>
-                        )}
-                        {/* Scale dot (no chord, no position selected) */}
-                        {showScaleDot && (
-                          <div
-                            className="relative z-10 rounded-full flex items-center justify-center font-bold transition-all"
-                            style={{
-                              width: 20,
-                              height: 20,
-                              fontSize: 8,
-                              backgroundColor: isActive ? color : `${color}cc`,
-                              color: '#000',
-                              transform: isActive ? 'scale(1.2)' : 'scale(1)',
-                              boxShadow: isActive ? `0 0 8px ${color}` : 'none',
-                            }}
-                          >
-                            {noteToString(pitched)}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Nut */}
-                <div
-                  style={{
-                    width: !isChordView || isOpenPosition ? 6 : 2,
-                    backgroundColor:
-                      !isChordView || isOpenPosition
-                        ? '#a1a1aa'
-                        : '#3f3f46',
-                    height: '100%',
-                  }}
-                />
-
-                {/* Open string / muted indicator area */}
-                <div
-                  className="flex items-center justify-center cursor-pointer"
-                  style={{ width: 40 }}
-                  onClick={() => !isMuted && handleFretClick(openFretNote)}
-                >
-                  {isMuted ? (
-                    <span
-                      className="font-bold"
-                      style={{ fontSize: 14, color: '#ef4444aa' }}
-                    >
-                      ✕
-                    </span>
-                  ) : isOpenVoicing ? (
-                    <div
-                      className="rounded-full flex items-center justify-center font-bold"
-                      style={{
-                        width: isChordView ? 22 : 20,
-                        height: isChordView ? 22 : 20,
-                        fontSize: 9,
-                        backgroundColor: openColor ?? '#60A5FA',
-                        color: '#000',
-                        boxShadow: isOpenRoot
-                          ? `0 0 16px ${(openColor ?? '#60A5FA')}aa, 0 0 6px ${(openColor ?? '#60A5FA')}88`
-                          : `0 0 10px ${(openColor ?? '#60A5FA')}88`,
-                        border: isOpenRoot
-                          ? '3px solid #ffffff'
-                          : `2px solid ${openColor ?? '#60A5FA'}`,
-                      }}
-                    >
-                      {openLabel}
-                    </div>
-                  ) : openColor && !currentShape ? (
-                    <div
-                      className="rounded-full flex items-center justify-center font-bold"
-                      style={{
-                        width: 20,
-                        height: 20,
-                        fontSize: 8,
-                        backgroundColor: isOpenActive ? openColor : `${openColor}cc`,
-                        color: '#000',
-                        transform: isOpenActive ? 'scale(1.15)' : 'scale(1)',
-                        boxShadow: isOpenActive ? `0 0 8px ${openColor}` : 'none',
-                      }}
-                    >
-                      {openLabel}
-                    </div>
-                  ) : (
-                    <span className="text-[9px] text-zinc-600">{openLabel}</span>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+          {[0, 1, 2, 3, 4, 5].map((stringIdx) => (
+            <FretboardString
+              key={stringIdx}
+              stringIdx={stringIdx}
+              visibleFrets={visibleFrets}
+              fretMinWidth={fretMinWidth}
+              mobile={mobile}
+              isChordView={isChordView}
+              isOpenPosition={isOpenPosition}
+              tuningPitchClasses={tuningPitchClasses}
+              activeNotes={activeNotes}
+              rootPitchClass={rootPitchClass}
+              getNoteColor={getNoteColor}
+              getFretNote={getFretNote}
+              handleFretClick={handleFretClick}
+              currentShape={currentShape}
+              voicingLookup={voicingLookup}
+              currentScalePos={currentScalePos}
+              scalePositionLookup={scalePositionLookup}
+              focusedFret={focusedCell?.stringIdx === stringIdx ? focusedCell.fret : null}
+            />
+          ))}
         </div>
 
         {/* Fret numbers row */}
@@ -635,7 +459,7 @@ export function Fretboard() {
             {visibleFrets.map((f) => (
               <div
                 key={f}
-                className="flex-1 text-center text-[9px] text-zinc-600"
+                className="flex-1 text-center text-[9px] text-zinc-500"
                 style={{ minWidth: fretMinWidth }}
               >
                 {f}
@@ -647,7 +471,7 @@ export function Fretboard() {
             {(isChordView || isScalePosView) && !isOpenPosition ? (
               <span className="text-[9px] text-zinc-500 font-mono">{lowestVisibleFret}fr</span>
             ) : (
-              <span className="text-[9px] text-zinc-600">0</span>
+              <span className="text-[9px] text-zinc-500">0</span>
             )}
           </div>
         </div>

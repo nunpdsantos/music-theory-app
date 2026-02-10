@@ -1,0 +1,256 @@
+import { describe, it, expect, beforeEach } from 'vitest';
+import { useAppStore } from '../store.ts';
+import type { Chord } from '../../core/types/music.ts';
+
+const C_MAJOR: Chord = {
+  root: { natural: 'C', accidental: '' },
+  quality: 'major',
+  notes: [{ natural: 'C', accidental: '' }, { natural: 'E', accidental: '' }, { natural: 'G', accidental: '' }],
+};
+
+const A_MINOR: Chord = {
+  root: { natural: 'A', accidental: '' },
+  quality: 'minor',
+  notes: [{ natural: 'A', accidental: '' }, { natural: 'C', accidental: '' }, { natural: 'E', accidental: '' }],
+};
+
+// Reset store to defaults before each test
+beforeEach(() => {
+  useAppStore.setState({
+    selectedKey: { natural: 'C', accidental: '' },
+    selectedScale: 'major',
+    selectedChord: null,
+    selectedDegree: null,
+    chordInversion: 0,
+    instrument: 'piano',
+    activeNotes: new Set<number>(),
+    highlightedNotes: [],
+    guitarScalePosition: null,
+    synthPreset: 'piano',
+    volume: 0.7,
+    isPlaying: false,
+    view: 'explore',
+    detailPanelOpen: false,
+    quickSearchOpen: false,
+    colorMode: 'functional',
+    scaleOctaves: 1,
+    baseOctave: 4,
+  });
+});
+
+describe('store defaults', () => {
+  it('has correct initial state', () => {
+    const s = useAppStore.getState();
+    expect(s.selectedKey).toEqual({ natural: 'C', accidental: '' });
+    expect(s.selectedScale).toBe('major');
+    expect(s.selectedChord).toBeNull();
+    expect(s.selectedDegree).toBeNull();
+    expect(s.chordInversion).toBe(0);
+    expect(s.instrument).toBe('piano');
+    expect(s.activeNotes.size).toBe(0);
+    expect(s.guitarScalePosition).toBeNull();
+    expect(s.view).toBe('explore');
+    expect(s.detailPanelOpen).toBe(false);
+    expect(s.colorMode).toBe('functional');
+    expect(s.baseOctave).toBe(4);
+    expect(s.volume).toBe(0.7);
+  });
+});
+
+describe('music actions', () => {
+  it('setKey updates key and resets chord/degree/guitarScalePosition', () => {
+    const { setSelectedChord, setSelectedDegree, setGuitarScalePosition, setKey } = useAppStore.getState();
+
+    // Set up transient state
+    setSelectedChord(C_MAJOR);
+    setSelectedDegree(1);
+    setGuitarScalePosition(2);
+
+    // Verify state was set
+    expect(useAppStore.getState().selectedChord).not.toBeNull();
+    expect(useAppStore.getState().selectedDegree).toBe(1);
+    expect(useAppStore.getState().guitarScalePosition).toBe(2);
+
+    // Change key
+    setKey({ natural: 'D', accidental: '' });
+
+    const s = useAppStore.getState();
+    expect(s.selectedKey).toEqual({ natural: 'D', accidental: '' });
+    expect(s.selectedChord).toBeNull();
+    expect(s.selectedDegree).toBeNull();
+    expect(s.guitarScalePosition).toBeNull();
+  });
+
+  it('setScale updates scale and resets chord/degree/guitarScalePosition', () => {
+    const { setSelectedChord, setSelectedDegree, setGuitarScalePosition, setScale } = useAppStore.getState();
+
+    setSelectedChord(C_MAJOR);
+    setSelectedDegree(3);
+    setGuitarScalePosition(1);
+
+    setScale('natural_minor');
+
+    const s = useAppStore.getState();
+    expect(s.selectedScale).toBe('natural_minor');
+    expect(s.selectedChord).toBeNull();
+    expect(s.selectedDegree).toBeNull();
+    expect(s.guitarScalePosition).toBeNull();
+  });
+
+  it('setSelectedChord opens detail panel and resets inversion', () => {
+    const { setChordInversion, setSelectedChord } = useAppStore.getState();
+
+    setChordInversion(2);
+    expect(useAppStore.getState().chordInversion).toBe(2);
+
+    setSelectedChord(A_MINOR);
+
+    const s = useAppStore.getState();
+    expect(s.selectedChord).toEqual(A_MINOR);
+    expect(s.detailPanelOpen).toBe(true);
+    expect(s.chordInversion).toBe(0);
+  });
+
+  it('setSelectedChord(null) closes detail panel', () => {
+    const { setSelectedChord } = useAppStore.getState();
+
+    setSelectedChord(C_MAJOR);
+    expect(useAppStore.getState().detailPanelOpen).toBe(true);
+
+    setSelectedChord(null);
+    expect(useAppStore.getState().selectedChord).toBeNull();
+    expect(useAppStore.getState().detailPanelOpen).toBe(false);
+  });
+
+  it('setChordInversion sets inversion', () => {
+    useAppStore.getState().setChordInversion(1);
+    expect(useAppStore.getState().chordInversion).toBe(1);
+  });
+
+  it('setSelectedDegree sets degree', () => {
+    useAppStore.getState().setSelectedDegree(5);
+    expect(useAppStore.getState().selectedDegree).toBe(5);
+  });
+});
+
+describe('instrument actions', () => {
+  it('setInstrument changes instrument', () => {
+    useAppStore.getState().setInstrument('guitar');
+    expect(useAppStore.getState().instrument).toBe('guitar');
+  });
+
+  it('addActiveNote adds MIDI number to set', () => {
+    const { addActiveNote } = useAppStore.getState();
+
+    addActiveNote(60);
+    addActiveNote(64);
+    addActiveNote(67);
+
+    const notes = useAppStore.getState().activeNotes;
+    expect(notes.has(60)).toBe(true);
+    expect(notes.has(64)).toBe(true);
+    expect(notes.has(67)).toBe(true);
+    expect(notes.size).toBe(3);
+  });
+
+  it('removeActiveNote removes specific MIDI number', () => {
+    const { addActiveNote, removeActiveNote } = useAppStore.getState();
+
+    addActiveNote(60);
+    addActiveNote(64);
+    removeActiveNote(60);
+
+    const notes = useAppStore.getState().activeNotes;
+    expect(notes.has(60)).toBe(false);
+    expect(notes.has(64)).toBe(true);
+    expect(notes.size).toBe(1);
+  });
+
+  it('clearActiveNotes empties the set', () => {
+    const { addActiveNote, clearActiveNotes } = useAppStore.getState();
+
+    addActiveNote(60);
+    addActiveNote(64);
+    addActiveNote(67);
+    expect(useAppStore.getState().activeNotes.size).toBe(3);
+
+    clearActiveNotes();
+    expect(useAppStore.getState().activeNotes.size).toBe(0);
+  });
+
+  it('setGuitarScalePosition sets position index', () => {
+    useAppStore.getState().setGuitarScalePosition(3);
+    expect(useAppStore.getState().guitarScalePosition).toBe(3);
+
+    useAppStore.getState().setGuitarScalePosition(null);
+    expect(useAppStore.getState().guitarScalePosition).toBeNull();
+  });
+});
+
+describe('navigation actions', () => {
+  it('setView changes view and resets transient state', () => {
+    const { setSelectedChord, setSelectedDegree, setDetailPanelOpen, setView } = useAppStore.getState();
+
+    setSelectedChord(C_MAJOR);
+    setSelectedDegree(1);
+    setDetailPanelOpen(true);
+
+    setView('learn');
+
+    const s = useAppStore.getState();
+    expect(s.view).toBe('learn');
+    expect(s.detailPanelOpen).toBe(false);
+    expect(s.selectedChord).toBeNull();
+    expect(s.selectedDegree).toBeNull();
+  });
+
+  it('setDetailPanelOpen toggles panel', () => {
+    useAppStore.getState().setDetailPanelOpen(true);
+    expect(useAppStore.getState().detailPanelOpen).toBe(true);
+
+    useAppStore.getState().setDetailPanelOpen(false);
+    expect(useAppStore.getState().detailPanelOpen).toBe(false);
+  });
+
+  it('setQuickSearchOpen toggles quick search', () => {
+    useAppStore.getState().setQuickSearchOpen(true);
+    expect(useAppStore.getState().quickSearchOpen).toBe(true);
+
+    useAppStore.getState().setQuickSearchOpen(false);
+    expect(useAppStore.getState().quickSearchOpen).toBe(false);
+  });
+});
+
+describe('audio actions', () => {
+  it('setSynthPreset changes preset', () => {
+    useAppStore.getState().setSynthPreset('strings');
+    expect(useAppStore.getState().synthPreset).toBe('strings');
+  });
+
+  it('setVolume updates volume', () => {
+    useAppStore.getState().setVolume(0.5);
+    expect(useAppStore.getState().volume).toBe(0.5);
+  });
+
+  it('setIsPlaying toggles playing state', () => {
+    useAppStore.getState().setIsPlaying(true);
+    expect(useAppStore.getState().isPlaying).toBe(true);
+  });
+});
+
+describe('preferences actions', () => {
+  it('setColorMode changes color mode', () => {
+    useAppStore.getState().setColorMode('absolute');
+    expect(useAppStore.getState().colorMode).toBe('absolute');
+  });
+
+  it('setScaleOctaves changes octave count', () => {
+    useAppStore.getState().setScaleOctaves(2);
+    expect(useAppStore.getState().scaleOctaves).toBe(2);
+  });
+
+  it('setBaseOctave changes base octave', () => {
+    useAppStore.getState().setBaseOctave(3);
+    expect(useAppStore.getState().baseOctave).toBe(3);
+  });
+});

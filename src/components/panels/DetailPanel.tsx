@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m } from 'framer-motion';
 import { useAppStore } from '../../state/store.ts';
 import { ChordDetail } from './ChordDetail.tsx';
 import { ScaleDetail } from './ScaleDetail.tsx';
@@ -14,6 +14,11 @@ export function DetailPanel() {
   const handleClose = () => {
     setDetailPanelOpen(false);
     setSelectedChord(null);
+    // Restore focus to chord grid
+    requestAnimationFrame(() => {
+      const btn = document.querySelector<HTMLElement>('[aria-label="Diatonic chords"] button');
+      btn?.focus();
+    });
   };
 
   // Mobile/tablet: inline panel at top of scroll area (not a fixed overlay)
@@ -22,7 +27,7 @@ export function DetailPanel() {
     return (
       <AnimatePresence>
         {detailPanelOpen && (
-          <motion.div
+          <m.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -34,7 +39,7 @@ export function DetailPanel() {
 
             {/* Close button */}
             <div className="flex items-center justify-between px-4 pt-3 pb-2">
-              <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">
+              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
                 Details
               </span>
               <button
@@ -55,7 +60,7 @@ export function DetailPanel() {
                 <ScaleDetail />
               )}
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     );
@@ -65,7 +70,7 @@ export function DetailPanel() {
   return (
     <AnimatePresence>
       {detailPanelOpen && (
-        <motion.div
+        <m.div
           initial={{ x: '100%', opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: '100%', opacity: 0 }}
@@ -77,7 +82,7 @@ export function DetailPanel() {
 
           {/* Close button */}
           <div className="sticky top-0 z-20 flex items-center justify-between px-4 pt-3 pb-2">
-            <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">
+            <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
               Details
             </span>
             <button
@@ -98,7 +103,7 @@ export function DetailPanel() {
               <ScaleDetail />
             )}
           </div>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

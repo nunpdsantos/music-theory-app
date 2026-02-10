@@ -12,6 +12,30 @@ import { useIsMobile, useIsCompact } from '../../hooks/useMediaQuery.ts';
 const START_OCTAVE = 2;
 const END_OCTAVE = 6;
 
+// Computer keyboard → semitone offset from base octave C
+// Bottom row = white keys, top row = black keys
+// Layout: |W|E| |T|Y|U| |O|P|
+//         |A|S|D|F|G|H|J|K|L|;|
+const KEYBOARD_MAP: Record<string, number> = {
+  'a': 0,   // C
+  'w': 1,   // C#
+  's': 2,   // D
+  'e': 3,   // D#
+  'd': 4,   // E
+  'f': 5,   // F
+  't': 6,   // F#
+  'g': 7,   // G
+  'y': 8,   // G#
+  'h': 9,   // A
+  'u': 10,  // A#
+  'j': 11,  // B
+  'k': 12,  // C (next octave)
+  'o': 13,  // C#
+  'l': 14,  // D
+  'p': 15,  // D#
+  ';': 16,  // E
+};
+
 // Responsive key widths
 const KEY_WIDTH_DESKTOP = 46;
 const KEY_WIDTH_TABLET = 36;
@@ -82,9 +106,10 @@ export function Piano() {
 
   const handleNoteOn = useCallback(
     (key: PianoKey) => {
-      noteOn(key.note, key.octave).then((midi) => {
-        activeMidiMap.current.set(key.midiNumber, midi);
-      });
+      noteOn(key.note, key.octave).then(
+        (midi) => { activeMidiMap.current.set(key.midiNumber, midi); },
+        (e) => { console.warn('[Piano] noteOn failed:', e); }
+      );
     },
     [noteOn]
   );
@@ -178,6 +203,59 @@ export function Piano() {
     isDragging.current = false;
   }, []);
 
+  // Computer keyboard → piano key mapping
+  const midiLookup = useMemo(() => {
+    const m = new Map<number, PianoKey>();
+    for (const k of keys) m.set(k.midiNumber, k);
+    return m;
+  }, [keys]);
+
+  const keyboardHeldKeys = useRef(new Set<string>());
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
+      // Don't intercept when typing in search or input fields
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (useAppStore.getState().quickSearchOpen) return;
+
+      const semitone = KEYBOARD_MAP[e.key.toLowerCase()];
+      if (semitone === undefined) return;
+      if (keyboardHeldKeys.current.has(e.key)) return;
+
+      const oct = useAppStore.getState().baseOctave;
+      const midi = 12 + oct * 12 + semitone; // C4 = MIDI 60 when oct=4
+      const pk = midiLookup.get(midi);
+      if (!pk) return;
+
+      e.preventDefault();
+      keyboardHeldKeys.current.add(e.key);
+      handleNoteOn(pk);
+    };
+
+    const onKeyUp = (e: KeyboardEvent) => {
+      const semitone = KEYBOARD_MAP[e.key.toLowerCase()];
+      if (semitone === undefined) return;
+      if (!keyboardHeldKeys.current.has(e.key)) return;
+
+      const oct = useAppStore.getState().baseOctave;
+      const midi = 12 + oct * 12 + semitone;
+      const pk = midiLookup.get(midi);
+      if (!pk) return;
+
+      keyboardHeldKeys.current.delete(e.key);
+      handleNoteOff(pk);
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('keyup', onKeyUp);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('keyup', onKeyUp);
+    };
+  }, [midiLookup, handleNoteOn, handleNoteOff]);
+
   const blackKeyPositions = useMemo(() => {
     return blackKeys.map((bk) => {
       const bkIdx = keys.indexOf(bk);
@@ -193,15 +271,17 @@ export function Piano() {
   }, [blackKeys, keys, keyWidth, blackKeyOffset]);
 
   return (
-    <div className="w-full bg-zinc-900 border-t border-zinc-800">
+    <div role="group" aria-label="Piano keyboard" className="w-full bg-zinc-900 border-t border-zinc-800">
       {/* Octave selector strip */}
-      <div className="flex items-center gap-1 px-3 py-1.5 border-b border-zinc-800">
+      <div role="tablist" aria-label="Base octave" className="flex items-center gap-1 px-3 py-1.5 border-b border-zinc-800">
         <span className="text-[10px] text-zinc-500 uppercase tracking-wider mr-1">Octave</span>
         {[2, 3, 4, 5, 6].map((oct) => {
           const isActive = baseOctave === oct;
           return (
             <button
               key={oct}
+              role="tab"
+              aria-selected={isActive}
               onClick={() => setBaseOctave(oct)}
               className="px-2 py-0.5 rounded text-[10px] font-medium transition-colors"
               style={{

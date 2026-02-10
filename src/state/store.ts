@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import type { Note, ScaleType, Chord, PitchedNote } from '../core/types/music.ts';
 import type { SynthPresetName } from '../core/types/visual.ts';
 
@@ -86,7 +87,9 @@ export interface AppState extends MusicState, InstrumentState, AudioState, Navig
 // Store
 // ============================================================================
 
-export const useAppStore = create<AppState>((set) => ({
+export const useAppStore = create<AppState>()(
+  persist(
+    (set) => ({
   // Music defaults
   selectedKey: { natural: 'C', accidental: '' },
   selectedScale: 'major',
@@ -146,7 +149,7 @@ export const useAppStore = create<AppState>((set) => ({
   setIsPlaying: (playing) => set({ isPlaying: playing }),
 
   // Navigation actions
-  setView: (view) => set({ view }),
+  setView: (view) => set({ view, detailPanelOpen: false, selectedChord: null, selectedDegree: null }),
   setDetailPanelOpen: (open) => set({ detailPanelOpen: open }),
   setQuickSearchOpen: (open) => set({ quickSearchOpen: open }),
 
@@ -154,4 +157,21 @@ export const useAppStore = create<AppState>((set) => ({
   setColorMode: (mode) => set({ colorMode: mode }),
   setScaleOctaves: (octaves) => set({ scaleOctaves: octaves }),
   setBaseOctave: (octave) => set({ baseOctave: octave }),
-}));
+    }),
+    {
+      name: 'music-theory-app',
+      version: 1,
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        selectedKey: state.selectedKey,
+        selectedScale: state.selectedScale,
+        instrument: state.instrument,
+        baseOctave: state.baseOctave,
+        colorMode: state.colorMode,
+        scaleOctaves: state.scaleOctaves,
+        volume: state.volume,
+        synthPreset: state.synthPreset,
+      }),
+    }
+  )
+);

@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import type { CurriculumModule, CurriculumUnit, CurriculumLevel } from '../../core/types/curriculum';
 
 interface ContinueBannerProps {
@@ -12,7 +12,7 @@ export function ContinueBanner({ module, unit, level, onClick }: ContinueBannerP
   const accent = level.accentColor;
 
   return (
-    <motion.button
+    <m.button
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
@@ -60,6 +60,6 @@ export function ContinueBanner({ module, unit, level, onClick }: ContinueBannerP
           <path d="M5 12h14M12 5l7 7-7 7" />
         </svg>
       </div>
-    </motion.button>
+    </m.button>
   );
 }

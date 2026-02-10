@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 
 interface ProgressBarProps {
   percent: number;
@@ -13,7 +13,7 @@ export function ProgressBar({ percent, color, height = 6, delay = 0 }: ProgressB
       className="w-full rounded-full overflow-hidden bg-zinc-800"
       style={{ height }}
     >
-      <motion.div
+      <m.div
         className="h-full rounded-full"
         style={{ backgroundColor: color }}
         initial={{ width: 0 }}

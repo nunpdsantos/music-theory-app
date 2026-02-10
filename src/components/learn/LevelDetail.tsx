@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import type { CurriculumLevel, CurriculumProgress } from '../../core/types/curriculum';
-import { getNextIncompleteModule } from '../../core/constants/curriculum';
-import { getLevelModuleCount } from '../../core/constants/levelHelpers';
+import { findNextIncompleteModule, getLevelModuleCount } from '../../data/curriculumLoader';
 import { LearnBreadcrumb } from './LearnBreadcrumb';
 import { ContinueBanner } from './ContinueBanner';
 import { DifficultyBadge } from './DifficultyBadge';
@@ -36,7 +35,7 @@ export function LevelDetail({
 
   // Continue banner — scoped to this level
   const nextUp = useMemo(() => {
-    const result = getNextIncompleteModule(progress, [level]);
+    const result = findNextIncompleteModule(progress, [level]);
     return result ?? undefined;
   }, [progress, level]);
 
@@ -66,7 +65,7 @@ export function LevelDetail({
       </div>
 
       {/* Level header */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
@@ -100,7 +99,7 @@ export function LevelDetail({
             {completedModules}/{totalModules}
           </span>
         </div>
-      </motion.div>
+      </m.div>
 
       {/* Continue banner */}
       {nextUp && (

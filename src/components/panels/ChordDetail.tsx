@@ -1,5 +1,5 @@
 import { useCallback, useRef, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { noteToString, type Chord, type Note } from '../../core/types/music.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
@@ -125,7 +125,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
   }, [notesForPlayback, synthPreset, baseOctave, addActiveNote, removeActiveNote, clearVisualTimeouts]);
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
@@ -154,7 +154,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
 
       {/* Notes */}
       <div>
-        <h3 className="text-[10px] font-bold text-zinc-600 mb-2 uppercase tracking-widest">
+        <h3 className="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">
           Notes
         </h3>
         <div className="flex gap-1.5">
@@ -188,7 +188,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
 
       {/* Inversions */}
       <div>
-        <h3 className="text-[10px] font-bold text-zinc-600 mb-2 uppercase tracking-widest">
+        <h3 className="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">
           Voicing
         </h3>
         <div className="flex gap-1.5" role="radiogroup" aria-label="Chord inversion">
@@ -216,7 +216,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
 
       {/* Formula — real interval labels */}
       <div>
-        <h3 className="text-[10px] font-bold text-zinc-600 mb-2 uppercase tracking-widest">
+        <h3 className="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">
           Formula
         </h3>
         <div className="flex items-center gap-1.5">
@@ -234,7 +234,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
       {/* Compatible Scales */}
       {scaleSuggestions.length > 0 && (
         <div>
-          <h3 className="text-[10px] font-bold text-zinc-600 mb-2 uppercase tracking-widest">
+          <h3 className="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">
             Compatible Scales
           </h3>
           <div className="flex flex-wrap gap-1.5">
@@ -289,6 +289,6 @@ export function ChordDetail({ chord }: ChordDetailProps) {
           Arpeggio
         </button>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

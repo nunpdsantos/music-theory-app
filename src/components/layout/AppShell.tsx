@@ -15,15 +15,21 @@ export function AppShell({ children }: AppShellProps) {
 
   return (
     <div className="h-screen supports-[height:100dvh]:h-dvh flex flex-col bg-zinc-950 text-zinc-100">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:px-4 focus:py-2 focus:bg-zinc-800 focus:text-zinc-100 focus:rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        Skip to content
+      </a>
       <TopBar />
-      <main className="flex-1 overflow-hidden flex flex-col min-h-0">
+      <main id="main-content" className="flex-1 overflow-hidden flex flex-col min-h-0">
         {children}
       </main>
       {/* Instrument bar */}
       <div className="flex items-center justify-between px-3 max-sm:px-2 py-1 bg-zinc-900 border-t border-zinc-800">
         <InstrumentSelector />
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-zinc-600 max-sm:hidden" aria-hidden="true">
+          <span className="text-[10px] text-zinc-500 max-sm:hidden" aria-hidden="true">
             Click keys to play
           </span>
           {/* Collapse toggle — visible on tablet and below */}

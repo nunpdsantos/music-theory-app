@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { KeySelector } from '../components/navigation/KeySelector.tsx';
 import { ScaleDegreeBar } from '../components/theory/ScaleDegreeBar.tsx';
 import { ChordGrid } from '../components/theory/ChordGrid.tsx';
@@ -57,19 +57,19 @@ export function ExploreView() {
     <div className="flex h-full">
       {/* Main content */}
       <div className="flex-1 overflow-y-auto">
-        <motion.div
+        <m.div
           variants={stagger}
           initial="hidden"
           animate="show"
           className="max-w-4xl mx-auto px-5 max-sm:px-3 py-5 max-sm:py-3 space-y-7 max-sm:space-y-4"
         >
           {/* ─── Key / Scale Selector ──────────────────────────── */}
-          <motion.div variants={fadeUp}>
+          <m.div variants={fadeUp}>
             <KeySelector />
-          </motion.div>
+          </m.div>
 
           {/* ─── Hero: Current Scale Context ───────────────────── */}
-          <motion.div
+          <m.div
             variants={fadeUp}
             className="relative rounded-2xl overflow-hidden"
             style={{
@@ -126,24 +126,24 @@ export function ExploreView() {
                 </button>
               </div>
             </div>
-          </motion.div>
+          </m.div>
 
           {/* ─── Scale Degrees ──────────────────────────────────── */}
-          <motion.div variants={fadeUp}>
-            <h3 className="text-[10px] font-bold text-zinc-600 mb-2.5 uppercase tracking-widest">
+          <m.div variants={fadeUp}>
+            <h3 className="text-[10px] font-bold text-zinc-500 mb-2.5 uppercase tracking-widest">
               Scale Degrees
             </h3>
             <ScaleDegreeBar />
-          </motion.div>
+          </m.div>
 
           {/* ─── Chord Grid + Circle of Fifths ─────────────────── */}
-          <motion.div
+          <m.div
             variants={fadeUp}
             className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6"
           >
             <div>
               <div className="flex items-center gap-3 mb-2.5">
-                <h3 className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">
+                <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
                   Chords
                 </h3>
                 <div className="flex rounded-lg overflow-hidden border border-zinc-800">
@@ -172,15 +172,15 @@ export function ExploreView() {
               {chordMode === 'diatonic' ? <ChordGrid /> : <ChordBrowser />}
             </div>
             <div>
-              <h3 className="text-[10px] font-bold text-zinc-600 mb-2.5 uppercase tracking-widest">
+              <h3 className="text-[10px] font-bold text-zinc-500 mb-2.5 uppercase tracking-widest">
                 Circle of Fifths
               </h3>
               <div className="rounded-xl border border-zinc-800/50 bg-zinc-900/30 p-3">
                 <CircleOfFifths />
               </div>
             </div>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       </div>
 
       {/* Detail panel */}

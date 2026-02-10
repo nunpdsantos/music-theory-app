@@ -1,9 +1,11 @@
 import { useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import type { CurriculumModule, CurriculumUnit, CurriculumLevel } from '../../core/types/curriculum';
-import { getNextModule, getPreviousModule } from '../../core/constants/curriculum';
+import type { ExerciseDefinition } from '../../core/types/exercise';
+import { getNextModuleInLevel, getPreviousModuleInLevel } from '../../data/curriculumLoader';
 import { executeTheoryQuery } from '../../utils/queryExecutor';
 import { LearnBreadcrumb } from './LearnBreadcrumb';
+import { ExerciseRunner } from './exercises/ExerciseRunner';
 
 interface ModuleViewProps {
   module: CurriculumModule;
@@ -14,8 +16,12 @@ interface ModuleViewProps {
   isModuleCompleted: boolean;
   isTaskCompleted: (moduleId: string, taskId: string) => boolean;
   completedTaskCount: number;
+  exercises: ExerciseDefinition[];
+  exercisesPassed: boolean;
   onToggleTask: (moduleId: string, taskId: string) => void;
   onCompleteModule: (moduleId: string) => void;
+  onRecordExerciseResult: (exerciseId: string, score: 0 | 0.5 | 1) => void;
+  onExercisesComplete: (passed: boolean) => void;
   onBack: () => void;
   onBackToLevels: () => void;
   onNavigateModule: (moduleId: string) => void;
@@ -30,16 +36,22 @@ export function ModuleView({
   isModuleCompleted,
   isTaskCompleted,
   completedTaskCount,
+  exercises,
+  exercisesPassed,
   onToggleTask,
   onCompleteModule,
+  onRecordExerciseResult,
+  onExercisesComplete,
   onBack,
   onBackToLevels,
   onNavigateModule,
 }: ModuleViewProps) {
   const accent = level.accentColor;
-  const prevModule = getPreviousModule(module.id);
-  const nextModule = getNextModule(module.id);
+  const prevModule = getPreviousModuleInLevel(module.id, level);
+  const nextModule = getNextModuleInLevel(module.id, level);
   const allTasksDone = completedTaskCount >= module.tasks.length;
+  const hasExercises = exercises.length > 0;
+  const canComplete = allTasksDone && (!hasExercises || exercisesPassed);
 
   const handleTryThis = useCallback((query: string) => {
     executeTheoryQuery(query);
@@ -74,7 +86,7 @@ export function ModuleView({
         </div>
 
         {/* ─── Module Header ─────────────────────────────────────── */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.05 }}
@@ -102,10 +114,10 @@ export function ModuleView({
           <p className="text-sm text-zinc-500">
             {module.subtitle}
           </p>
-        </motion.div>
+        </m.div>
 
         {/* ─── Objectives ────────────────────────────────────────── */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
@@ -132,12 +144,12 @@ export function ModuleView({
               </li>
             ))}
           </ul>
-        </motion.div>
+        </m.div>
 
         {/* ─── Concepts ──────────────────────────────────────────── */}
         <div className="space-y-8 mb-12">
           {module.concepts.map((concept, i) => (
-            <motion.div
+            <m.div
               key={i}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -210,7 +222,7 @@ export function ModuleView({
                     <svg
                       width="16" height="16" viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                      className="text-zinc-600 group-hover:text-zinc-400 group-hover:translate-x-0.5 transition-all"
+                      className="text-zinc-500 group-hover:text-zinc-400 group-hover:translate-x-0.5 transition-all"
                     >
                       <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
@@ -222,13 +234,30 @@ export function ModuleView({
               {i < module.concepts.length - 1 && (
                 <div className="ml-10 mt-8 h-px bg-zinc-800/60" />
               )}
-            </motion.div>
+            </m.div>
           ))}
         </div>
 
+        {/* ─── Exercises ───────────────────────────────────────────── */}
+        {hasExercises && (
+          <m.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35 }}
+            className="mb-10"
+          >
+            <ExerciseRunner
+              exercises={exercises}
+              accentColor={accent}
+              onRecordResult={(exerciseId, score) => onRecordExerciseResult(exerciseId, score)}
+              onComplete={onExercisesComplete}
+            />
+          </m.div>
+        )}
+
         {/* ─── Practice Tasks ────────────────────────────────────── */}
         {module.tasks.length > 0 && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
@@ -238,7 +267,7 @@ export function ModuleView({
               <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-400">
                 Practice Tasks
               </h2>
-              <span className="text-[10px] text-zinc-600">
+              <span className="text-[10px] text-zinc-500">
                 {completedTaskCount}/{module.tasks.length}
               </span>
             </div>
@@ -260,7 +289,7 @@ export function ModuleView({
                     >
                       <AnimatePresence>
                         {done && (
-                          <motion.svg
+                          <m.svg
                             initial={{ scale: 0, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0, opacity: 0 }}
@@ -269,7 +298,7 @@ export function ModuleView({
                             stroke="#34D399" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
                           >
                             <polyline points="20 6 9 17 4 12" />
-                          </motion.svg>
+                          </m.svg>
                         )}
                       </AnimatePresence>
                     </span>
@@ -286,12 +315,12 @@ export function ModuleView({
                 );
               })}
             </div>
-          </motion.div>
+          </m.div>
         )}
 
         {/* ─── Complete Module Button ────────────────────────────── */}
-        {!isModuleCompleted && allTasksDone && (
-          <motion.div
+        {!isModuleCompleted && canComplete && (
+          <m.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
@@ -314,11 +343,11 @@ export function ModuleView({
             >
               Mark Module Complete
             </button>
-          </motion.div>
+          </m.div>
         )}
 
         {/* ─── Navigation Footer ─────────────────────────────────── */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.55 }}
@@ -337,7 +366,7 @@ export function ModuleView({
                 <path d="M19 12H5M12 19l-7-7 7-7" />
               </svg>
               <div className="text-left">
-                <span className="block text-[10px] text-zinc-600">Previous</span>
+                <span className="block text-[10px] text-zinc-500">Previous</span>
                 <span>{prevModule.title}</span>
               </div>
             </button>
@@ -350,7 +379,7 @@ export function ModuleView({
               className="flex items-center gap-2 text-xs text-zinc-500 hover:text-zinc-300 transition-colors group text-right"
             >
               <div>
-                <span className="block text-[10px] text-zinc-600">Next</span>
+                <span className="block text-[10px] text-zinc-500">Next</span>
                 <span>{nextModule.title}</span>
               </div>
               <svg
@@ -364,7 +393,7 @@ export function ModuleView({
           ) : (
             <div />
           )}
-        </motion.div>
+        </m.div>
       </div>
     </div>
   );

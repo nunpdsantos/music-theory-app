@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { noteToString } from '../../core/types/music.ts';
 import { SCALE_FORMULAS } from '../../core/constants/scales.ts';
 import { INTERVAL_SHORT_LABELS } from '../../core/constants/chords.ts';
@@ -53,7 +53,7 @@ export function ScaleDegreeBar() {
         const funcLabel = FUNCTION_BY_INTERVAL[intervalLabel] ?? '';
 
         return (
-          <motion.button
+          <m.button
             key={`${noteToString(note)}-${i}`}
             onClick={() => setSelectedDegree(isSelected ? null : degree)}
             className="flex flex-col items-center gap-1 py-2.5 max-sm:py-2 rounded-xl flex-1 min-w-0 group transition-colors"
@@ -85,13 +85,13 @@ export function ScaleDegreeBar() {
             {!isCompact && (
               <span
                 className={`text-[9px] leading-none transition-colors max-sm:hidden ${
-                  isSelected ? 'text-zinc-400' : 'text-zinc-600 group-hover:text-zinc-500'
+                  isSelected ? 'text-zinc-400' : 'text-zinc-500 group-hover:text-zinc-400'
                 }`}
               >
                 {funcLabel}
               </span>
             )}
-          </motion.button>
+          </m.button>
         );
       })}
     </div>

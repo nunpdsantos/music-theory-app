@@ -1,5 +1,5 @@
 import { useCallback, useRef, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { noteToString, type Note, type ModeName } from '../../core/types/music.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
@@ -159,7 +159,7 @@ export function ScaleDetail() {
   const tonicColor = DEGREE_COLORS[1];
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
@@ -179,7 +179,7 @@ export function ScaleDetail() {
 
       {/* Notes with degree colors */}
       <div>
-        <h3 className="text-[10px] font-bold text-zinc-600 mb-2 uppercase tracking-widest">
+        <h3 className="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">
           Notes
         </h3>
         <div className="flex flex-wrap gap-1.5">
@@ -205,7 +205,7 @@ export function ScaleDetail() {
 
       {/* Formula */}
       <div>
-        <h3 className="text-[10px] font-bold text-zinc-600 mb-2 uppercase tracking-widest">
+        <h3 className="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">
           Formula
         </h3>
         <div className="flex flex-wrap items-center gap-1.5">
@@ -223,7 +223,7 @@ export function ScaleDetail() {
       {/* Mode info */}
       {modeInfo && (
         <div>
-          <h3 className="text-[10px] font-bold text-zinc-600 mb-2 uppercase tracking-widest">
+          <h3 className="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">
             Mode
           </h3>
           <div className="rounded-xl bg-zinc-800/40 border border-zinc-700/40 px-3 py-2.5 space-y-1.5">
@@ -241,7 +241,7 @@ export function ScaleDetail() {
       {/* Compatible Chords */}
       {chordSuggestions.length > 0 && (
         <div>
-          <h3 className="text-[10px] font-bold text-zinc-600 mb-2 uppercase tracking-widest">
+          <h3 className="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">
             Compatible Chords
           </h3>
           <div className="flex flex-wrap gap-1.5">
@@ -273,7 +273,7 @@ export function ScaleDetail() {
 
       {/* Octave range */}
       <div>
-        <h3 className="text-[10px] font-bold text-zinc-600 mb-2 uppercase tracking-widest">
+        <h3 className="text-[10px] font-bold text-zinc-500 mb-2 uppercase tracking-widest">
           Piano Range
         </h3>
         <div className="flex gap-1.5" role="radiogroup" aria-label="Scale octave range">
@@ -325,6 +325,6 @@ export function ScaleDetail() {
           Up & Down
         </button>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

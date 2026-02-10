@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m } from 'framer-motion';
 import { useKeyContext } from '../hooks/useKeyContext.ts';
 import { noteToString } from '../core/types/music.ts';
 import { SCALE_TYPE_NAMES } from '../core/constants/scales.ts';
@@ -138,14 +138,14 @@ export function PlayView() {
 
   return (
     <div className="flex-1 overflow-y-auto" role="region" aria-label="Play mode">
-      <motion.div
+      <m.div
         variants={stagger}
         initial="hidden"
         animate="show"
         className="max-w-3xl mx-auto px-5 max-sm:px-3 py-5 max-sm:py-3 space-y-6 max-sm:space-y-4"
       >
         {/* ─── Key Context ──────────────────────────────────────── */}
-        <motion.div
+        <m.div
           variants={fadeUp}
           className="relative rounded-2xl overflow-hidden"
           style={{
@@ -171,15 +171,15 @@ export function PlayView() {
                 {scale.notes.length} notes &middot; {scale.notes.map((n) => noteToString(n)).join(' ')}
               </p>
             </div>
-            <div className="text-[10px] font-medium text-zinc-600">
+            <div className="text-[10px] font-medium text-zinc-500">
               Performance Mode
             </div>
           </div>
-        </motion.div>
+        </m.div>
 
         {/* ─── Sound Preset ─────────────────────────────────────── */}
-        <motion.div variants={fadeUp}>
-          <h3 className="text-[10px] font-bold text-zinc-600 mb-2.5 uppercase tracking-widest">
+        <m.div variants={fadeUp}>
+          <h3 className="text-[10px] font-bold text-zinc-500 mb-2.5 uppercase tracking-widest">
             Sound
           </h3>
           <div className="flex gap-1.5 max-sm:grid max-sm:grid-cols-3" role="radiogroup" aria-label="Synth preset">
@@ -187,7 +187,7 @@ export function PlayView() {
               const isActive = synthPreset === preset;
               const meta = PRESET_META[preset];
               return (
-                <motion.button
+                <m.button
                   key={preset}
                   role="radio"
                   aria-checked={isActive}
@@ -200,17 +200,6 @@ export function PlayView() {
                   whileHover={{ scale: 1.03, y: -1 }}
                   whileTap={{ scale: 0.96 }}
                 >
-                  {isActive && (
-                    <motion.div
-                      layoutId="activePreset"
-                      className="absolute inset-0 rounded-xl"
-                      style={{
-                        backgroundColor: `${tonicColor}08`,
-                        border: `1.5px solid ${tonicColor}40`,
-                      }}
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    />
-                  )}
                   <span
                     className="relative z-10 transition-colors"
                     style={{ color: isActive ? tonicColor : '#71717a' }}
@@ -223,17 +212,17 @@ export function PlayView() {
                   >
                     {meta.label}
                   </span>
-                </motion.button>
+                </m.button>
               );
             })}
           </div>
-        </motion.div>
+        </m.div>
 
         {/* ─── Controls: Volume + Octave ────────────────────────── */}
-        <motion.div variants={fadeUp} className="grid grid-cols-2 max-sm:grid-cols-1 gap-5">
+        <m.div variants={fadeUp} className="grid grid-cols-2 max-sm:grid-cols-1 gap-5">
           {/* Volume */}
           <div>
-            <h3 className="text-[10px] font-bold text-zinc-600 mb-2.5 uppercase tracking-widest">
+            <h3 className="text-[10px] font-bold text-zinc-500 mb-2.5 uppercase tracking-widest">
               Volume
             </h3>
             <div className="flex items-center gap-3 bg-zinc-900/60 rounded-xl px-3.5 py-2.5 border border-zinc-800/50">
@@ -263,7 +252,7 @@ export function PlayView() {
 
           {/* Octave */}
           <div>
-            <h3 className="text-[10px] font-bold text-zinc-600 mb-2.5 uppercase tracking-widest">
+            <h3 className="text-[10px] font-bold text-zinc-500 mb-2.5 uppercase tracking-widest">
               Octave
             </h3>
             <div className="flex gap-1.5" role="radiogroup" aria-label="Base octave">
@@ -288,11 +277,11 @@ export function PlayView() {
               })}
             </div>
           </div>
-        </motion.div>
+        </m.div>
 
         {/* ─── Active Notes HUD ─────────────────────────────────── */}
-        <motion.div variants={fadeUp}>
-          <h3 className="text-[10px] font-bold text-zinc-600 mb-2.5 uppercase tracking-widest">
+        <m.div variants={fadeUp}>
+          <h3 className="text-[10px] font-bold text-zinc-500 mb-2.5 uppercase tracking-widest">
             Now Playing
           </h3>
           <div
@@ -303,7 +292,7 @@ export function PlayView() {
             {/* Subtle animated background glow when notes are playing */}
             <AnimatePresence>
               {activeInfo.length > 0 && (
-                <motion.div
+                <m.div
                   key="glow"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -319,7 +308,7 @@ export function PlayView() {
 
             <AnimatePresence mode="popLayout">
               {activeInfo.length === 0 ? (
-                <motion.div
+                <m.div
                   key="empty"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -331,14 +320,14 @@ export function PlayView() {
                     <circle cx="6" cy="18" r="3" />
                     <circle cx="18" cy="16" r="3" />
                   </svg>
-                  <p className="text-xs text-zinc-600">
+                  <p className="text-xs text-zinc-500">
                     Play the instrument below
                   </p>
-                </motion.div>
+                </m.div>
               ) : (
                 <div className="flex flex-wrap items-center justify-center gap-3 relative z-10">
                   {activeInfo.map(({ midi, name, degree, color, octave, functionLabel }) => (
-                    <motion.div
+                    <m.div
                       key={midi}
                       initial={{ scale: 0.6, opacity: 0, y: 8 }}
                       animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -362,18 +351,18 @@ export function PlayView() {
                           {functionLabel}
                         </span>
                       )}
-                    </motion.div>
+                    </m.div>
                   ))}
                 </div>
               )}
             </AnimatePresence>
           </div>
-        </motion.div>
+        </m.div>
 
         {/* ─── Scale Reference Strip ────────────────────────────── */}
         {scale.notes.length === 7 && (
-          <motion.div variants={fadeUp}>
-            <h3 className="text-[10px] font-bold text-zinc-600 mb-2.5 uppercase tracking-widest">
+          <m.div variants={fadeUp}>
+            <h3 className="text-[10px] font-bold text-zinc-500 mb-2.5 uppercase tracking-widest">
               Scale Reference
             </h3>
             <div className="flex items-stretch gap-1 max-sm:grid max-sm:grid-cols-4 max-sm:gap-1" role="group" aria-label="Scale notes reference">
@@ -410,9 +399,9 @@ export function PlayView() {
                 );
               })}
             </div>
-          </motion.div>
+          </m.div>
         )}
-      </motion.div>
+      </m.div>
     </div>
   );
 }

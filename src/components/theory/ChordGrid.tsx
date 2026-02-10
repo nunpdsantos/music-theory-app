@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { noteToString } from '../../core/types/music.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
 import { useAppStore } from '../../state/store.ts';
@@ -56,7 +56,7 @@ export function ChordGrid() {
           selectedChord.quality === chord.quality;
 
         return (
-          <motion.button
+          <m.button
             key={degree}
             onClick={() => setSelectedChord(isSelected ? null : chord)}
             className="relative flex flex-col items-center gap-1.5 p-3 max-sm:p-2 rounded-xl overflow-hidden group"
@@ -89,10 +89,10 @@ export function ChordGrid() {
               {rootLabel}
               <span className="text-zinc-500 font-normal">{qualityLabel}</span>
             </span>
-            <span className="text-[9px] text-zinc-600 group-hover:text-zinc-500 transition-colors">
+            <span className="text-[9px] text-zinc-500 group-hover:text-zinc-400 transition-colors">
               {qualityFull}
             </span>
-          </motion.button>
+          </m.button>
         );
       })}
     </div>

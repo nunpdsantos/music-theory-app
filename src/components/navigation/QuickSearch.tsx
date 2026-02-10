@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m } from 'framer-motion';
 import { useAppStore } from '../../state/store.ts';
 import { noteToString, stringToNote, type Note, type ScaleType } from '../../core/types/music.ts';
 import { buildChord, CHORD_QUALITY_NAMES, CHORD_SYMBOLS } from '../../core/constants/chords.ts';
@@ -153,6 +153,8 @@ export function QuickSearch() {
   const [query, setQuery] = useState('');
   const [selectedIdx, setSelectedIdx] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   const results = useMemo(() => getResults(query), [query]);
 
@@ -160,6 +162,19 @@ export function QuickSearch() {
   useEffect(() => {
     setSelectedIdx(0);
   }, [results.length, query]);
+
+  const restoreFocus = useCallback(() => {
+    requestAnimationFrame(() => {
+      previousFocusRef.current?.focus();
+      previousFocusRef.current = null;
+    });
+  }, []);
+
+  const closeDialog = useCallback(() => {
+    setQuickSearchOpen(false);
+    setQuery('');
+    restoreFocus();
+  }, [setQuickSearchOpen, restoreFocus]);
 
   // Cmd+K to toggle
   useEffect(() => {
@@ -170,17 +185,17 @@ export function QuickSearch() {
         setQuery('');
       }
       if (e.key === 'Escape' && quickSearchOpen) {
-        setQuickSearchOpen(false);
-        setQuery('');
+        closeDialog();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [quickSearchOpen, setQuickSearchOpen]);
+  }, [quickSearchOpen, setQuickSearchOpen, closeDialog]);
 
-  // Focus input when opened
+  // Capture previous focus and auto-focus input when opened
   useEffect(() => {
     if (quickSearchOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
       setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, [quickSearchOpen]);
@@ -192,9 +207,10 @@ export function QuickSearch() {
         r.action();
         setQuickSearchOpen(false);
         setQuery('');
+        restoreFocus();
       }
     },
-    [results, setQuickSearchOpen],
+    [results, setQuickSearchOpen, restoreFocus],
   );
 
   const handleKeyDown = useCallback(
@@ -218,25 +234,50 @@ export function QuickSearch() {
       {quickSearchOpen && (
         <>
           {/* Backdrop */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/50 z-40"
-            onClick={() => {
-              setQuickSearchOpen(false);
-              setQuery('');
-            }}
+            onClick={closeDialog}
           />
           {/* Search dialog */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className="fixed top-[20%] left-1/2 -translate-x-1/2 w-full max-w-md z-50"
+            className="fixed top-[20%] left-1/2 -translate-x-1/2 w-full max-w-md z-50 px-4"
           >
-            <div className="bg-zinc-900 border border-zinc-700 rounded-xl shadow-2xl overflow-hidden">
+            <div
+              ref={dialogRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Quick search"
+              onKeyDown={(e) => {
+                if (e.key !== 'Tab') return;
+                const container = dialogRef.current;
+                if (!container) return;
+                const focusable = container.querySelectorAll<HTMLElement>(
+                  'input, button, [tabindex]:not([tabindex="-1"])'
+                );
+                if (focusable.length === 0) return;
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (e.shiftKey) {
+                  if (document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                  }
+                } else {
+                  if (document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                  }
+                }
+              }}
+              className="bg-zinc-900 border border-zinc-700 rounded-xl shadow-2xl overflow-hidden"
+            >
               <div className="flex items-center px-4 py-3 border-b border-zinc-800">
                 <span className="text-zinc-500 mr-2 text-sm">&#128270;</span>
                 <input
@@ -246,9 +287,9 @@ export function QuickSearch() {
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder='Try "Cmaj7#11", "D harmonic minor", "lydian dominant"...'
-                  className="flex-1 bg-transparent text-zinc-100 text-sm outline-none placeholder:text-zinc-600"
+                  className="flex-1 bg-transparent text-zinc-100 text-sm outline-none placeholder:text-zinc-500"
                 />
-                <kbd className="text-[10px] text-zinc-600 bg-zinc-800 px-1.5 py-0.5 rounded">
+                <kbd className="text-[10px] text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded">
                   ESC
                 </kbd>
               </div>
@@ -290,7 +331,7 @@ export function QuickSearch() {
                 </div>
               )}
             </div>
-          </motion.div>
+          </m.div>
         </>
       )}
     </AnimatePresence>

@@ -18,7 +18,11 @@ export function useAudio() {
 
   const ensureResumed = useCallback(async () => {
     if (!resumed.current) {
-      await resumeAudio();
+      try {
+        await resumeAudio();
+      } catch (e) {
+        console.warn('[useAudio] Failed to resume AudioContext:', e);
+      }
       resumed.current = true;
     }
     setMasterVolume(volume);

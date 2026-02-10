@@ -28,7 +28,7 @@ export function ModuleRow({ module, index, isCompleted, isLocked, isComingSoon, 
           isCompleted
             ? 'bg-emerald-500/20 text-emerald-400'
             : disabled
-              ? 'bg-zinc-800 text-zinc-600'
+              ? 'bg-zinc-800 text-zinc-500'
               : 'bg-zinc-800 text-zinc-500 group-hover:text-zinc-300'
         }`}
       >
@@ -52,19 +52,19 @@ export function ModuleRow({ module, index, isCompleted, isLocked, isComingSoon, 
             isCompleted
               ? 'text-zinc-500'
               : disabled
-                ? 'text-zinc-600'
+                ? 'text-zinc-500'
                 : 'text-zinc-300 group-hover:text-zinc-100'
           }`}
         >
           {module.title}
         </span>
-        <span className="text-[11px] text-zinc-600 block truncate">
+        <span className="text-[11px] text-zinc-500 block truncate">
           {module.subtitle}
         </span>
       </div>
 
       {isComingSoon && (
-        <span className="text-[9px] font-medium text-zinc-600 bg-zinc-800 px-1.5 py-0.5 rounded-full shrink-0">
+        <span className="text-[9px] font-medium text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded-full shrink-0">
           Soon
         </span>
       )}

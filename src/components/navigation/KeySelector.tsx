@@ -1,5 +1,4 @@
-import { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useMemo, useRef, useLayoutEffect } from 'react';
 import { useAppStore } from '../../state/store.ts';
 import { noteToString, type Note, type ScaleType } from '../../core/types/music.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
@@ -119,14 +118,58 @@ export function KeySelector() {
   const showAll = expanded || isSelectedInHiddenGroup;
   const visibleGroups = showAll ? SCALE_GROUPS : SCALE_GROUPS.slice(0, ALWAYS_VISIBLE_COUNT);
 
+  // CSS indicator for root note
+  const rootContainerRef = useRef<HTMLDivElement>(null);
+  const [rootIndicator, setRootIndicator] = useState({ left: 0, width: 0, height: 0 });
+  const rootLabel = noteToString(selectedKey);
+
+  useLayoutEffect(() => {
+    const container = rootContainerRef.current;
+    if (!container) return;
+    const btn = container.querySelector<HTMLElement>(`[data-root="${rootLabel}"]`);
+    if (!btn) return;
+    setRootIndicator({ left: btn.offsetLeft, width: btn.offsetWidth, height: btn.offsetHeight });
+  }, [rootLabel]);
+
+  // CSS indicator for scale type
+  const scaleContainerRef = useRef<HTMLDivElement>(null);
+  const [scaleIndicator, setScaleIndicator] = useState({ left: 0, top: 0, width: 0, height: 0 });
+
+  useLayoutEffect(() => {
+    const container = scaleContainerRef.current;
+    if (!container) return;
+    const btn = container.querySelector<HTMLElement>(`[data-scale="${selectedScale}"]`);
+    if (!btn) return;
+    setScaleIndicator({
+      left: btn.offsetLeft,
+      top: btn.offsetTop,
+      width: btn.offsetWidth,
+      height: btn.offsetHeight,
+    });
+  }, [selectedScale, showAll]);
+
   return (
     <div className="space-y-3" role="group" aria-label="Key and scale selector">
       {/* ─── Root note chromatic strip ──────────────────────── */}
       <div>
-        <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest block mb-1.5">
+        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block mb-1.5">
           Root
         </span>
-        <div className="inline-flex items-center rounded-xl bg-zinc-900/80 border border-zinc-800/60 p-1 gap-0.5 max-sm:max-w-full max-sm:overflow-x-auto max-sm:snap-x max-sm:snap-mandatory">
+        <div ref={rootContainerRef} className="relative inline-flex items-center rounded-xl bg-zinc-900/80 border border-zinc-800/60 p-1 gap-0.5 max-sm:max-w-full max-sm:overflow-x-auto max-sm:snap-x max-sm:snap-mandatory">
+          <div
+            className="absolute rounded-lg pointer-events-none"
+            style={{
+              left: rootIndicator.left,
+              width: rootIndicator.width,
+              height: rootIndicator.height,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              backgroundColor: `${TONIC_COLOR}25`,
+              border: `1px solid ${TONIC_COLOR}50`,
+              boxShadow: `0 0 12px ${TONIC_COLOR}15`,
+              transition: 'left 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
+          />
           {ROOTS.map((root) => {
             const label = noteToString(root);
             const isSelected =
@@ -137,6 +180,7 @@ export function KeySelector() {
             return (
               <button
                 key={label}
+                data-root={label}
                 onClick={() => setKey(root)}
                 className={`relative px-2.5 py-1.5 text-xs font-semibold rounded-lg transition-all duration-150 ${
                   hasAccidental ? 'min-w-[30px]' : 'min-w-[26px]'
@@ -146,18 +190,6 @@ export function KeySelector() {
                     : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
                 }`}
               >
-                {isSelected && (
-                  <motion.div
-                    layoutId="selectedRoot"
-                    className="absolute inset-0 rounded-lg"
-                    style={{
-                      backgroundColor: `${TONIC_COLOR}25`,
-                      border: `1px solid ${TONIC_COLOR}50`,
-                      boxShadow: `0 0 12px ${TONIC_COLOR}15`,
-                    }}
-                    transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                  />
-                )}
                 <span className="relative z-10">{label}</span>
               </button>
             );
@@ -167,10 +199,20 @@ export function KeySelector() {
 
       {/* ─── Scale type pills (grouped) ─────────────────────── */}
       <div>
-        <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest block mb-1.5">
+        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block mb-1.5">
           Scale
         </span>
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 max-sm:gap-x-1.5 max-sm:gap-y-1">
+        <div ref={scaleContainerRef} className="relative flex flex-wrap items-center gap-x-3 gap-y-1.5 max-sm:gap-x-1.5 max-sm:gap-y-1">
+          <div
+            className="absolute rounded-lg bg-zinc-700/60 border border-zinc-600/50 pointer-events-none"
+            style={{
+              left: scaleIndicator.left,
+              top: scaleIndicator.top,
+              width: scaleIndicator.width,
+              height: scaleIndicator.height,
+              transition: 'left 0.2s cubic-bezier(0.4, 0, 0.2, 1), top 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
+          />
           {visibleGroups.map((group, gi) => (
             <div key={group.label} className="flex items-center gap-1">
               {group.options.map((opt) => {
@@ -178,6 +220,7 @@ export function KeySelector() {
                 return (
                   <button
                     key={opt.value}
+                    data-scale={opt.value}
                     onClick={() => setScale(opt.value)}
                     className={`relative px-2.5 py-1 text-[11px] font-medium rounded-lg transition-all duration-150 ${
                       isActive
@@ -186,13 +229,6 @@ export function KeySelector() {
                     }`}
                     aria-pressed={isActive}
                   >
-                    {isActive && (
-                      <motion.div
-                        layoutId="selectedScale"
-                        className="absolute inset-0 rounded-lg bg-zinc-700/60 border border-zinc-600/50"
-                        transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                      />
-                    )}
                     <span className="relative z-10">{opt.label}</span>
                   </button>
                 );

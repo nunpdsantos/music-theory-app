@@ -18,9 +18,10 @@ export function useMidi() {
 
       if (command === 0x90 && velocity > 0) {
         const pitched = midiToNote(noteNumber);
-        noteOn(pitched, pitched.octave).then((midi) => {
-          activeMidiMap.current.set(noteNumber, midi);
-        });
+        noteOn(pitched, pitched.octave).then(
+          (midi) => { activeMidiMap.current.set(noteNumber, midi); },
+          (e) => { console.warn('[MIDI] noteOn failed:', e); }
+        );
       } else if (command === 0x80 || (command === 0x90 && velocity === 0)) {
         const midi = activeMidiMap.current.get(noteNumber);
         if (midi !== undefined) {
@@ -41,8 +42,8 @@ export function useMidi() {
           input.onmidimessage = handleMidiMessage;
         }
       };
-    }).catch(() => {
-      // MIDI not available
+    }).catch((e) => {
+      console.warn('[MIDI] Access denied or unavailable:', e);
     });
 
     return () => {
