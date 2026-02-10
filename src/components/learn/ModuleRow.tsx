@@ -11,7 +11,7 @@ interface ModuleRowProps {
 }
 
 export function ModuleRow({ module, index, isCompleted, isLocked, isComingSoon, accentColor, onClick }: ModuleRowProps) {
-  const disabled = isLocked || isComingSoon;
+  const disabled = isComingSoon; // Only truly disable coming-soon modules; locked ones are browsable
 
   return (
     <button
@@ -19,8 +19,10 @@ export function ModuleRow({ module, index, isCompleted, isLocked, isComingSoon, 
       disabled={disabled}
       className={`w-full text-left px-3 py-2.5 rounded-lg flex items-center gap-3 transition-all duration-150 group ${
         disabled
-          ? isComingSoon ? 'opacity-50 cursor-default' : 'opacity-40 cursor-not-allowed'
-          : 'hover:bg-white/[0.04]'
+          ? 'opacity-50 cursor-default'
+          : isLocked
+            ? 'opacity-70 hover:bg-white/[0.04]'
+            : 'hover:bg-white/[0.04]'
       }`}
     >
       <span
@@ -63,7 +65,7 @@ export function ModuleRow({ module, index, isCompleted, isLocked, isComingSoon, 
         </span>
       )}
 
-      {!disabled && (
+      {!isComingSoon && (
         <svg
           width="14"
           height="14"

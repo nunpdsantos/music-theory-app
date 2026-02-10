@@ -20,7 +20,7 @@ export function LevelCard({ level, state, completedModuleCount, index, onClick }
   const progressPercent = totalModules > 0 ? (completedModuleCount / totalModules) * 100 : 0;
   const isLocked = state === 'locked';
   const isComingSoon = state === 'coming-soon';
-  const isClickable = !isLocked;
+  const isClickable = true; // Always browsable — locking only gates completion
   const isActive = !isLocked && !isComingSoon;
 
   return (
@@ -33,9 +33,7 @@ export function LevelCard({ level, state, completedModuleCount, index, onClick }
       className={`w-full text-left rounded-xl border overflow-hidden transition-all duration-200 ${
         isActive
           ? 'hover:scale-[1.01] cursor-pointer'
-          : isComingSoon
-            ? 'hover:scale-[1.005] cursor-pointer opacity-60'
-            : 'cursor-not-allowed opacity-40'
+          : 'hover:scale-[1.005] cursor-pointer opacity-60'
       }`}
       style={{
         borderColor: `${accent}${isActive ? '20' : '10'}`,
@@ -64,6 +62,12 @@ export function LevelCard({ level, state, completedModuleCount, index, onClick }
             {level.number}
           </div>
           <div className="flex items-center gap-2">
+            {state === 'locked' && (
+              <span className="text-[10px] font-medium px-2 py-0.5 rounded-full flex items-center gap-1" style={{ color: 'var(--text-dim)', backgroundColor: 'var(--card-hover)' }}>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+                {t('learn.level', { n: level.prerequisites?.[0]?.replace('l', '') ?? '' })}
+              </span>
+            )}
             {state === 'coming-soon' && (
               <span className="text-[10px] font-medium px-2 py-0.5 rounded-full" style={{ color: 'var(--text-dim)', backgroundColor: 'var(--card-hover)' }}>
                 {t('status.comingSoon')}
