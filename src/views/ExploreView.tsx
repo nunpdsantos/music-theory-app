@@ -19,6 +19,7 @@ import {
   resumeAudio,
 } from '../core/services/audio.ts';
 import { generateScaleSummary, copyToClipboard } from '../utils/exportHelpers.ts';
+import { toast } from '../state/toastStore.ts';
 import { getScaleNotesWithOctaves } from '../core/utils/pianoLayout.ts';
 import { getKeySignatureForScale } from '../utils/notationHelpers.ts';
 import { StaffNotationSkeleton } from '../components/notation/StaffNotationSkeleton.tsx';
@@ -51,7 +52,6 @@ export function ExploreView() {
   const synthPreset = useAppStore((s) => s.synthPreset);
   const baseOctave = useAppStore((s) => s.baseOctave);
   const [chordMode, setChordMode] = useState<'diatonic' | 'all'>('diatonic');
-  const [copied, setCopied] = useState(false);
 
   const handleShowScale = () => {
     setSelectedChord(null);
@@ -88,6 +88,7 @@ export function ExploreView() {
             style={{
               backgroundColor: `${tonicColor}06`,
               border: `1px solid ${tonicColor}12`,
+              boxShadow: 'var(--shadow-sm)',
             }}
           >
             {/* Subtle gradient wash */}
@@ -112,10 +113,10 @@ export function ExploreView() {
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 max-sm:flex-col max-sm:items-start">
+              <div className="flex items-center gap-2 max-sm:flex-col max-sm:items-stretch max-sm:gap-1.5">
                 <button
                   onClick={handleQuickPlay}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 hover:scale-[1.03]"
+                  className="flex items-center gap-1.5 px-3 py-1.5 max-sm:py-2 rounded-xl text-xs font-semibold transition-all duration-150 hover:scale-[1.03] active:scale-[0.97] max-sm:justify-center"
                   style={{
                     backgroundColor: `${tonicColor}15`,
                     color: tonicColor,
@@ -130,7 +131,7 @@ export function ExploreView() {
                 </button>
                 <button
                   onClick={handleShowScale}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all duration-150"
+                  className="flex items-center gap-1.5 px-3 py-1.5 max-sm:py-2 rounded-xl text-xs font-medium transition-all duration-150 active:scale-[0.97] max-sm:justify-center"
                   style={{
                     color: 'var(--text-muted)',
                     backgroundColor: 'color-mix(in srgb, var(--card) 40%, transparent)',
@@ -146,9 +147,9 @@ export function ExploreView() {
                   onClick={async () => {
                     const text = generateScaleSummary(scale, diatonicChords, selectedChord);
                     const ok = await copyToClipboard(text);
-                    if (ok) { setCopied(true); setTimeout(() => setCopied(false), 2000); }
+                    if (ok) toast(t('toast.copiedToClipboard'), 'success');
                   }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all duration-150"
+                  className="flex items-center gap-1.5 px-3 py-1.5 max-sm:py-2 rounded-xl text-xs font-medium transition-all duration-150 active:scale-[0.97] max-sm:justify-center"
                   style={{
                     color: 'var(--text-muted)',
                     backgroundColor: 'color-mix(in srgb, var(--card) 40%, transparent)',
@@ -159,11 +160,11 @@ export function ExploreView() {
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                   </svg>
-                  {t(copied ? 'common.copied' : 'common.copy')}
+                  {t('common.copy')}
                 </button>
                 <button
                   onClick={() => window.print()}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all duration-150 no-print"
+                  className="flex items-center gap-1.5 px-3 py-1.5 max-sm:py-2 rounded-xl text-xs font-medium transition-all duration-150 active:scale-[0.97] no-print max-sm:justify-center"
                   style={{
                     color: 'var(--text-muted)',
                     backgroundColor: 'color-mix(in srgb, var(--card) 40%, transparent)',
@@ -193,7 +194,7 @@ export function ExploreView() {
             <h3 className="type-section mb-2.5">
               {t('explore.staffNotation')}
             </h3>
-            <div className="rounded-xl p-3" style={{ border: '1px solid color-mix(in srgb, var(--card) 50%, transparent)', backgroundColor: 'color-mix(in srgb, var(--bg) 30%, transparent)' }}>
+            <div className="rounded-xl p-3" style={{ border: '1px solid color-mix(in srgb, var(--card) 50%, transparent)', backgroundColor: 'color-mix(in srgb, var(--bg) 30%, transparent)', boxShadow: 'var(--shadow-sm)' }}>
               <Suspense fallback={<StaffNotationSkeleton height={130} />}>
                 <StaffNotation
                   notes={getScaleNotesWithOctaves(scale.notes, baseOctave)}
@@ -226,7 +227,7 @@ export function ExploreView() {
                 <div className="flex rounded-lg overflow-hidden" style={{ border: '1px solid var(--card)' }}>
                   <button
                     onClick={() => setChordMode('diatonic')}
-                    className="px-2 py-0.5 text-[10px] font-medium transition-colors"
+                    className="px-2 py-0.5 text-2xs font-medium transition-colors max-sm:px-3 max-sm:py-1.5 max-sm:text-xs"
                     style={{
                       backgroundColor: chordMode === 'diatonic' ? 'var(--card-hover)' : 'transparent',
                       color: chordMode === 'diatonic' ? 'var(--text)' : 'var(--text-dim)',
@@ -236,7 +237,7 @@ export function ExploreView() {
                   </button>
                   <button
                     onClick={() => setChordMode('all')}
-                    className="px-2 py-0.5 text-[10px] font-medium transition-colors"
+                    className="px-2 py-0.5 text-2xs font-medium transition-colors max-sm:px-3 max-sm:py-1.5 max-sm:text-xs"
                     style={{
                       backgroundColor: chordMode === 'all' ? 'var(--card-hover)' : 'transparent',
                       color: chordMode === 'all' ? 'var(--text)' : 'var(--text-dim)',
@@ -252,7 +253,7 @@ export function ExploreView() {
               <h3 className="type-section mb-2.5">
                 {t('explore.circleOfFifths')}
               </h3>
-              <div className="rounded-xl p-3" style={{ border: '1px solid color-mix(in srgb, var(--card) 50%, transparent)', backgroundColor: 'color-mix(in srgb, var(--bg) 30%, transparent)' }}>
+              <div className="rounded-xl p-3" style={{ border: '1px solid color-mix(in srgb, var(--card) 50%, transparent)', backgroundColor: 'color-mix(in srgb, var(--bg) 30%, transparent)', boxShadow: 'var(--shadow-sm)' }}>
                 <CircleOfFifths />
               </div>
             </div>

@@ -1,7 +1,10 @@
 import { useRef, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppStore, type ViewMode, type ThemeMode } from '../../state/store.ts';
+import { useGamificationStore } from '../../state/gamificationStore.ts';
 import { SUPPORTED_LANGUAGES } from '../../i18n/index.ts';
+import { toast } from '../../state/toastStore.ts';
+import { StreakBadge } from '../gamification/StreakBadge.tsx';
 
 const VIEWS: ViewMode[] = ['explore', 'play', 'learn'];
 const VIEW_KEYS: Record<ViewMode, string> = {
@@ -59,6 +62,7 @@ export function TopBar() {
   const setThemeMode = useAppStore((s) => s.setThemeMode);
   const language = useAppStore((s) => s.language);
   const setLanguage = useAppStore((s) => s.setLanguage);
+  const currentStreak = useGamificationStore((s) => s.streak.currentStreak);
   const navRef = useRef<HTMLElement>(null);
   const [indicator, setIndicator] = useState({ left: 0, width: 0 });
 
@@ -72,7 +76,9 @@ export function TopBar() {
 
   const cycleTheme = () => {
     const idx = THEME_CYCLE.indexOf(themeMode);
-    setThemeMode(THEME_CYCLE[(idx + 1) % THEME_CYCLE.length]);
+    const next = THEME_CYCLE[(idx + 1) % THEME_CYCLE.length];
+    setThemeMode(next);
+    toast(t('toast.themeChanged', { mode: t(THEME_KEYS[next]) }), 'info');
   };
 
   const themeLabel = t(THEME_KEYS[themeMode]);
@@ -133,11 +139,23 @@ export function TopBar() {
       </nav>
 
       <div className="flex items-center gap-2">
+        {/* Streak badge */}
+        <StreakBadge
+          streak={currentStreak}
+          onClick={() => {
+            setView('learn');
+            useGamificationStore.getState().requestDashboard();
+          }}
+        />
+
         {/* Language selector */}
         <select
           value={language}
-          onChange={(e) => setLanguage(e.target.value)}
-          className="text-[10px] px-1.5 py-1 rounded-lg appearance-none cursor-pointer bg-transparent"
+          onChange={(e) => {
+            setLanguage(e.target.value);
+            toast(t('toast.languageChanged'), 'info');
+          }}
+          className="text-2xs px-1.5 py-1 rounded-lg appearance-none cursor-pointer bg-transparent"
           style={{
             color: 'var(--text-dim)',
             border: '1px solid color-mix(in srgb, var(--border) 50%, transparent)',
@@ -182,7 +200,7 @@ export function TopBar() {
           </svg>
           <span className="max-sm:hidden">{t('nav.search')}</span>
           <kbd
-            className="text-[10px] px-1 py-0.5 rounded ml-1 max-sm:hidden"
+            className="text-2xs px-1 py-0.5 rounded ml-1 max-sm:hidden"
             style={{ color: 'var(--text-dim)', backgroundColor: 'var(--bg)' }}
             aria-hidden="true"
           >

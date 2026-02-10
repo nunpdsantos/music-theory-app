@@ -13,7 +13,8 @@ export function InstrumentSelector() {
     <div
       role="tablist"
       aria-label="Instrument"
-      className="flex items-center gap-0.5 rounded-md p-0.5"
+      data-tour="instrument"
+      className="flex items-center gap-0.5 rounded-md p-0.5 max-sm:p-1 max-sm:rounded-lg"
       style={{ backgroundColor: 'color-mix(in srgb, var(--card-hover) 60%, transparent)' }}
     >
       {INSTRUMENTS.map((inst) => {
@@ -24,7 +25,7 @@ export function InstrumentSelector() {
             role="tab"
             aria-selected={isActive}
             onClick={() => setInstrument(inst.id)}
-            className="px-2 py-0.5 text-[10px] font-medium rounded transition-colors"
+            className="px-2 py-0.5 text-2xs font-medium rounded transition-colors max-sm:px-3 max-sm:py-1.5 max-sm:text-xs"
             style={{
               backgroundColor: isActive ? 'var(--border)' : 'transparent',
               color: isActive ? 'var(--text)' : 'var(--text-dim)',

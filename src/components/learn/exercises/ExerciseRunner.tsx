@@ -13,6 +13,7 @@ import { InstrumentInput } from './inputs/InstrumentInput';
 import { playNote, playChord, resumeAudio } from '../../../core/services/audio';
 import type { NaturalNote, Accidental, Note } from '../../../core/types/music';
 import { buildChord } from '../../../core/constants/chords';
+import { useGamificationStore } from '../../../state/gamificationStore';
 
 type Phase = 'active' | 'submitted';
 
@@ -27,6 +28,9 @@ interface ExerciseRunnerProps {
 
 export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onRecordResult, onComplete }: ExerciseRunnerProps) {
   const { t } = useTranslation();
+  const gamLogActivity = useGamificationStore((s) => s.logActivity);
+  const gamIncrementExercise = useGamificationStore((s) => s.incrementExerciseAttempt);
+  const gamAddXP = useGamificationStore((s) => s.addXP);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [phase, setPhase] = useState<Phase>('active');
   const [attempt, setAttempt] = useState(1);
@@ -125,10 +129,15 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
       const score: 0 | 0.5 | 1 = attempt === 1 ? 1 : 0.5;
       onRecordResult(exercise.id, score);
       setAccumulatedScore((prev) => prev + score);
+      gamLogActivity();
+      gamIncrementExercise(attempt === 1);
+      gamAddXP(attempt === 1 ? 'exercise_perfect' : 'exercise_accuracy', attempt === 1 ? 2 : 1, exercise.id);
     } else if (attempt >= 2) {
       onRecordResult(exercise.id, 0);
+      gamLogActivity();
+      gamIncrementExercise(false);
     }
-  }, [exercise, selected, attempt, onRecordResult]);
+  }, [exercise, selected, attempt, onRecordResult, gamLogActivity, gamIncrementExercise, gamAddXP]);
 
   const handleSubmitInstrument = useCallback((pitchClasses: Set<number>) => {
     if (!exercise) return;
@@ -140,10 +149,15 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
       const score: 0 | 0.5 | 1 = attempt === 1 ? 1 : 0.5;
       onRecordResult(exercise.id, score);
       setAccumulatedScore((prev) => prev + score);
+      gamLogActivity();
+      gamIncrementExercise(attempt === 1);
+      gamAddXP(attempt === 1 ? 'exercise_perfect' : 'exercise_accuracy', attempt === 1 ? 2 : 1, exercise.id);
     } else if (attempt >= 2) {
       onRecordResult(exercise.id, 0);
+      gamLogActivity();
+      gamIncrementExercise(false);
     }
-  }, [exercise, attempt, onRecordResult]);
+  }, [exercise, attempt, onRecordResult, gamLogActivity, gamIncrementExercise, gamAddXP]);
 
   const handleTryAgain = useCallback(() => {
     setAttempt(2);
@@ -276,7 +290,7 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
                   >
                     <button
                       onClick={handleSubmitChoice}
-                      className="px-4 py-1.5 rounded-lg text-xs font-medium transition-colors"
+                      className="px-4 py-1.5 max-sm:py-2 max-sm:px-5 rounded-lg text-xs font-medium transition-colors"
                       style={{
                         backgroundColor: `${accentColor}20`,
                         color: accentColor,

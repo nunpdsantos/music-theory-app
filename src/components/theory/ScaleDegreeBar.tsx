@@ -40,7 +40,7 @@ export function ScaleDegreeBar() {
   const isCompact = noteCount > 8;
 
   return (
-    <div className="flex items-stretch gap-1.5 max-sm:gap-0.5" role="group" aria-label="Scale degrees" style={{ boxShadow: 'var(--shadow-sm)' }}>
+    <div className="flex items-stretch gap-1.5 max-sm:gap-0.5 max-sm:overflow-x-auto max-sm:snap-x max-sm:snap-proximity" role="group" aria-label="Scale degrees" style={{ boxShadow: 'var(--shadow-sm)' }}>
       {scale.notes.map((note, i) => {
         const degree = i + 1;
         const isSelected = selectedDegree === degree;
@@ -56,7 +56,7 @@ export function ScaleDegreeBar() {
           <m.button
             key={`${noteToString(note)}-${i}`}
             onClick={() => setSelectedDegree(isSelected ? null : degree)}
-            className="flex flex-col items-center gap-1 py-2.5 max-sm:py-2 rounded-xl flex-1 min-w-0 group transition-colors"
+            className="flex flex-col items-center gap-1 py-2.5 max-sm:py-2.5 rounded-xl flex-1 min-w-0 max-sm:min-w-[36px] max-sm:snap-start group transition-colors"
             style={{
               padding: isCompact ? '0.5rem 0.25rem' : undefined,
               paddingLeft: isCompact ? '0.375rem' : undefined,

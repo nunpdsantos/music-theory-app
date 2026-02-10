@@ -67,7 +67,9 @@
     "sharedLegend": "Comuns",
     "onlyLegend": "Apenas {{name}}",
     "vs": "vs",
-    "staffNotation": "Nota\u00e7\u00e3o em Pauta"
+    "staffNotation": "Notação em Pauta",
+    "noDiatonicChords": "Sem acordes diatónicos para este tipo de escala",
+    "noDiatonicChordsHint": "Experimenta uma escala diferente para ver harmonia"
   },
   "play": {
     "performanceMode": "Modo Performance",
@@ -166,7 +168,10 @@
     "markModuleComplete": "Marcar M\u00f3dulo como Conclu\u00eddo",
     "unitsModules": "{{units}} {{unitLabel}} \u00b7 {{modules}} m\u00f3dulos",
     "unitSingular": "unidade",
-    "unitPlural": "unidades"
+    "unitPlural": "unidades",
+    "emptyTitle": "Comece a Sua Jornada",
+    "emptySubtitle": "Toque em qualquer nível para explorar teoria musical",
+    "startLevel1": "Começar Nível 1"
   },
   "exercise": {
     "title": "Exerc\u00edcios",
@@ -192,6 +197,14 @@
     "unexpectedError": "Ocorreu um erro inesperado.",
     "viewError": "Esta vista encontrou um erro."
   },
+  "toast": {
+    "copiedToClipboard": "Copiado para a \u00e1rea de transfer\u00eancia",
+    "themeChanged": "Tema: {{mode}}",
+    "languageChanged": "Idioma atualizado",
+    "moduleCompleted": "M\u00f3dulo conclu\u00eddo: {{title}}",
+    "reviewPassed": "Revis\u00e3o aprovada: {{title}}",
+    "reviewFailed": "Revis\u00e3o precisa de mais pr\u00e1tica: {{title}}"
+  },
   "instrument": {
     "piano": "Piano",
     "guitar": "Guitarra",
@@ -205,6 +218,90 @@
     "reviewComplete": "Revis\u00e3o Completa!",
     "reviewAgainSoon": "Rever Novamente em Breve",
     "dueNow": "Agora",
-    "startReview": "Iniciar Revis\u00e3o"
+    "startReview": "Iniciar Revis\u00e3o",
+    "allCaughtUp": "Tudo em dia!",
+    "nextReview": "Pr\u00f3xima revis\u00e3o {{time}}"
+  },
+  "celebration": {
+    "levelComplete": "N\u00edvel {{n}} Completo!",
+    "modulesCompleted": "{{count}} m\u00f3dulos dominados",
+    "continue": "Continuar"
+  },
+  "gamification": {
+    "streakLabel": "Sequência de {{days}} dias",
+    "streakMilestone": "Sequência de {{days}} dias!",
+    "xpThisWeek": "Esta semana: +{{xp}} XP",
+    "xpTotal": "Total: {{xp}} XP",
+    "stats": "Estatísticas",
+    "dashboard": {
+      "title": "O Seu Progresso",
+      "back": "Voltar",
+      "xp": "XP",
+      "modules": "Módulos",
+      "streak": "Sequência",
+      "exercises": "Exercícios",
+      "accuracy": "Precisão",
+      "reviews": "Revisões",
+      "activity": "Atividade",
+      "thisWeek": "Esta Semana",
+      "achievements": "Conquistas",
+      "weeks": "{{n}} semanas",
+      "noActivity": "Ainda sem atividade"
+    },
+    "ach": {
+      "firstStepsTitle": "Primeiros Passos",
+      "firstStepsDesc": "Complete o seu primeiro módulo",
+      "level1CompleteTitle": "Nível 1 Completo",
+      "level1CompleteDesc": "Complete todos os módulos do Nível 1",
+      "halfwayThereTitle": "A Meio Caminho",
+      "halfwayThereDesc": "Complete 59 módulos",
+      "theoryScholarTitle": "Estudioso da Teoria",
+      "theoryScholarDesc": "Complete os Níveis 1 a 8",
+      "parallelPathTitle": "Caminho Paralelo",
+      "parallelPathDesc": "Complete o Nível 9",
+      "completionistTitle": "Completista",
+      "completionistDesc": "Complete todos os 118 módulos",
+      "weekWarriorTitle": "Guerreiro da Semana",
+      "weekWarriorDesc": "Mantenha uma sequência de 7 dias",
+      "fortnightFocusTitle": "Foco Quinzenal",
+      "fortnightFocusDesc": "Mantenha uma sequência de 14 dias",
+      "monthlyMomentumTitle": "Impulso Mensal",
+      "monthlyMomentumDesc": "Mantenha uma sequência de 30 dias",
+      "centuryStreakTitle": "Sequência Centenária",
+      "centuryStreakDesc": "Mantenha uma sequência de 100 dias",
+      "firstPerfectTitle": "Pontuação Perfeita",
+      "firstPerfectDesc": "Obtenha a primeira pontuação perfeita",
+      "sharpEarTitle": "Ouvido Apurado",
+      "sharpEarDesc": "Demonstre fortes competências de treino auditivo",
+      "perfectModuleTitle": "Módulo Impecável",
+      "perfectModuleDesc": "Obtenha 100% nos exercícios de um módulo",
+      "centuryClubTitle": "Clube dos Cem",
+      "centuryClubDesc": "Tente 100 exercícios",
+      "exerciseVeteranTitle": "Veterano dos Exercícios",
+      "exerciseVeteranDesc": "Tente 500 exercícios",
+      "goldenFiftyTitle": "Cinquenta Dourados",
+      "goldenFiftyDesc": "Alcance 50 pontuações perfeitas",
+      "dedicatedLearnerTitle": "Aprendiz Dedicado",
+      "dedicatedLearnerDesc": "Pratique em 5 dias diferentes numa semana",
+      "reviewerTitle": "Revisor",
+      "reviewerDesc": "Complete 10 revisões SRS",
+      "reviewBlitzTitle": "Blitz de Revisão",
+      "reviewBlitzDesc": "Complete 5 revisões num único dia",
+      "reviewMasterTitle": "Mestre da Revisão",
+      "reviewMasterDesc": "Complete 50 revisões SRS"
+    }
+  },
+  "tour": {
+    "step1Title": "Escolha o Instrumento",
+    "step1Body": "Alterne entre piano e guitarra para ver escalas, acordes e notas em cada instrumento.",
+    "step2Title": "Escolha Tonalidade e Escala",
+    "step2Body": "Selecione uma nota fundamental e um tipo de escala. O instrumento abaixo destaca as notas correspondentes.",
+    "step3Title": "Toque uma Nota",
+    "step3Body": "Toque ou clique em qualquer tecla para a ouvir. Experimente agora!",
+    "step4Title": "Pronto para Aprender?",
+    "step4Body": "V\u00e1 ao separador Aprender para um curr\u00edculo estruturado com exerc\u00edcios e acompanhamento de progresso.",
+    "skip": "Saltar",
+    "next": "Seguinte",
+    "finish": "Entendido"
   }
 }

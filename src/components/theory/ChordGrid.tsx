@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import { noteToString } from '../../core/types/music.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
@@ -31,6 +32,7 @@ const QUALITY_FULL: Record<string, string> = {
 };
 
 export function ChordGrid() {
+  const { t } = useTranslation();
   const { diatonicChords } = useKeyContext();
   const setSelectedChord = useAppStore((s) => s.setSelectedChord);
   const selectedChord = useAppStore((s) => s.selectedChord);
@@ -38,14 +40,21 @@ export function ChordGrid() {
   if (diatonicChords.length === 0) {
     return (
       <div
-        className="text-xs px-4 py-8 text-center rounded-xl border"
+        className="px-4 py-8 text-center rounded-xl border"
         style={{
           color: 'var(--text-dim)',
           borderColor: 'color-mix(in srgb, var(--card-hover) 50%, transparent)',
           backgroundColor: 'color-mix(in srgb, var(--bg) 30%, transparent)',
+          boxShadow: 'var(--shadow-sm)',
         }}
       >
-        No diatonic chords for this scale type
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-2 opacity-40">
+          <path d="M9 18V5l12-2v13" />
+          <circle cx="6" cy="18" r="3" />
+          <circle cx="18" cy="16" r="3" />
+        </svg>
+        <p className="text-xs font-medium mb-0.5">{t('explore.noDiatonicChords')}</p>
+        <p className="text-2xs">{t('explore.noDiatonicChordsHint')}</p>
       </div>
     );
   }
@@ -75,7 +84,7 @@ export function ChordGrid() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.04, type: 'spring', stiffness: 400, damping: 25 }}
-            whileHover={{ scale: 1.04, y: -2 }}
+            whileHover={{ scale: 1.04, y: -2, boxShadow: 'var(--shadow-md)' }}
             whileTap={{ scale: 0.96 }}
             aria-pressed={isSelected}
             aria-label={`${rootLabel} ${chord.quality} chord, degree ${degree}`}

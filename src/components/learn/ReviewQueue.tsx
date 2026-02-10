@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import type { CurriculumProgress } from '../../core/types/curriculum';
 import { LEVEL_METADATA } from '../../data/curriculumLoader';
+import { SPRING_MICRO } from '../../design/tokens/motion';
 import { getDueReviewModuleIds } from '../../services/spacedRepetition';
 import { formatNextReview, getIntervalLabel } from '../../services/spacedRepetition';
 
@@ -34,7 +35,38 @@ export function ReviewQueue({ progress, onStartReview }: ReviewQueueProps) {
     [progress],
   );
 
-  if (dueModuleIds.length === 0) return null;
+  // No schedules at all → user hasn't completed any modules with SRS
+  const schedules = progress.reviewSchedules ?? {};
+  const hasSchedules = Object.keys(schedules).length > 0;
+
+  if (dueModuleIds.length === 0) {
+    if (!hasSchedules) return null;
+
+    // All caught up — show next review date
+    const earliest = Math.min(...Object.values(schedules).map((s) => s.nextReviewAt));
+    const relativeTime = formatNextReview({ nextReviewAt: earliest } as Parameters<typeof formatNextReview>[0], Date.now());
+
+    return (
+      <m.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.1 }}
+        className="mb-6 rounded-xl px-5 py-4 text-center"
+        style={{ backgroundColor: `${AMBER}08`, border: `1px solid ${AMBER}15`, boxShadow: 'var(--shadow-sm)' }}
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={AMBER} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-1.5">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+          <polyline points="22 4 12 14.01 9 11.01" />
+        </svg>
+        <h3 className="text-sm font-bold mb-0.5" style={{ color: AMBER }}>
+          {t('review.allCaughtUp')}
+        </h3>
+        <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
+          {t('review.nextReview', { time: relativeTime })}
+        </p>
+      </m.div>
+    );
+  }
 
   const shown = dueModuleIds.slice(0, MAX_SHOWN);
   const remaining = dueModuleIds.length - MAX_SHOWN;
@@ -70,21 +102,25 @@ export function ReviewQueue({ progress, onStartReview }: ReviewQueueProps) {
           const interval = schedule ? getIntervalLabel(schedule.intervalLevel) : '';
 
           return (
-            <button
+            <m.button
               key={moduleId}
+              whileTap={{ scale: 0.97, transition: SPRING_MICRO }}
               onClick={() => onStartReview(moduleId)}
               className="w-full text-left px-4 py-3 rounded-xl transition-all duration-150 hover:scale-[1.01] group"
               style={{
                 backgroundColor: `${AMBER}08`,
                 border: `1px solid ${AMBER}15`,
+                boxShadow: 'var(--shadow-sm)',
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = `${AMBER}15`;
                 e.currentTarget.style.borderColor = `${AMBER}30`;
+                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = `${AMBER}08`;
                 e.currentTarget.style.borderColor = `${AMBER}15`;
+                e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
               }}
             >
               <div className="flex items-center justify-between">
@@ -124,7 +160,7 @@ export function ReviewQueue({ progress, onStartReview }: ReviewQueueProps) {
                   </svg>
                 </div>
               </div>
-            </button>
+            </m.button>
           );
         })}
       </div>

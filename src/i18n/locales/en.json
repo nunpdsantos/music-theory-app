@@ -67,7 +67,9 @@
     "sharedLegend": "Shared",
     "onlyLegend": "{{name}} only",
     "vs": "vs",
-    "staffNotation": "Staff Notation"
+    "staffNotation": "Staff Notation",
+    "noDiatonicChords": "No diatonic chords for this scale type",
+    "noDiatonicChordsHint": "Try a different scale to see chord harmony"
   },
   "play": {
     "performanceMode": "Performance Mode",
@@ -166,7 +168,10 @@
     "markModuleComplete": "Mark Module Complete",
     "unitsModules": "{{units}} {{unitLabel}} \u00b7 {{modules}} modules",
     "unitSingular": "unit",
-    "unitPlural": "units"
+    "unitPlural": "units",
+    "emptyTitle": "Start Your Journey",
+    "emptySubtitle": "Tap any level to begin exploring music theory",
+    "startLevel1": "Start Level 1"
   },
   "exercise": {
     "title": "Exercises",
@@ -192,6 +197,14 @@
     "unexpectedError": "An unexpected error occurred.",
     "viewError": "This view encountered an error."
   },
+  "toast": {
+    "copiedToClipboard": "Copied to clipboard",
+    "themeChanged": "Theme: {{mode}}",
+    "languageChanged": "Language updated",
+    "moduleCompleted": "Module complete: {{title}}",
+    "reviewPassed": "Review passed: {{title}}",
+    "reviewFailed": "Review needs more practice: {{title}}"
+  },
   "instrument": {
     "piano": "Piano",
     "guitar": "Guitar",
@@ -205,6 +218,90 @@
     "reviewComplete": "Review Complete!",
     "reviewAgainSoon": "Review Again Soon",
     "dueNow": "Due now",
-    "startReview": "Start Review"
+    "startReview": "Start Review",
+    "allCaughtUp": "All caught up!",
+    "nextReview": "Next review {{time}}"
+  },
+  "celebration": {
+    "levelComplete": "Level {{n}} Complete!",
+    "modulesCompleted": "{{count}} modules mastered",
+    "continue": "Continue"
+  },
+  "gamification": {
+    "streakLabel": "{{days}}-day streak",
+    "streakMilestone": "{{days}}-day streak!",
+    "xpThisWeek": "This week: +{{xp}} XP",
+    "xpTotal": "Total: {{xp}} XP",
+    "stats": "Stats",
+    "dashboard": {
+      "title": "Your Progress",
+      "back": "Back",
+      "xp": "XP",
+      "modules": "Modules",
+      "streak": "Streak",
+      "exercises": "Exercises",
+      "accuracy": "Accuracy",
+      "reviews": "Reviews",
+      "activity": "Activity",
+      "thisWeek": "This Week",
+      "achievements": "Achievements",
+      "weeks": "{{n}} weeks",
+      "noActivity": "No activity yet"
+    },
+    "ach": {
+      "firstStepsTitle": "First Steps",
+      "firstStepsDesc": "Complete your first module",
+      "level1CompleteTitle": "Level 1 Complete",
+      "level1CompleteDesc": "Complete all modules in Level 1",
+      "halfwayThereTitle": "Halfway There",
+      "halfwayThereDesc": "Complete 59 modules",
+      "theoryScholarTitle": "Theory Scholar",
+      "theoryScholarDesc": "Complete Levels 1 through 8",
+      "parallelPathTitle": "Parallel Path",
+      "parallelPathDesc": "Complete Level 9",
+      "completionistTitle": "Completionist",
+      "completionistDesc": "Complete all 118 modules",
+      "weekWarriorTitle": "Week Warrior",
+      "weekWarriorDesc": "Maintain a 7-day streak",
+      "fortnightFocusTitle": "Fortnight Focus",
+      "fortnightFocusDesc": "Maintain a 14-day streak",
+      "monthlyMomentumTitle": "Monthly Momentum",
+      "monthlyMomentumDesc": "Maintain a 30-day streak",
+      "centuryStreakTitle": "Century Streak",
+      "centuryStreakDesc": "Maintain a 100-day streak",
+      "firstPerfectTitle": "Perfect Score",
+      "firstPerfectDesc": "Get your first perfect exercise score",
+      "sharpEarTitle": "Sharp Ear",
+      "sharpEarDesc": "Demonstrate strong ear training skills",
+      "perfectModuleTitle": "Flawless Module",
+      "perfectModuleDesc": "Score 100% on a module's exercises",
+      "centuryClubTitle": "Century Club",
+      "centuryClubDesc": "Attempt 100 exercises",
+      "exerciseVeteranTitle": "Exercise Veteran",
+      "exerciseVeteranDesc": "Attempt 500 exercises",
+      "goldenFiftyTitle": "Golden Fifty",
+      "goldenFiftyDesc": "Achieve 50 lifetime perfect scores",
+      "dedicatedLearnerTitle": "Dedicated Learner",
+      "dedicatedLearnerDesc": "Practice on 5 different days in a week",
+      "reviewerTitle": "Reviewer",
+      "reviewerDesc": "Complete 10 SRS reviews",
+      "reviewBlitzTitle": "Review Blitz",
+      "reviewBlitzDesc": "Complete 5 reviews in a single day",
+      "reviewMasterTitle": "Review Master",
+      "reviewMasterDesc": "Complete 50 SRS reviews"
+    }
+  },
+  "tour": {
+    "step1Title": "Pick Your Instrument",
+    "step1Body": "Switch between piano and guitar to see scales, chords, and notes on either instrument.",
+    "step2Title": "Choose a Key & Scale",
+    "step2Body": "Select a root note and scale type. The instrument below will highlight the matching notes.",
+    "step3Title": "Play a Note",
+    "step3Body": "Tap or click any key to hear it. Try it now!",
+    "step4Title": "Ready to Learn?",
+    "step4Body": "Head to the Learn tab for a structured curriculum with exercises and progress tracking.",
+    "skip": "Skip",
+    "next": "Next",
+    "finish": "Got it"
   }
 }

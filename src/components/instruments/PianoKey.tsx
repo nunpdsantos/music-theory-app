@@ -7,7 +7,7 @@ type SizeMode = 'mobile' | 'tablet' | 'desktop';
 const DIMS: Record<SizeMode, { white: [number, number]; black: [number, number]; labelSize: string }> = {
   desktop: { white: [44, 210], black: [28, 130], labelSize: '10px' },
   tablet:  { white: [36, 160], black: [22, 100], labelSize: '9px' },
-  mobile:  { white: [30, 130], black: [18, 80],  labelSize: '8px' },
+  mobile:  { white: [46, 150], black: [28, 92],  labelSize: '9px' },
 };
 
 interface PianoKeyProps {
@@ -87,7 +87,7 @@ export function PianoKeyComponent({
 
     if (isActive) {
       bg = color;
-      shadow = 'inset 0 -2px 4px rgba(0,0,0,0.3)';
+      shadow = `inset 0 -2px 4px rgba(0,0,0,0.3), 0 0 8px ${color}66`;
       transform = 'translateY(1px)';
       labelColor = '#000';
     } else if (isVoicingNote) {
@@ -110,35 +110,48 @@ export function PianoKeyComponent({
       bg = 'var(--piano-black)';
     }
 
+    // On mobile, add invisible padding around black keys for larger touch area
+    const touchPad = sizeMode === 'mobile' ? 4 : 0;
+
     return (
       <div
         role="button"
         aria-label={`${label}${keyData.octave}`}
         className="absolute z-10 cursor-pointer select-none touch-none"
         style={{
-          width: bw,
-          height: bh,
-          backgroundColor: bg,
-          opacity,
-          borderRadius: '0 0 4px 4px',
-          border,
-          boxShadow: shadow,
-          transform,
-          transition: 'transform 0.05s, background-color 0.08s, opacity 0.15s, box-shadow 0.15s, border 0.1s',
+          width: bw + touchPad * 2,
+          height: bh + touchPad,
+          padding: touchPad ? `0 ${touchPad}px ${touchPad}px` : undefined,
+          left: -touchPad,
         }}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onPointerLeave={handlePointerLeave}
         onPointerCancel={handlePointerUp}
       >
-        {showLabel && (isHighlighted || isChordTone || isVoicingNote) && (
-          <span
-            className="absolute bottom-1 left-1/2 -translate-x-1/2 font-bold"
-            style={{ color: labelColor, fontSize: dims.labelSize }}
-          >
-            {label}
-          </span>
-        )}
+        <div
+          style={{
+            width: bw,
+            height: bh,
+            backgroundColor: bg,
+            opacity,
+            borderRadius: '0 0 4px 4px',
+            border,
+            boxShadow: shadow,
+            transform,
+            transition: 'transform 0.05s, background-color 0.08s, opacity 0.15s, box-shadow 0.15s, border 0.1s',
+            position: 'relative',
+          }}
+        >
+          {showLabel && (isHighlighted || isChordTone || isVoicingNote) && (
+            <span
+              className="absolute bottom-1 left-1/2 -translate-x-1/2 font-bold"
+              style={{ color: labelColor, fontSize: dims.labelSize }}
+            >
+              {label}
+            </span>
+          )}
+        </div>
       </div>
     );
   }
@@ -154,7 +167,7 @@ export function PianoKeyComponent({
 
   if (isActive) {
     bg = color;
-    shadow = 'inset 0 -2px 6px rgba(0,0,0,0.15)';
+    shadow = `inset 0 -2px 6px rgba(0,0,0,0.15), 0 0 10px ${color}66`;
     transform = 'translateY(1px)';
     labelColor = '#000';
   } else if (isVoicingNote) {

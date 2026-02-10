@@ -5,6 +5,8 @@ import { AppShell } from './components/layout/AppShell.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 import { QuickSearch } from './components/navigation/QuickSearch.tsx';
 import { PWAPrompts } from './components/layout/PWAPrompts.tsx';
+import { ToastContainer } from './components/layout/Toast.tsx';
+import { GuidedTour } from './components/layout/GuidedTour.tsx';
 import { useMidi } from './hooks/useMidi.ts';
 import { useTheme } from './hooks/useTheme.ts';
 import { useLanguage } from './hooks/useLanguage.ts';
@@ -91,6 +93,8 @@ function App() {
       </AppShell>
       <QuickSearch />
       <PWAPrompts />
+      <ToastContainer />
+      <GuidedTour />
     </LazyMotion>
   );
 }

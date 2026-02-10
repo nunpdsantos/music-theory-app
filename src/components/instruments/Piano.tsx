@@ -39,20 +39,20 @@ const KEYBOARD_MAP: Record<string, number> = {
 // Responsive key widths
 const KEY_WIDTH_DESKTOP = 46;
 const KEY_WIDTH_TABLET = 36;
-const KEY_WIDTH_MOBILE = 30;
+const KEY_WIDTH_MOBILE = 46; // WCAG 44px minimum
 
 // Responsive container/key heights
 const CONTAINER_H_DESKTOP = 220;
 const CONTAINER_H_TABLET = 170;
-const CONTAINER_H_MOBILE = 140;
+const CONTAINER_H_MOBILE = 160;
 
 const WHITE_H_DESKTOP = 210;
 const WHITE_H_TABLET = 160;
-const WHITE_H_MOBILE = 130;
+const WHITE_H_MOBILE = 150;
 
 const BLACK_OFFSET_DESKTOP = 30;
 const BLACK_OFFSET_TABLET = 22;
-const BLACK_OFFSET_MOBILE = 18;
+const BLACK_OFFSET_MOBILE = 30;
 
 export function Piano() {
   const { noteOn, noteOff } = useAudio();
@@ -79,7 +79,15 @@ export function Piano() {
   const dragStartX = useRef(0);
   const dragScrollLeft = useRef(0);
 
-  const keys = useMemo(() => generateKeyboardKeys(START_OCTAVE, END_OCTAVE), []);
+  const allKeys = useMemo(() => generateKeyboardKeys(START_OCTAVE, END_OCTAVE), []);
+
+  // On mobile, show only 2 octaves centered on baseOctave for larger touch targets
+  const keys = useMemo(() => {
+    if (!mobile) return allKeys;
+    const lo = Math.max(START_OCTAVE, baseOctave - 1);
+    const hi = Math.min(END_OCTAVE, lo + 1);
+    return allKeys.filter((k) => k.octave >= lo && k.octave <= hi);
+  }, [mobile, allKeys, baseOctave]);
 
   const isInScale = useCallback(
     (key: PianoKey) => scaleMidiNumbers.has(key.midiNumber),
@@ -203,12 +211,12 @@ export function Piano() {
     isDragging.current = false;
   }, []);
 
-  // Computer keyboard → piano key mapping
+  // Computer keyboard → piano key mapping (uses all keys, not filtered)
   const midiLookup = useMemo(() => {
     const m = new Map<number, PianoKey>();
-    for (const k of keys) m.set(k.midiNumber, k);
+    for (const k of allKeys) m.set(k.midiNumber, k);
     return m;
-  }, [keys]);
+  }, [allKeys]);
 
   const keyboardHeldKeys = useRef(new Set<string>());
 
@@ -273,7 +281,7 @@ export function Piano() {
   return (
     <div role="group" aria-label="Piano keyboard" className="w-full" style={{ backgroundColor: 'var(--bg)', borderTop: '1px solid var(--border-subtle)' }}>
       {/* Octave selector strip */}
-      <div role="tablist" aria-label="Base octave" className="flex items-center gap-1 px-3 py-1.5" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+      <div role="tablist" aria-label="Base octave" className="flex items-center gap-1 max-sm:gap-0.5 px-3 max-sm:px-2 py-1.5" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
         <span className="text-[10px] uppercase tracking-wider mr-1" style={{ color: 'var(--text-dim)' }}>Octave</span>
         {[2, 3, 4, 5, 6].map((oct) => {
           const isActive = baseOctave === oct;
@@ -283,7 +291,7 @@ export function Piano() {
               role="tab"
               aria-selected={isActive}
               onClick={() => setBaseOctave(oct)}
-              className="px-2 py-0.5 rounded text-[10px] font-medium transition-colors"
+              className="px-2 max-sm:px-3 py-0.5 max-sm:py-1.5 rounded text-[10px] max-sm:text-xs font-medium transition-colors"
               style={{
                 backgroundColor: isActive ? 'var(--accent)' : 'transparent',
                 color: isActive ? '#000' : 'var(--text-dim)',
@@ -325,7 +333,7 @@ export function Piano() {
               isDimmed={isDimmed(wk)}
               onNoteOn={handleNoteOn}
               onNoteOff={handleNoteOff}
-              showLabel={true}
+              showLabel={!mobile || isInScale(wk) || activeNotes.has(wk.midiNumber) || (wk.note.natural === 'C' && wk.note.accidental === '')}
               sizeMode={sizeMode}
             />
           ))}
@@ -346,7 +354,7 @@ export function Piano() {
                 isDimmed={isDimmed(bk)}
                 onNoteOn={handleNoteOn}
                 onNoteOff={handleNoteOff}
-                showLabel={true}
+                showLabel={!mobile || isInScale(bk) || activeNotes.has(bk.midiNumber)}
                 sizeMode={sizeMode}
               />
             </div>

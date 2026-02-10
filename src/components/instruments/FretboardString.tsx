@@ -73,7 +73,7 @@ export function FretboardString({
   const scalePosNotes = scalePositionLookup.get(stringIdx);
 
   return (
-    <div className="flex items-center" style={{ height: mobile ? 24 : (isChordView ? 30 : 28) }}>
+    <div className="flex items-center" style={{ height: mobile ? 32 : (isChordView ? 30 : 28) }}>
       {/* String label */}
       <div
         className="text-right pr-2 text-[10px] font-mono"
@@ -121,6 +121,7 @@ export function FretboardString({
               isMuted={isMuted}
               fretMinWidth={fretMinWidth}
               isChordView={isChordView}
+              mobile={mobile}
               showVoicing={showVoicing}
               finger={finger}
               showScalePos={showScalePos}

@@ -101,13 +101,20 @@ export function ChordBrowser() {
               }}
               className="flex flex-col items-start px-2.5 py-2 rounded-xl transition-all text-left"
               style={{
-                backgroundColor: isActive ? '#60A5FA15' : 'var(--card)',
-                border: isActive ? '1px solid #60A5FA40' : '1px solid var(--card-hover)',
+                backgroundColor: isActive ? 'var(--accent-dim)' : 'var(--card)',
+                border: isActive ? '1px solid color-mix(in srgb, var(--accent) 25%, transparent)' : '1px solid var(--card-hover)',
+                boxShadow: 'var(--shadow-sm)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
               }}
             >
               <span
                 className="text-sm font-bold"
-                style={{ color: isActive ? '#60A5FA' : '#e4e4e7' }}
+                style={{ color: isActive ? 'var(--accent)' : 'var(--text)' }}
               >
                 {rootLabel}{symbol}
               </span>

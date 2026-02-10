@@ -151,13 +151,14 @@ export function KeySelector() {
   }, [selectedScale, showAll]);
 
   return (
-    <div className="space-y-3" role="group" aria-label={t('keySelector.label')}>
+    <div className="space-y-3" role="group" aria-label={t('keySelector.label')} data-tour="key-scale">
       {/* ─── Root note chromatic strip ──────────────────────── */}
       <div>
         <span className="type-section block mb-1.5">
           {t('keySelector.root')}
         </span>
-        <div ref={rootContainerRef} className="relative inline-flex items-center rounded-xl p-1 gap-0.5 max-sm:max-w-full max-sm:overflow-x-auto max-sm:snap-x max-sm:snap-mandatory" style={{ backgroundColor: 'color-mix(in srgb, var(--bg-raised) 80%, transparent)', border: '1px solid color-mix(in srgb, var(--border) 60%, transparent)' }}>
+        <div className="relative max-sm:max-w-full">
+          <div ref={rootContainerRef} className="relative inline-flex items-center rounded-xl p-1 gap-0.5 max-sm:max-w-full max-sm:overflow-x-auto max-sm:snap-x max-sm:snap-mandatory" style={{ backgroundColor: 'color-mix(in srgb, var(--bg-raised) 80%, transparent)', border: '1px solid color-mix(in srgb, var(--border) 60%, transparent)' }}>
           <div
             className="absolute rounded-lg pointer-events-none"
             style={{
@@ -184,7 +185,7 @@ export function KeySelector() {
                 key={label}
                 data-root={label}
                 onClick={() => setKey(root)}
-                className={`relative px-2.5 py-1.5 text-xs font-semibold rounded-lg transition-all duration-150 ${
+                className={`relative px-2.5 py-1.5 text-xs font-semibold rounded-lg transition-all duration-150 max-sm:px-3 max-sm:py-2 max-sm:min-w-[34px] ${
                   hasAccidental ? 'min-w-[30px]' : 'min-w-[26px]'
                 } ${
                   isSelected
@@ -197,6 +198,11 @@ export function KeySelector() {
               </button>
             );
           })}
+          </div>
+          <div
+            className="hidden max-sm:block absolute right-0 top-0 bottom-0 w-6 pointer-events-none z-20 rounded-r-xl"
+            style={{ background: 'linear-gradient(to right, transparent, var(--bg))' }}
+          />
         </div>
       </div>
 
@@ -227,7 +233,7 @@ export function KeySelector() {
                     key={opt.value}
                     data-scale={opt.value}
                     onClick={() => setScale(opt.value)}
-                    className={`relative px-2.5 py-1 text-[11px] font-medium rounded-lg transition-all duration-150 ${
+                    className={`relative px-2.5 py-1 max-sm:py-1.5 text-[11px] font-medium rounded-lg transition-all duration-150 ${
                       isActive
                         ? ''
                         : 'hover:bg-white/[0.03]'
@@ -247,7 +253,7 @@ export function KeySelector() {
           {!isSelectedInHiddenGroup && (
             <button
               onClick={() => setExpanded(!expanded)}
-              className="text-[10px] font-medium px-2 py-1 rounded-lg hover:bg-white/[0.03] transition-colors"
+              className="text-2xs font-medium px-2 py-1 max-sm:py-1.5 rounded-lg hover:bg-white/[0.03] transition-colors"
               style={{ color: 'var(--text-dim)' }}
             >
               {showAll ? t('keySelector.less') : t('keySelector.moreScales')}

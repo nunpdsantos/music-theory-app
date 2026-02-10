@@ -30,17 +30,17 @@ export function AppShell({ children }: AppShellProps) {
       </main>
       {/* Instrument bar */}
       <div
-        className="flex items-center justify-between px-3 max-sm:px-2 py-1"
+        className="flex items-center justify-between px-3 max-sm:px-2 py-1 max-sm:py-1.5"
         style={{ backgroundColor: 'var(--bg)', borderTop: '1px solid var(--border-subtle)' }}
       >
         <InstrumentSelector />
         <div className="flex items-center gap-2">
-          <span className="text-[10px] max-sm:hidden" style={{ color: 'var(--text-dim)' }} aria-hidden="true">
+          <span className="text-2xs max-sm:hidden" style={{ color: 'var(--text-dim)' }} aria-hidden="true">
             {t('nav.clickKeysToPlay')}
           </span>
           <button
             onClick={() => setInstrumentCollapsed((c) => !c)}
-            className="hidden max-lg:flex items-center justify-center w-6 h-6 rounded-md transition-colors"
+            className="hidden max-lg:flex items-center justify-center w-6 h-6 max-sm:w-8 max-sm:h-8 rounded-md transition-colors"
             style={{ color: 'var(--text-dim)' }}
             aria-label={instrumentCollapsed ? t('nav.showInstrument') : t('nav.hideInstrument')}
           >
@@ -62,10 +62,11 @@ export function AppShell({ children }: AppShellProps) {
       </div>
       {!instrumentCollapsed && (
         <div
+          data-tour="play-note"
           role="region"
           aria-label={t('instrument.label', { name: t(`instrument.${instrument}`) })}
-          className="h-[260px] max-md:h-[200px] max-sm:h-[160px] overflow-y-auto overflow-x-hidden"
-          style={{ backgroundColor: 'var(--bg)' }}
+          className={`h-[260px] max-md:h-[200px] ${instrument === 'guitar' ? 'max-sm:h-[200px]' : 'max-sm:h-[160px]'} overflow-y-auto overflow-x-hidden`}
+          style={{ backgroundColor: 'var(--bg)', overscrollBehavior: 'contain' }}
         >
           {instrument === 'piano' ? <Piano /> : <Fretboard />}
         </div>

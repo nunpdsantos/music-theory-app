@@ -13,9 +13,11 @@ interface FretboardPositionSelectorProps {
   scalePositions: { position: ScalePosition; baseFret: number }[];
   guitarScalePosition: number | null;
   onSelectScalePosition: (idx: number | null) => void;
+  mobile?: boolean;
 }
 
 const btnBase = 'text-[10px] px-2 py-0.5 rounded transition-colors';
+const btnMobile = 'text-xs px-3 py-1.5 rounded transition-colors min-h-[36px]';
 
 function selectorStyle(isActive: boolean) {
   return {
@@ -35,7 +37,10 @@ export function FretboardPositionSelector({
   scalePositions,
   guitarScalePosition,
   onSelectScalePosition,
+  mobile = false,
 }: FretboardPositionSelectorProps) {
+  const btn = mobile ? btnMobile : btnBase;
+
   // Chord shape selector
   if (selectedChord && chordShapeCount > 0) {
     return (
@@ -47,7 +52,7 @@ export function FretboardPositionSelector({
             role="tab"
             aria-selected={selectedShapeIdx === idx}
             onClick={() => onSelectShape(idx)}
-            className={btnBase}
+            className={btn}
             style={selectorStyle(selectedShapeIdx === idx)}
           >
             {positionLabels[idx]}
@@ -66,7 +71,7 @@ export function FretboardPositionSelector({
           role="tab"
           aria-selected={guitarScalePosition === null}
           onClick={() => onSelectScalePosition(null)}
-          className={btnBase}
+          className={btn}
           style={selectorStyle(guitarScalePosition === null)}
         >
           All
@@ -77,7 +82,7 @@ export function FretboardPositionSelector({
             role="tab"
             aria-selected={guitarScalePosition === idx}
             onClick={() => onSelectScalePosition(idx)}
-            className={btnBase}
+            className={btn}
             style={selectorStyle(guitarScalePosition === idx)}
           >
             {sp.position.shortName} ({sp.position.cagedShape})

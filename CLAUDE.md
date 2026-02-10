@@ -5,7 +5,7 @@
 **Name:** Music Theory App
 **Domain:** Music theory education / interactive instrument
 **Stack:** React 19 + TypeScript 5.9 + Vite 7 + Tailwind CSS v4 + Zustand 5 + Framer Motion 12
-**Tests:** 399 passing (Vitest + React Testing Library)
+**Tests:** 404 passing (Vitest + React Testing Library)
 **Languages:** English + Portuguese (react-i18next)
 **PWA:** Offline-capable with Workbox precaching
 
@@ -33,13 +33,14 @@ src/
   core/              ~40 files, framework-agnostic music theory engine (types, constants, utils)
   design/tokens/     Color system (degree colors, surface colors) + motion tokens
   state/store.ts     Single Zustand store (music, instrument, audio, navigation, preferences)
+  state/toastStore.ts  Standalone toast queue (Zustand, not in main store)
   i18n/              i18next config + locales (en.json, pt.json) — ~170 keys, 18 namespaces
   components/
     instruments/     Piano, PianoKey, Fretboard, FretCell, InstrumentSelector
     theory/          ScaleDegreeBar, ChordGrid, CircleOfFifths
     panels/          DetailPanel, ChordDetail, ScaleDetail (with staff notation)
     navigation/      KeySelector, QuickSearch (Cmd+K)
-    layout/          AppShell, TopBar, PWAPrompts, ErrorBoundary
+    layout/          AppShell, TopBar, Toast, PWAPrompts, ErrorBoundary
     notation/        StaffNotation, StaffNotationSkeleton, useStaffNotation (VexFlow 5.0)
     play/            MetronomeControl, MidiOutputControl, RecordingControl, ChordProgressionBuilder
     learn/           LevelsOverview, LevelCard, ModuleView, ReviewQueue, ContinueBanner
@@ -100,17 +101,20 @@ src/
 - **Exercise generation:** Seeded PRNG templates for 118 modules (~627 generated, ~1,000+ total)
 - **Staff notation:** VexFlow 5.0 lazy-loaded (~1,128 KB separate chunk), theme-reactive, integrated in Explore/panels/exercises
 
+### Polish & Reach (Phase 8A–8B) — COMPLETE
+- **8A.1:** Self-hosted fonts (Inter + Source Serif 4 WOFF2, `@font-face`, SW precache)
+- **8A.2:** Toast notification system (standalone Zustand store, `m.div` + AnimatePresence, auto-dismiss)
+- **8A.3:** Typography tokens (`text-2xs` custom utility, `type-section`/`learn-serif` classes)
+- **8B.1–8B.4:** View mobile responsiveness (AppShell, Explore, Play, Learn — WCAG 44px touch targets, scroll snap, fade hints)
+- **8B.5:** Piano mobile (wider keys, reduced octave range, hidden labels)
+- **8B.6:** Fretboard mobile (position snapping, proportional dots, 44px touch targets)
+- 404 tests passing
+
+### Onboarding + Visual Polish (Phase 8C) — IN PROGRESS
+- **8C.2:** Completion celebrations — canvas confetti, Web Audio arpeggio (C5-E5-G5), LevelAchievement overlay, review toast. New files: `Confetti.tsx`, `celebrationSound.ts`, `LevelAchievement.tsx`. 5 i18n keys (en+pt).
+
 ---
 
-## Where to Go Next
+## Current Phase: 8C — Onboarding + Visual Polish (4 tasks remaining)
 
-No phases are currently planned. Potential directions:
-
-- **Adaptive difficulty** — dynamic exercise selection based on weak areas
-- **Audio input** — microphone pitch detection for real instrument practice
-- **Backend/sync** — user accounts, cloud progress sync
-- **More languages** — Spanish, French, German, Japanese
-- **More instruments** — ukulele, bass guitar fretboard layouts
-- **Analytics dashboard** — practice time stats, weak-area heatmaps
-- **E2E tests** — Playwright for critical user flows
-- **Social/gamification** — streaks, XP, achievements
+See **ROADMAP.md § "Start Here"** for the execution plan and next steps.

@@ -14,12 +14,15 @@ import { ContinueBanner } from './ContinueBanner';
 import { ReviewQueue } from './ReviewQueue';
 import { LevelCard } from './LevelCard';
 import { ProgressBar } from './ProgressBar';
+import { XPDisplay } from '../gamification/XPDisplay';
+import { useGamificationStore } from '../../state/gamificationStore';
 
 interface LevelsOverviewProps {
   progress: CurriculumProgress;
   onOpenLevel: (levelId: string) => void;
   onOpenModule: (moduleId: string, unitId: string, levelId: string) => void;
   onStartReview?: (moduleId: string) => void;
+  onOpenDashboard?: () => void;
 }
 
 export function LevelsOverview({
@@ -27,8 +30,11 @@ export function LevelsOverview({
   onOpenLevel,
   onOpenModule,
   onStartReview,
+  onOpenDashboard,
 }: LevelsOverviewProps) {
   const { t } = useTranslation();
+  const weeklyXP = useGamificationStore((s) => s.weeklyXP);
+  const totalXP = useGamificationStore((s) => s.totalXP);
   // Async-load full levels for continue banner
   const [allLevels, setAllLevels] = useState<CurriculumLevel[] | null>(null);
   useEffect(() => {
@@ -85,7 +91,62 @@ export function LevelsOverview({
             {totalCompleted}/{totalModules}
           </span>
         </div>
+
+        <div className="mt-2 flex items-center justify-between">
+          <XPDisplay weeklyXP={weeklyXP} totalXP={totalXP} />
+          {onOpenDashboard && (
+            <button
+              onClick={onOpenDashboard}
+              className="text-xs px-2.5 py-1 rounded-lg transition-colors"
+              style={{
+                color: 'var(--text-dim)',
+                border: '1px solid color-mix(in srgb, var(--border) 50%, transparent)',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-dim)'; }}
+            >
+              {t('gamification.stats')}
+            </button>
+          )}
+        </div>
       </m.div>
+
+      {/* Welcome banner — shown only when zero progress */}
+      {totalCompleted === 0 && !nextUp && (
+        <m.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+          className="mb-6 rounded-xl px-6 py-6 text-center"
+          style={{ backgroundColor: '#60A5FA12', border: '1px solid #60A5FA20', boxShadow: 'var(--shadow-sm)' }}
+        >
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-3">
+            <path d="M9 18V5l12-2v13" />
+            <circle cx="6" cy="18" r="3" />
+            <circle cx="18" cy="16" r="3" />
+          </svg>
+          <h2 className="text-base font-bold mb-1" style={{ color: 'var(--text)' }}>
+            {t('learn.emptyTitle')}
+          </h2>
+          <p className="text-sm mb-4" style={{ color: 'var(--text-dim)' }}>
+            {t('learn.emptySubtitle')}
+          </p>
+          <button
+            onClick={() => onOpenLevel('l1')}
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-150 hover:scale-[1.03]"
+            style={{
+              backgroundColor: '#60A5FA20',
+              color: '#60A5FA',
+              border: '1px solid #60A5FA30',
+            }}
+          >
+            {t('learn.startLevel1')}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </button>
+        </m.div>
+      )}
 
       {/* Continue banner */}
       {nextUp && (

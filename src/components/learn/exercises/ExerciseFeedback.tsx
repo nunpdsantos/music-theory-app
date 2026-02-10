@@ -1,6 +1,7 @@
 import { m } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import type { ValidationResult } from '../../../core/types/exercise';
+import { SPRING_SNAPPY, SPRING_MICRO } from '../../../design/tokens/motion';
 
 interface ExerciseFeedbackProps {
   result: ValidationResult;
@@ -25,8 +26,9 @@ export function ExerciseFeedback({
 
   return (
     <m.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={isCorrect ? { opacity: 0, y: 8, scale: 0.95 } : { opacity: 0, x: 0 }}
+      animate={isCorrect ? { opacity: 1, y: 0, scale: 1 } : { opacity: 1, x: [0, -4, 4, -2, 0] }}
+      transition={isCorrect ? SPRING_SNAPPY : { duration: 0.3 }}
       className={`rounded-xl p-4 mt-4 border ${
         isCorrect
           ? 'bg-emerald-500/10 border-emerald-500/25'
@@ -35,15 +37,33 @@ export function ExerciseFeedback({
     >
       <div className="flex items-start gap-3">
         {/* Icon */}
-        <span className={`mt-0.5 shrink-0 ${isCorrect ? 'text-emerald-400' : 'text-red-400'}`}>
+        <span className={`mt-0.5 shrink-0 ${isCorrect ? 'text-emerald-400 pulse-ring-correct' : 'text-red-400'}`}>
           {isCorrect ? (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="20 6 9 17 4 12" />
+              <m.polyline
+                points="20 6 9 17 4 12"
+                strokeDasharray="1"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 0.35, ease: 'easeOut' }}
+              />
             </svg>
           ) : (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
+              <m.line
+                x1="18" y1="6" x2="6" y2="18"
+                strokeDasharray="1"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 0.25, delay: 0.1 }}
+              />
+              <m.line
+                x1="6" y1="6" x2="18" y2="18"
+                strokeDasharray="1"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 0.25, delay: 0.1 }}
+              />
             </svg>
           )}
         </span>
@@ -77,27 +97,31 @@ export function ExerciseFeedback({
       {/* Action button */}
       <div className="mt-3 flex justify-end">
         {canRetry ? (
-          <button
+          <m.button
+            whileTap={{ scale: 0.97 }}
+            transition={SPRING_MICRO}
             onClick={onTryAgain}
-            className="text-xs font-medium px-4 py-1.5 rounded-lg transition-colors"
+            className="text-xs font-medium px-4 py-1.5 max-sm:py-2 max-sm:px-5 rounded-lg transition-colors"
             style={{
               backgroundColor: `${accentColor}20`,
               color: accentColor,
             }}
           >
             {t('common.tryAgain')}
-          </button>
+          </m.button>
         ) : (
-          <button
+          <m.button
+            whileTap={{ scale: 0.97 }}
+            transition={SPRING_MICRO}
             onClick={onNext}
-            className="text-xs font-medium px-4 py-1.5 rounded-lg transition-colors"
+            className="text-xs font-medium px-4 py-1.5 max-sm:py-2 max-sm:px-5 rounded-lg transition-colors"
             style={{
               backgroundColor: `${accentColor}20`,
               color: accentColor,
             }}
           >
             {isCorrect ? t('common.continue') : t('common.next')}
-          </button>
+          </m.button>
         )}
       </div>
     </m.div>

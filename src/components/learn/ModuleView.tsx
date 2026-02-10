@@ -1,12 +1,15 @@
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { m, AnimatePresence } from 'framer-motion';
 import type { CurriculumModule, CurriculumUnit, CurriculumLevel } from '../../core/types/curriculum';
 import type { ExerciseDefinition } from '../../core/types/exercise';
-import { getNextModuleInLevel, getPreviousModuleInLevel } from '../../data/curriculumLoader';
+import { getNextModuleInLevel, getPreviousModuleInLevel, getLevelModuleCount } from '../../data/curriculumLoader';
 import { executeTheoryQuery } from '../../utils/queryExecutor';
 import { LearnBreadcrumb } from './LearnBreadcrumb';
 import { ExerciseRunner } from './exercises/ExerciseRunner';
+import { Confetti } from './Confetti';
+import { toast } from '../../state/toastStore';
+import { playCelebrationSound } from '../../utils/celebrationSound';
 
 interface ModuleViewProps {
   module: CurriculumModule;
@@ -21,6 +24,8 @@ interface ModuleViewProps {
   exercisesPassed: boolean;
   /** When true, shows only exercises in review mode (hides concepts/tasks) */
   isReviewMode?: boolean;
+  /** Number of modules already completed in this level (before this action) */
+  levelCompletedModuleCount: number;
   onToggleTask: (moduleId: string, taskId: string) => void;
   onCompleteModule: (moduleId: string) => void;
   onRecordExerciseResult: (exerciseId: string, score: 0 | 0.5 | 1) => void;
@@ -28,6 +33,7 @@ interface ModuleViewProps {
   onBack: () => void;
   onBackToLevels: () => void;
   onNavigateModule: (moduleId: string) => void;
+  onLevelComplete?: () => void;
 }
 
 export function ModuleView({
@@ -42,6 +48,7 @@ export function ModuleView({
   exercises,
   exercisesPassed,
   isReviewMode = false,
+  levelCompletedModuleCount,
   onToggleTask,
   onCompleteModule,
   onRecordExerciseResult,
@@ -49,8 +56,10 @@ export function ModuleView({
   onBack,
   onBackToLevels,
   onNavigateModule,
+  onLevelComplete,
 }: ModuleViewProps) {
   const { t } = useTranslation();
+  const [showConfetti, setShowConfetti] = useState(false);
   const accent = level.accentColor;
   const prevModule = getPreviousModuleInLevel(module.id, level);
   const nextModule = getNextModuleInLevel(module.id, level);
@@ -344,7 +353,19 @@ export function ModuleView({
             className="mb-10"
           >
             <button
-              onClick={() => onCompleteModule(module.id)}
+              onClick={() => {
+                onCompleteModule(module.id);
+                playCelebrationSound();
+                setShowConfetti(true);
+
+                // Check if this was the last module in the level
+                const totalModules = getLevelModuleCount(level);
+                if (levelCompletedModuleCount + 1 >= totalModules && onLevelComplete) {
+                  onLevelComplete();
+                } else {
+                  toast(t('toast.moduleCompleted', { title: module.title }), 'success');
+                }
+              }}
               className="w-full py-3 rounded-xl text-sm font-semibold transition-all duration-200 hover:scale-[1.01]"
               style={{
                 backgroundColor: `${accent}20`,
@@ -419,6 +440,7 @@ export function ModuleView({
           )}
         </m.div>
       </div>
+      {showConfetti && <Confetti onComplete={() => setShowConfetti(false)} />}
     </div>
   );
 }

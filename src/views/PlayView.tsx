@@ -168,11 +168,11 @@ export function PlayView() {
                   {SCALE_TYPE_NAMES[selectedScale]}
                 </span>
               </h2>
-              <p className="text-[11px] mt-0.5" style={{ color: 'var(--text-dim)' }}>
+              <p className="text-xs mt-0.5" style={{ color: 'var(--text-dim)' }}>
                 {scale.notes.length} notes &middot; {scale.notes.map((n) => noteToString(n)).join(' ')}
               </p>
             </div>
-            <div className="text-[10px] font-medium" style={{ color: 'var(--text-dim)' }}>
+            <div className="text-2xs font-medium" style={{ color: 'var(--text-dim)' }}>
               {t('play.performanceMode')}
             </div>
           </div>
@@ -208,7 +208,7 @@ export function PlayView() {
                     <PresetIcon preset={preset} />
                   </span>
                   <span
-                    className="relative z-10 text-[11px] font-semibold transition-colors"
+                    className="relative z-10 text-xs font-semibold transition-colors"
                     style={{ color: isActive ? tonicColor : 'var(--text-muted)' }}
                   >
                     {t(meta.labelKey)}
@@ -265,7 +265,7 @@ export function PlayView() {
                 }}
                 aria-label={t('play.volume')}
               />
-              <span className="text-[11px] font-mono w-8 text-right tabular-nums" style={{ color: 'var(--text-dim)' }}>
+              <span className="text-xs font-mono w-8 text-right tabular-nums" style={{ color: 'var(--text-dim)' }}>
                 {Math.round(volume * 100)}
               </span>
             </div>
@@ -364,12 +364,12 @@ export function PlayView() {
                     >
                       <span className="text-xl font-bold leading-none" style={{ color }}>
                         {name}
-                        <span className="text-[11px] font-normal ml-0.5" style={{ color: 'var(--text-dim)' }}>
+                        <span className="text-xs font-normal ml-0.5" style={{ color: 'var(--text-dim)' }}>
                           {octave}
                         </span>
                       </span>
                       {degree && functionKey && (
-                        <span className="text-[10px] mt-1.5" style={{ color: 'var(--text-dim)' }}>
+                        <span className="text-2xs mt-1.5" style={{ color: 'var(--text-dim)' }}>
                           {t(functionKey)}
                         </span>
                       )}
@@ -406,7 +406,7 @@ export function PlayView() {
                     }}
                   >
                     <span
-                      className="text-[10px] font-bold leading-none"
+                      className="text-2xs font-bold leading-none"
                       style={{ color }}
                     >
                       {ROMAN[i]}

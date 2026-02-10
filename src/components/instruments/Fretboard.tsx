@@ -342,7 +342,7 @@ export function Fretboard() {
     [quickSearchOpen, visibleFrets, getFretNote, handleFretClick]
   );
 
-  // Announce focused note for screen readers
+  // Announce focused note for screen readers + auto-scroll focused cell into view
   useEffect(() => {
     if (!focusedCell) {
       setAnnouncedNote('');
@@ -352,7 +352,29 @@ export function Fretboard() {
     const pitched = midiToNote(fn.midiNumber);
     const name = noteToString(pitched);
     setAnnouncedNote(`String ${6 - focusedCell.stringIdx}, fret ${focusedCell.fret}, ${name}`);
+
+    // Auto-scroll focused cell into view
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const cell = container.querySelector<HTMLElement>(
+      `[data-string-row="${focusedCell.stringIdx}"][data-fret="${focusedCell.fret}"]`
+    );
+    if (cell) {
+      cell.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+    }
   }, [focusedCell, getFretNote]);
+
+  // Auto-scroll to CAGED position when selected
+  useEffect(() => {
+    if (!currentScalePos || !scrollContainerRef.current) return;
+    const { baseFret } = currentScalePos;
+    const targetCell = scrollContainerRef.current.querySelector<HTMLElement>(
+      `[data-fret="${baseFret}"]`
+    );
+    if (targetCell) {
+      targetCell.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+    }
+  }, [currentScalePos]);
 
   // ─── Display state ────────────────────────────────────
   const isOpenPosition = currentShape !== null && currentShape.baseFret === 0;
@@ -360,8 +382,8 @@ export function Fretboard() {
   const lowestVisibleFret = (isChordView || isScalePosView) ? visibleFrets[visibleFrets.length - 1] : null;
 
   const fretMinWidth = isChordView
-    ? (mobile ? 44 : 56)
-    : (mobile ? 34 : 44);
+    ? (mobile ? 48 : 56)
+    : (mobile ? 44 : 44);
 
   return (
     <div
@@ -370,7 +392,14 @@ export function Fretboard() {
       aria-label="Guitar fretboard"
       tabIndex={0}
       className="w-full overflow-x-auto fretboard-scroll focus:outline-none"
-      style={{ cursor: 'grab', scrollbarWidth: 'none', userSelect: 'none', backgroundColor: 'var(--bg)', borderTop: '1px solid var(--border-subtle)' }}
+      style={{
+        cursor: 'grab',
+        scrollbarWidth: 'none',
+        userSelect: 'none',
+        backgroundColor: 'var(--bg)',
+        borderTop: '1px solid var(--border-subtle)',
+        ...(mobile ? { scrollSnapType: 'x proximity' } : {}),
+      }}
       onPointerDown={handleFretboardPointerDown}
       onClickCapture={handleFretboardClickCapture}
       onKeyDown={handleKeyDown}
@@ -380,7 +409,7 @@ export function Fretboard() {
         {announcedNote}
       </div>
 
-      <div className="px-4 py-2" style={{ minWidth: isChordView ? 0 : (mobile ? 500 : 800) }}>
+      <div className="px-4 max-sm:px-2 py-2" style={{ minWidth: isChordView ? 0 : (mobile ? 660 : 800) }}>
         {/* Position selector */}
         <FretboardPositionSelector
           selectedChord={selectedChord}
@@ -392,31 +421,52 @@ export function Fretboard() {
           scalePositions={scalePositions}
           guitarScalePosition={guitarScalePosition}
           onSelectScalePosition={setGuitarScalePosition}
+          mobile={mobile}
         />
 
-        {/* Tuning selector */}
-        <div role="radiogroup" aria-label="Guitar tuning" className="flex items-center gap-2 mb-2 flex-wrap">
-          <span className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-dim)' }}>Tuning:</span>
-          {GUITAR_TUNINGS.map((t) => {
-            const isActive = tuning.id === t.id;
-            return (
-              <button
-                key={t.id}
-                role="radio"
-                aria-checked={isActive}
-                onClick={() => setGuitarTuningId(t.id)}
-                className="text-[10px] px-2 py-0.5 rounded transition-colors"
-                style={{
-                  backgroundColor: isActive ? 'var(--accent)' : 'transparent',
-                  color: isActive ? '#000' : 'var(--text-dim)',
-                  border: isActive ? '1px solid var(--accent)' : '1px solid var(--border)',
-                }}
-              >
-                {t.shortName}
-              </button>
-            );
-          })}
-        </div>
+        {/* Tuning selector — native <select> on mobile, chip row on desktop */}
+        {mobile ? (
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-dim)' }}>Tuning:</span>
+            <select
+              value={guitarTuningId}
+              onChange={(e) => setGuitarTuningId(e.target.value)}
+              className="text-[10px] px-2 py-1 rounded appearance-none cursor-pointer bg-transparent"
+              style={{
+                color: 'var(--text-muted)',
+                border: '1px solid var(--border)',
+              }}
+              aria-label="Guitar tuning"
+            >
+              {GUITAR_TUNINGS.map((t) => (
+                <option key={t.id} value={t.id}>{t.shortName}</option>
+              ))}
+            </select>
+          </div>
+        ) : (
+          <div role="radiogroup" aria-label="Guitar tuning" className="flex items-center gap-2 mb-2 flex-wrap">
+            <span className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-dim)' }}>Tuning:</span>
+            {GUITAR_TUNINGS.map((t) => {
+              const isActive = tuning.id === t.id;
+              return (
+                <button
+                  key={t.id}
+                  role="radio"
+                  aria-checked={isActive}
+                  onClick={() => setGuitarTuningId(t.id)}
+                  className="text-[10px] px-2 py-0.5 rounded transition-colors"
+                  style={{
+                    backgroundColor: isActive ? 'var(--accent)' : 'transparent',
+                    color: isActive ? '#000' : 'var(--text-dim)',
+                    border: isActive ? '1px solid var(--accent)' : '1px solid var(--border)',
+                  }}
+                >
+                  {t.shortName}
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {/* Fret markers row */}
         <div className="flex mb-1">
@@ -425,8 +475,8 @@ export function Fretboard() {
             {visibleFrets.map((f) => (
               <div
                 key={f}
-                className="flex-1 text-center text-[9px]"
-                style={{ color: 'var(--text-dim)', minWidth: fretMinWidth }}
+                className="flex-1 text-center"
+                style={{ color: 'var(--text-dim)', minWidth: fretMinWidth, fontSize: mobile ? 11 : 9 }}
               >
                 {FRET_MARKERS.includes(f) ? (
                   <span>{DOUBLE_MARKERS.includes(f) ? '••' : '•'}</span>
@@ -489,8 +539,8 @@ export function Fretboard() {
             {visibleFrets.map((f) => (
               <div
                 key={f}
-                className="flex-1 text-center text-[9px]"
-                style={{ color: 'var(--text-dim)', minWidth: fretMinWidth }}
+                className="flex-1 text-center"
+                style={{ color: 'var(--text-dim)', minWidth: fretMinWidth, fontSize: mobile ? 11 : 9 }}
               >
                 {f}
               </div>
@@ -499,9 +549,9 @@ export function Fretboard() {
           <div style={{ width: isChordView && !isOpenPosition ? 2 : 6 }} />
           <div style={{ width: 40 }} className="flex items-center justify-center">
             {(isChordView || isScalePosView) && !isOpenPosition ? (
-              <span className="text-[9px] font-mono" style={{ color: 'var(--text-dim)' }}>{lowestVisibleFret}fr</span>
+              <span className="font-mono" style={{ color: 'var(--text-dim)', fontSize: mobile ? 11 : 9 }}>{lowestVisibleFret}fr</span>
             ) : (
-              <span className="text-[9px]" style={{ color: 'var(--text-dim)' }}>0</span>
+              <span style={{ color: 'var(--text-dim)', fontSize: mobile ? 11 : 9 }}>0</span>
             )}
           </div>
         </div>

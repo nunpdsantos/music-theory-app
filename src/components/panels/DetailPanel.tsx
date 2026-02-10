@@ -77,7 +77,7 @@ export function DetailPanel() {
           exit={{ x: '100%', opacity: 0 }}
           transition={{ type: 'spring', stiffness: 350, damping: 30 }}
           className="w-80 shrink-0 backdrop-blur-md overflow-y-auto relative"
-          style={{ backgroundColor: 'color-mix(in srgb, var(--bg-raised) 95%, transparent)', borderLeft: '1px solid var(--border-subtle)' }}
+          style={{ backgroundColor: 'color-mix(in srgb, var(--bg-raised) 95%, transparent)', borderLeft: '1px solid var(--border-subtle)', boxShadow: 'var(--shadow-lg)' }}
         >
           {/* Top gradient accent */}
           <div className="absolute top-0 left-0 right-0 h-24 pointer-events-none bg-gradient-to-b from-[var(--accent-bg)] to-transparent" />

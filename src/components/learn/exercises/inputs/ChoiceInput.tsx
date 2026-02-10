@@ -1,5 +1,6 @@
 import { m } from 'framer-motion';
 import type { ChoiceOption } from '../exerciseHelpers';
+import { SPRING_MICRO } from '../../../../design/tokens/motion';
 
 interface ChoiceInputProps {
   options: ChoiceOption[];
@@ -41,10 +42,10 @@ export function ChoiceInput({ options, selected, submitted, onSelect, accentColo
         return (
           <m.button
             key={opt.value}
-            whileTap={!submitted ? { scale: 0.97 } : undefined}
+            whileTap={!submitted ? { scale: 0.97, transition: SPRING_MICRO } : undefined}
             onClick={() => !submitted && onSelect(opt.value)}
             disabled={submitted}
-            className={`px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${bg} ${border} ${textColor} ${
+            className={`px-3 py-2.5 max-sm:py-3 rounded-xl text-sm font-medium transition-all duration-150 ${bg} ${border} ${textColor} ${
               submitted ? 'cursor-default' : 'cursor-pointer'
             }`}
             style={

@@ -15,6 +15,7 @@ interface FretCellProps {
   isMuted: boolean;
   fretMinWidth: number;
   isChordView: boolean;
+  mobile?: boolean;
   // Voicing
   showVoicing: boolean;
   finger: FingerNumber | undefined;
@@ -40,6 +41,7 @@ export const FretCell = memo(function FretCell({
   isMuted,
   fretMinWidth,
   isChordView,
+  mobile = false,
   showVoicing,
   finger,
   showScalePos,
@@ -84,9 +86,9 @@ export const FretCell = memo(function FretCell({
         <div
           className="relative z-10 rounded-full flex items-center justify-center font-bold"
           style={{
-            width: isChordView ? 26 : 22,
-            height: isChordView ? 26 : 22,
-            fontSize: finger && fingerLabel(finger) ? (isChordView ? 12 : 10) : 9,
+            width: isChordView ? (mobile ? 30 : 26) : (mobile ? 26 : 22),
+            height: isChordView ? (mobile ? 30 : 26) : (mobile ? 26 : 22),
+            fontSize: finger && fingerLabel(finger) ? (isChordView ? (mobile ? 13 : 12) : (mobile ? 11 : 10)) : (mobile ? 10 : 9),
             backgroundColor: dotColor,
             color: '#000',
             boxShadow: isRoot
@@ -105,9 +107,9 @@ export const FretCell = memo(function FretCell({
         <div
           className="relative z-10 rounded-full flex items-center justify-center font-bold"
           style={{
-            width: 24,
-            height: 24,
-            fontSize: 9,
+            width: mobile ? 28 : 24,
+            height: mobile ? 28 : 24,
+            fontSize: mobile ? 10 : 9,
             backgroundColor: dotColor,
             color: '#000',
             boxShadow: scalePosIsRoot
@@ -126,14 +128,14 @@ export const FretCell = memo(function FretCell({
         <div
           className="relative z-10 rounded-full flex items-center justify-center font-bold transition-all"
           style={{
-            width: isActive ? 20 : isRoot ? 20 : 16,
-            height: isActive ? 20 : isRoot ? 20 : 16,
-            fontSize: isActive || isRoot ? 8 : 7,
+            width: isActive ? (mobile ? 24 : 20) : isRoot ? (mobile ? 24 : 20) : (mobile ? 20 : 16),
+            height: isActive ? (mobile ? 24 : 20) : isRoot ? (mobile ? 24 : 20) : (mobile ? 20 : 16),
+            fontSize: isActive || isRoot ? (mobile ? 9 : 8) : (mobile ? 8 : 7),
             backgroundColor: isActive ? color : isRoot ? color : `${color}30`,
             color: isActive || isRoot ? '#000' : color ?? 'var(--text)',
             border: isActive || isRoot ? 'none' : `1.5px solid ${color}88`,
             transform: isActive ? 'scale(1.2)' : 'scale(1)',
-            boxShadow: isActive ? `0 0 8px ${color}` : 'none',
+            boxShadow: isActive ? `0 0 12px ${color}, 0 0 4px ${color}88` : 'none',
           }}
         >
           {noteToString(pitched)}
