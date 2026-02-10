@@ -96,8 +96,8 @@ export function InstrumentInput({ expectedCount, submitted, onSubmit, accentColo
         <div className="flex gap-2">
           <button
             onClick={handleClear}
-            className="px-3 py-1.5 rounded-lg text-xs border border-zinc-700/50 transition-colors"
-            style={{ color: 'var(--text-dim)' }}
+            className="px-3 py-1.5 rounded-lg text-xs transition-colors"
+            style={{ color: 'var(--text-dim)', border: '1px solid color-mix(in srgb, var(--border) 50%, transparent)' }}
             onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--card-hover)'; }}
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = ''; }}
           >

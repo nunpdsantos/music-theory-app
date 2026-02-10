@@ -69,17 +69,17 @@ const DIST_FILL_MAJOR = [
   TONIC_HUE + '24', // 2 — share 5/7
   TONIC_HUE + '16', // 3 — share 4/7
   TONIC_HUE + '0c', // 4 — share 3/7
-  '#151518',         // 5 — distant
-  '#131315',         // 6 — tritone
+  'var(--card)',     // 5 — distant
+  'var(--bg-raised)',// 6 — tritone
 ];
 const DIST_STROKE_MAJOR = [
   '#fff',
   TONIC_HUE + '50',
   TONIC_HUE + '35',
   TONIC_HUE + '22',
-  '#2a2a2e',
-  '#222226',
-  '#1e1e22',
+  'var(--border)',
+  'var(--border-subtle)',
+  'var(--border-subtle)',
 ];
 const DIST_TEXT_MAJOR = [
   '#000', '#e4e4e7', '#c4c4ca', 'var(--text-muted)', 'var(--text-dim)', 'var(--border-light)', 'var(--border)',
@@ -91,17 +91,17 @@ const DIST_FILL_MINOR = [
   TONIC_HUE + '28', // 1
   TONIC_HUE + '18', // 2
   TONIC_HUE + '0e', // 3
-  '#111114',         // 4
-  '#0f0f12',         // 5
-  '#0d0d10',         // 6
+  'var(--bg-raised)',// 4
+  'var(--bg)',       // 5
+  'var(--bg)',       // 6
 ];
 const DIST_STROKE_MINOR = [
   '#fff',
   TONIC_HUE + '40',
   TONIC_HUE + '28',
   TONIC_HUE + '18',
-  '#222226',
-  '#1c1c20',
+  'var(--border-subtle)',
+  'var(--border-subtle)',
   'var(--card)',
 ];
 const DIST_TEXT_MINOR = [
@@ -446,7 +446,7 @@ export function CircleOfFifths() {
                 onClick={() => handleMinorVariant(st)}
                 className="px-2.5 py-1 rounded-md text-[10px] font-medium transition-colors"
                 style={{
-                  backgroundColor: active ? TONIC_HUE : '#1a1a1e',
+                  backgroundColor: active ? TONIC_HUE : 'var(--card)',
                   color: active ? '#000' : 'var(--text-muted)',
                   border: `1px solid ${active ? TONIC_HUE : 'var(--card-hover)'}`,
                 }}

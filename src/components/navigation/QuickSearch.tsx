@@ -276,8 +276,8 @@ export function QuickSearch() {
                   }
                 }
               }}
-              className="rounded-xl shadow-2xl overflow-hidden"
-              style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)' }}
+              className="rounded-xl overflow-hidden"
+              style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-lg)' }}
             >
               <div className="flex items-center px-4 py-3" style={{ borderBottom: '1px solid var(--card)' }}>
                 <span className="mr-2 text-sm" style={{ color: 'var(--text-dim)' }}>&#128270;</span>
@@ -312,11 +312,11 @@ export function QuickSearch() {
                         className="text-[10px] px-1.5 py-0.5 rounded font-medium"
                         style={{
                           backgroundColor:
-                            r.type === 'Scale' ? '#60A5FA15' :
-                            r.type === 'Chord' ? '#FBBF2415' :
-                            '#34D39915',
+                            r.type === 'Scale' ? 'var(--accent-dim)' :
+                            r.type === 'Chord' ? 'rgba(251, 191, 36, 0.08)' :
+                            'rgba(52, 211, 153, 0.08)',
                           color:
-                            r.type === 'Scale' ? '#60A5FA' :
+                            r.type === 'Scale' ? 'var(--accent)' :
                             r.type === 'Chord' ? '#FBBF24' :
                             '#34D399',
                         }}

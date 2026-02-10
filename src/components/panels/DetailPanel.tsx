@@ -32,19 +32,20 @@ export function DetailPanel() {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-            className="overflow-hidden border-b border-zinc-800 bg-zinc-900/95 backdrop-blur-sm"
+            className="overflow-hidden backdrop-blur-md"
+            style={{ borderBottom: '1px solid var(--border-subtle)', backgroundColor: 'color-mix(in srgb, var(--bg-raised) 95%, transparent)' }}
           >
             {/* Top gradient accent */}
-            <div className="absolute top-0 left-0 right-0 h-24 pointer-events-none bg-gradient-to-b from-blue-500/[0.04] to-transparent" />
+            <div className="absolute top-0 left-0 right-0 h-24 pointer-events-none bg-gradient-to-b from-[var(--accent-bg)] to-transparent" />
 
             {/* Close button */}
             <div className="flex items-center justify-between px-4 pt-3 pb-2">
-              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+              <span className="type-section">
                 Details
               </span>
               <button
                 onClick={handleClose}
-                className="w-6 h-6 rounded-lg flex items-center justify-center text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-colors"
+                className="w-6 h-6 rounded-lg flex items-center justify-center hover:bg-[var(--card-hover)] transition-colors"
                 aria-label="Close panel"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -75,19 +76,20 @@ export function DetailPanel() {
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: '100%', opacity: 0 }}
           transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-          className="w-80 shrink-0 bg-zinc-900/95 backdrop-blur-sm border-l border-zinc-800 overflow-y-auto relative"
+          className="w-80 shrink-0 backdrop-blur-md overflow-y-auto relative"
+          style={{ backgroundColor: 'color-mix(in srgb, var(--bg-raised) 95%, transparent)', borderLeft: '1px solid var(--border-subtle)' }}
         >
           {/* Top gradient accent */}
-          <div className="absolute top-0 left-0 right-0 h-24 pointer-events-none bg-gradient-to-b from-blue-500/[0.04] to-transparent" />
+          <div className="absolute top-0 left-0 right-0 h-24 pointer-events-none bg-gradient-to-b from-[var(--accent-bg)] to-transparent" />
 
           {/* Close button */}
           <div className="sticky top-0 z-20 flex items-center justify-between px-4 pt-3 pb-2">
-            <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+            <span className="type-section">
               Details
             </span>
             <button
               onClick={handleClose}
-              className="w-6 h-6 rounded-lg flex items-center justify-center text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 transition-colors"
+              className="w-6 h-6 rounded-lg flex items-center justify-center hover:bg-[var(--card-hover)] transition-colors"
               aria-label="Close panel"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

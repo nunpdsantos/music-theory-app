@@ -1,5 +1,6 @@
 export const SPRING_SNAPPY = { type: 'spring' as const, stiffness: 500, damping: 30 };
 export const SPRING_GENTLE = { type: 'spring' as const, stiffness: 300, damping: 25 };
+export const SPRING_MICRO = { type: 'spring' as const, stiffness: 600, damping: 35 };
 
 export const PANEL_SLIDE = {
   initial: { x: '100%', opacity: 0 },

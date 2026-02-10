@@ -40,7 +40,7 @@ export function ScaleDegreeBar() {
   const isCompact = noteCount > 8;
 
   return (
-    <div className="flex items-stretch gap-1.5 max-sm:gap-0.5" role="group" aria-label="Scale degrees">
+    <div className="flex items-stretch gap-1.5 max-sm:gap-0.5" role="group" aria-label="Scale degrees" style={{ boxShadow: 'var(--shadow-sm)' }}>
       {scale.notes.map((note, i) => {
         const degree = i + 1;
         const isSelected = selectedDegree === degree;
@@ -77,8 +77,8 @@ export function ScaleDegreeBar() {
             >
               {intervalLabel}
             </span>
-            <span className="text-xs font-medium text-zinc-300 leading-none"
-              style={{ fontSize: isCompact ? 10 : undefined }}
+            <span className="text-xs font-medium leading-none"
+              style={{ color: 'var(--text)', fontSize: isCompact ? 10 : undefined }}
             >
               {noteToString(note)}
             </span>

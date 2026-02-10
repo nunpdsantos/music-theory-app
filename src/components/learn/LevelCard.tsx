@@ -38,6 +38,7 @@ export function LevelCard({ level, state, completedModuleCount, index, onClick }
       style={{
         borderColor: `${accent}${isActive ? '20' : '10'}`,
         backgroundColor: `${accent}${isActive ? '06' : '03'}`,
+        boxShadow: 'var(--shadow-sm)',
       }}
       onMouseEnter={(e) => {
         if (isClickable) {

@@ -78,7 +78,7 @@ export function RecordingControl() {
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+        <span className="type-section">
           {t('recording.title')}
         </span>
         <button

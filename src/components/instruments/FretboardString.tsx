@@ -105,7 +105,7 @@ export function FretboardString({
           const showScalePos = !currentShape && isScalePosNote;
           const showScaleDot = !currentShape && !currentScalePos && isInScale;
 
-          const dotColor = color ?? '#60A5FA';
+          const dotColor = color ?? 'var(--accent)';
           const isRoot = rootPitchClass !== null && fn.pitchClass === rootPitchClass;
 
           return (
@@ -162,14 +162,14 @@ export function FretboardString({
               width: isChordView ? 22 : 20,
               height: isChordView ? 22 : 20,
               fontSize: 9,
-              backgroundColor: openColor ?? '#60A5FA',
+              backgroundColor: openColor ?? 'var(--accent)',
               color: '#000',
               boxShadow: isOpenRoot
-                ? `0 0 16px ${(openColor ?? '#60A5FA')}aa, 0 0 6px ${(openColor ?? '#60A5FA')}88`
-                : `0 0 10px ${(openColor ?? '#60A5FA')}88`,
+                ? `0 0 16px ${(openColor ?? 'var(--accent)')}aa, 0 0 6px ${(openColor ?? 'var(--accent)')}88`
+                : `0 0 10px ${(openColor ?? 'var(--accent)')}88`,
               border: isOpenRoot
                 ? '3px solid #ffffff'
-                : `2px solid ${openColor ?? '#60A5FA'}`,
+                : `2px solid ${openColor ?? 'var(--accent)'}`,
             }}
           >
             {openLabel}
@@ -190,7 +190,7 @@ export function FretboardString({
             {openLabel}
           </div>
         ) : (
-          <span className="text-[9px] text-zinc-500">{openLabel}</span>
+          <span className="text-[9px]" style={{ color: 'var(--text-dim)' }}>{openLabel}</span>
         )}
       </div>
     </div>

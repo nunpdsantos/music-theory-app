@@ -126,7 +126,7 @@ export function LevelsOverview({
             className="flex items-center gap-4 mb-4"
           >
             <div className="flex-1 h-px" style={{ backgroundColor: 'var(--card-hover)' }} />
-            <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+            <span className="type-section">
               {t('learn.parallelTrack')}
             </span>
             <div className="flex-1 h-px" style={{ backgroundColor: 'var(--card-hover)' }} />

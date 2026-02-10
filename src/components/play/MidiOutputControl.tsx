@@ -27,7 +27,7 @@ export function MidiOutputControl() {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+        <span className="type-section">
           {t('midi.title')}
         </span>
         <button

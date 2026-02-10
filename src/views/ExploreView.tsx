@@ -72,7 +72,7 @@ export function ExploreView() {
       <div className="flex-1 overflow-y-auto">
         <m.div
           variants={stagger}
-          initial="hidden"
+          initial={false}
           animate="show"
           className="max-w-4xl mx-auto px-5 max-sm:px-3 py-5 max-sm:py-3 space-y-7 max-sm:space-y-4"
         >
@@ -182,7 +182,7 @@ export function ExploreView() {
 
           {/* ─── Scale Degrees ──────────────────────────────────── */}
           <m.div variants={fadeUp}>
-            <h3 className="text-[10px] font-bold mb-2.5 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+            <h3 className="type-section mb-2.5">
               {t('explore.scaleDegrees')}
             </h3>
             <ScaleDegreeBar />
@@ -190,7 +190,7 @@ export function ExploreView() {
 
           {/* ─── Staff Notation ─────────────────────────────────── */}
           <m.div variants={fadeUp}>
-            <h3 className="text-[10px] font-bold mb-2.5 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+            <h3 className="type-section mb-2.5">
               {t('explore.staffNotation')}
             </h3>
             <div className="rounded-xl p-3" style={{ border: '1px solid color-mix(in srgb, var(--card) 50%, transparent)', backgroundColor: 'color-mix(in srgb, var(--bg) 30%, transparent)' }}>
@@ -220,7 +220,7 @@ export function ExploreView() {
           >
             <div>
               <div className="flex items-center gap-3 mb-2.5">
-                <h3 className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+                <h3 className="type-section">
                   {t('explore.chords')}
                 </h3>
                 <div className="flex rounded-lg overflow-hidden" style={{ border: '1px solid var(--card)' }}>
@@ -249,7 +249,7 @@ export function ExploreView() {
               {chordMode === 'diatonic' ? <ChordGrid /> : <ChordBrowser />}
             </div>
             <div>
-              <h3 className="text-[10px] font-bold mb-2.5 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+              <h3 className="type-section mb-2.5">
                 {t('explore.circleOfFifths')}
               </h3>
               <div className="rounded-xl p-3" style={{ border: '1px solid color-mix(in srgb, var(--card) 50%, transparent)', backgroundColor: 'color-mix(in srgb, var(--bg) 30%, transparent)' }}>

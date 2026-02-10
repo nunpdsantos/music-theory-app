@@ -15,7 +15,7 @@ export function useTheme() {
       document.documentElement.classList.toggle('light', isLight);
       // Sync theme-color meta tag for mobile browser chrome
       const meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) meta.setAttribute('content', isLight ? '#fafafa' : '#09090b');
+      if (meta) meta.setAttribute('content', isLight ? '#f8f7f4' : '#0a0a12');
     }
 
     if (themeMode === 'light') {

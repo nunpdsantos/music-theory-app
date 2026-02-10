@@ -154,10 +154,10 @@ export function KeySelector() {
     <div className="space-y-3" role="group" aria-label={t('keySelector.label')}>
       {/* ─── Root note chromatic strip ──────────────────────── */}
       <div>
-        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block mb-1.5">
+        <span className="type-section block mb-1.5">
           {t('keySelector.root')}
         </span>
-        <div ref={rootContainerRef} className="relative inline-flex items-center rounded-xl bg-zinc-900/80 border border-zinc-800/60 p-1 gap-0.5 max-sm:max-w-full max-sm:overflow-x-auto max-sm:snap-x max-sm:snap-mandatory">
+        <div ref={rootContainerRef} className="relative inline-flex items-center rounded-xl p-1 gap-0.5 max-sm:max-w-full max-sm:overflow-x-auto max-sm:snap-x max-sm:snap-mandatory" style={{ backgroundColor: 'color-mix(in srgb, var(--bg-raised) 80%, transparent)', border: '1px solid color-mix(in srgb, var(--border) 60%, transparent)' }}>
           <div
             className="absolute rounded-lg pointer-events-none"
             style={{
@@ -188,9 +188,10 @@ export function KeySelector() {
                   hasAccidental ? 'min-w-[30px]' : 'min-w-[26px]'
                 } ${
                   isSelected
-                    ? 'text-white shadow-lg'
-                    : 'text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]'
+                    ? 'shadow-lg'
+                    : 'hover:bg-white/[0.04]'
                 }`}
+                style={{ color: isSelected ? 'var(--text)' : 'var(--text-muted)' }}
               >
                 <span className="relative z-10">{label}</span>
               </button>
@@ -201,17 +202,19 @@ export function KeySelector() {
 
       {/* ─── Scale type pills (grouped) ─────────────────────── */}
       <div>
-        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block mb-1.5">
+        <span className="type-section block mb-1.5">
           {t('keySelector.scale')}
         </span>
         <div ref={scaleContainerRef} className="relative flex flex-wrap items-center gap-x-3 gap-y-1.5 max-sm:gap-x-1.5 max-sm:gap-y-1">
           <div
-            className="absolute rounded-lg bg-zinc-700/60 border border-zinc-600/50 pointer-events-none"
+            className="absolute rounded-lg pointer-events-none"
             style={{
               left: scaleIndicator.left,
               top: scaleIndicator.top,
               width: scaleIndicator.width,
               height: scaleIndicator.height,
+              backgroundColor: 'var(--card-hover)',
+              border: '1px solid var(--border)',
               transition: 'left 0.2s cubic-bezier(0.4, 0, 0.2, 1), top 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
           />
@@ -226,9 +229,10 @@ export function KeySelector() {
                     onClick={() => setScale(opt.value)}
                     className={`relative px-2.5 py-1 text-[11px] font-medium rounded-lg transition-all duration-150 ${
                       isActive
-                        ? 'text-white'
-                        : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.03]'
+                        ? ''
+                        : 'hover:bg-white/[0.03]'
                     }`}
+                    style={{ color: isActive ? 'var(--text)' : 'var(--text-dim)' }}
                     aria-pressed={isActive}
                   >
                     <span className="relative z-10">{opt.label}</span>
@@ -236,14 +240,15 @@ export function KeySelector() {
                 );
               })}
               {gi < visibleGroups.length - 1 && (
-                <div className="w-px h-3 bg-zinc-800 ml-1.5" />
+                <div className="w-px h-3 ml-1.5" style={{ backgroundColor: 'var(--border)' }} />
               )}
             </div>
           ))}
           {!isSelectedInHiddenGroup && (
             <button
               onClick={() => setExpanded(!expanded)}
-              className="text-[10px] font-medium text-zinc-500 hover:text-zinc-300 px-2 py-1 rounded-lg hover:bg-white/[0.03] transition-colors"
+              className="text-[10px] font-medium px-2 py-1 rounded-lg hover:bg-white/[0.03] transition-colors"
+              style={{ color: 'var(--text-dim)' }}
             >
               {showAll ? t('keySelector.less') : t('keySelector.moreScales')}
             </button>

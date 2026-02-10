@@ -19,8 +19,8 @@ export function AppShell({ children }: AppShellProps) {
     <div className="h-screen supports-[height:100dvh]:h-dvh flex flex-col" style={{ backgroundColor: 'var(--bg)', color: 'var(--text)' }}>
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:px-4 focus:py-2 focus:rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        style={{ backgroundColor: 'var(--card-hover)', color: 'var(--text)' }}
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:px-4 focus:py-2 focus:rounded-lg focus:outline-none focus:ring-2"
+        style={{ ['--tw-ring-color' as any]: 'var(--focus-ring)', backgroundColor: 'var(--card-hover)', color: 'var(--text)' }}
       >
         {t('nav.skipToContent')}
       </a>
@@ -31,7 +31,7 @@ export function AppShell({ children }: AppShellProps) {
       {/* Instrument bar */}
       <div
         className="flex items-center justify-between px-3 max-sm:px-2 py-1"
-        style={{ backgroundColor: 'var(--bg)', borderTop: '1px solid var(--card)' }}
+        style={{ backgroundColor: 'var(--bg)', borderTop: '1px solid var(--border-subtle)' }}
       >
         <InstrumentSelector />
         <div className="flex items-center gap-2">

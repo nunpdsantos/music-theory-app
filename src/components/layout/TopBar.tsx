@@ -79,14 +79,19 @@ export function TopBar() {
 
   return (
     <header
-      className="flex items-center justify-between px-4 max-sm:px-2.5 h-12 backdrop-blur-sm shrink-0"
+      className="flex items-center justify-between px-4 max-sm:px-2.5 h-12 backdrop-blur-md shrink-0"
       style={{
         backgroundColor: 'color-mix(in srgb, var(--bg) 80%, transparent)',
-        borderBottom: '1px solid var(--card)',
+        borderBottom: '1px solid var(--border-subtle)',
       }}
     >
       <div className="flex items-center gap-3">
-        <span className="text-sm font-semibold tracking-tight max-sm:hidden" style={{ color: 'var(--text)' }}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" className="max-sm:hidden shrink-0">
+          <path d="M9 18V5l12-2v13" />
+          <circle cx="6" cy="18" r="3" />
+          <circle cx="18" cy="16" r="3" />
+        </svg>
+        <span className="text-xs font-medium tracking-tight max-sm:hidden" style={{ color: 'var(--text-muted)' }}>
           {t('nav.musicTheory')}
         </span>
       </div>
@@ -105,7 +110,7 @@ export function TopBar() {
             width: indicator.width,
             top: 2,
             bottom: 2,
-            backgroundColor: 'var(--border)',
+            backgroundColor: 'var(--accent-dim)',
             transition: 'left 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         />
@@ -167,6 +172,7 @@ export function TopBar() {
             color: 'var(--text-dim)',
             backgroundColor: 'color-mix(in srgb, var(--card-hover) 50%, transparent)',
             border: '1px solid color-mix(in srgb, var(--border) 50%, transparent)',
+            boxShadow: 'var(--shadow-sm)',
           }}
           aria-label={t('nav.quickSearchLabel')}
         >

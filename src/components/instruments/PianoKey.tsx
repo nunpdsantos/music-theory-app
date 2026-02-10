@@ -74,16 +74,16 @@ export function PianoKeyComponent({
 
   const label = noteToString(keyData.note);
   const isC = keyData.note.natural === 'C' && keyData.note.accidental === '';
-  const color = highlightColor ?? '#60A5FA';
+  const color = highlightColor ?? 'var(--accent)';
 
   if (keyData.isBlack) {
     const [bw, bh] = dims.black;
     let bg: string;
     let opacity = 1;
-    let border = '1px solid #000';
-    let shadow = '0 2px 4px rgba(0,0,0,0.5)';
+    let border = '1px solid var(--piano-border)';
+    let shadow = 'var(--piano-black-shadow)';
     let transform = 'none';
-    let labelColor = '#666';
+    let labelColor = 'var(--piano-label)';
 
     if (isActive) {
       bg = color;
@@ -101,13 +101,13 @@ export function PianoKeyComponent({
       border = `1.5px solid ${color}`;
       labelColor = '#fff';
     } else if (isDimmed) {
-      bg = '#1c1c1e';
+      bg = 'var(--piano-black)';
     } else if (isHighlighted) {
       bg = color;
       opacity = 0.8;
       labelColor = '#000';
     } else {
-      bg = '#1c1c1e';
+      bg = 'var(--piano-black)';
     }
 
     return (
@@ -147,10 +147,10 @@ export function PianoKeyComponent({
   const [ww, wh] = dims.white;
   let bg: string;
   let opacity = 1;
-  let border = '1px solid #bbb';
-  let shadow = '0 2px 4px rgba(0,0,0,0.15)';
+  let border = '1px solid var(--piano-border)';
+  let shadow = 'var(--piano-white-shadow)';
   let transform = 'none';
-  let labelColor = '#999';
+  let labelColor = 'var(--piano-label)';
 
   if (isActive) {
     bg = color;
@@ -168,13 +168,13 @@ export function PianoKeyComponent({
     border = `2px solid ${color}88`;
     labelColor = color;
   } else if (isDimmed) {
-    bg = '#e8e8e8';
+    bg = 'var(--piano-white)';
   } else if (isHighlighted) {
     bg = color;
     opacity = 0.7;
     labelColor = '#000';
   } else {
-    bg = '#e8e8e8';
+    bg = 'var(--piano-white)';
   }
 
   return (

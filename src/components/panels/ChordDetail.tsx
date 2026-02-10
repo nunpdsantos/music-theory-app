@@ -160,7 +160,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
 
       {/* Notes */}
       <div>
-        <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+        <h3 className="type-section mb-2">
           Notes
         </h3>
         <div className="flex gap-1.5">
@@ -194,7 +194,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
 
       {/* Staff Notation */}
       <div>
-        <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+        <h3 className="type-section mb-2">
           Staff
         </h3>
         <Suspense fallback={<StaffNotationSkeleton height={120} />}>
@@ -208,7 +208,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
 
       {/* Inversions */}
       <div>
-        <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+        <h3 className="type-section mb-2">
           Voicing
         </h3>
         <div className="flex gap-1.5" role="radiogroup" aria-label="Chord inversion">
@@ -236,7 +236,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
 
       {/* Formula — real interval labels */}
       <div>
-        <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+        <h3 className="type-section mb-2">
           Formula
         </h3>
         <div className="flex items-center gap-1.5">
@@ -255,7 +255,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
       {/* Compatible Scales */}
       {scaleSuggestions.length > 0 && (
         <div>
-          <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+          <h3 className="type-section mb-2">
             Compatible Scales
           </h3>
           <div className="flex flex-wrap gap-1.5">

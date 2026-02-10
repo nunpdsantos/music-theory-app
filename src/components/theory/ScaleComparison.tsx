@@ -107,7 +107,7 @@ export function ScaleComparison() {
   if (!comparisonScale) {
     return (
       <div className="flex items-center gap-3">
-        <h3 className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+        <h3 className="type-section">
           {t('explore.compareScales')}
         </h3>
         <select
@@ -137,7 +137,7 @@ export function ScaleComparison() {
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+        <h3 className="type-section">
           {t('explore.scaleComparison')}
         </h3>
         <button

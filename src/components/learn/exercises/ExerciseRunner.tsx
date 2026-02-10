@@ -213,7 +213,7 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
   return (
     <div className="rounded-xl border overflow-hidden" style={{ borderColor: 'var(--card-hover)' }}>
       {/* Header */}
-      <div className="px-4 py-3 border-b bg-zinc-900/50" style={{ borderColor: 'var(--card-hover)' }}>
+      <div className="px-4 py-3 border-b" style={{ borderColor: 'var(--card-hover)', backgroundColor: 'color-mix(in srgb, var(--bg-raised) 50%, transparent)' }}>
         <h2 className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-muted)' }}>
           {t('exercise.title')}
         </h2>

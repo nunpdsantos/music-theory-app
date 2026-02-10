@@ -70,7 +70,7 @@ export function ChordGrid() {
             style={{
               backgroundColor: isSelected ? `${color}18` : 'var(--card)',
               border: isSelected ? `1.5px solid ${color}60` : '1.5px solid var(--card-hover)',
-              boxShadow: isSelected ? `0 0 20px ${color}10` : 'none',
+              boxShadow: isSelected ? `0 0 20px ${color}10` : 'var(--shadow-sm)',
             }}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -82,7 +82,7 @@ export function ChordGrid() {
           >
             {/* Subtle top accent line */}
             <div
-              className="absolute top-0 left-2 right-2 h-px opacity-40"
+              className="absolute top-0 left-2 right-2 h-px opacity-50"
               style={{ backgroundColor: color }}
             />
 

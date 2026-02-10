@@ -62,7 +62,7 @@ export const FretCell = memo(function FretCell({
       style={{
         minWidth: fretMinWidth,
         ...(isFocused ? {
-          outline: '2px solid rgba(96, 165, 250, 0.6)',
+          outline: '2px solid var(--focus-ring)',
           outlineOffset: -2,
           borderRadius: 4,
         } : undefined),
@@ -126,11 +126,12 @@ export const FretCell = memo(function FretCell({
         <div
           className="relative z-10 rounded-full flex items-center justify-center font-bold transition-all"
           style={{
-            width: 20,
-            height: 20,
-            fontSize: 8,
-            backgroundColor: isActive ? color : `${color}cc`,
-            color: '#000',
+            width: isActive ? 20 : isRoot ? 20 : 16,
+            height: isActive ? 20 : isRoot ? 20 : 16,
+            fontSize: isActive || isRoot ? 8 : 7,
+            backgroundColor: isActive ? color : isRoot ? color : `${color}30`,
+            color: isActive || isRoot ? '#000' : color ?? 'var(--text)',
+            border: isActive || isRoot ? 'none' : `1.5px solid ${color}88`,
             transform: isActive ? 'scale(1.2)' : 'scale(1)',
             boxShadow: isActive ? `0 0 8px ${color}` : 'none',
           }}

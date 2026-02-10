@@ -45,7 +45,7 @@ export function MetronomeControl() {
     <div className="space-y-3">
       {/* Header + Play/Stop */}
       <div className="flex items-center justify-between">
-        <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+        <h3 className="type-section">
           {t('metronome.title')}
         </h3>
         <m.button
@@ -98,8 +98,8 @@ export function MetronomeControl() {
       </div>
 
       {/* BPM slider */}
-      <div className="flex items-center gap-3 bg-zinc-900/60 rounded-xl px-3.5 py-2.5 border border-zinc-800/50">
-        <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider w-8">
+      <div className="flex items-center gap-3 rounded-xl px-3.5 py-2.5" style={{ backgroundColor: 'color-mix(in srgb, var(--bg) 60%, transparent)', border: '1px solid color-mix(in srgb, var(--border) 50%, transparent)' }}>
+        <span className="text-[10px] font-bold uppercase tracking-wider w-8" style={{ color: 'var(--text-dim)' }}>
           {t('metronome.bpm')}
         </span>
         <input
@@ -115,7 +115,7 @@ export function MetronomeControl() {
           }}
           aria-label={t('metronome.tempo')}
         />
-        <span className="text-[11px] font-mono text-zinc-500 w-8 text-right tabular-nums">
+        <span className="text-[11px] font-mono w-8 text-right tabular-nums" style={{ color: 'var(--text-dim)' }}>
           {bpm}
         </span>
       </div>
@@ -144,7 +144,7 @@ export function MetronomeControl() {
       </div>
 
       {/* Volume slider */}
-      <div className="flex items-center gap-3 bg-zinc-900/60 rounded-xl px-3.5 py-2.5 border border-zinc-800/50">
+      <div className="flex items-center gap-3 rounded-xl px-3.5 py-2.5" style={{ backgroundColor: 'color-mix(in srgb, var(--bg) 60%, transparent)', border: '1px solid color-mix(in srgb, var(--border) 50%, transparent)' }}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" strokeWidth="2" strokeLinecap="round">
           <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
           <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
@@ -162,7 +162,7 @@ export function MetronomeControl() {
           }}
           aria-label={t('metronome.volume')}
         />
-        <span className="text-[11px] font-mono text-zinc-500 w-8 text-right tabular-nums">
+        <span className="text-[11px] font-mono w-8 text-right tabular-nums" style={{ color: 'var(--text-dim)' }}>
           {Math.round(metronomeVolume * 100)}
         </span>
       </div>

@@ -186,7 +186,7 @@ export function ModuleView({
 
               {/* Explanation */}
               <div className="ml-10 space-y-4">
-                <p className="learn-concept-text text-zinc-300/90">
+                <p className="learn-concept-text" style={{ color: 'var(--text-muted)' }}>
                   {concept.explanation}
                 </p>
 
@@ -246,7 +246,7 @@ export function ModuleView({
 
               {/* Divider between concepts (not after last) */}
               {i < module.concepts.length - 1 && (
-                <div className="ml-10 mt-8 h-px bg-zinc-800/60" />
+                <div className="ml-10 mt-8 h-px" style={{ backgroundColor: 'color-mix(in srgb, var(--border) 60%, transparent)' }} />
               )}
             </m.div>
           ))}
@@ -279,7 +279,7 @@ export function ModuleView({
             className="mb-10 rounded-xl border overflow-hidden"
             style={{ borderColor: 'var(--card-hover)' }}
           >
-            <div className="px-4 py-3 border-b bg-zinc-900/50 flex items-center justify-between" style={{ borderColor: 'var(--card-hover)' }}>
+            <div className="px-4 py-3 border-b flex items-center justify-between" style={{ borderColor: 'var(--card-hover)', backgroundColor: 'color-mix(in srgb, var(--bg-raised) 50%, transparent)' }}>
               <h2 className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
                 {t('learn.practiceTasks')}
               </h2>
@@ -287,14 +287,17 @@ export function ModuleView({
                 {completedTaskCount}/{module.tasks.length}
               </span>
             </div>
-            <div className="divide-y divide-zinc-800/50">
+            <div className="divide-y" style={{ borderColor: 'color-mix(in srgb, var(--border) 50%, transparent)' }}>
               {module.tasks.map((task) => {
                 const done = isTaskCompleted(module.id, task.id);
                 return (
                   <button
                     key={task.id}
                     onClick={() => onToggleTask(module.id, task.id)}
-                    className="w-full text-left px-4 py-3 flex items-start gap-3 hover:bg-zinc-800/30 transition-colors group"
+                    className="w-full text-left px-4 py-3 flex items-start gap-3 transition-colors group"
+                    style={{ ['--tw-bg-opacity' as any]: undefined }}
+                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'color-mix(in srgb, var(--card-hover) 30%, transparent)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
                   >
                     <span
                       className={`mt-0.5 w-4 h-4 rounded-md border flex items-center justify-center shrink-0 transition-all duration-200 ${

@@ -186,7 +186,7 @@ export function ScaleDetail() {
 
       {/* Notes with degree colors */}
       <div>
-        <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+        <h3 className="type-section mb-2">
           Notes
         </h3>
         <div className="flex flex-wrap gap-1.5">
@@ -212,7 +212,7 @@ export function ScaleDetail() {
 
       {/* Staff Notation */}
       <div>
-        <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+        <h3 className="type-section mb-2">
           Staff
         </h3>
         <Suspense fallback={<StaffNotationSkeleton height={120} />}>
@@ -230,7 +230,7 @@ export function ScaleDetail() {
 
       {/* Formula */}
       <div>
-        <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+        <h3 className="type-section mb-2">
           Formula
         </h3>
         <div className="flex flex-wrap items-center gap-1.5">
@@ -249,7 +249,7 @@ export function ScaleDetail() {
       {/* Mode info */}
       {modeInfo && (
         <div>
-          <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+          <h3 className="type-section mb-2">
             Mode
           </h3>
           <div className="rounded-xl px-3 py-2.5 space-y-1.5" style={{ backgroundColor: 'color-mix(in srgb, var(--card) 40%, transparent)', border: '1px solid color-mix(in srgb, var(--border) 40%, transparent)' }}>
@@ -267,7 +267,7 @@ export function ScaleDetail() {
       {/* Compatible Chords */}
       {chordSuggestions.length > 0 && (
         <div>
-          <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+          <h3 className="type-section mb-2">
             Compatible Chords
           </h3>
           <div className="flex flex-wrap gap-1.5">
@@ -299,7 +299,7 @@ export function ScaleDetail() {
 
       {/* Octave range */}
       <div>
-        <h3 className="text-[10px] font-bold mb-2 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+        <h3 className="type-section mb-2">
           Piano Range
         </h3>
         <div className="flex gap-1.5" role="radiogroup" aria-label="Scale octave range">

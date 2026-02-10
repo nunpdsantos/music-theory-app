@@ -17,8 +17,9 @@ export function ChoiceInput({ options, selected, submitted, onSelect, accentColo
         const showCorrect = submitted && opt.correct;
         const showIncorrect = submitted && isSelected && !opt.correct;
 
-        let bg = 'bg-zinc-800/60 hover:bg-zinc-800';
-        let border = 'border-zinc-700/50';
+        let bg = '';
+        let border = '';
+        let defaultStyle: React.CSSProperties = { backgroundColor: 'color-mix(in srgb, var(--card) 60%, transparent)', border: '1px solid color-mix(in srgb, var(--border) 50%, transparent)' };
         let textColor = '';
 
         if (isSelected && !submitted) {
@@ -43,19 +44,19 @@ export function ChoiceInput({ options, selected, submitted, onSelect, accentColo
             whileTap={!submitted ? { scale: 0.97 } : undefined}
             onClick={() => !submitted && onSelect(opt.value)}
             disabled={submitted}
-            className={`px-3 py-2.5 rounded-xl border text-sm font-medium transition-all duration-150 ${bg} ${border} ${textColor} ${
+            className={`px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${bg} ${border} ${textColor} ${
               submitted ? 'cursor-default' : 'cursor-pointer'
             }`}
             style={
               isSelected && !submitted
                 ? {
                     backgroundColor: `${accentColor}20`,
-                    borderColor: `${accentColor}50`,
+                    border: `1px solid ${accentColor}50`,
                     color: accentColor,
                   }
-                : !showCorrect && !showIncorrect
-                  ? { color: 'var(--text-muted)' }
-                  : undefined
+                : showCorrect || showIncorrect
+                  ? undefined
+                  : { ...defaultStyle, color: 'var(--text-muted)' }
             }
           >
             {opt.label}

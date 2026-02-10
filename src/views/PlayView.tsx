@@ -180,7 +180,7 @@ export function PlayView() {
 
         {/* ─── Sound Preset ─────────────────────────────────────── */}
         <m.div variants={fadeUp}>
-          <h3 className="text-[10px] font-bold mb-2.5 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+          <h3 className="type-section mb-2.5">
             {t('play.sound')}
           </h3>
           <div className="flex gap-1.5 max-sm:grid max-sm:grid-cols-3" role="radiogroup" aria-label={t('play.synthPreset')}>
@@ -243,7 +243,7 @@ export function PlayView() {
         <m.div variants={fadeUp} className="grid grid-cols-2 max-sm:grid-cols-1 gap-5">
           {/* Volume */}
           <div>
-            <h3 className="text-[10px] font-bold mb-2.5 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+            <h3 className="type-section mb-2.5">
               {t('play.volume')}
             </h3>
             <div className="flex items-center gap-3 rounded-xl px-3.5 py-2.5" style={{ backgroundColor: 'color-mix(in srgb, var(--bg) 60%, transparent)', border: '1px solid color-mix(in srgb, var(--border) 50%, transparent)' }}>
@@ -273,7 +273,7 @@ export function PlayView() {
 
           {/* Octave */}
           <div>
-            <h3 className="text-[10px] font-bold mb-2.5 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+            <h3 className="type-section mb-2.5">
               {t('play.octave')}
             </h3>
             <div className="flex gap-1.5" role="radiogroup" aria-label={t('play.baseOctave')}>
@@ -302,11 +302,11 @@ export function PlayView() {
 
         {/* ─── Active Notes HUD ─────────────────────────────────── */}
         <m.div variants={fadeUp}>
-          <h3 className="text-[10px] font-bold mb-2.5 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+          <h3 className="type-section mb-2.5">
             {t('play.nowPlaying')}
           </h3>
           <div
-            className="relative min-h-[100px] rounded-2xl flex items-center justify-center px-4 py-5 overflow-hidden"
+            className="relative min-h-[80px] rounded-2xl flex items-center justify-center px-4 py-5 overflow-hidden"
             style={{ border: '1px solid color-mix(in srgb, var(--border) 50%, transparent)', backgroundColor: 'color-mix(in srgb, var(--bg) 30%, transparent)' }}
             aria-live="polite"
             aria-label={t('play.activeNotes')}
@@ -384,7 +384,7 @@ export function PlayView() {
         {/* ─── Scale Reference Strip ────────────────────────────── */}
         {scale.notes.length === 7 && (
           <m.div variants={fadeUp}>
-            <h3 className="text-[10px] font-bold mb-2.5 uppercase tracking-widest" style={{ color: 'var(--text-dim)' }}>
+            <h3 className="type-section mb-2.5">
               {t('play.scaleReference')}
             </h3>
             <div className="flex items-stretch gap-1 max-sm:grid max-sm:grid-cols-4 max-sm:gap-1" role="group" aria-label={t('play.scaleReference')}>

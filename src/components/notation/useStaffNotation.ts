@@ -37,9 +37,12 @@ export function useStaffNotation(options: UseStaffNotationOptions) {
     return () => { cancelled = true; };
   }, []);
 
-  // ResizeObserver
+  // ResizeObserver — must re-run after loading completes because the
+  // container div only mounts once the skeleton is replaced.
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (loading || !containerRef.current) return;
+    // Synchronous initial measurement so render doesn't bail on width=0
+    setContainerWidth(containerRef.current.getBoundingClientRect().width);
     const ro = new ResizeObserver((entries) => {
       for (const entry of entries) {
         setContainerWidth(entry.contentRect.width);
@@ -47,7 +50,7 @@ export function useStaffNotation(options: UseStaffNotationOptions) {
     });
     ro.observe(containerRef.current);
     return () => ro.disconnect();
-  }, []);
+  }, [loading]);
 
   // Render function
   const render = useCallback(() => {

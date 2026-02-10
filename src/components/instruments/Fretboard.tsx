@@ -369,8 +369,8 @@ export function Fretboard() {
       role="grid"
       aria-label="Guitar fretboard"
       tabIndex={0}
-      className="w-full overflow-x-auto bg-zinc-900 border-t border-zinc-800 fretboard-scroll focus:outline-none"
-      style={{ cursor: 'grab', scrollbarWidth: 'none', userSelect: 'none' }}
+      className="w-full overflow-x-auto fretboard-scroll focus:outline-none"
+      style={{ cursor: 'grab', scrollbarWidth: 'none', userSelect: 'none', backgroundColor: 'var(--bg)', borderTop: '1px solid var(--border-subtle)' }}
       onPointerDown={handleFretboardPointerDown}
       onClickCapture={handleFretboardClickCapture}
       onKeyDown={handleKeyDown}
@@ -396,7 +396,7 @@ export function Fretboard() {
 
         {/* Tuning selector */}
         <div role="radiogroup" aria-label="Guitar tuning" className="flex items-center gap-2 mb-2 flex-wrap">
-          <span className="text-[10px] text-zinc-500 uppercase tracking-wider">Tuning:</span>
+          <span className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-dim)' }}>Tuning:</span>
           {GUITAR_TUNINGS.map((t) => {
             const isActive = tuning.id === t.id;
             return (
@@ -407,9 +407,9 @@ export function Fretboard() {
                 onClick={() => setGuitarTuningId(t.id)}
                 className="text-[10px] px-2 py-0.5 rounded transition-colors"
                 style={{
-                  backgroundColor: isActive ? '#60A5FA' : 'transparent',
+                  backgroundColor: isActive ? 'var(--accent)' : 'transparent',
                   color: isActive ? '#000' : 'var(--text-dim)',
-                  border: isActive ? '1px solid #60A5FA' : '1px solid var(--border)',
+                  border: isActive ? '1px solid var(--accent)' : '1px solid var(--border)',
                 }}
               >
                 {t.shortName}
@@ -425,8 +425,8 @@ export function Fretboard() {
             {visibleFrets.map((f) => (
               <div
                 key={f}
-                className="flex-1 text-center text-[9px] text-zinc-500"
-                style={{ minWidth: fretMinWidth }}
+                className="flex-1 text-center text-[9px]"
+                style={{ color: 'var(--text-dim)', minWidth: fretMinWidth }}
               >
                 {FRET_MARKERS.includes(f) ? (
                   <span>{DOUBLE_MARKERS.includes(f) ? '••' : '•'}</span>
@@ -489,8 +489,8 @@ export function Fretboard() {
             {visibleFrets.map((f) => (
               <div
                 key={f}
-                className="flex-1 text-center text-[9px] text-zinc-500"
-                style={{ minWidth: fretMinWidth }}
+                className="flex-1 text-center text-[9px]"
+                style={{ color: 'var(--text-dim)', minWidth: fretMinWidth }}
               >
                 {f}
               </div>
@@ -499,9 +499,9 @@ export function Fretboard() {
           <div style={{ width: isChordView && !isOpenPosition ? 2 : 6 }} />
           <div style={{ width: 40 }} className="flex items-center justify-center">
             {(isChordView || isScalePosView) && !isOpenPosition ? (
-              <span className="text-[9px] text-zinc-500 font-mono">{lowestVisibleFret}fr</span>
+              <span className="text-[9px] font-mono" style={{ color: 'var(--text-dim)' }}>{lowestVisibleFret}fr</span>
             ) : (
-              <span className="text-[9px] text-zinc-500">0</span>
+              <span className="text-[9px]" style={{ color: 'var(--text-dim)' }}>0</span>
             )}
           </div>
         </div>
