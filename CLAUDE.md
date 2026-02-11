@@ -5,8 +5,8 @@
 **Name:** Music Theory App
 **Domain:** Music theory education / interactive instrument
 **Stack:** React 19 + TypeScript 5.9 + Vite 7 + Tailwind CSS v4 + Zustand 5 + Framer Motion 12 + Supabase
-**Tests:** 719 passing (Vitest + React Testing Library)
-**Languages:** English + Portuguese (react-i18next)
+**Tests:** 764 passing (Vitest + React Testing Library, 40 test files)
+**Languages:** English + Portuguese + Spanish (react-i18next + content overlay system)
 **PWA:** Offline-capable with Workbox precaching
 **Backend:** Supabase (optional — app works fully without env vars)
 
@@ -42,7 +42,15 @@ src/
   state/syncStore.ts   Sync UI state (not persisted)
   state/gamificationStore.ts  Streaks, XP, achievements (persisted)
   state/conceptStore.ts  Concept mastery tracking (30-day sliding window)
-  i18n/              i18next config + locales (en.json, pt.json) — ~200 keys, 21 namespaces
+  i18n/              i18next config + locales (en.json, pt.json, es.json) — 366 keys, 35 namespaces
+  i18n/content/      Translation overlay system for educational content (lazy-loaded per level)
+    types.ts         ContentLanguage, CurriculumLevelOverlay, ExerciseLevelOverlay, TemplateLevelOverlay, SongOverlay
+    contentResolver.ts  Pure apply functions (applyCurriculumOverlay, applyExerciseOverlay, etc.)
+    overlayLoader.ts    Dynamic import.meta.glob loaders + cache (keyed by lang:levelId)
+    levelMetaResolver.ts  Eager translator for 9 level titles/descriptions
+    musicTerms.ts       Scale/chord/direction dictionaries (PT + ES)
+    pt/              29 files: levelMeta + curriculumL1-L9 + exercisesL1-L9 + templatesL1-L9 + songs (100% complete)
+    es/              levelMeta only (content overlays pending — see ES_TRANSLATION_STATUS.md)
   components/
     instruments/     Piano, PianoKey, Fretboard, FretCell, InstrumentSelector
     theory/          ScaleDegreeBar, ChordGrid, CircleOfFifths
@@ -56,17 +64,17 @@ src/
     auth/            AuthModal (magic link), AccountMenu (dropdown)
     gamification/    ProgressDashboard, ConceptRadar
   views/             ExploreView, PlayView, LearnView
-  hooks/             useAudio, useMidi, useKeyContext, useMetronome, useTheme, usePWA, useLanguage, useLearnProgress, useAuth, useSync, useGamificationEffects
-  services/          midiAccess (shared singleton), midiInput, midiOutput, metronome, noteRecorder, spacedRepetition, sync, syncMerge, conceptTagger, exerciseSelector
+  hooks/             useAudio, useMidi, useKeyContext, useMetronome, useTheme, usePWA, useLanguage, useLearnProgress, useAuth, useSync, useGamificationEffects, useMediaQuery
+  services/          midiAccess (shared singleton), midiInput, midiOutput, metronome, noteRecorder, spacedRepetition, gamification, sync, syncMerge, conceptTagger, exerciseSelector
   utils/             exportHelpers, notationHelpers, vexflowLoader, midiHelpers
   data/
-    curriculumLoader.ts      Dynamic import + LEVEL_METADATA (lightweight)
+    curriculumLoader.ts      Dynamic import + LEVEL_METADATA (accepts lang param for overlay loading)
+    exerciseLoader.ts        Merges hand-authored + generated, lazy-loads per level (accepts lang param)
     songReferences.ts        Module→song reference map (L1–L3, ~80 entries)
     exercises/
-      exercisesL1-L9.ts      Hand-authored exercises (~380 total)
-      templatesL1-L9.ts      Exercise generation templates (118 modules)
-      exerciseGenerator.ts   Seeded PRNG generator (~627 generated exercises)
-      exerciseLoader.ts      Merges hand-authored + generated, lazy-loads per level
+      exercisesL1-L9.ts      Hand-authored exercises (~385 total)
+      templatesL1-L9.ts      Exercise generation templates (118 modules, 156 templates)
+      exerciseGenerator.ts   Seeded PRNG generator (~627 generated, accepts lang for music term translation)
 ```
 
 **Interaction model:** Instrument-first. Piano/fretboard always visible at bottom. Three views: Explore (theory), Play (performance), Learn (curriculum). Cmd+K for power-user search. Color encodes scale degree function (tonic=blue, dominant=amber, leading=red).
@@ -104,7 +112,7 @@ src/
 - Chord progression builder (diatonic palette, sequential playback)
 - Print/export (print stylesheet, clipboard copy)
 - Audio recording (note event capture, timed playback)
-- i18n (English + Portuguese, ~170 keys, language selector)
+- i18n (English + Portuguese + Spanish, 366 keys, 35 namespaces, language selector)
 
 ### Advanced (Phase 7)
 - **Spaced repetition:** 6-level intervals (1d→90d), review queue, backfill for pre-SRS modules
@@ -150,10 +158,21 @@ src/
 - **Song references:** ~80 entries for L1–L3 modules (song + artist + educational context)
 - **ModuleView:** "Songs That Use This" card between concepts and exercises sections
 - **i18n:** `midiInput` (6 keys) + `songRef` (1 key) in en.json + pt.json
-- 719 tests passing (27 new)
+
+### Content Translation Overlay System (Phase 12.5) — IN PROGRESS
+- **Architecture:** Lazy-loaded per-language, per-level overlays that merge with English source data at load time
+- **Infrastructure:** `src/i18n/content/` — types, contentResolver, overlayLoader (`import.meta.glob`), levelMetaResolver, musicTerms
+- **Language threading:** `curriculumLoader`, `exerciseLoader`, `exerciseGenerator` all accept `lang` param; `LearnView` + `LevelsOverview` read language from store
+- **Cache isolation:** Cache keys include language (`${lang}:${levelId}`) to prevent cross-language contamination
+- **Portuguese:** 100% complete — 29 overlay files (levelMeta + 9×curriculum + 9×exercises + 9×templates + songs)
+- **Spanish:** UI chrome complete (es.json, 366 keys) + levelMeta; 28 content overlay files pending (see `ES_TRANSLATION_STATUS.md`)
+- **Music term dictionaries:** Scale types, chord qualities, directions for PT + ES (used by exercise generator)
+- **Tests:** 45 new tests (contentResolver 22, musicTerms 11, generatorLang 7, levelMetaResolver 5)
+- 764 tests passing (45 new), 40 test files
 
 ---
 
-## Current Phase: See ROADMAP.md
+## Current Phase: See ROADMAP.md and ES_TRANSLATION_STATUS.md
 
-Next: Phase 13 (Distribution) — landing page, embeddable widgets, app store wrappers.
+**Immediate:** Complete 28 Spanish content overlay files (ES_TRANSLATION_STATUS.md has full checklist).
+**Next:** Phase 13 (Distribution) — landing page, embeddable widgets, app store wrappers.
