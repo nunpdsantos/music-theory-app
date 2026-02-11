@@ -9,9 +9,8 @@ import {
   SYNTH_PRESETS,
   resumeAudio,
 } from '../../core/services/audio.ts';
-import { getPitchClass } from '../../core/constants/notes.ts';
-import { getMidiNumber } from '../../core/utils/pianoLayout.ts';
 import { useAppStore } from '../../state/store.ts';
+import { buildAscendingMidi } from '../../utils/midiHelpers.ts';
 import {
   CHORD_QUALITY_NAMES,
   getChordShortIntervalLabels,
@@ -32,19 +31,7 @@ interface ChordDetailProps {
 const INVERSION_LABELS = ['Root', '1st Inv', '2nd Inv', '3rd Inv'];
 
 function computeVoicedMidi(notes: Note[], startOctave: number): number[] {
-  const midiNumbers: number[] = [];
-  let currentOctave = startOctave;
-  let lastPitchClass = -1;
-
-  for (let i = 0; i < notes.length; i++) {
-    const pc = getPitchClass(notes[i]);
-    if (i > 0 && pc <= lastPitchClass) {
-      currentOctave++;
-    }
-    midiNumbers.push(getMidiNumber(notes[i], currentOctave));
-    lastPitchClass = pc;
-  }
-  return midiNumbers;
+  return buildAscendingMidi(notes, startOctave).midi;
 }
 
 const FIT_COLORS = {

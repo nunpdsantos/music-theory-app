@@ -5,7 +5,7 @@
 **Name:** Music Theory App
 **Domain:** Music theory education / interactive instrument
 **Stack:** React 19 + TypeScript 5.9 + Vite 7 + Tailwind CSS v4 + Zustand 5 + Framer Motion 12 + Supabase
-**Tests:** 511 passing (Vitest + React Testing Library)
+**Tests:** 719 passing (Vitest + React Testing Library)
 **Languages:** English + Portuguese (react-i18next)
 **PWA:** Offline-capable with Workbox precaching
 **Backend:** Supabase (optional — app works fully without env vars)
@@ -34,12 +34,15 @@ src/
   core/              ~40 files, framework-agnostic music theory engine (types, constants, utils)
   design/tokens/     Color system (degree colors, surface colors) + motion tokens
   lib/               supabase.ts (client singleton, null when no env vars), database.types.ts
-  state/store.ts     Single Zustand store (music, instrument, audio, navigation, preferences)
+  state/store.ts     Single Zustand store v3 (music, instrument, audio, navigation, metronome, preferences)
+  state/storeTypes.ts Type definitions for all 6 slices (avoids circular imports)
+  state/slices/      6 slice creators (musicSlice, instrumentSlice, audioSlice, navigationSlice, metronomeSlice, preferencesSlice)
   state/progressStore.ts  Zustand curriculum progress (persisted, sync-ready)
   state/toastStore.ts  Standalone toast queue (Zustand, not in main store)
   state/syncStore.ts   Sync UI state (not persisted)
   state/gamificationStore.ts  Streaks, XP, achievements (persisted)
-  i18n/              i18next config + locales (en.json, pt.json) — ~190 keys, 19 namespaces
+  state/conceptStore.ts  Concept mastery tracking (30-day sliding window)
+  i18n/              i18next config + locales (en.json, pt.json) — ~200 keys, 21 namespaces
   components/
     instruments/     Piano, PianoKey, Fretboard, FretCell, InstrumentSelector
     theory/          ScaleDegreeBar, ChordGrid, CircleOfFifths
@@ -47,17 +50,18 @@ src/
     navigation/      KeySelector, QuickSearch (Cmd+K)
     layout/          AppShell, TopBar, Toast, PWAPrompts, ErrorBoundary
     notation/        StaffNotation, StaffNotationSkeleton, useStaffNotation (VexFlow 5.0)
-    play/            MetronomeControl, MidiOutputControl, RecordingControl, ChordProgressionBuilder
+    play/            MetronomeControl, MidiOutputControl, MidiInputControl, RecordingControl, ChordProgressionBuilder
     learn/           LevelsOverview, LevelCard, ModuleView, ReviewQueue, ContinueBanner
-      exercises/     ExerciseRunner, ExercisePrompt, ExerciseFeedback, ExerciseProgress, ChoiceInput
+      exercises/     ExerciseRunner, ExercisePrompt, ExerciseFeedback, ExerciseProgress, ChoiceInput, InstrumentInput
     auth/            AuthModal (magic link), AccountMenu (dropdown)
+    gamification/    ProgressDashboard, ConceptRadar
   views/             ExploreView, PlayView, LearnView
-  hooks/             useAudio, useMidi, useKeyContext, useMetronome, useTheme, usePWA, useLanguage, useLearnProgress, useAuth, useSync
-  services/          metronome, midiOutput, noteRecorder, spacedRepetition, sync, syncMerge
-  utils/             exportHelpers, notationHelpers, vexflowLoader
+  hooks/             useAudio, useMidi, useKeyContext, useMetronome, useTheme, usePWA, useLanguage, useLearnProgress, useAuth, useSync, useGamificationEffects
+  services/          midiAccess (shared singleton), midiInput, midiOutput, metronome, noteRecorder, spacedRepetition, sync, syncMerge, conceptTagger, exerciseSelector
+  utils/             exportHelpers, notationHelpers, vexflowLoader, midiHelpers
   data/
-    curriculumL1-L9.ts       Curriculum content per level (lazy-loaded)
     curriculumLoader.ts      Dynamic import + LEVEL_METADATA (lightweight)
+    songReferences.ts        Module→song reference map (L1–L3, ~80 entries)
     exercises/
       exercisesL1-L9.ts      Hand-authored exercises (~380 total)
       templatesL1-L9.ts      Exercise generation templates (118 modules)
@@ -69,7 +73,7 @@ src/
 
 ---
 
-## What's Built (Phases 1–10)
+## What's Built (Phases 1–12)
 
 ### Foundation (Phase 1–3)
 - Error boundaries (app-level + per-view with auto-recovery)
@@ -122,15 +126,34 @@ src/
 - **Supabase client:** `src/lib/supabase.ts` — null when env vars missing (zero breaking changes)
 - **Auth:** Magic link (email OTP) via `useAuth` hook, `AuthModal` + `AccountMenu` components
 - **Cloud sync:** Debounced push (2s), pull-on-login, offline queue in localStorage
-- **Merge functions:** `src/services/syncMerge.ts` — preferences (LWW), progress (union), gamification (max)
+- **Merge functions:** `src/services/syncMerge.ts` — preferences (LWW), progress (union), gamification (max), concepts (max per-date)
 - **Progress store:** Converted `useLearnProgress` from useState to Zustand (`progressStore.ts`)
 - **Store versioning:** `store.ts` v1→v2 migration (added `preferencesUpdatedAt`)
 - **PWA:** Workbox `NetworkOnly` for Supabase URLs
 - **i18n:** 18 auth/sync keys (en + pt)
-- 511 tests passing (66 new: 50 syncMerge + 11 progressStore + 5 syncStore)
+
+### Adaptive Difficulty (Phase 11) — COMPLETE
+- **Concept tagger:** Derives concept tags from ExerciseConfig (pure function, no manual tagging)
+- **Concept store:** 30-day sliding window accuracy tracking per concept
+- **Exercise selector:** Weighted Fisher-Yates selection (3x weight for weak concepts)
+- **Concept radar:** Hand-rolled SVG radar chart (6 axes) in ProgressDashboard
+- **Sync:** `mergeConceptTracking` for 4th sync domain (concept_tracking table)
+
+### MIDI Input + Song References (Phase 12) — COMPLETE
+- **Shared MIDIAccess singleton:** `src/services/midiAccess.ts` — lazy init, concurrent-call deduplication, multi-listener statechange
+- **MIDI input service:** `src/services/midiInput.ts` — device enumeration (mirrors midiOutput pattern)
+- **MIDI output refactored:** Uses shared midiAccess singleton instead of own requestMIDIAccess
+- **MIDI input UI:** Toggle + device dropdown in PlayView (`MidiInputControl.tsx`)
+- **useMidi hook:** Respects `midiInputEnabled` + `midiInputDeviceId` from store
+- **MIDI badge:** Shown in instrument exercises when MIDI input enabled
+- **Store v2→v3:** Migration adds `midiInputEnabled: true`, `midiInputDeviceId: null`
+- **Song references:** ~80 entries for L1–L3 modules (song + artist + educational context)
+- **ModuleView:** "Songs That Use This" card between concepts and exercises sections
+- **i18n:** `midiInput` (6 keys) + `songRef` (1 key) in en.json + pt.json
+- 719 tests passing (27 new)
 
 ---
 
 ## Current Phase: See ROADMAP.md
 
-Next: Phase 11 (adaptive difficulty) → Phase 12+ (MIDI input, distribution).
+Next: Phase 13 (Distribution) — landing page, embeddable widgets, app store wrappers.

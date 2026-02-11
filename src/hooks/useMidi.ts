@@ -1,15 +1,18 @@
 import { useEffect, useRef } from 'react';
 import { midiToNote } from '../core/utils/pianoLayout.ts';
 import { useAudio } from './useAudio.ts';
+import { useAppStore } from '../state/store.ts';
+import { initMidiInput, getInputs } from '../services/midiInput.ts';
+import { addStateChangeListener } from '../services/midiAccess.ts';
 
 export function useMidi() {
   const { noteOn, noteOff } = useAudio();
   const activeMidiMap = useRef<Map<number, number>>(new Map());
+  const midiInputEnabled = useAppStore((s) => s.midiInputEnabled);
+  const midiInputDeviceId = useAppStore((s) => s.midiInputDeviceId);
 
   useEffect(() => {
-    if (!navigator.requestMIDIAccess) return;
-
-    let inputs: MIDIInputMap | null = null;
+    if (!midiInputEnabled) return;
 
     const handleMidiMessage = (e: MIDIMessageEvent) => {
       if (!e.data || e.data.length < 3) return;
@@ -31,27 +34,30 @@ export function useMidi() {
       }
     };
 
-    navigator.requestMIDIAccess().then((access) => {
-      inputs = access.inputs;
-      for (const input of inputs.values()) {
-        input.onmidimessage = handleMidiMessage;
-      }
-
-      access.onstatechange = () => {
-        for (const input of access.inputs.values()) {
-          input.onmidimessage = handleMidiMessage;
-        }
-      };
-    }).catch((e) => {
-      console.warn('[MIDI] Access denied or unavailable:', e);
-    });
-
-    return () => {
-      if (inputs) {
-        for (const input of inputs.values()) {
+    const attachListeners = () => {
+      const inputs = getInputs();
+      for (const input of inputs) {
+        if (midiInputDeviceId && input.id !== midiInputDeviceId) {
           input.onmidimessage = null;
+        } else {
+          input.onmidimessage = handleMidiMessage;
         }
       }
     };
-  }, [noteOn, noteOff]);
+
+    let cleanupStateChange: (() => void) | undefined;
+
+    initMidiInput().then(() => {
+      attachListeners();
+      cleanupStateChange = addStateChangeListener(attachListeners);
+    });
+
+    return () => {
+      cleanupStateChange?.();
+      const inputs = getInputs();
+      for (const input of inputs) {
+        input.onmidimessage = null;
+      }
+    };
+  }, [noteOn, noteOff, midiInputEnabled, midiInputDeviceId]);
 }

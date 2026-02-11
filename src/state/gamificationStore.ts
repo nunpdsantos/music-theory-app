@@ -20,13 +20,22 @@ import {
   incrementDailyReviews,
 } from '../services/gamification';
 import { ACHIEVEMENT_DEFINITIONS } from '../data/achievements';
-import { toast } from './toastStore';
+
+// ─── Event types (consumed by useGamificationEffects hook) ──────────────────
+
+export type GamificationEvent =
+  | { type: 'streak_milestone'; streak: number }
+  | { type: 'achievement_unlocked'; achievementId: string; titleKey: string };
 
 interface GamificationStore extends GamificationData {
   // Navigation signal (not persisted)
   dashboardRequested: boolean;
   requestDashboard: () => void;
   clearDashboardRequest: () => void;
+
+  // Events queue (consumed by useGamificationEffects, not persisted)
+  pendingEvents: GamificationEvent[];
+  consumeEvents: () => GamificationEvent[];
 
   // Actions
   logActivity: (now?: number) => void;
@@ -48,6 +57,13 @@ export const useGamificationStore = create<GamificationStore>()(
       requestDashboard: () => set({ dashboardRequested: true }),
       clearDashboardRequest: () => set({ dashboardRequested: false }),
 
+      pendingEvents: [],
+      consumeEvents: () => {
+        const events = get().pendingEvents;
+        if (events.length > 0) set({ pendingEvents: [] });
+        return events;
+      },
+
       logActivity: (now = Date.now()) => {
         set((state) => {
           const asData = extractData(state);
@@ -57,10 +73,13 @@ export const useGamificationStore = create<GamificationStore>()(
             updated.streak.currentStreak > asData.streak.currentStreak &&
             isStreakMilestone(updated.streak.currentStreak)
           ) {
-            // Defer toast to avoid triggering during render
-            queueMicrotask(() => {
-              toast(`${updated.streak.currentStreak}-day streak!`, 'success', 4000);
-            });
+            return {
+              ...spreadData(updated),
+              pendingEvents: [
+                ...state.pendingEvents,
+                { type: 'streak_milestone' as const, streak: updated.streak.currentStreak },
+              ],
+            };
           }
           return spreadData(updated);
         });
@@ -98,20 +117,17 @@ export const useGamificationStore = create<GamificationStore>()(
           const now = Date.now();
           let updated = unlockAchievements(asData, newlyUnlocked, now);
           updated = markAchievementsNotified(updated, newlyUnlocked);
-          set(spreadData(updated));
 
-          // Fire toasts + sound for each new achievement
-          queueMicrotask(() => {
-            for (const id of newlyUnlocked) {
-              const def = ACHIEVEMENT_DEFINITIONS.find((d) => d.id === id);
-              if (def) {
-                toast(def.titleKey, 'success', 4000);
-              }
-            }
-            // Defer sound import to avoid circular deps
-            import('../utils/celebrationSound').then(({ playCelebrationSound }) => {
-              playCelebrationSound();
-            });
+          const events: GamificationEvent[] = newlyUnlocked.flatMap((id) => {
+            const def = ACHIEVEMENT_DEFINITIONS.find((d) => d.id === id);
+            return def
+              ? [{ type: 'achievement_unlocked' as const, achievementId: id, titleKey: def.titleKey }]
+              : [];
+          });
+
+          set({
+            ...spreadData(updated),
+            pendingEvents: [...get().pendingEvents, ...events],
           });
         }
       },

@@ -2,23 +2,20 @@
  * MIDI Output service — sends note messages to external MIDI devices.
  */
 
-let midiAccess: MIDIAccess | null = null;
+import { getMidiAccess, getCachedMidiAccess, addStateChangeListener } from './midiAccess.ts';
+
 let selectedOutputId: string | null = null;
 
 export async function initMidiOutput(): Promise<MIDIOutput[]> {
-  if (!navigator.requestMIDIAccess) return [];
-  try {
-    midiAccess = await navigator.requestMIDIAccess();
-    return getOutputs();
-  } catch (e) {
-    console.warn('[MIDI Output] Access denied:', e);
-    return [];
-  }
+  const access = await getMidiAccess();
+  if (!access) return [];
+  return getOutputs();
 }
 
 export function getOutputs(): MIDIOutput[] {
-  if (!midiAccess) return [];
-  return [...midiAccess.outputs.values()];
+  const access = getCachedMidiAccess();
+  if (!access) return [];
+  return [...access.outputs.values()];
 }
 
 export function selectOutput(deviceId: string | null) {
@@ -26,8 +23,9 @@ export function selectOutput(deviceId: string | null) {
 }
 
 function getSelectedOutput(): MIDIOutput | null {
-  if (!midiAccess || !selectedOutputId) return null;
-  return midiAccess.outputs.get(selectedOutputId) ?? null;
+  const access = getCachedMidiAccess();
+  if (!access || !selectedOutputId) return null;
+  return access.outputs.get(selectedOutputId) ?? null;
 }
 
 export function sendNoteOn(midiNumber: number, velocity = 100, channel = 0) {
@@ -50,7 +48,5 @@ export function sendAllNotesOff(channel = 0) {
 }
 
 export function onStateChange(callback: () => void): () => void {
-  if (!midiAccess) return () => {};
-  midiAccess.onstatechange = callback;
-  return () => { if (midiAccess) midiAccess.onstatechange = null; };
+  return addStateChangeListener(callback);
 }

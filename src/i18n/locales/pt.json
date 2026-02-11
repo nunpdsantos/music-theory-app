@@ -129,6 +129,17 @@
     "noDevice": "Nenhum dispositivo selecionado",
     "noDevices": "Nenhum dispositivo de sa\u00edda MIDI encontrado. Conecte um dispositivo MIDI e atualize."
   },
+  "midiInput": {
+    "title": "Entrada MIDI",
+    "enable": "Ativar entrada MIDI",
+    "selectDevice": "Selecionar dispositivo de entrada MIDI",
+    "noDevice": "Todos os dispositivos (dete\u00e7\u00e3o autom\u00e1tica)",
+    "noDevices": "Nenhum dispositivo de entrada MIDI encontrado. Conecte um controlador MIDI e atualize.",
+    "badge": "MIDI"
+  },
+  "songRef": {
+    "title": "M\u00fasicas Que Usam Isto"
+  },
   "degree": {
     "tonic": "T\u00f3nica",
     "supertonic": "Supert\u00f3nica",
@@ -308,6 +319,16 @@
     "synced": "Sincronizado",
     "syncError": "Erro de sincroniza\u00e7\u00e3o",
     "offline": "Offline"
+  },
+  "concepts": {
+    "radarTitle": "Domínio de Conceitos",
+    "needsWork": "A melhorar",
+    "noteReading": "Notas",
+    "intervals": "Intervalos",
+    "scales": "Escalas",
+    "chords": "Acordes",
+    "scaleDegrees": "Graus",
+    "earTraining": "Ouvido"
   },
   "tour": {
     "step1Title": "Escolha o Instrumento",

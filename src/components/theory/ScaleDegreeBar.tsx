@@ -72,6 +72,13 @@ export function ScaleDegreeBar() {
             aria-label={`Degree ${degree}, ${intervalLabel}, ${noteToString(note)}`}
           >
             <span
+              className="text-[9px] font-bold leading-none rounded-full"
+              style={{ color: 'var(--text-dim)', fontSize: isCompact ? 8 : undefined }}
+              aria-hidden="true"
+            >
+              {degree}
+            </span>
+            <span
               className="text-sm font-bold leading-none"
               style={{ color, fontSize: isCompact ? 11 : undefined }}
             >

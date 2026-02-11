@@ -7,6 +7,9 @@ import { StatCard } from './StatCard';
 import { StreakCalendar } from './StreakCalendar';
 import { WeeklyChart } from './WeeklyChart';
 import { AchievementGrid } from './AchievementGrid';
+import { ConceptRadar } from './ConceptRadar';
+import { useConceptStore } from '../../state/conceptStore';
+import { CONCEPT_LABELS } from '../../services/conceptTagger';
 
 interface ProgressDashboardProps {
   progress: CurriculumProgress;
@@ -27,6 +30,9 @@ export function ProgressDashboard({ progress, onBack }: ProgressDashboardProps) 
   const accuracy = totalExercises > 0
     ? Math.round((totalPerfect / totalExercises) * 100)
     : 0;
+
+  const weakConcepts = useConceptStore((s) => s.getWeakConcepts)();
+  const hasConceptData = Object.keys(useConceptStore((s) => s.concepts)).length > 0;
 
   return (
     <div className="max-w-2xl mx-auto px-5 max-sm:px-3 py-6 max-sm:py-4 pb-32">
@@ -71,11 +77,42 @@ export function ProgressDashboard({ progress, onBack }: ProgressDashboardProps) 
         <StatCard value={totalReviews} label={t('gamification.dashboard.reviews')} />
       </m.div>
 
+      {/* Concept mastery radar + weak concepts */}
+      {hasConceptData && (
+        <m.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+          className="mb-8"
+        >
+          <ConceptRadar />
+          {weakConcepts.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-1.5 justify-center">
+              <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                {t('concepts.needsWork')}:
+              </span>
+              {weakConcepts.slice(0, 5).map((id) => (
+                <span
+                  key={id}
+                  className="text-xs px-2 py-0.5 rounded-full"
+                  style={{
+                    backgroundColor: 'var(--card-hover)',
+                    color: 'var(--text-dim)',
+                  }}
+                >
+                  {CONCEPT_LABELS[id] ?? id}
+                </span>
+              ))}
+            </div>
+          )}
+        </m.div>
+      )}
+
       {/* Activity heatmap */}
       <m.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.1 }}
+        transition={{ duration: 0.3, delay: hasConceptData ? 0.15 : 0.1 }}
         className="mb-8"
       >
         <StreakCalendar activityLog={activityLog} />

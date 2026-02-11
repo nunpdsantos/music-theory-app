@@ -129,6 +129,17 @@
     "noDevice": "No device selected",
     "noDevices": "No MIDI output devices found. Connect a MIDI device and refresh."
   },
+  "midiInput": {
+    "title": "MIDI Input",
+    "enable": "Enable MIDI input",
+    "selectDevice": "Select MIDI input device",
+    "noDevice": "All devices (auto-detect)",
+    "noDevices": "No MIDI input devices found. Connect a MIDI controller and refresh.",
+    "badge": "MIDI"
+  },
+  "songRef": {
+    "title": "Songs That Use This"
+  },
   "degree": {
     "tonic": "Tonic",
     "supertonic": "Supertonic",
@@ -308,6 +319,16 @@
     "synced": "Synced",
     "syncError": "Sync error",
     "offline": "Offline"
+  },
+  "concepts": {
+    "radarTitle": "Concept Mastery",
+    "needsWork": "Needs work",
+    "noteReading": "Notes",
+    "intervals": "Intervals",
+    "scales": "Scales",
+    "chords": "Chords",
+    "scaleDegrees": "Degrees",
+    "earTraining": "Ear"
   },
   "tour": {
     "step1Title": "Pick Your Instrument",

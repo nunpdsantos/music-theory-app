@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../../../../state/store';
 import type { NaturalNote, Accidental, PitchedNote } from '../../../../core/types/music';
 import { getPitchClass, PITCH_CLASS_SPELLINGS } from '../../../../core/constants/notes';
@@ -11,9 +12,11 @@ interface InstrumentInputProps {
 }
 
 export function InstrumentInput({ expectedCount, submitted, onSubmit, accentColor }: InstrumentInputProps) {
+  const { t } = useTranslation();
   const [toggledPCs, setToggledPCs] = useState<Set<number>>(new Set());
   const activeNotes = useAppStore((s) => s.activeNotes);
   const setHighlightedNotes = useAppStore((s) => s.setHighlightedNotes);
+  const midiInputEnabled = useAppStore((s) => s.midiInputEnabled);
 
   // When a note is played on the instrument, toggle its pitch class
   useEffect(() => {
@@ -65,8 +68,13 @@ export function InstrumentInput({ expectedCount, submitted, onSubmit, accentColo
         <span className="text-xs" style={{ color: 'var(--text-dim)' }}>
           Selected {toggledPCs.size} of {expectedCount} notes
         </span>
-        <span className="text-[10px]" style={{ color: 'var(--text-dim)' }}>
+        <span className="text-[10px] flex items-center gap-1.5" style={{ color: 'var(--text-dim)' }}>
           Play notes on the instrument to toggle
+          {midiInputEnabled && (
+            <span className="px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-blue-500/15 text-blue-400">
+              {t('midiInput.badge')}
+            </span>
+          )}
         </span>
       </div>
 

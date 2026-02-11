@@ -16,6 +16,7 @@ import type {
   AchievementRecord,
   XPEvent,
 } from '../core/types/gamification';
+import type { ConceptRecord, ConceptHistoryEntry } from '../state/conceptStore';
 
 // ─── Preferences ─────────────────────────────────────────────────────────────
 
@@ -33,6 +34,8 @@ export interface PreferencesSnapshot {
   synthPreset: string;
   midiOutputEnabled: boolean;
   midiOutputDeviceId: string | null;
+  midiInputEnabled: boolean;
+  midiInputDeviceId: string | null;
   metronomeBPM: number;
   metronomeBeats: number;
   metronomeVolume: number;
@@ -233,4 +236,58 @@ function maxDateString(a: string | null, b: string | null): string | null {
   if (!a) return b;
   if (!b) return a;
   return a >= b ? a : b;
+}
+
+// ─── Concept Tracking ────────────────────────────────────────────────────────
+
+/**
+ * Per concept: union history entries by date (take max correct/total per date),
+ * sum lifetime totals.
+ */
+export function mergeConceptTracking(
+  local: Record<string, ConceptRecord>,
+  remote: Record<string, ConceptRecord>,
+): Record<string, ConceptRecord> {
+  const allIds = new Set([...Object.keys(local), ...Object.keys(remote)]);
+  const merged: Record<string, ConceptRecord> = {};
+
+  for (const id of allIds) {
+    const l = local[id];
+    const r = remote[id];
+    if (!l) { merged[id] = r!; continue; }
+    if (!r) { merged[id] = l; continue; }
+    merged[id] = mergeConceptRecord(l, r);
+  }
+
+  return merged;
+}
+
+function mergeConceptRecord(local: ConceptRecord, remote: ConceptRecord): ConceptRecord {
+  // Merge history: per date, take max correct/total
+  const historyMap = new Map<string, ConceptHistoryEntry>();
+  for (const entry of local.history) {
+    historyMap.set(entry.date, entry);
+  }
+  for (const entry of remote.history) {
+    const existing = historyMap.get(entry.date);
+    if (!existing) {
+      historyMap.set(entry.date, entry);
+    } else {
+      historyMap.set(entry.date, {
+        date: entry.date,
+        correct: Math.max(existing.correct, entry.correct),
+        total: Math.max(existing.total, entry.total),
+      });
+    }
+  }
+
+  const history = Array.from(historyMap.values()).sort((a, b) =>
+    a.date.localeCompare(b.date),
+  );
+
+  return {
+    correct: Math.max(local.correct, remote.correct),
+    total: Math.max(local.total, remote.total),
+    history,
+  };
 }

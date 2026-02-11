@@ -9,6 +9,7 @@ import { LearnBreadcrumb } from './LearnBreadcrumb';
 import { ExerciseRunner } from './exercises/ExerciseRunner';
 import { Confetti } from './Confetti';
 import { toast } from '../../state/toastStore';
+import { getSongReferences } from '../../data/songReferences';
 import { playCelebrationSound } from '../../utils/celebrationSound';
 
 interface ModuleViewProps {
@@ -66,6 +67,8 @@ export function ModuleView({
   const allTasksDone = completedTaskCount >= module.tasks.length;
   const hasExercises = exercises.length > 0;
   const canComplete = allTasksDone && (!hasExercises || exercisesPassed);
+
+  const songRefs = getSongReferences(module.id);
 
   const handleTryThis = useCallback((query: string) => {
     executeTheoryQuery(query);
@@ -260,6 +263,47 @@ export function ModuleView({
             </m.div>
           ))}
         </div>}
+
+        {/* ─── Song References (hidden in review mode) ────────────── */}
+        {!isReviewMode && songRefs.length > 0 && (
+          <m.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="mb-10 rounded-xl p-4"
+            style={{
+              backgroundColor: `${accent}08`,
+              border: `1px solid ${accent}15`,
+            }}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="2" strokeLinecap="round">
+                <path d="M9 18V5l12-2v13" />
+                <circle cx="6" cy="18" r="3" />
+                <circle cx="18" cy="16" r="3" />
+              </svg>
+              <h2
+                className="text-[10px] font-bold uppercase tracking-widest"
+                style={{ color: accent }}
+              >
+                {t('songRef.title')}
+              </h2>
+            </div>
+            <div className="divide-y" style={{ borderColor: `${accent}15` }}>
+              {songRefs.map((ref, i) => (
+                <div key={i} className={`py-2.5 ${i === 0 ? 'pt-0' : ''}`}>
+                  <div className="text-sm">
+                    <span className="font-semibold" style={{ color: 'var(--text)' }}>{ref.song}</span>
+                    <span className="ml-1.5" style={{ color: 'var(--text-dim)' }}>{ref.artist}</span>
+                  </div>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
+                    {ref.context}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </m.div>
+        )}
 
         {/* ─── Exercises ───────────────────────────────────────────── */}
         {hasExercises && (

@@ -2,12 +2,12 @@
 
 ## Start Here (Session Handoff)
 
-**Last updated:** 2026-02-10
-**Tests:** 511 passing | **Build:** clean | **TypeScript:** clean
+**Last updated:** 2026-02-11
+**Tests:** 719 passing | **Build:** clean | **TypeScript:** clean
 
-**Completed:** Phases 1–10 + Phase 8A–8C (all complete). Supabase backend live.
+**Completed:** Phases 1–12 (all complete). Supabase backend live. MIDI input/output with shared singleton. Song references for L1–L3.
 
-**Next up:** Phase 11 (Adaptive Difficulty Engine).
+**Next up:** Phase 13 (Distribution).
 
 **To start a new session:** Say "Continue with the roadmap" and point to this file. Everything needed is in CLAUDE.md (architecture) + this ROADMAP (plan + status).
 
@@ -95,31 +95,29 @@
 - i18n: 18 auth/sync keys (en + pt)
 - 66 new tests, 511 total passing
 
----
+### Phase 11: Adaptive Difficulty Engine ✓
+- Concept tagger: derives concept tags from ExerciseConfig (pure function, no manual tagging)
+- Per-concept accuracy tracking over 30-day sliding window (conceptStore)
+- Weighted exercise selection: 3x weight for weak concepts (exerciseSelector)
+- Concept mastery radar chart in ProgressDashboard (hand-rolled SVG, 6 axes)
+- 4th sync domain: concept_tracking with mergeConceptTracking
+- ExerciseRunner records concept results on submit
+- Review mode reorders exercises via selectWeightedExercises
+- i18n: concepts namespace (8 keys en + pt)
+- 54 new tests, 692 total passing
 
-## Phase 11: Adaptive Difficulty Engine
-
-Concept-level performance tracking to surface weaknesses and personalize exercise selection.
-
-- Tag exercises with concept identifiers (key signatures, intervals, chord voicing, etc.)
-- Per-concept accuracy tracking over sliding 30-day window
-- Weakness profiling: identify concepts below 70% accuracy threshold
-- Weighted exercise selection: surface weak concepts 2-3x more often
-- Extend SRS from module-level to concept-level granularity
-- Feed weakness data into exercise generator template selection
-- Dashboard visualization: concept mastery radar chart
-
----
-
-## Phase 12: MIDI Input + Real Song References
-
-Bridge theory to practice with MIDI input and musical context.
-
-- MIDI input for exercises: accept `noteOn` messages as answers in scale_build/chord_build
-- Real-time pitch display: show incoming MIDI notes on piano/fretboard
-- Curated song references in curriculum text (2-3 callouts per module)
-- Optional: Hooktheory TheoryTab API integration for chord progressions
-- Exercise mode: "Play this chord on your MIDI keyboard"
+### Phase 12: MIDI Input + Song References ✓
+- Shared MIDIAccess singleton (`midiAccess.ts`): lazy init, concurrent-call dedup, multi-listener statechange
+- MIDI input service (`midiInput.ts`): device enumeration mirroring midiOutput pattern
+- MIDI output refactored to use shared singleton (eliminated redundant requestMIDIAccess)
+- MIDI input UI: toggle + device dropdown in PlayView (`MidiInputControl.tsx`)
+- useMidi hook: respects midiInputEnabled + midiInputDeviceId from store
+- MIDI badge in InstrumentInput when input enabled
+- Store v2→v3 migration: midiInputEnabled (default true), midiInputDeviceId (default null)
+- Song references: ~80 entries for all 35 L1–L3 modules (song + artist + educational context)
+- ModuleView: "Songs That Use This" card between concepts and exercises
+- i18n: midiInput (6 keys) + songRef (1 key) in en + pt
+- 27 new tests, 719 total passing
 
 ---
 
@@ -155,6 +153,8 @@ These are valid directions but explicitly deferred. Do not start without a separ
 - **More languages** — i18n infrastructure exists (en + pt). Spanish, French, German, Japanese are easy adds but need quality translation, not machine output.
 - **More instruments** — Ukulele, bass guitar fretboard layouts. Straightforward extension of existing Fretboard component but low priority.
 - **AI personalization** — Beyond adaptive difficulty (Phase 11). Full ML pipeline, recommendation engine. Premature until user base exists.
+- **Song references L4–L9** — Infrastructure exists in `songReferences.ts`. Can be populated incrementally per level.
+- **Hooktheory API** — Optional integration for chord progressions from real songs. External dependency for unproven user value. Deferred.
 
 ---
 
@@ -183,3 +183,4 @@ Modern, free, instrument-first music theory platform. No competitor combines: in
 5. **Offline-first PWA** — Full curriculum works without internet
 6. **Evidence-based SRS scheduling** — Spaced repetition across 1,000+ exercises
 7. **Gamification without paywall** — Streaks, XP, achievements, all free
+8. **MIDI input/output** — Connect real instruments, shared singleton architecture

@@ -7,8 +7,10 @@ import { loadLevel, getLevelModuleCount } from '../data/curriculumLoader';
 import { loadExercises } from '../data/exerciseLoader';
 import { useLearnProgress } from '../hooks/useLearnProgress';
 import { useGamificationStore } from '../state/gamificationStore';
+import { useShallow } from 'zustand/shallow';
 import { computeModuleXP } from '../services/gamification';
 import { toast } from '../state/toastStore';
+import { useGamificationEffects } from '../hooks/useGamificationEffects';
 import { LevelsOverview } from '../components/learn/LevelsOverview';
 import { LevelDetail } from '../components/learn/LevelDetail';
 import { UnitDetail } from '../components/learn/UnitDetail';
@@ -42,16 +44,31 @@ export function LearnView() {
   const [levelCelebration, setLevelCelebration] = useState<LevelCelebration | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Gamification store selectors (effects below, after progress/navigate are declared)
-  const logActivity = useGamificationStore((s) => s.logActivity);
-  const addXP = useGamificationStore((s) => s.addXP);
-  const incrementModulesCompleted = useGamificationStore((s) => s.incrementModulesCompleted);
-  const incrementReviewsCompleted = useGamificationStore((s) => s.incrementReviewsCompleted);
-  const checkAchievementsFromProgress = useGamificationStore((s) => s.checkAchievementsFromProgress);
-  const backfillIfNeeded = useGamificationStore((s) => s.backfillIfNeeded);
-  const pruneAndResetWeekly = useGamificationStore((s) => s.pruneAndResetWeekly);
-  const dashboardRequested = useGamificationStore((s) => s.dashboardRequested);
-  const clearDashboardRequest = useGamificationStore((s) => s.clearDashboardRequest);
+  // Consume gamification events (streaks, achievements) → toasts + sounds
+  useGamificationEffects();
+
+  // Gamification store — single selector with shallow equality (9 subscriptions → 1)
+  const {
+    logActivity,
+    addXP,
+    incrementModulesCompleted,
+    incrementReviewsCompleted,
+    checkAchievementsFromProgress,
+    backfillIfNeeded,
+    pruneAndResetWeekly,
+    dashboardRequested,
+    clearDashboardRequest,
+  } = useGamificationStore(useShallow((s) => ({
+    logActivity: s.logActivity,
+    addXP: s.addXP,
+    incrementModulesCompleted: s.incrementModulesCompleted,
+    incrementReviewsCompleted: s.incrementReviewsCompleted,
+    checkAchievementsFromProgress: s.checkAchievementsFromProgress,
+    backfillIfNeeded: s.backfillIfNeeded,
+    pruneAndResetWeekly: s.pruneAndResetWeekly,
+    dashboardRequested: s.dashboardRequested,
+    clearDashboardRequest: s.clearDashboardRequest,
+  })));
 
   const {
     progress,

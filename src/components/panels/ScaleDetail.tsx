@@ -8,9 +8,8 @@ import {
   SYNTH_PRESETS,
   resumeAudio,
 } from '../../core/services/audio.ts';
-import { getPitchClass } from '../../core/constants/notes.ts';
-import { getMidiNumber } from '../../core/utils/pianoLayout.ts';
 import { SCALE_TYPE_NAMES, SCALE_FORMULAS } from '../../core/constants/scales.ts';
+import { buildAscendingMidi, buildDescendingMidi } from '../../utils/midiHelpers.ts';
 import { INTERVAL_SHORT_LABELS, buildChord, CHORD_QUALITY_NAMES, CHORD_SYMBOLS } from '../../core/constants/chords.ts';
 import { MODE_INFO } from '../../core/constants/modes.ts';
 import { getChordsForScale } from '../../core/constants/chordScaleRelationships.ts';
@@ -44,29 +43,16 @@ function computeScaleSequenceMidi(
   let lastOctaveTrack = startOctave;
 
   if (ascending) {
-    let currentOctave = startOctave;
-    let lastPitchClass = -1;
-    for (let i = 0; i < notes.length; i++) {
-      const pc = getPitchClass(notes[i]);
-      if (i > 0 && pc <= lastPitchClass) currentOctave++;
-      sequence.push(getMidiNumber(notes[i], currentOctave));
-      lastPitchClass = pc;
-    }
-    const rootPc = getPitchClass(notes[0]);
-    if (rootPc <= lastPitchClass) currentOctave++;
-    sequence.push(getMidiNumber(notes[0], currentOctave));
-    lastOctaveTrack = currentOctave;
+    const { midi, finalOctave, finalPitchClass } = buildAscendingMidi(notes, startOctave);
+    sequence.push(...midi);
+    // Add root at top to complete the octave (continuing from final pitch class)
+    const topRoot = buildAscendingMidi([notes[0]], finalOctave, finalPitchClass);
+    sequence.push(topRoot.midi[0]);
+    lastOctaveTrack = topRoot.finalOctave;
   }
 
   if (descending) {
-    let currentOctave = lastOctaveTrack;
-    let lastPitchClass = getPitchClass(notes[0]);
-    for (let i = notes.length - 1; i >= 0; i--) {
-      const pc = getPitchClass(notes[i]);
-      if (pc >= lastPitchClass) currentOctave--;
-      sequence.push(getMidiNumber(notes[i], currentOctave));
-      lastPitchClass = pc;
-    }
+    sequence.push(...buildDescendingMidi(notes, lastOctaveTrack));
   }
 
   return sequence;

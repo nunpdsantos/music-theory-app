@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { noteToString } from '../../core/types/music.ts';
 import type { PitchedNote } from '../../core/types/music.ts';
 import type { ChordShape, FingerNumber } from '../../core/constants/guitarChordShapes.ts';
@@ -32,7 +33,7 @@ interface FretboardStringProps {
   focusedFret: number | null;
 }
 
-export function FretboardString({
+export const FretboardString = memo(function FretboardString({
   stringIdx,
   visibleFrets,
   fretMinWidth,
@@ -196,4 +197,4 @@ export function FretboardString({
       </div>
     </div>
   );
-}
+});

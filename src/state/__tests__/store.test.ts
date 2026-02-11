@@ -43,6 +43,8 @@ beforeEach(() => {
     comparisonScale: null,
     midiOutputEnabled: false,
     midiOutputDeviceId: null,
+    midiInputEnabled: true,
+    midiInputDeviceId: null,
     language: 'en',
   });
 });
@@ -372,5 +374,37 @@ describe('preferences actions', () => {
 
   it('has English as default language', () => {
     expect(useAppStore.getState().language).toBe('en');
+  });
+});
+
+describe('midi input actions', () => {
+  it('has midiInputEnabled true by default', () => {
+    expect(useAppStore.getState().midiInputEnabled).toBe(true);
+  });
+
+  it('has midiInputDeviceId null by default', () => {
+    expect(useAppStore.getState().midiInputDeviceId).toBeNull();
+  });
+
+  it('setMidiInputEnabled toggles MIDI input', () => {
+    useAppStore.getState().setMidiInputEnabled(false);
+    expect(useAppStore.getState().midiInputEnabled).toBe(false);
+
+    useAppStore.getState().setMidiInputEnabled(true);
+    expect(useAppStore.getState().midiInputEnabled).toBe(true);
+  });
+
+  it('setMidiInputDeviceId selects device', () => {
+    useAppStore.getState().setMidiInputDeviceId('input-1');
+    expect(useAppStore.getState().midiInputDeviceId).toBe('input-1');
+
+    useAppStore.getState().setMidiInputDeviceId(null);
+    expect(useAppStore.getState().midiInputDeviceId).toBeNull();
+  });
+
+  it('setMidiInputEnabled updates preferencesUpdatedAt', () => {
+    const before = useAppStore.getState().preferencesUpdatedAt;
+    useAppStore.getState().setMidiInputEnabled(false);
+    expect(useAppStore.getState().preferencesUpdatedAt).toBeGreaterThanOrEqual(before);
   });
 });

@@ -3,6 +3,7 @@ import {
   mergePreferences,
   mergeProgress,
   mergeGamification,
+  mergeConceptTracking,
 } from '../syncMerge';
 import type { PreferencesSnapshot } from '../syncMerge';
 import type { CurriculumProgress } from '../../core/types/curriculum';
@@ -26,6 +27,8 @@ function makePrefs(overrides?: Partial<PreferencesSnapshot>): PreferencesSnapsho
     synthPreset: 'piano',
     midiOutputEnabled: false,
     midiOutputDeviceId: null,
+    midiInputEnabled: true,
+    midiInputDeviceId: null,
     metronomeBPM: 120,
     metronomeBeats: 4,
     metronomeVolume: 0.5,
@@ -668,5 +671,140 @@ describe('mergeGamification', () => {
       // Same timestamp+type+undefined ref => deduplicated
       expect(result.recentXPEvents).toHaveLength(1);
     });
+  });
+});
+
+// ─── Concept Tracking Merge ─────────────────────────────────────────────────
+
+describe('mergeConceptTracking', () => {
+  it('returns local when remote is empty', () => {
+    const local = {
+      intervals: { correct: 3, total: 5, history: [{ date: '2026-02-10', correct: 3, total: 5 }] },
+    };
+    const result = mergeConceptTracking(local, {});
+    expect(result).toEqual(local);
+  });
+
+  it('returns remote when local is empty', () => {
+    const remote = {
+      chords: { correct: 7, total: 10, history: [{ date: '2026-02-09', correct: 7, total: 10 }] },
+    };
+    const result = mergeConceptTracking({}, remote);
+    expect(result).toEqual(remote);
+  });
+
+  it('unions distinct concept IDs from both sides', () => {
+    const local = {
+      intervals: { correct: 2, total: 3, history: [] },
+    };
+    const remote = {
+      chords: { correct: 5, total: 8, history: [] },
+    };
+    const result = mergeConceptTracking(local, remote);
+    expect(Object.keys(result)).toEqual(expect.arrayContaining(['intervals', 'chords']));
+  });
+
+  it('takes max correct/total for shared concept', () => {
+    const local = {
+      intervals: { correct: 5, total: 10, history: [] },
+    };
+    const remote = {
+      intervals: { correct: 8, total: 12, history: [] },
+    };
+    const result = mergeConceptTracking(local, remote);
+    expect(result.intervals.correct).toBe(8);
+    expect(result.intervals.total).toBe(12);
+  });
+
+  it('unions history entries by date', () => {
+    const local = {
+      intervals: {
+        correct: 3, total: 5,
+        history: [{ date: '2026-02-08', correct: 2, total: 3 }],
+      },
+    };
+    const remote = {
+      intervals: {
+        correct: 4, total: 6,
+        history: [{ date: '2026-02-09', correct: 2, total: 3 }],
+      },
+    };
+    const result = mergeConceptTracking(local, remote);
+    expect(result.intervals.history).toHaveLength(2);
+  });
+
+  it('takes max correct/total per date when same date on both sides', () => {
+    const local = {
+      intervals: {
+        correct: 5, total: 10,
+        history: [{ date: '2026-02-10', correct: 3, total: 5 }],
+      },
+    };
+    const remote = {
+      intervals: {
+        correct: 8, total: 10,
+        history: [{ date: '2026-02-10', correct: 5, total: 7 }],
+      },
+    };
+    const result = mergeConceptTracking(local, remote);
+    expect(result.intervals.history).toHaveLength(1);
+    expect(result.intervals.history[0].correct).toBe(5);
+    expect(result.intervals.history[0].total).toBe(7);
+  });
+
+  it('sorts merged history by date ascending', () => {
+    const local = {
+      intervals: {
+        correct: 5, total: 8,
+        history: [{ date: '2026-02-10', correct: 2, total: 3 }],
+      },
+    };
+    const remote = {
+      intervals: {
+        correct: 5, total: 8,
+        history: [
+          { date: '2026-02-08', correct: 1, total: 2 },
+          { date: '2026-02-09', correct: 2, total: 3 },
+        ],
+      },
+    };
+    const result = mergeConceptTracking(local, remote);
+    const dates = result.intervals.history.map((h) => h.date);
+    expect(dates).toEqual(['2026-02-08', '2026-02-09', '2026-02-10']);
+  });
+
+  it('handles both sides empty', () => {
+    expect(mergeConceptTracking({}, {})).toEqual({});
+  });
+
+  it('preserves all concepts across a multi-concept merge', () => {
+    const local = {
+      intervals: { correct: 2, total: 4, history: [{ date: '2026-02-10', correct: 2, total: 4 }] },
+      chords: { correct: 3, total: 3, history: [{ date: '2026-02-10', correct: 3, total: 3 }] },
+    };
+    const remote = {
+      intervals: { correct: 5, total: 7, history: [{ date: '2026-02-10', correct: 5, total: 7 }] },
+      scales: { correct: 1, total: 2, history: [{ date: '2026-02-09', correct: 1, total: 2 }] },
+    };
+    const result = mergeConceptTracking(local, remote);
+    expect(Object.keys(result).sort()).toEqual(['chords', 'intervals', 'scales']);
+    expect(result.intervals.correct).toBe(5);
+    expect(result.chords.correct).toBe(3);
+    expect(result.scales.correct).toBe(1);
+  });
+
+  it('handles concept with empty history on one side', () => {
+    const local = {
+      intervals: { correct: 3, total: 5, history: [] },
+    };
+    const remote = {
+      intervals: {
+        correct: 4, total: 6,
+        history: [{ date: '2026-02-10', correct: 4, total: 6 }],
+      },
+    };
+    const result = mergeConceptTracking(local, remote);
+    expect(result.intervals.history).toHaveLength(1);
+    expect(result.intervals.correct).toBe(4);
   });
 });

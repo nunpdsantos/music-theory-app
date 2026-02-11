@@ -14,6 +14,9 @@ import { playNote, playChord, resumeAudio } from '../../../core/services/audio';
 import type { NaturalNote, Accidental, Note } from '../../../core/types/music';
 import { buildChord } from '../../../core/constants/chords';
 import { useGamificationStore } from '../../../state/gamificationStore';
+import { useConceptStore } from '../../../state/conceptStore';
+import { getExerciseConcepts } from '../../../services/conceptTagger';
+import { selectWeightedExercises } from '../../../services/exerciseSelector';
 
 type Phase = 'active' | 'submitted';
 
@@ -31,6 +34,17 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
   const gamLogActivity = useGamificationStore((s) => s.logActivity);
   const gamIncrementExercise = useGamificationStore((s) => s.incrementExerciseAttempt);
   const gamAddXP = useGamificationStore((s) => s.addXP);
+  const recordConceptResult = useConceptStore((s) => s.recordResult);
+  const getWeakConcepts = useConceptStore((s) => s.getWeakConcepts);
+
+  // In review mode, reorder exercises to emphasize weak concepts
+  const orderedExercises = useMemo(() => {
+    if (!reviewMode) return exercises;
+    const weak = getWeakConcepts();
+    if (weak.length === 0) return exercises;
+    return selectWeightedExercises(exercises, weak, exercises.length);
+  }, [exercises, reviewMode, getWeakConcepts]);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [phase, setPhase] = useState<Phase>('active');
   const [attempt, setAttempt] = useState(1);
@@ -39,7 +53,7 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
   const [accumulatedScore, setAccumulatedScore] = useState(0);
   const [finished, setFinished] = useState(false);
 
-  const exercise = exercises[currentIndex];
+  const exercise = orderedExercises[currentIndex];
 
   // Generate choices for current exercise (memoized per exercise)
   const choices: ChoiceOption[] = useMemo(() => {
@@ -125,6 +139,8 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
     setValidationResult(result);
     setPhase('submitted');
 
+    const concepts = getExerciseConcepts(exercise.config, exercise.id);
+
     if (result.correct) {
       const score: 0 | 0.5 | 1 = attempt === 1 ? 1 : 0.5;
       onRecordResult(exercise.id, score);
@@ -132,12 +148,14 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
       gamLogActivity();
       gamIncrementExercise(attempt === 1);
       gamAddXP(attempt === 1 ? 'exercise_perfect' : 'exercise_accuracy', attempt === 1 ? 2 : 1, exercise.id);
+      recordConceptResult(concepts, true);
     } else if (attempt >= 2) {
       onRecordResult(exercise.id, 0);
       gamLogActivity();
       gamIncrementExercise(false);
+      recordConceptResult(concepts, false);
     }
-  }, [exercise, selected, attempt, onRecordResult, gamLogActivity, gamIncrementExercise, gamAddXP]);
+  }, [exercise, selected, attempt, onRecordResult, gamLogActivity, gamIncrementExercise, gamAddXP, recordConceptResult]);
 
   const handleSubmitInstrument = useCallback((pitchClasses: Set<number>) => {
     if (!exercise) return;
@@ -145,6 +163,8 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
     setValidationResult(result);
     setPhase('submitted');
 
+    const concepts = getExerciseConcepts(exercise.config, exercise.id);
+
     if (result.correct) {
       const score: 0 | 0.5 | 1 = attempt === 1 ? 1 : 0.5;
       onRecordResult(exercise.id, score);
@@ -152,12 +172,14 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
       gamLogActivity();
       gamIncrementExercise(attempt === 1);
       gamAddXP(attempt === 1 ? 'exercise_perfect' : 'exercise_accuracy', attempt === 1 ? 2 : 1, exercise.id);
+      recordConceptResult(concepts, true);
     } else if (attempt >= 2) {
       onRecordResult(exercise.id, 0);
       gamLogActivity();
       gamIncrementExercise(false);
+      recordConceptResult(concepts, false);
     }
-  }, [exercise, attempt, onRecordResult, gamLogActivity, gamIncrementExercise, gamAddXP]);
+  }, [exercise, attempt, onRecordResult, gamLogActivity, gamIncrementExercise, gamAddXP, recordConceptResult]);
 
   const handleTryAgain = useCallback(() => {
     setAttempt(2);
@@ -168,9 +190,9 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
 
   const handleNext = useCallback(() => {
     const nextIndex = currentIndex + 1;
-    if (nextIndex >= exercises.length) {
+    if (nextIndex >= orderedExercises.length) {
       // All exercises done
-      const passed = accumulatedScore >= exercises.length * 0.8;
+      const passed = accumulatedScore >= orderedExercises.length * 0.8;
       setFinished(true);
       onComplete(passed);
     } else {
@@ -180,11 +202,11 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
       setSelected(null);
       setValidationResult(null);
     }
-  }, [currentIndex, exercises.length, accumulatedScore, onComplete]);
+  }, [currentIndex, orderedExercises.length, accumulatedScore, onComplete]);
 
   if (!exercise || finished) {
     // Completion summary
-    const passed = accumulatedScore >= exercises.length * 0.8;
+    const passed = accumulatedScore >= orderedExercises.length * 0.8;
     return (
       <m.div
         initial={{ opacity: 0, y: 12 }}
@@ -210,10 +232,10 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
               : (passed ? t('exercise.exercisesComplete') : t('exercise.keepPracticing'))}
           </h3>
           <p className="text-xs mb-3" style={{ color: 'var(--text-dim)' }}>
-            Score: {accumulatedScore % 1 === 0 ? accumulatedScore : accumulatedScore.toFixed(1)}/{exercises.length}
+            Score: {accumulatedScore % 1 === 0 ? accumulatedScore : accumulatedScore.toFixed(1)}/{orderedExercises.length}
             {passed
               ? ' — ' + t('exercise.passed')
-              : ' — ' + t('exercise.needToPass', { score: Math.ceil(exercises.length * 0.8) })}
+              : ' — ' + t('exercise.needToPass', { score: Math.ceil(orderedExercises.length * 0.8) })}
           </p>
         </div>
       </m.div>
@@ -233,7 +255,7 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
         </h2>
         <ExerciseProgress
           current={currentIndex}
-          total={exercises.length}
+          total={orderedExercises.length}
           score={accumulatedScore}
           accentColor={accentColor}
         />

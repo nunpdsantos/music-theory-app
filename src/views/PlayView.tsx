@@ -9,6 +9,7 @@ import { DEGREE_COLORS } from '../design/tokens/colors.ts';
 import { setMasterVolume } from '../core/services/audio.ts';
 import { MetronomeControl } from '../components/play/MetronomeControl.tsx';
 import { MidiOutputControl } from '../components/play/MidiOutputControl.tsx';
+import { MidiInputControl } from '../components/play/MidiInputControl.tsx';
 import { ChordProgressionBuilder } from '../components/play/ChordProgressionBuilder.tsx';
 import { RecordingControl } from '../components/play/RecordingControl.tsx';
 import type { SynthPresetName } from '../core/types/visual.ts';
@@ -237,6 +238,11 @@ export function PlayView() {
         {/* ─── MIDI Output ──────────────────────────────────────── */}
         <m.div variants={fadeUp}>
           <MidiOutputControl />
+        </m.div>
+
+        {/* ─── MIDI Input ───────────────────────────────────────── */}
+        <m.div variants={fadeUp}>
+          <MidiInputControl />
         </m.div>
 
         {/* ─── Controls: Volume + Octave ────────────────────────── */}

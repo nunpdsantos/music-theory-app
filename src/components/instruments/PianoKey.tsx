@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { memo, useCallback, useRef } from 'react';
 import type { PianoKey as PianoKeyData } from '../../core/utils/pianoLayout.ts';
 import { noteToString } from '../../core/types/music.ts';
 
@@ -24,7 +24,7 @@ interface PianoKeyProps {
   sizeMode?: SizeMode;
 }
 
-export function PianoKeyComponent({
+export const PianoKeyComponent = memo(function PianoKeyComponent({
   keyData,
   isHighlighted,
   highlightColor,
@@ -222,4 +222,4 @@ export function PianoKeyComponent({
       </span>
     </div>
   );
-}
+});

@@ -29,6 +29,12 @@ i18n.use(initReactI18next).init({
   },
 });
 
+if (import.meta.env.DEV) {
+  i18n.on('missingKey', (_lngs, ns, key) => {
+    console.warn(`[i18n] Missing key: ${ns}:${key}`);
+  });
+}
+
 export default i18n;
 
 export const SUPPORTED_LANGUAGES = [
