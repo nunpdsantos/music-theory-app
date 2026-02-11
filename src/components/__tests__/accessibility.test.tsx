@@ -178,21 +178,21 @@ describe('Fretboard accessibility', () => {
     return render(<Fretboard />);
   }
 
-  it('has role="grid" with aria-label="Guitar fretboard"', async () => {
+  it('has role="grid" with aria-label="fretboard.label"', async () => {
     await renderFretboard();
-    const grid = screen.getByRole('grid', { name: 'Guitar fretboard' });
+    const grid = screen.getByRole('grid', { name: 'fretboard.label' });
     expect(grid).toBeDefined();
   });
 
   it('fretboard container is focusable (tabIndex=0)', async () => {
     await renderFretboard();
-    const grid = screen.getByRole('grid', { name: 'Guitar fretboard' });
+    const grid = screen.getByRole('grid', { name: 'fretboard.label' });
     expect(grid.getAttribute('tabindex')).toBe('0');
   });
 
   it('contains an aria-live="polite" region for screen reader announcements', async () => {
     await renderFretboard();
-    const grid = screen.getByRole('grid', { name: 'Guitar fretboard' });
+    const grid = screen.getByRole('grid', { name: 'fretboard.label' });
     const liveRegion = grid.querySelector('[aria-live="polite"]');
     expect(liveRegion).not.toBeNull();
     expect(liveRegion!.getAttribute('aria-atomic')).toBe('true');
@@ -215,7 +215,7 @@ describe('Fretboard accessibility', () => {
 
   it('arrow keys navigate between frets (left/right)', async () => {
     await renderFretboard();
-    const grid = screen.getByRole('grid', { name: 'Guitar fretboard' });
+    const grid = screen.getByRole('grid', { name: 'fretboard.label' });
 
     // Focus the grid and press ArrowRight to initialize focus
     fireEvent.keyDown(grid, { key: 'ArrowRight' });
@@ -233,7 +233,7 @@ describe('Fretboard accessibility', () => {
 
   it('arrow up/down moves between strings', async () => {
     await renderFretboard();
-    const grid = screen.getByRole('grid', { name: 'Guitar fretboard' });
+    const grid = screen.getByRole('grid', { name: 'fretboard.label' });
 
     // Initialize focus
     fireEvent.keyDown(grid, { key: 'ArrowRight' });
@@ -252,7 +252,7 @@ describe('Fretboard accessibility', () => {
 
   it('Enter/Space on focused cell triggers note play (click handler)', async () => {
     await renderFretboard();
-    const grid = screen.getByRole('grid', { name: 'Guitar fretboard' });
+    const grid = screen.getByRole('grid', { name: 'fretboard.label' });
 
     // Initialize focus
     fireEvent.keyDown(grid, { key: 'ArrowRight' });
@@ -268,7 +268,7 @@ describe('Fretboard accessibility', () => {
 
   it('Escape clears keyboard focus', async () => {
     await renderFretboard();
-    const grid = screen.getByRole('grid', { name: 'Guitar fretboard' });
+    const grid = screen.getByRole('grid', { name: 'fretboard.label' });
 
     // Initialize focus
     fireEvent.keyDown(grid, { key: 'ArrowRight' });
@@ -284,7 +284,7 @@ describe('Fretboard accessibility', () => {
   it('tuning radio group has proper ARIA roles', async () => {
     await renderFretboard();
     const radiogroup = screen.getByRole('radiogroup', {
-      name: 'Guitar tuning',
+      name: 'fretboard.tuningLabel',
     });
     expect(radiogroup).toBeDefined();
 
@@ -309,9 +309,9 @@ describe('Piano accessibility', () => {
     return render(<Piano />);
   }
 
-  it('has a container with role="group" and aria-label="Piano keyboard"', async () => {
+  it('has a container with role="group" and aria-label="instrument.pianoKeyboard"', async () => {
     await renderPiano();
-    const group = screen.getByRole('group', { name: 'Piano keyboard' });
+    const group = screen.getByRole('group', { name: 'instrument.pianoKeyboard' });
     expect(group).toBeDefined();
   });
 
@@ -345,7 +345,7 @@ describe('Piano accessibility', () => {
 
   it('octave selector has role="tablist" with aria-label', async () => {
     await renderPiano();
-    const tablist = screen.getByRole('tablist', { name: 'Base octave' });
+    const tablist = screen.getByRole('tablist', { name: 'instrument.baseOctave' });
     expect(tablist).toBeDefined();
 
     const tabs = within(tablist).getAllByRole('tab');
@@ -369,7 +369,7 @@ describe('General accessibility', () => {
     // Render fretboard and trigger keyboard focus on a cell
     const { Fretboard } = await import('../instruments/Fretboard');
     render(<Fretboard />);
-    const grid = screen.getByRole('grid', { name: 'Guitar fretboard' });
+    const grid = screen.getByRole('grid', { name: 'fretboard.label' });
 
     // Initialize focus via arrow key
     fireEvent.keyDown(grid, { key: 'ArrowRight' });
