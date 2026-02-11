@@ -1,5 +1,35 @@
 # CLAUDE.md
 
+## Product Overview
+
+Interactive music theory education platform that teaches through instrument-first pedagogy — theory emerges from playing, not the other way around. Users interact with a virtual piano or guitar fretboard that's always visible at the bottom of the screen, with three main views above it:
+
+- **Explore** — browse scales, chords, intervals, and keys. The Circle of Fifths, scale degree bar, and chord grid let users visualize relationships. Selecting any entity highlights it on the instrument below. Detail panels show staff notation, constituent notes, and related structures.
+- **Play** — performance tools: metronome with configurable BPM/time signature, MIDI input/output for connecting real instruments, audio recording with playback, and a chord progression builder with diatonic palette.
+- **Learn** — structured 9-level curriculum (beginner → advanced) with 118 modules, 1,000+ exercises, spaced repetition review, and adaptive difficulty. Progress is tracked per-module with gamification (streaks, XP, achievements).
+
+### Curriculum (9 Levels, 118 Modules)
+
+| Level | Title | Modules | Topics |
+|-------|-------|---------|--------|
+| L1 | Foundations of Music Literacy | 10 | Staff notation, pitch, rhythm/meter, major scale, basic intervals, major triads |
+| L2 | Expanding Fundamentals | 12 | All key signatures, scale degrees, minor scales, compound meter, syncopation, all triad types, inversions, diatonic harmony |
+| L3 | Harmony Foundations | 13 | Seventh chords, voice leading, cadences, phrase structure, non-chord tones |
+| L4 | Diatonic Mastery | 15 | Advanced non-chord tones, dominant seventh, harmonic function, sequences, counterpoint |
+| L5 | Chromaticism & Modulation | 14 | Secondary dominants, tonicization, modulation, mode mixture, musical form |
+| L6 | Chromatic Harmony | 12 | Neapolitan chord, augmented sixths, enharmonic modulation, advanced counterpoint |
+| L7 | Jazz, Pop & Modal Harmony | 16 | Jazz chord symbols, ii-V-I, modal harmony, pop analysis, scale/chord taxonomy |
+| L8 | Analysis, Counterpoint & Post-Tonal | 11 | Fugue analysis, large form, orchestration, set theory, 20th-century techniques |
+| L9 | Ear Training & Aural Skills | 15 | Interval recognition, chord ID, melodic dictation, sight singing (parallel track, all levels) |
+
+### Color System
+
+Scale degree function is encoded in color throughout the app:
+- Tonic (1) = blue, Supertonic (2) = indigo, Mediant (3) = violet
+- Subdominant (4) = green, Dominant (5) = amber, Submediant (6) = teal, Leading tone (7) = red
+
+---
+
 ## Project
 
 **Name:** Music Theory App
@@ -50,23 +80,25 @@ src/
     levelMetaResolver.ts  Eager translator for 9 level titles/descriptions
     musicTerms.ts       Scale/chord/direction dictionaries (PT + ES)
     pt/              29 files: levelMeta + curriculumL1-L9 + exercisesL1-L9 + templatesL1-L9 + songs (100% complete)
-    es/              levelMeta only (content overlays pending — see ES_TRANSLATION_STATUS.md)
+    es/              29 files: levelMeta + curriculumL1-L9 + exercisesL1-L9 + templatesL1-L9 + songs (100% complete)
   components/
-    instruments/     Piano, PianoKey, Fretboard, FretCell, InstrumentSelector
-    theory/          ScaleDegreeBar, ChordGrid, CircleOfFifths
+    ErrorBoundary    App-level error boundary with auto-recovery
+    instruments/     Piano, PianoKey, Fretboard, FretCell, FretboardString, FretboardPositionSelector, InstrumentSelector
+    theory/          ScaleDegreeBar, ChordGrid, ChordBrowser, CircleOfFifths (+ circleOfFifthsConstants.ts), ScaleComparison
     panels/          DetailPanel, ChordDetail, ScaleDetail (with staff notation)
     navigation/      KeySelector, QuickSearch (Cmd+K)
-    layout/          AppShell, TopBar, Toast, PWAPrompts, ErrorBoundary
+    layout/          AppShell, TopBar, Toast, PWAPrompts, GuidedTour (4-step onboarding)
     notation/        StaffNotation, StaffNotationSkeleton, useStaffNotation (VexFlow 5.0)
     play/            MetronomeControl, MidiOutputControl, MidiInputControl, RecordingControl, ChordProgressionBuilder
-    learn/           LevelsOverview, LevelCard, ModuleView, ReviewQueue, ContinueBanner
-      exercises/     ExerciseRunner, ExercisePrompt, ExerciseFeedback, ExerciseProgress, ChoiceInput, InstrumentInput
+    learn/           LevelsOverview, LevelCard, LevelDetail, LevelIcon, LevelAchievement, UnitCard, UnitDetail, ModuleView, ModuleRow, ReviewQueue, ContinueBanner, LearnBreadcrumb, ProgressBar, DifficultyBadge, Confetti
+      exercises/     ExerciseRunner, ExercisePrompt, ExerciseFeedback, ExerciseProgress
+        inputs/      ChoiceInput, InstrumentInput
     auth/            AuthModal (magic link), AccountMenu (dropdown)
-    gamification/    ProgressDashboard, ConceptRadar
+    gamification/    ProgressDashboard, ConceptRadar, StreakBadge, XPDisplay, StreakCalendar, WeeklyChart, AchievementCard, AchievementGrid, StatCard
   views/             ExploreView, PlayView, LearnView
   hooks/             useAudio, useMidi, useKeyContext, useMetronome, useTheme, usePWA, useLanguage, useLearnProgress, useAuth, useSync, useGamificationEffects, useMediaQuery
   services/          midiAccess (shared singleton), midiInput, midiOutput, metronome, noteRecorder, spacedRepetition, gamification, sync, syncMerge, conceptTagger, exerciseSelector
-  utils/             exportHelpers, notationHelpers, vexflowLoader, midiHelpers
+  utils/             exportHelpers, notationHelpers, vexflowLoader, midiHelpers, celebrationSound, queryExecutor
   data/
     curriculumLoader.ts      Dynamic import + LEVEL_METADATA (accepts lang param for overlay loading)
     exerciseLoader.ts        Merges hand-authored + generated, lazy-loads per level (accepts lang param)
@@ -159,20 +191,19 @@ src/
 - **ModuleView:** "Songs That Use This" card between concepts and exercises sections
 - **i18n:** `midiInput` (6 keys) + `songRef` (1 key) in en.json + pt.json
 
-### Content Translation Overlay System (Phase 12.5) — IN PROGRESS
+### Content Translation Overlay System (Phase 12.5) — COMPLETE
 - **Architecture:** Lazy-loaded per-language, per-level overlays that merge with English source data at load time
 - **Infrastructure:** `src/i18n/content/` — types, contentResolver, overlayLoader (`import.meta.glob`), levelMetaResolver, musicTerms
 - **Language threading:** `curriculumLoader`, `exerciseLoader`, `exerciseGenerator` all accept `lang` param; `LearnView` + `LevelsOverview` read language from store
 - **Cache isolation:** Cache keys include language (`${lang}:${levelId}`) to prevent cross-language contamination
 - **Portuguese:** 100% complete — 29 overlay files (levelMeta + 9×curriculum + 9×exercises + 9×templates + songs)
-- **Spanish:** UI chrome complete (es.json, 366 keys) + levelMeta; 28 content overlay files pending (see `ES_TRANSLATION_STATUS.md`)
+- **Spanish:** 100% complete — 29 overlay files (levelMeta + 9×curriculum + 9×exercises + 9×templates + songs), 13,310 lines
 - **Music term dictionaries:** Scale types, chord qualities, directions for PT + ES (used by exercise generator)
 - **Tests:** 45 new tests (contentResolver 22, musicTerms 11, generatorLang 7, levelMetaResolver 5)
 - 764 tests passing (45 new), 40 test files
 
 ---
 
-## Current Phase: See ROADMAP.md and ES_TRANSLATION_STATUS.md
+## Current Phase: See ROADMAP.md
 
-**Immediate:** Complete 28 Spanish content overlay files (ES_TRANSLATION_STATUS.md has full checklist).
 **Next:** Phase 13 (Distribution) — landing page, embeddable widgets, app store wrappers.

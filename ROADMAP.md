@@ -3,11 +3,11 @@
 ## Start Here (Session Handoff)
 
 **Last updated:** 2026-02-11
-**Tests:** 719 passing | **Build:** clean | **TypeScript:** clean
+**Tests:** 764 passing | **Build:** clean | **TypeScript:** clean
 
-**Completed:** Phases 1–12 (all complete). Supabase backend live. MIDI input/output with shared singleton. Song references for L1–L3.
+**Completed:** Phases 1–12.5 (all complete). Supabase backend live. MIDI input/output with shared singleton. Song references for L1–L3. Trilingual content overlay system with Portuguese and Spanish both 100% complete (29 files each, verified structural parity).
 
-**Next up:** Phase 13 (Distribution).
+**Next up:** Phase 13 (Distribution) — landing page, embeddable widgets, app store wrappers.
 
 **To start a new session:** Say "Continue with the roadmap" and point to this file. Everything needed is in CLAUDE.md (architecture) + this ROADMAP (plan + status).
 
@@ -45,7 +45,7 @@
 - 6.9: Chord progression builder (diatonic palette, sequential playback)
 - 6.10: Print/export (print stylesheet, clipboard copy)
 - 6.11: Audio recording (note event capture, timed playback)
-- 6.12: i18n (English + Portuguese, ~170 keys, language selector)
+- 6.12: i18n (English + Portuguese + Spanish, 366 keys / 35 namespaces, language selector)
 
 ### Phase 7: Advanced Systems
 - 7.A: Spaced repetition (6-level intervals 1d→90d, review queue, backfill)
@@ -88,7 +88,7 @@
 - Bidirectional cloud sync: pull-on-login, debounced push (2s), offline queue
 - Conflict resolution: LWW preferences, union progress, max gamification counters
 - Converted useLearnProgress from useState to Zustand store (same API surface)
-- Pure merge functions for 3 domains (50 tests)
+- Pure merge functions for 4 domains: preferences, progress, gamification, concepts (60 tests)
 - Auth UI: AuthModal + AccountMenu in TopBar
 - SQL migration with RLS policies and auto-provisioning triggers
 - PWA: Workbox NetworkOnly for Supabase URLs
@@ -118,6 +118,16 @@
 - ModuleView: "Songs That Use This" card between concepts and exercises
 - i18n: midiInput (6 keys) + songRef (1 key) in en + pt
 - 27 new tests, 719 total passing
+
+### Phase 12.5: Content Translation Overlay System ✓
+- Lazy-loaded per-language, per-level overlays that merge with English source data at load time
+- Infrastructure: types, contentResolver, overlayLoader (`import.meta.glob`), levelMetaResolver, musicTerms
+- Language threading: curriculumLoader, exerciseLoader, exerciseGenerator accept `lang` param
+- Cache isolation: keys include language (`${lang}:${levelId}`) to prevent cross-language contamination
+- Portuguese: 100% complete — 29 overlay files (levelMeta + 9×curriculum + 9×exercises + 9×templates + songs)
+- Spanish: 100% complete — 29 overlay files (13,310 lines), verified structural parity with PT
+- Music term dictionaries: scale types, chord qualities, directions for PT + ES
+- 45 new tests, 764 total passing
 
 ---
 
@@ -150,7 +160,7 @@ These are valid directions but explicitly deferred. Do not start without a separ
 
 - **Audio input (mic pitch detection)** — Web Audio pitch detection is unreliable (ambient noise, latency). High effort, uncertain quality. Revisit when WebCodecs API matures.
 - **Video content** — High production cost, large bandwidth, breaks offline-first model. Interactive exercises are more effective for active learning.
-- **More languages** — i18n infrastructure exists (en + pt). Spanish, French, German, Japanese are easy adds but need quality translation, not machine output.
+- **More languages** — English, Portuguese (100%), and Spanish (100%) are live. French, German, Japanese are easy adds using the overlay system but need quality translation, not machine output.
 - **More instruments** — Ukulele, bass guitar fretboard layouts. Straightforward extension of existing Fretboard component but low priority.
 - **AI personalization** — Beyond adaptive difficulty (Phase 11). Full ML pipeline, recommendation engine. Premature until user base exists.
 - **Song references L4–L9** — Infrastructure exists in `songReferences.ts`. Can be populated incrementally per level.
