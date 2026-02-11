@@ -189,7 +189,7 @@ export function TopBar() {
             color: 'var(--text-dim)',
             border: '1px solid color-mix(in srgb, var(--border) 50%, transparent)',
           }}
-          aria-label="Language"
+          aria-label={t('nav.languageLabel')}
         >
           {SUPPORTED_LANGUAGES.map((lang) => (
             <option key={lang.code} value={lang.code}>{lang.code.toUpperCase()}</option>

@@ -1,4 +1,5 @@
 import { useCallback, useRef, useMemo, Suspense, lazy } from 'react';
+import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import { noteToString, type Chord, type Note } from '../../core/types/music.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
@@ -28,7 +29,7 @@ interface ChordDetailProps {
   chord: Chord;
 }
 
-const INVERSION_LABELS = ['Root', '1st Inv', '2nd Inv', '3rd Inv'];
+const INVERSION_LABEL_KEYS = ['panel.rootPos', 'panel.inv1', 'panel.inv2', 'panel.inv3'];
 
 function computeVoicedMidi(notes: Note[], startOctave: number): number[] {
   return buildAscendingMidi(notes, startOctave).midi;
@@ -41,6 +42,7 @@ const FIT_COLORS = {
 } as const;
 
 export function ChordDetail({ chord }: ChordDetailProps) {
+  const { t } = useTranslation();
   const { getNoteDegree, invertedNotes } = useKeyContext();
   const synthPreset = useAppStore((s) => s.synthPreset);
   const chordInversion = useAppStore((s) => s.chordInversion);
@@ -140,7 +142,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
             className="text-[10px] font-semibold px-2 py-0.5 rounded-full mt-2 inline-block"
             style={{ backgroundColor: `${color}18`, color, border: `1px solid ${color}35` }}
           >
-            Degree {degree}
+            {t('panel.degree', { n: degree })}
           </span>
         )}
       </div>
@@ -148,7 +150,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
       {/* Notes */}
       <div>
         <h3 className="type-section mb-2">
-          Notes
+          {t('panel.notes')}
         </h3>
         <div className="flex gap-1.5">
           {notesForPlayback.map((note, i) => {
@@ -170,7 +172,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
                     ? `1.5px dashed ${noteColor}`
                     : isBass ? `1.5px solid ${noteColor}` : `1px solid ${noteColor}30`,
                 }}
-                title={isSlashBass ? 'Slash bass note' : undefined}
+                title={isSlashBass ? t('panel.slashBass') : undefined}
               >
                 {noteToString(note)}
               </span>
@@ -182,7 +184,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
       {/* Staff Notation */}
       <div>
         <h3 className="type-section mb-2">
-          Staff
+          {t('panel.staff')}
         </h3>
         <Suspense fallback={<StaffNotationSkeleton height={120} />}>
           <StaffNotation
@@ -196,9 +198,9 @@ export function ChordDetail({ chord }: ChordDetailProps) {
       {/* Inversions */}
       <div>
         <h3 className="type-section mb-2">
-          Voicing
+          {t('panel.voicing')}
         </h3>
-        <div className="flex gap-1.5" role="radiogroup" aria-label="Chord inversion">
+        <div className="flex gap-1.5" role="radiogroup" aria-label={t('panel.chordInversion')}>
           {Array.from({ length: maxInversion + 1 }, (_, i) => {
             const isActive = chordInversion === i;
             return (
@@ -214,7 +216,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
                   border: isActive ? `1px solid ${color}50` : '1px solid var(--border)',
                 }}
               >
-                {INVERSION_LABELS[i] ?? `${i}th Inv`}
+                {t(INVERSION_LABEL_KEYS[i] ?? 'panel.rootPos')}
               </button>
             );
           })}
@@ -224,7 +226,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
       {/* Formula — real interval labels */}
       <div>
         <h3 className="type-section mb-2">
-          Formula
+          {t('panel.formula')}
         </h3>
         <div className="flex items-center gap-1.5">
           {intervalLabels.map((label, i) => (
@@ -243,7 +245,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
       {scaleSuggestions.length > 0 && (
         <div>
           <h3 className="type-section mb-2">
-            Compatible Scales
+            {t('panel.compatibleScales')}
           </h3>
           <div className="flex flex-wrap gap-1.5">
             {scaleSuggestions.map((s) => {
@@ -285,7 +287,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
             <polygon points="5 3 19 12 5 21 5 3" />
           </svg>
-          Chord
+          {t('panel.chord')}
         </button>
         <button
           onClick={handlePlayArpeggio}
@@ -299,7 +301,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
             <polygon points="5 3 19 12 5 21 5 3" />
           </svg>
-          Arpeggio
+          {t('panel.arpeggio')}
         </button>
       </div>
     </m.div>

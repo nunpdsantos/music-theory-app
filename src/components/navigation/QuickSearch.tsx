@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AnimatePresence, m } from 'framer-motion';
 import { useAppStore } from '../../state/store.ts';
 import { noteToString, stringToNote, type Note, type ScaleType } from '../../core/types/music.ts';
@@ -8,8 +9,10 @@ import { SCALE_TYPE_NAMES } from '../../core/constants/scales.ts';
 import { parseChordSymbol, formatParsedChordName } from '../../core/utils/chordParser.ts';
 import { parseScaleSymbol, formatParsedScaleName } from '../../core/utils/scaleParser.ts';
 
+type SearchResultType = 'Scale' | 'Chord' | 'Key';
+
 interface SearchResult {
-  type: 'Scale' | 'Chord' | 'Key';
+  type: SearchResultType;
   label: string;
   action: () => void;
 }
@@ -147,7 +150,14 @@ function getResults(query: string): SearchResult[] {
   return results.slice(0, 8);
 }
 
+const TYPE_KEYS: Record<SearchResultType, string> = {
+  Scale: 'search.typeScale',
+  Chord: 'search.typeChord',
+  Key: 'search.typeKey',
+};
+
 export function QuickSearch() {
+  const { t } = useTranslation();
   const quickSearchOpen = useAppStore((s) => s.quickSearchOpen);
   const setQuickSearchOpen = useAppStore((s) => s.setQuickSearchOpen);
   const [query, setQuery] = useState('');
@@ -287,7 +297,7 @@ export function QuickSearch() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder='Try "Cmaj7#11", "D harmonic minor", "lydian dominant"...'
+                  placeholder={t('search.placeholder')}
                   className="flex-1 bg-transparent text-sm outline-none"
                   style={{ color: 'var(--text)' }}
                 />
@@ -321,7 +331,7 @@ export function QuickSearch() {
                             '#34D399',
                         }}
                       >
-                        {r.type}
+                        {t(TYPE_KEYS[r.type])}
                       </span>
                     </button>
                   ))}
@@ -329,7 +339,7 @@ export function QuickSearch() {
               )}
               {query && results.length === 0 && (
                 <div className="px-4 py-3 text-sm" style={{ color: 'var(--text-dim)' }}>
-                  No match. Try a chord (Cmaj7#11), scale (D harmonic minor), or note (Ab).
+                  {t('search.noMatch')}
                 </div>
               )}
             </div>

@@ -1,10 +1,12 @@
 import { AnimatePresence, m } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../../state/store.ts';
 import { ChordDetail } from './ChordDetail.tsx';
 import { ScaleDetail } from './ScaleDetail.tsx';
 import { useIsCompact } from '../../hooks/useMediaQuery.ts';
 
 export function DetailPanel() {
+  const { t } = useTranslation();
   const detailPanelOpen = useAppStore((s) => s.detailPanelOpen);
   const selectedChord = useAppStore((s) => s.selectedChord);
   const setDetailPanelOpen = useAppStore((s) => s.setDetailPanelOpen);
@@ -41,12 +43,12 @@ export function DetailPanel() {
             {/* Close button */}
             <div className="flex items-center justify-between px-4 pt-3 pb-2">
               <span className="type-section">
-                Details
+                {t('common.details')}
               </span>
               <button
                 onClick={handleClose}
                 className="w-6 h-6 rounded-lg flex items-center justify-center hover:bg-[var(--card-hover)] transition-colors"
-                aria-label="Close panel"
+                aria-label={t('panel.closePanel')}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M18 6L6 18M6 6l12 12" />

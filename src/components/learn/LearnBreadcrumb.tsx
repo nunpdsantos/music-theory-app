@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 interface BreadcrumbSegment {
   label: string;
   onClick?: () => void;
@@ -9,8 +11,9 @@ interface LearnBreadcrumbProps {
 }
 
 export function LearnBreadcrumb({ segments, accentColor }: LearnBreadcrumbProps) {
+  const { t } = useTranslation();
   return (
-    <nav className="flex items-center gap-1.5 text-xs" aria-label="Breadcrumb">
+    <nav className="flex items-center gap-1.5 text-xs" aria-label={t('learn.breadcrumb')}>
       {segments.map((seg, i) => {
         const isLast = i === segments.length - 1;
         return (

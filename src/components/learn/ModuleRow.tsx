@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { CurriculumModule } from '../../core/types/curriculum';
 
 interface ModuleRowProps {
@@ -11,6 +12,7 @@ interface ModuleRowProps {
 }
 
 export function ModuleRow({ module, index, isCompleted, isLocked, isComingSoon, accentColor, onClick }: ModuleRowProps) {
+  const { t } = useTranslation();
   const disabled = isComingSoon; // Only truly disable coming-soon modules; locked ones are browsable
 
   return (
@@ -61,7 +63,7 @@ export function ModuleRow({ module, index, isCompleted, isLocked, isComingSoon, 
 
       {isComingSoon && (
         <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full shrink-0" style={{ color: 'var(--text-dim)', backgroundColor: 'var(--card-hover)' }}>
-          Soon
+          {t('learn.soon')}
         </span>
       )}
 

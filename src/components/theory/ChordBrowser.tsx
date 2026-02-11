@@ -1,19 +1,20 @@
 import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { noteToString, type ChordQuality } from '../../core/types/music.ts';
 import { buildChord, CHORD_QUALITY_NAMES, CHORD_SYMBOLS } from '../../core/constants/chords.ts';
 import { useAppStore } from '../../state/store.ts';
 
-const CHORD_QUALITY_GROUPS: { label: string; qualities: ChordQuality[] }[] = [
+const CHORD_QUALITY_GROUPS: { labelKey: string; qualities: ChordQuality[] }[] = [
   {
-    label: 'Triads',
+    labelKey: 'chordCategory.triads',
     qualities: ['major', 'minor', 'diminished', 'augmented'],
   },
   {
-    label: '6ths',
+    labelKey: 'chordCategory.sixths',
     qualities: ['major6', 'minor6', 'six_nine', 'minor_six_nine'],
   },
   {
-    label: '7ths',
+    labelKey: 'chordCategory.sevenths',
     qualities: [
       'major7', 'minor7', 'dominant7', 'diminished7',
       'half_diminished7', 'augmented7', 'minor_major7',
@@ -21,19 +22,19 @@ const CHORD_QUALITY_GROUPS: { label: string; qualities: ChordQuality[] }[] = [
     ],
   },
   {
-    label: 'Sus',
+    labelKey: 'chordCategory.sus',
     qualities: ['sus2', 'sus4', 'dominant7sus4', 'dominant9sus4', 'sus2sus4'],
   },
   {
-    label: 'Power',
+    labelKey: 'chordCategory.power',
     qualities: ['power'],
   },
   {
-    label: '9ths',
+    labelKey: 'chordCategory.ninths',
     qualities: ['major9', 'minor9', 'dominant9', 'add9'],
   },
   {
-    label: 'Alt. Dom',
+    labelKey: 'chordCategory.altDom',
     qualities: [
       'dominant7flat9', 'dominant7sharp9', 'dominant7flat5', 'dominant7sharp5',
       'dominant7alt', 'dominant7sharp5flat9', 'dominant7flat5flat9',
@@ -41,16 +42,17 @@ const CHORD_QUALITY_GROUPS: { label: string; qualities: ChordQuality[] }[] = [
     ],
   },
   {
-    label: '11ths',
+    labelKey: 'chordCategory.elevenths',
     qualities: ['dominant11', 'major11', 'minor11', 'dominant9sharp11', 'add11', 'major7sharp11'],
   },
   {
-    label: '13ths',
+    labelKey: 'chordCategory.thirteenths',
     qualities: ['dominant13', 'major13', 'minor13', 'dominant13flat9'],
   },
 ];
 
 export function ChordBrowser() {
+  const { t } = useTranslation();
   const selectedKey = useAppStore((s) => s.selectedKey);
   const setSelectedChord = useAppStore((s) => s.setSelectedChord);
   const selectedChord = useAppStore((s) => s.selectedChord);
@@ -67,7 +69,7 @@ export function ChordBrowser() {
           const isActive = activeCategory === i;
           return (
             <button
-              key={g.label}
+              key={g.labelKey}
               onClick={() => setActiveCategory(i)}
               className="px-2 py-1 text-[10px] font-medium rounded-lg transition-colors"
               style={{
@@ -76,7 +78,7 @@ export function ChordBrowser() {
                 border: isActive ? '1px solid var(--border-light)' : '1px solid transparent',
               }}
             >
-              {g.label}
+              {t(g.labelKey)}
             </button>
           );
         })}

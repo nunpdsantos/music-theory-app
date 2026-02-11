@@ -215,13 +215,13 @@ export function ScaleComparison() {
             className="flex items-center justify-center h-4"
           >
             {slot.shared && (
-              <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#34D399' }} title="Shared" />
+              <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#34D399' }} title={t('explore.sharedLegend')} />
             )}
             {slot.onlyA && (
-              <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: DEGREE_COLORS[1] }} title={`Only in ${SCALE_TYPE_NAMES[selectedScale]}`} />
+              <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: DEGREE_COLORS[1] }} title={t('explore.onlyLegend', { name: SCALE_TYPE_NAMES[selectedScale] })} />
             )}
             {slot.onlyB && (
-              <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: DEGREE_COLORS[5] }} title={`Only in ${SCALE_TYPE_NAMES[comparisonScale]}`} />
+              <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: DEGREE_COLORS[5] }} title={t('explore.onlyLegend', { name: SCALE_TYPE_NAMES[comparisonScale] })} />
             )}
           </div>
         ))}

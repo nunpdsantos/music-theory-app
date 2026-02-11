@@ -1,4 +1,5 @@
 import { m } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import type { CurriculumUnit, CurriculumLevel } from '../../core/types/curriculum';
 import { areModulePrereqsMet } from '../../data/curriculumLoader';
 import type { CurriculumProgress } from '../../core/types/curriculum';
@@ -27,6 +28,7 @@ export function UnitDetail({
   onBack,
   onBackToLevels,
 }: UnitDetailProps) {
+  const { t } = useTranslation();
   const accent = level.accentColor;
   const completedCount = unit.modules.filter((m) => isModuleCompleted(m.id)).length;
   const progressPercent = unit.modules.length > 0 ? (completedCount / unit.modules.length) * 100 : 0;
@@ -53,8 +55,8 @@ export function UnitDetail({
         <LearnBreadcrumb
           accentColor={accent}
           segments={[
-            { label: 'Learn', onClick: onBackToLevels },
-            { label: `Level ${level.number}`, onClick: onBack },
+            { label: t('nav.learn'), onClick: onBackToLevels },
+            { label: t('learn.level', { n: level.number }), onClick: onBack },
             { label: unit.title },
           ]}
         />
@@ -68,7 +70,7 @@ export function UnitDetail({
         className="mb-8"
       >
         <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-dim)' }}>
-          Unit {unitIndex + 1}
+          {t('learn.unit', { n: unitIndex + 1 })}
         </span>
         <h1 className="text-2xl font-bold learn-serif mt-1 mb-1.5" style={{ color: 'var(--text)' }}>
           {unit.title}

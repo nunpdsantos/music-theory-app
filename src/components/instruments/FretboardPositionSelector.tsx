@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { Chord } from '../../core/types/music.ts';
 import type { ScalePosition } from '../../core/constants/guitarScalePositions.ts';
 
@@ -39,13 +40,14 @@ export function FretboardPositionSelector({
   onSelectScalePosition,
   mobile = false,
 }: FretboardPositionSelectorProps) {
+  const { t } = useTranslation();
   const btn = mobile ? btnMobile : btnBase;
 
   // Chord shape selector
   if (selectedChord && chordShapeCount > 0) {
     return (
-      <div role="tablist" aria-label="Chord position" className="flex items-center gap-2 mb-2 flex-wrap">
-        <span className="text-[10px] text-zinc-500 uppercase tracking-wider">Position:</span>
+      <div role="tablist" aria-label={t('fretboard.chordPosition')} className="flex items-center gap-2 mb-2 flex-wrap">
+        <span className="text-[10px] text-zinc-500 uppercase tracking-wider">{t('fretboard.position')}</span>
         {Array.from({ length: chordShapeCount }, (_, idx) => (
           <button
             key={idx}
@@ -65,8 +67,8 @@ export function FretboardPositionSelector({
   // Scale CAGED position selector
   if (!selectedChord && hasScalePositions) {
     return (
-      <div role="tablist" aria-label="Scale position" className="flex items-center gap-2 mb-2 flex-wrap">
-        <span className="text-[10px] text-zinc-500 uppercase tracking-wider">Scale pos:</span>
+      <div role="tablist" aria-label={t('fretboard.scalePosition')} className="flex items-center gap-2 mb-2 flex-wrap">
+        <span className="text-[10px] text-zinc-500 uppercase tracking-wider">{t('fretboard.scalePos')}</span>
         <button
           role="tab"
           aria-selected={guitarScalePosition === null}
@@ -74,7 +76,7 @@ export function FretboardPositionSelector({
           className={btn}
           style={selectorStyle(guitarScalePosition === null)}
         >
-          All
+          {t('fretboard.all')}
         </button>
         {scalePositions.map((sp, idx) => (
           <button

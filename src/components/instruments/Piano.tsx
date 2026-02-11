@@ -1,4 +1,5 @@
 import { useMemo, useCallback, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   generateKeyboardKeys,
   type PianoKey,
@@ -55,6 +56,7 @@ const BLACK_OFFSET_TABLET = 22;
 const BLACK_OFFSET_MOBILE = 22;
 
 export function Piano() {
+  const { t } = useTranslation();
   const { noteOn, noteOff } = useAudio();
   const activeNotes = useAppStore((s) => s.activeNotes);
   const baseOctave = useAppStore((s) => s.baseOctave);
@@ -279,10 +281,10 @@ export function Piano() {
   }, [blackKeys, keys, keyWidth, blackKeyOffset]);
 
   return (
-    <div role="group" aria-label="Piano keyboard" className="w-full" style={{ backgroundColor: 'var(--bg)', borderTop: '1px solid var(--border-subtle)' }}>
+    <div role="group" aria-label={t('instrument.pianoKeyboard')} className="w-full" style={{ backgroundColor: 'var(--bg)', borderTop: '1px solid var(--border-subtle)' }}>
       {/* Octave selector strip */}
-      <div role="tablist" aria-label="Base octave" className="flex items-center gap-1 max-sm:gap-0.5 px-3 max-sm:px-2 py-1.5" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-        <span className="text-[10px] uppercase tracking-wider mr-1" style={{ color: 'var(--text-dim)' }}>Octave</span>
+      <div role="tablist" aria-label={t('instrument.baseOctave')} className="flex items-center gap-1 max-sm:gap-0.5 px-3 max-sm:px-2 py-1.5" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+        <span className="text-[10px] uppercase tracking-wider mr-1" style={{ color: 'var(--text-dim)' }}>{t('play.octave')}</span>
         {[2, 3, 4, 5, 6].map((oct) => {
           const isActive = baseOctave === oct;
           return (

@@ -1,4 +1,5 @@
 import { useMemo, useCallback, useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getTuningById, getTuningPitchClasses, GUITAR_TUNINGS } from '../../core/constants/guitarTunings.ts';
 import type { GuitarTuning } from '../../core/constants/guitarTunings.ts';
 import { midiToNote } from '../../core/utils/pianoLayout.ts';
@@ -16,6 +17,7 @@ import { FretboardPositionSelector } from './FretboardPositionSelector.tsx';
 import { FretboardString } from './FretboardString.tsx';
 
 export function Fretboard() {
+  const { t } = useTranslation();
   const { getNoteColor } = useKeyContext();
   const { noteOn, noteOff } = useAudio();
   const activeNotes = useAppStore((s) => s.activeNotes);
@@ -389,7 +391,7 @@ export function Fretboard() {
     <div
       ref={scrollContainerRef}
       role="grid"
-      aria-label="Guitar fretboard"
+      aria-label={t('fretboard.label')}
       tabIndex={0}
       className="w-full overflow-x-auto fretboard-scroll focus:outline-none"
       style={{
@@ -428,7 +430,7 @@ export function Fretboard() {
         {mobile ? (
           !isStandardTuning ? (
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-dim)' }}>Tuning:</span>
+              <span className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-dim)' }}>{t('fretboard.tuning')}</span>
               <select
                 value={guitarTuningId}
                 onChange={(e) => setGuitarTuningId(e.target.value)}
@@ -437,7 +439,7 @@ export function Fretboard() {
                   color: 'var(--text-muted)',
                   border: '1px solid var(--border)',
                 }}
-                aria-label="Guitar tuning"
+                aria-label={t('fretboard.tuningLabel')}
               >
                 {GUITAR_TUNINGS.map((t) => (
                   <option key={t.id} value={t.id}>{t.shortName}</option>
@@ -446,7 +448,7 @@ export function Fretboard() {
             </div>
           ) : null
         ) : (
-          <div role="radiogroup" aria-label="Guitar tuning" className="flex items-center gap-2 mb-2 flex-wrap">
+          <div role="radiogroup" aria-label={t('fretboard.tuningLabel')} className="flex items-center gap-2 mb-2 flex-wrap">
             <span className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--text-dim)' }}>Tuning:</span>
             {GUITAR_TUNINGS.map((t) => {
               const isActive = tuning.id === t.id;

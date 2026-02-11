@@ -1,18 +1,20 @@
+import { useTranslation } from 'react-i18next';
 import { useAppStore, type InstrumentType } from '../../state/store.ts';
 
-const INSTRUMENTS: { id: InstrumentType; label: string }[] = [
-  { id: 'piano', label: 'Piano' },
-  { id: 'guitar', label: 'Guitar' },
+const INSTRUMENTS: { id: InstrumentType; labelKey: string }[] = [
+  { id: 'piano', labelKey: 'instrument.piano' },
+  { id: 'guitar', labelKey: 'instrument.guitar' },
 ];
 
 export function InstrumentSelector() {
+  const { t } = useTranslation();
   const instrument = useAppStore((s) => s.instrument);
   const setInstrument = useAppStore((s) => s.setInstrument);
 
   return (
     <div
       role="tablist"
-      aria-label="Instrument"
+      aria-label={t('instrument.selectorLabel')}
       data-tour="instrument"
       className="flex items-center gap-0.5 rounded-md p-0.5 max-sm:p-1 max-sm:rounded-lg"
       style={{ backgroundColor: 'color-mix(in srgb, var(--card-hover) 60%, transparent)' }}
@@ -31,7 +33,7 @@ export function InstrumentSelector() {
               color: isActive ? 'var(--text)' : 'var(--text-dim)',
             }}
           >
-            {inst.label}
+            {t(inst.labelKey)}
           </button>
         );
       })}

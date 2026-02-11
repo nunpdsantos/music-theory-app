@@ -1,4 +1,5 @@
 import { m } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import type { CurriculumUnit } from '../../core/types/curriculum';
 import { ProgressBar } from './ProgressBar';
 
@@ -12,6 +13,7 @@ interface UnitCardProps {
 }
 
 export function UnitCard({ unit, index, completedCount, accentColor, isComplete, onClick }: UnitCardProps) {
+  const { t } = useTranslation();
   const totalModules = unit.modules.length;
   const progressPercent = totalModules > 0 ? (completedCount / totalModules) * 100 : 0;
 
@@ -60,11 +62,11 @@ export function UnitCard({ unit, index, completedCount, accentColor, isComplete,
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-dim)' }}>
-                  Unit {index + 1}
+                  {t('learn.unit', { n: index + 1 })}
                 </span>
                 {isComplete && (
                   <span className="text-[10px] font-medium text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded-full">
-                    Complete
+                    {t('status.complete')}
                   </span>
                 )}
               </div>
@@ -94,7 +96,7 @@ export function UnitCard({ unit, index, completedCount, accentColor, isComplete,
 
           <div className="flex items-center gap-2 mb-3">
             <span className="text-[10px]" style={{ color: 'var(--text-dim)' }}>
-              {totalModules} modules
+              {t('learn.moduleCount', { count: totalModules })}
             </span>
           </div>
 

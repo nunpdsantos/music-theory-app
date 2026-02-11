@@ -14,11 +14,11 @@ export const LEVEL_ACCENTS: Record<string, string> = {
 
 export const DIFFICULTY_CONFIG: Record<
   DifficultyTier,
-  { label: string; color: string; bg: string }
+  { labelKey: string; color: string; bg: string }
 > = {
-  beginner: { label: 'Beginner', color: '#60A5FA', bg: 'rgba(96, 165, 250, 0.12)' },
-  intermediate: { label: 'Intermediate', color: '#FBBF24', bg: 'rgba(251, 191, 36, 0.12)' },
-  advanced: { label: 'Advanced', color: '#A78BFA', bg: 'rgba(167, 139, 250, 0.12)' },
+  beginner: { labelKey: 'difficulty.beginner', color: '#60A5FA', bg: 'rgba(96, 165, 250, 0.12)' },
+  intermediate: { labelKey: 'difficulty.intermediate', color: '#FBBF24', bg: 'rgba(251, 191, 36, 0.12)' },
+  advanced: { labelKey: 'difficulty.advanced', color: '#A78BFA', bg: 'rgba(167, 139, 250, 0.12)' },
 };
 
 export function getLevelAccent(levelId: string): string {

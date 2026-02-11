@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import { noteToString } from '../../core/types/music.ts';
 import { SCALE_FORMULAS } from '../../core/constants/scales.ts';
@@ -7,23 +8,24 @@ import { useKeyContext } from '../../hooks/useKeyContext.ts';
 import { useAppStore } from '../../state/store.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
 
-// Map interval short labels to functional names
-const FUNCTION_BY_INTERVAL: Record<string, string> = {
-  'R': 'Tonic',
-  '2': 'Super.',
-  'm2': 'Super.',
-  '3': 'Mediant',
-  'm3': 'Mediant',
-  '4': 'Subdom.',
-  'b5': 'Tritone',
-  '5': 'Dominant',
-  '#5': 'Aug. 5th',
-  '6': 'Submed.',
-  'b7': 'Subtonic',
-  '7': 'Leading',
+// Map interval short labels to i18n keys
+const FUNCTION_KEY_BY_INTERVAL: Record<string, string> = {
+  'R': 'degreeShort.tonic',
+  '2': 'degreeShort.supertonic',
+  'm2': 'degreeShort.supertonic',
+  '3': 'degreeShort.mediant',
+  'm3': 'degreeShort.mediant',
+  '4': 'degreeShort.subdominant',
+  'b5': 'degreeShort.tritone',
+  '5': 'degreeShort.dominant',
+  '#5': 'degreeShort.augFifth',
+  '6': 'degreeShort.submediant',
+  'b7': 'degreeShort.subtonic',
+  '7': 'degreeShort.leading',
 };
 
 export function ScaleDegreeBar() {
+  const { t } = useTranslation();
   const { scale } = useKeyContext();
   const selectedScale = useAppStore((s) => s.selectedScale);
   const selectedDegree = useAppStore((s) => s.selectedDegree);
@@ -50,7 +52,8 @@ export function ScaleDegreeBar() {
           : (((i % 7) + 1) as keyof typeof DEGREE_COLORS);
         const color = DEGREE_COLORS[colorKey] ?? 'var(--text-muted)';
         const intervalLabel = degreeLabels[i] ?? `${i + 1}`;
-        const funcLabel = FUNCTION_BY_INTERVAL[intervalLabel] ?? '';
+        const funcKey = FUNCTION_KEY_BY_INTERVAL[intervalLabel];
+        const funcLabel = funcKey ? t(funcKey) : '';
 
         return (
           <m.button

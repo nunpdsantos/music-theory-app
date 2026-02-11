@@ -11,7 +11,8 @@
     "showInstrument": "Show instrument",
     "hideInstrument": "Hide instrument",
     "themeLabel": "Theme: {{mode}}. Click to change.",
-    "quickSearchLabel": "Quick search, Command+K"
+    "quickSearchLabel": "Quick search, Command+K",
+    "languageLabel": "Language"
   },
   "theme": {
     "dark": "Dark",
@@ -182,7 +183,11 @@
     "unitPlural": "units",
     "emptyTitle": "Start Your Journey",
     "emptySubtitle": "Tap any level to begin exploring music theory",
-    "startLevel1": "Start Level 1"
+    "startLevel1": "Start Level 1",
+    "moduleCount": "{{count}} modules",
+    "soon": "Soon",
+    "region": "Learn music theory",
+    "breadcrumb": "Breadcrumb"
   },
   "exercise": {
     "title": "Exercises",
@@ -219,7 +224,10 @@
   "instrument": {
     "piano": "Piano",
     "guitar": "Guitar",
-    "label": "{{name}} instrument"
+    "label": "{{name}} instrument",
+    "selectorLabel": "Instrument",
+    "pianoKeyboard": "Piano keyboard",
+    "baseOctave": "Base octave"
   },
   "review": {
     "title": "Review Queue",
@@ -329,6 +337,94 @@
     "chords": "Chords",
     "scaleDegrees": "Degrees",
     "earTraining": "Ear"
+  },
+  "panel": {
+    "notes": "Notes",
+    "staff": "Staff",
+    "voicing": "Voicing",
+    "formula": "Formula",
+    "compatibleScales": "Compatible Scales",
+    "compatibleChords": "Compatible Chords",
+    "degree": "Degree {{n}}",
+    "chord": "Chord",
+    "arpeggio": "Arpeggio",
+    "ascending": "Ascending",
+    "upAndDown": "Up & Down",
+    "closePanel": "Close panel",
+    "slashBass": "Slash bass note",
+    "pianoRange": "Piano Range",
+    "octaveCount": "{{n}} Octave",
+    "octaveCount_plural": "{{n}} Octaves",
+    "mode": "Mode",
+    "mood": "Mood:",
+    "modeDegree": "Degree {{n}} of the parent major scale",
+    "noteCount": "{{count}} notes",
+    "rootPos": "Root",
+    "inv1": "1st Inv",
+    "inv2": "2nd Inv",
+    "inv3": "3rd Inv",
+    "chordInversion": "Chord inversion"
+  },
+  "mode": {
+    "ionianDesc": "The major scale - bright, open, and resolved",
+    "dorianDesc": "Minor with raised 6th - jazzy, sophisticated",
+    "phrygianDesc": "Minor with lowered 2nd - dark, Spanish",
+    "lydianDesc": "Major with raised 4th - dreamy, floating",
+    "mixolydianDesc": "Major with lowered 7th - bluesy, rock",
+    "aeolianDesc": "The natural minor scale - darker, serious",
+    "locrianDesc": "Diminished character - unstable, tense",
+    "ionianMood": "Bright, open, stable",
+    "dorianMood": "Jazzy, soulful, sophisticated",
+    "phrygianMood": "Dark, exotic, Spanish",
+    "lydianMood": "Dreamy, ethereal, floating",
+    "mixolydianMood": "Bluesy, rock, dominant",
+    "aeolianMood": "Serious, reflective, dark",
+    "locrianMood": "Unstable, tense, dark"
+  },
+  "search": {
+    "placeholder": "Try \"Cmaj7#11\", \"D harmonic minor\", \"lydian dominant\"...",
+    "noMatch": "No match. Try a chord (Cmaj7#11), scale (D harmonic minor), or note (Ab).",
+    "typeScale": "Scale",
+    "typeChord": "Chord",
+    "typeKey": "Key"
+  },
+  "chordCategory": {
+    "triads": "Triads",
+    "sixths": "6ths",
+    "sevenths": "7ths",
+    "sus": "Sus",
+    "power": "Power",
+    "ninths": "9ths",
+    "altDom": "Alt. Dom",
+    "elevenths": "11ths",
+    "thirteenths": "13ths"
+  },
+  "degreeShort": {
+    "tonic": "Tonic",
+    "supertonic": "Super.",
+    "mediant": "Mediant",
+    "subdominant": "Subdom.",
+    "tritone": "Tritone",
+    "dominant": "Dominant",
+    "augFifth": "Aug. 5th",
+    "submediant": "Submed.",
+    "subtonic": "Subtonic",
+    "leading": "Leading"
+  },
+  "fretboard": {
+    "label": "Guitar fretboard",
+    "tuning": "Tuning:",
+    "tuningLabel": "Guitar tuning",
+    "position": "Position:",
+    "scalePos": "Scale pos:",
+    "all": "All",
+    "chordPosition": "Chord position",
+    "scalePosition": "Scale position"
+  },
+  "difficulty": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced"
   },
   "tour": {
     "step1Title": "Pick Your Instrument",

@@ -191,7 +191,7 @@ export function LearnView() {
   );
 
   return (
-    <div ref={scrollRef} className="h-full overflow-y-auto" role="region" aria-label="Learn music theory">
+    <div ref={scrollRef} className="h-full overflow-y-auto" role="region" aria-label={t('learn.region')}>
       <AnimatePresence mode="wait" initial={false}>
         {screen.type === 'levels' && (
           <m.div

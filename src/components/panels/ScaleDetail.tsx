@@ -1,4 +1,5 @@
 import { useCallback, useRef, useMemo, Suspense, lazy } from 'react';
+import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import { noteToString, type Note, type ModeName } from '../../core/types/music.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
@@ -64,7 +65,29 @@ const FIT_COLORS = {
   color: '#F472B6',
 } as const;
 
+// Mode name → i18n key mapping (core/modes.ts is read-only)
+const MODE_DESC_KEYS: Record<string, string> = {
+  ionian: 'mode.ionianDesc',
+  dorian: 'mode.dorianDesc',
+  phrygian: 'mode.phrygianDesc',
+  lydian: 'mode.lydianDesc',
+  mixolydian: 'mode.mixolydianDesc',
+  aeolian: 'mode.aeolianDesc',
+  locrian: 'mode.locrianDesc',
+};
+
+const MODE_MOOD_KEYS: Record<string, string> = {
+  ionian: 'mode.ionianMood',
+  dorian: 'mode.dorianMood',
+  phrygian: 'mode.phrygianMood',
+  lydian: 'mode.lydianMood',
+  mixolydian: 'mode.mixolydianMood',
+  aeolian: 'mode.aeolianMood',
+  locrian: 'mode.locrianMood',
+};
+
 export function ScaleDetail() {
+  const { t } = useTranslation();
   const { scale } = useKeyContext();
   const synthPreset = useAppStore((s) => s.synthPreset);
   const selectedScale = useAppStore((s) => s.selectedScale);
@@ -166,14 +189,14 @@ export function ScaleDetail() {
           </span>
         </h2>
         <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full mt-2 inline-block" style={{ color: 'var(--text-dim)', backgroundColor: 'color-mix(in srgb, var(--card) 60%, transparent)' }}>
-          {scale.notes.length} notes
+          {t('panel.noteCount', { count: scale.notes.length })}
         </span>
       </div>
 
       {/* Notes with degree colors */}
       <div>
         <h3 className="type-section mb-2">
-          Notes
+          {t('panel.notes')}
         </h3>
         <div className="flex flex-wrap gap-1.5">
           {scale.notes.map((note, i) => {
@@ -199,7 +222,7 @@ export function ScaleDetail() {
       {/* Staff Notation */}
       <div>
         <h3 className="type-section mb-2">
-          Staff
+          {t('panel.staff')}
         </h3>
         <Suspense fallback={<StaffNotationSkeleton height={120} />}>
           <StaffNotation
@@ -217,7 +240,7 @@ export function ScaleDetail() {
       {/* Formula */}
       <div>
         <h3 className="type-section mb-2">
-          Formula
+          {t('panel.formula')}
         </h3>
         <div className="flex flex-wrap items-center gap-1.5">
           {formulaLabels.map((label, i) => (
@@ -236,15 +259,15 @@ export function ScaleDetail() {
       {modeInfo && (
         <div>
           <h3 className="type-section mb-2">
-            Mode
+            {t('panel.mode')}
           </h3>
           <div className="rounded-xl px-3 py-2.5 space-y-1.5" style={{ backgroundColor: 'color-mix(in srgb, var(--card) 40%, transparent)', border: '1px solid color-mix(in srgb, var(--border) 40%, transparent)' }}>
-            <p className="text-xs" style={{ color: 'var(--text)' }}>{modeInfo.description}</p>
+            <p className="text-xs" style={{ color: 'var(--text)' }}>{modeName ? t(MODE_DESC_KEYS[modeName]) : modeInfo.description}</p>
             <p className="text-[10px]" style={{ color: 'var(--text-dim)' }}>
-              Mood: <span style={{ color: 'var(--text-muted)' }}>{modeInfo.mood}</span>
+              {t('panel.mood')} <span style={{ color: 'var(--text-muted)' }}>{modeName ? t(MODE_MOOD_KEYS[modeName]) : modeInfo.mood}</span>
             </p>
             <p className="text-[10px]" style={{ color: 'var(--text-dim)' }}>
-              Degree {modeInfo.degree} of the parent major scale
+              {t('panel.modeDegree', { n: modeInfo.degree })}
             </p>
           </div>
         </div>
@@ -254,7 +277,7 @@ export function ScaleDetail() {
       {chordSuggestions.length > 0 && (
         <div>
           <h3 className="type-section mb-2">
-            Compatible Chords
+            {t('panel.compatibleChords')}
           </h3>
           <div className="flex flex-wrap gap-1.5">
             {chordSuggestions.slice(0, 12).map((s) => {
@@ -286,9 +309,9 @@ export function ScaleDetail() {
       {/* Octave range */}
       <div>
         <h3 className="type-section mb-2">
-          Piano Range
+          {t('panel.pianoRange')}
         </h3>
-        <div className="flex gap-1.5" role="radiogroup" aria-label="Scale octave range">
+        <div className="flex gap-1.5" role="radiogroup" aria-label={t('panel.pianoRange')}>
           {([1, 2] as const).map((n) => {
             const isActive = scaleOctaves === n;
             return (
@@ -304,7 +327,7 @@ export function ScaleDetail() {
                   border: isActive ? `1px solid ${tonicColor}50` : '1px solid var(--border)',
                 }}
               >
-                {n} Octave{n > 1 ? 's' : ''}
+                {n > 1 ? t('panel.octaveCount_plural', { n }) : t('panel.octaveCount', { n })}
               </button>
             );
           })}
@@ -325,7 +348,7 @@ export function ScaleDetail() {
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
             <polygon points="5 3 19 12 5 21 5 3" />
           </svg>
-          Ascending
+          {t('panel.ascending')}
         </button>
         <button
           onClick={handlePlayBoth}
@@ -339,7 +362,7 @@ export function ScaleDetail() {
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
             <polygon points="5 3 19 12 5 21 5 3" />
           </svg>
-          Up & Down
+          {t('panel.upAndDown')}
         </button>
       </div>
     </m.div>
