@@ -16,6 +16,10 @@ import type {
   DifficultyTier,
   LevelState,
 } from '../core/types/curriculum';
+import type { ContentLanguage } from '../i18n/content/types';
+import { loadCurriculumOverlay } from '../i18n/content/overlayLoader';
+import { applyCurriculumOverlay } from '../i18n/content/contentResolver';
+import { translateLevelMetadata } from '../i18n/content/levelMetaResolver';
 
 // ─── Lightweight metadata ────────────────────────────────────────────────────
 
@@ -68,8 +72,12 @@ const UNITS_KEYS: Record<string, string> = {
 
 const levelCache = new Map<string, CurriculumLevel>();
 
-export async function loadLevel(levelId: string): Promise<CurriculumLevel | undefined> {
-  const cached = levelCache.get(levelId);
+export async function loadLevel(
+  levelId: string,
+  lang: ContentLanguage = 'en',
+): Promise<CurriculumLevel | undefined> {
+  const cacheKey = `${lang}:${levelId}`;
+  const cached = levelCache.get(cacheKey);
   if (cached) return cached;
 
   const meta = LEVEL_METADATA.find((m) => m.id === levelId);
@@ -78,29 +86,41 @@ export async function loadLevel(levelId: string): Promise<CurriculumLevel | unde
   const importer = LEVEL_IMPORTERS[levelId];
   if (!importer) return undefined;
 
-  const mod = await importer();
+  // Load English data + translation overlay in parallel
+  const [mod, overlay] = await Promise.all([
+    importer(),
+    loadCurriculumOverlay(lang, levelId),
+  ]);
   const units: CurriculumUnit[] = mod[UNITS_KEYS[levelId]] ?? [];
 
-  const level: CurriculumLevel = {
-    id: meta.id,
-    number: meta.number,
-    title: meta.title,
-    description: meta.description,
-    difficulty: meta.difficulty,
-    difficultyLabel: meta.difficultyLabel,
-    accentColor: meta.accentColor,
-    prerequisites: meta.prerequisites,
-    parallel: meta.parallel,
-    comingSoon: meta.comingSoon,
+  // Apply translated level metadata
+  const translatedMeta = translateLevelMetadata([meta], lang)[0];
+
+  let level: CurriculumLevel = {
+    id: translatedMeta.id,
+    number: translatedMeta.number,
+    title: translatedMeta.title,
+    description: translatedMeta.description,
+    difficulty: translatedMeta.difficulty,
+    difficultyLabel: translatedMeta.difficultyLabel,
+    accentColor: translatedMeta.accentColor,
+    prerequisites: translatedMeta.prerequisites,
+    parallel: translatedMeta.parallel,
+    comingSoon: translatedMeta.comingSoon,
     units,
   };
 
-  levelCache.set(levelId, level);
+  // Apply curriculum content overlay (unit/module translations)
+  level = applyCurriculumOverlay(level, overlay);
+
+  levelCache.set(cacheKey, level);
   return level;
 }
 
-export async function loadAllLevels(): Promise<CurriculumLevel[]> {
-  const results = await Promise.all(LEVEL_METADATA.map((m) => loadLevel(m.id)));
+export async function loadAllLevels(
+  lang: ContentLanguage = 'en',
+): Promise<CurriculumLevel[]> {
+  const results = await Promise.all(LEVEL_METADATA.map((m) => loadLevel(m.id, lang)));
   return results.filter((l): l is CurriculumLevel => l !== undefined);
 }
 

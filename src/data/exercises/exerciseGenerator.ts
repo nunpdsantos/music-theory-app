@@ -4,6 +4,8 @@
  */
 import type { ExerciseDefinition, ExerciseConfig } from '../../core/types/exercise';
 import type { ModuleTemplateConfig, ExerciseTemplate } from './exerciseTemplates';
+import type { ContentLanguage } from '../../i18n/content/types';
+import { translateScaleType, translateChordQuality, translateDirection } from '../../i18n/content/musicTerms';
 
 // ─── Seeded PRNG (mulberry32) ───────────────────────────────────────────────
 
@@ -132,7 +134,7 @@ function buildConfig(template: ExerciseTemplate, rand: () => number): ExerciseCo
 }
 
 /** Fill {param} placeholders in a template string with values from config */
-function fillTemplate(template: string, config: ExerciseConfig): string {
+function fillTemplate(template: string, config: ExerciseConfig, lang: ContentLanguage = 'en'): string {
   let result = template;
   const replacements: Record<string, string> = {};
 
@@ -145,19 +147,19 @@ function fillTemplate(template: string, config: ExerciseConfig): string {
     case 'interval_id':
       replacements['root'] = config.root + config.rootAccidental;
       replacements['semitones'] = String(config.targetSemitones);
-      replacements['direction'] = config.direction;
+      replacements['direction'] = translateDirection(config.direction, lang);
       break;
     case 'scale_build':
       replacements['root'] = config.root + config.rootAccidental;
-      replacements['scaleType'] = config.scaleType.replace(/_/g, ' ');
+      replacements['scaleType'] = translateScaleType(config.scaleType, lang);
       break;
     case 'chord_build':
       replacements['root'] = config.root + config.rootAccidental;
-      replacements['quality'] = config.quality.replace(/_/g, ' ');
+      replacements['quality'] = translateChordQuality(config.quality, lang);
       break;
     case 'scale_degree_id':
       replacements['root'] = config.root + config.rootAccidental;
-      replacements['scaleType'] = config.scaleType.replace(/_/g, ' ');
+      replacements['scaleType'] = translateScaleType(config.scaleType, lang);
       replacements['degree'] = String(config.correctDegree);
       break;
   }
@@ -175,6 +177,7 @@ function fillTemplate(template: string, config: ExerciseConfig): string {
 export function generateExercises(
   config: ModuleTemplateConfig,
   seed?: number,
+  lang: ContentLanguage = 'en',
 ): ExerciseDefinition[] {
   const actualSeed = seed ?? hashString(config.moduleId);
   const rand = mulberry32(actualSeed);
@@ -201,9 +204,9 @@ export function generateExercises(
     exercises.push({
       id,
       type: template.type,
-      prompt: fillTemplate(template.promptTemplate, exerciseConfig),
+      prompt: fillTemplate(template.promptTemplate, exerciseConfig, lang),
       config: exerciseConfig,
-      hint: fillTemplate(template.hintTemplate, exerciseConfig),
+      hint: fillTemplate(template.hintTemplate, exerciseConfig, lang),
       points: template.points ?? 1,
     });
   }
@@ -214,10 +217,11 @@ export function generateExercises(
 /** Generate all exercises for a level's template configs. Returns moduleId → exercises. */
 export function generateAllForLevel(
   configs: ModuleTemplateConfig[],
+  lang: ContentLanguage = 'en',
 ): Record<string, ExerciseDefinition[]> {
   const result: Record<string, ExerciseDefinition[]> = {};
   for (const config of configs) {
-    const exercises = generateExercises(config);
+    const exercises = generateExercises(config, undefined, lang);
     if (exercises.length > 0) {
       result[config.moduleId] = exercises;
     }

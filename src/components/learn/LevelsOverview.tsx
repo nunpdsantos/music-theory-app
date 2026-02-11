@@ -2,6 +2,7 @@ import { useMemo, useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import type { CurriculumLevel, CurriculumProgress } from '../../core/types/curriculum';
+import type { ContentLanguage } from '../../i18n/content/types';
 import {
   LEVEL_METADATA,
   computeLevelStateMeta,
@@ -10,12 +11,14 @@ import {
   findNextIncompleteModule,
 } from '../../data/curriculumLoader';
 import type { LevelMeta } from '../../data/curriculumLoader';
+import { translateLevelMetadata } from '../../i18n/content/levelMetaResolver';
 import { ContinueBanner } from './ContinueBanner';
 import { ReviewQueue } from './ReviewQueue';
 import { LevelCard } from './LevelCard';
 import { ProgressBar } from './ProgressBar';
 import { XPDisplay } from '../gamification/XPDisplay';
 import { useGamificationStore } from '../../state/gamificationStore';
+import { useAppStore } from '../../state/store.ts';
 
 interface LevelsOverviewProps {
   progress: CurriculumProgress;
@@ -33,25 +36,31 @@ export function LevelsOverview({
   onOpenDashboard,
 }: LevelsOverviewProps) {
   const { t } = useTranslation();
+  const language = useAppStore((s) => s.language) as ContentLanguage;
   const weeklyXP = useGamificationStore((s) => s.weeklyXP);
   const totalXP = useGamificationStore((s) => s.totalXP);
   // Async-load full levels for continue banner
   const [allLevels, setAllLevels] = useState<CurriculumLevel[] | null>(null);
   useEffect(() => {
-    loadAllLevels().then(setAllLevels);
-  }, []);
+    loadAllLevels(language).then(setAllLevels);
+  }, [language]);
 
   const nextUp = useMemo(() => {
     if (!allLevels) return undefined;
     return findNextIncompleteModule(progress, allLevels);
   }, [progress, allLevels]);
 
-  const totalModules = LEVEL_METADATA.reduce((s, l) => s + l.moduleCount, 0);
+  const translatedMeta = useMemo(
+    () => translateLevelMetadata(LEVEL_METADATA, language),
+    [language],
+  );
+
+  const totalModules = translatedMeta.reduce((s, l) => s + l.moduleCount, 0);
   const totalCompleted = progress.completedModules.length;
 
   // Split levels: main track (l1-l8) and parallel (l9)
-  const mainLevels = LEVEL_METADATA.filter((l) => !l.parallel);
-  const parallelLevels = LEVEL_METADATA.filter((l) => l.parallel);
+  const mainLevels = translatedMeta.filter((l) => !l.parallel);
+  const parallelLevels = translatedMeta.filter((l) => l.parallel);
 
   const getLevelState = useCallback(
     (meta: LevelMeta) => computeLevelStateMeta(meta, LEVEL_METADATA, progress.completedModules),

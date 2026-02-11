@@ -180,3 +180,8 @@ const SONG_REFERENCES: Record<string, SongReference[]> = {
 export function getSongReferences(moduleId: string): SongReference[] {
   return SONG_REFERENCES[moduleId] ?? [];
 }
+
+/** Get the full song reference map (used by content resolver for overlays). */
+export function getAllSongReferences(): Record<string, SongReference[]> {
+  return SONG_REFERENCES;
+}

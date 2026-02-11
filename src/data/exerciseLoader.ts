@@ -2,10 +2,14 @@
  * Exercise data loader — enables code-splitting of exercise data per level.
  * Mirrors the curriculumLoader.ts pattern: dynamic import + cache.
  * Merges hand-authored exercises with programmatically generated ones.
+ * Supports translation overlays for non-English languages.
  */
 import type { ExerciseDefinition } from '../core/types/exercise';
 import type { ModuleTemplateConfig } from './exercises/exerciseTemplates';
+import type { ContentLanguage } from '../i18n/content/types';
 import { generateAllForLevel, mergeExerciseMaps } from './exercises/exerciseGenerator';
+import { loadExerciseOverlay, loadTemplateOverlay } from '../i18n/content/overlayLoader';
+import { applyExerciseOverlay, applyTemplateOverlay } from '../i18n/content/contentResolver';
 
 type ExerciseMap = Record<string, ExerciseDefinition[]>;
 
@@ -35,30 +39,37 @@ const TEMPLATE_IMPORTERS: Record<string, () => Promise<{ default: ModuleTemplate
 
 const exerciseCache = new Map<string, ExerciseMap>();
 
-export async function loadExercises(levelId: string): Promise<ExerciseMap> {
-  const cached = exerciseCache.get(levelId);
+export async function loadExercises(
+  levelId: string,
+  lang: ContentLanguage = 'en',
+): Promise<ExerciseMap> {
+  const cacheKey = `${lang}:${levelId}`;
+  const cached = exerciseCache.get(cacheKey);
   if (cached) return cached;
 
   const importer = EXERCISE_IMPORTERS[levelId];
   if (!importer) return {};
 
-  // Load hand-authored exercises
-  const mod = await importer();
-  let exercises = mod.default;
-
-  // Load and merge generated exercises from templates
+  // Load all sources in parallel
   const templateImporter = TEMPLATE_IMPORTERS[levelId];
-  if (templateImporter) {
-    try {
-      const templateMod = await templateImporter();
-      const generated = generateAllForLevel(templateMod.default);
-      exercises = mergeExerciseMaps(exercises, generated);
-    } catch {
-      // Template file may not exist yet — silently continue with authored only
-    }
+  const [exerciseMod, templateMod, exerciseOv, templateOv] = await Promise.all([
+    importer(),
+    templateImporter ? templateImporter().catch(() => null) : Promise.resolve(null),
+    loadExerciseOverlay(lang, levelId),
+    loadTemplateOverlay(lang, levelId),
+  ]);
+
+  // Apply exercise overlay to hand-authored exercises
+  let exercises = applyExerciseOverlay(exerciseMod.default, exerciseOv);
+
+  // Apply template overlay + generate
+  if (templateMod) {
+    const translatedTemplates = applyTemplateOverlay(templateMod.default, templateOv);
+    const generated = generateAllForLevel(translatedTemplates, lang);
+    exercises = mergeExerciseMaps(exercises, generated);
   }
 
-  exerciseCache.set(levelId, exercises);
+  exerciseCache.set(cacheKey, exercises);
   return exercises;
 }
 

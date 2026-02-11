@@ -3,8 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { AnimatePresence, m } from 'framer-motion';
 import type { CurriculumLevel } from '../core/types/curriculum';
 import type { ExerciseDefinition } from '../core/types/exercise';
+import type { ContentLanguage } from '../i18n/content/types';
 import { loadLevel, getLevelModuleCount } from '../data/curriculumLoader';
 import { loadExercises } from '../data/exerciseLoader';
+import { useAppStore } from '../state/store.ts';
 import { useLearnProgress } from '../hooks/useLearnProgress';
 import { useGamificationStore } from '../state/gamificationStore';
 import { useShallow } from 'zustand/shallow';
@@ -134,6 +136,7 @@ export function LearnView() {
   const exerciseCacheRef = useRef<Map<string, Record<string, ExerciseDefinition[]>>>(new Map());
 
   const activeLevelId = (screen.type === 'levels' || screen.type === 'dashboard') ? null : screen.levelId;
+  const language = useAppStore((s) => s.language) as ContentLanguage;
 
   useEffect(() => {
     if (!activeLevelId) {
@@ -142,7 +145,9 @@ export function LearnView() {
       return;
     }
 
-    const cached = levelCacheRef.current.get(activeLevelId);
+    const cacheKey = `${language}:${activeLevelId}`;
+
+    const cached = levelCacheRef.current.get(cacheKey);
     if (cached) {
       setLoadedLevel(cached);
     } else {
@@ -150,7 +155,7 @@ export function LearnView() {
     }
 
     // Load exercises (may be empty for levels without authored exercises)
-    const cachedEx = exerciseCacheRef.current.get(activeLevelId);
+    const cachedEx = exerciseCacheRef.current.get(cacheKey);
     if (cachedEx) {
       setExercisesByModule(cachedEx);
     } else {
@@ -161,9 +166,9 @@ export function LearnView() {
 
     // Load level data
     if (!cached) {
-      loadLevel(activeLevelId).then((level) => {
+      loadLevel(activeLevelId, language).then((level) => {
         if (!cancelled && level) {
-          levelCacheRef.current.set(activeLevelId, level);
+          levelCacheRef.current.set(cacheKey, level);
           setLoadedLevel(level);
         }
       });
@@ -171,16 +176,16 @@ export function LearnView() {
 
     // Load exercise data
     if (!cachedEx) {
-      loadExercises(activeLevelId).then((exercises) => {
+      loadExercises(activeLevelId, language).then((exercises) => {
         if (!cancelled) {
-          exerciseCacheRef.current.set(activeLevelId, exercises);
+          exerciseCacheRef.current.set(cacheKey, exercises);
           setExercisesByModule(exercises);
         }
       });
     }
 
     return () => { cancelled = true; };
-  }, [activeLevelId]);
+  }, [activeLevelId, language]);
 
   const xOffset = direction === 'forward' ? 40 : -40;
 
