@@ -1,8 +1,12 @@
 # Spanish (ES) Content Translation Status
 
-## Overview
+## Status: COMPLETE (2026-02-11)
 
-The i18n content overlay system is fully built and working. Portuguese (PT) is 100% complete across all 9 levels. Spanish (ES) needs content overlay files created.
+All 29 Spanish content overlay files are written, type-checked, and tested. Spanish is at 100% parity with Portuguese.
+
+- **tsc:** clean
+- **Tests:** 764 passing (40 files)
+- **Total lines:** 13,310 across 29 ES overlay files
 
 ## What's Done
 
@@ -26,8 +30,12 @@ The i18n content overlay system is fully built and working. Portuguese (PT) is 1
 ### Spanish UI chrome (complete)
 - `src/i18n/locales/es.json` — 441 lines, full UI translation
 
-### Spanish content (only level metadata done)
+### Spanish content (100% complete — 29 files)
 - `src/i18n/content/es/levelMeta.ts` — all 9 levels (titles, descriptions, difficulty labels)
+- `src/i18n/content/es/curriculumL1.ts` through `curriculumL9.ts` (9 files)
+- `src/i18n/content/es/exercisesL1.ts` through `exercisesL9.ts` (9 files)
+- `src/i18n/content/es/templatesL1.ts` through `templatesL9.ts` (9 files)
+- `src/i18n/content/es/songs.ts` (L1–L3 coverage)
 
 ### Portuguese content (100% complete — 29 files)
 - `src/i18n/content/pt/levelMeta.ts`
@@ -36,26 +44,22 @@ The i18n content overlay system is fully built and working. Portuguese (PT) is 1
 - `src/i18n/content/pt/templatesL1.ts` through `templatesL9.ts` (9 files)
 - `src/i18n/content/pt/songs.ts` (L1–L3 coverage)
 
-## What Remains: 28 Spanish Content Files
-
-All files go in `src/i18n/content/es/`. The overlay loader auto-discovers them via `import.meta.glob` — no registration needed.
-
-### Per-level files (3 files × 9 levels = 27 files)
+### Per-level completion
 
 | Level | curriculumL{n}.ts | exercisesL{n}.ts | templatesL{n}.ts |
 |-------|-------------------|-------------------|-------------------|
-| L1 | ❌ | ❌ | ❌ |
-| L2 | ❌ | ❌ | ❌ |
-| L3 | ❌ | ❌ | ❌ |
-| L4 | ❌ | ❌ | ❌ |
-| L5 | ❌ | ❌ | ❌ |
-| L6 | ❌ | ❌ | ❌ |
-| L7 | ❌ | ❌ | ❌ |
-| L8 | ❌ | ❌ | ❌ |
-| L9 | ❌ | ❌ | ❌ |
+| L1 | done | done | done |
+| L2 | done | done | done |
+| L3 | done | done | done |
+| L4 | done | done | done |
+| L5 | done | done | done |
+| L6 | done | done | done |
+| L7 | done | done | done |
+| L8 | done | done | done |
+| L9 | done | done | done |
 
-### Song overlay (1 file)
-- `songs.ts` — ❌ (covers L1–L3 module IDs, same as PT)
+### Song overlay
+- `songs.ts` — done (covers L1–L3 module IDs, same as PT)
 
 ## How to Create Each File
 
