@@ -78,6 +78,7 @@ export function Piano() {
 
   // Drag-to-scroll state (threshold-based: distinguishes click from drag)
   const DRAG_THRESHOLD = 8;
+  const isPointerDown = useRef(false);
   const isDragging = useRef(false);
   const dragStartX = useRef(0);
   const dragScrollLeft = useRef(0);
@@ -178,14 +179,19 @@ export function Piano() {
     [midiToWhiteKeyIndex, keyWidth]
   );
 
+  // Auto-scroll only when the actual selection changes (not on every render).
+  // Uses a serialized key so manual scrolling isn't overridden.
+  const prevSelectionKey = useRef('');
   useEffect(() => {
-    if (chordVoicingMidi.size > 0) {
-      scrollToMidiRange(chordVoicingMidi);
-    } else if (scaleMidiNumbers.size > 0) {
-      scrollToMidiRange(scaleMidiNumbers);
-    }
+    const target = chordVoicingMidi.size > 0 ? chordVoicingMidi : scaleMidiNumbers;
+    if (target.size === 0) { prevSelectionKey.current = ''; return; }
+    const key = Array.from(target).sort((a, b) => a - b).join(',');
+    if (key === prevSelectionKey.current) return;
+    prevSelectionKey.current = key;
+    scrollToMidiRange(target);
   }, [scaleMidiNumbers, chordVoicingMidi, scrollToMidiRange]);
 
+  // Scroll on octave button change
   useEffect(() => {
     const t = setTimeout(() => {
       if (chordVoicingMidi.size > 0) {
@@ -199,6 +205,7 @@ export function Piano() {
   }, [baseOctave]);
 
   const handleContainerPointerDown = useCallback((e: React.PointerEvent) => {
+    isPointerDown.current = true;
     isDragging.current = false;
     dragStartX.current = e.clientX;
     dragScrollLeft.current = containerRef.current?.scrollLeft ?? 0;
@@ -211,7 +218,7 @@ export function Piano() {
   }, []);
 
   const handleContainerPointerMove = useCallback((e: React.PointerEvent) => {
-    if (!containerRef.current) return;
+    if (!isPointerDown.current || !containerRef.current) return;
     const dx = e.clientX - dragStartX.current;
 
     if (!isDragging.current && Math.abs(dx) > DRAG_THRESHOLD) {
@@ -234,6 +241,7 @@ export function Piano() {
     if (!isDragging.current && lastPointerNoteKey.current) {
       handleNoteOff(lastPointerNoteKey.current);
     }
+    isPointerDown.current = false;
     isDragging.current = false;
     lastPointerNoteKey.current = null;
     if (containerRef.current) containerRef.current.style.cursor = 'grab';
@@ -338,7 +346,7 @@ export function Piano() {
         style={{
           height: containerHeight,
           cursor: mobile ? undefined : 'grab',
-          scrollbarWidth: 'thin',
+          scrollbarWidth: 'none',
           WebkitOverflowScrolling: 'touch',
         }}
         onPointerDown={mobile ? undefined : handleContainerPointerDown}
