@@ -306,13 +306,13 @@ export function Piano() {
       let precedingWhiteIdx = 0;
       for (let i = bkIdx - 1; i >= 0; i--) {
         if (!keys[i].isBlack) {
-          precedingWhiteIdx = keys[i].whiteKeyIndex ?? 0;
+          precedingWhiteIdx = whiteKeys.indexOf(keys[i]);
           break;
         }
       }
       return { key: bk, left: precedingWhiteIdx * keyWidth + blackKeyOffset };
     });
-  }, [blackKeys, keys, keyWidth, blackKeyOffset]);
+  }, [blackKeys, whiteKeys, keys, keyWidth, blackKeyOffset]);
 
   return (
     <div role="group" aria-label={t('instrument.pianoKeyboard')} className="w-full" style={{ backgroundColor: 'var(--bg)', borderTop: '1px solid var(--border-subtle)' }}>
