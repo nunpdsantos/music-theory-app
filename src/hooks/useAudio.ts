@@ -13,7 +13,7 @@ import { useAppStore } from '../state/store.ts';
 import { getPitchClass } from '../core/constants/notes.ts';
 import type { Note } from '../core/types/music.ts';
 
-export function useAudio() {
+export function useAudio(instrument?: 'piano' | 'guitar') {
   const synthPreset = useAppStore((s) => s.synthPreset);
   const volume = useAppStore((s) => s.volume);
   const addActiveNote = useAppStore((s) => s.addActiveNote);
@@ -50,12 +50,17 @@ export function useAudio() {
     ksEngine.setVolume(volume);
   }, [volume]);
 
+  // Determine whether to use KS engine:
+  // - guitar instrument always uses KS
+  // - piano/undefined uses KS only when preset is 'pluck'
+  const useKS = instrument === 'guitar' || (instrument !== 'piano' && synthPreset === 'pluck');
+
   const noteOn = useCallback(
     async (note: Note, octave: number) => {
       await ensureResumed();
       const midi = 12 + octave * 12 + getPitchClass(note);
 
-      if (synthPreset === 'pluck') {
+      if (useKS) {
         ksEngine.startNote(midi);
       } else {
         const config = SYNTH_PRESETS[synthPreset] ?? {};
@@ -67,12 +72,12 @@ export function useAudio() {
       recordNoteOn(midi);
       return midi;
     },
-    [synthPreset, ensureResumed, addActiveNote, midiOutputEnabled]
+    [useKS, synthPreset, ensureResumed, addActiveNote, midiOutputEnabled]
   );
 
   const noteOff = useCallback(
     (midi: number) => {
-      if (synthPreset === 'pluck') {
+      if (useKS) {
         ksEngine.stopNote(midi);
       } else {
         stopSustainedNote(midi);
@@ -82,7 +87,7 @@ export function useAudio() {
       if (midiOutputEnabled) sendNoteOff(midi);
       recordNoteOff(midi);
     },
-    [synthPreset, removeActiveNote, midiOutputEnabled]
+    [useKS, removeActiveNote, midiOutputEnabled]
   );
 
   return { noteOn, noteOff };

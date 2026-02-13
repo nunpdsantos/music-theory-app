@@ -19,7 +19,7 @@ import { FretboardString } from './FretboardString.tsx';
 export function Fretboard() {
   const { t } = useTranslation();
   const { getNoteColor } = useKeyContext();
-  const { noteOn, noteOff } = useAudio();
+  const { noteOn, noteOff } = useAudio('guitar');
   const activeNotes = useAppStore((s) => s.activeNotes);
   const selectedChord = useAppStore((s) => s.selectedChord);
   const selectedKey = useAppStore((s) => s.selectedKey);

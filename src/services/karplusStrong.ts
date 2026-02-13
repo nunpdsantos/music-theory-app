@@ -35,10 +35,10 @@ interface Voice {
 // ---------------------------------------------------------------------------
 
 const DEFAULT_PARAMS: KSParams = {
-  brightness: 0.8,
-  damping: 0.996,
-  pickPosition: 0.5,
-  duration: 5,
+  brightness: 0.9,
+  damping: 0.997,
+  pickPosition: 0.13,
+  duration: 4,
 };
 
 const MAX_POLYPHONY = 16;
@@ -130,13 +130,25 @@ function midiToFrequency(midi: number): number {
 }
 
 /**
- * Generate a Karplus-Strong plucked string waveform.
+ * Convert MIDI number to frequency (used for damping scaling).
+ * Exported midiToFrequency is below; this is a local helper for the MIDI number.
+ */
+function midiFromFrequency(frequency: number): number {
+  return 69 + 12 * Math.log2(frequency / 440);
+}
+
+/**
+ * Generate a Karplus-Strong plucked string waveform with physical modeling.
  *
  * Algorithm:
  * 1. Create a circular delay line whose length = sampleRate / frequency
- * 2. Fill it with brightness-filtered noise (the "pluck" excitation)
+ * 2. Fill it with brightness-filtered noise shaped by a half-sine window (excitation)
  * 3. Apply a pick-position comb filter to remove the harmonic at the pick point
- * 4. Loop: read current sample, write back damping * 0.5 * (current + next)
+ * 4. Loop with:
+ *    a. Frequency-dependent damping (high notes decay faster)
+ *    b. One-pole allpass for string stiffness (inharmonicity)
+ *    c. Standard KS lossy averaging
+ * 5. Blend ~20% body resonance (2-pole bandpass at ~200 Hz)
  */
 export function generateKSBuffer(
   sampleRate: number,
@@ -152,18 +164,29 @@ export function generateKSBuffer(
 
   const delayLine = new Float32Array(delayLength);
 
-  // 1. Fill delay line with brightness-filtered noise
-  // Simple one-pole low-pass: y[n] = brightness * x[n] + (1 - brightness) * y[n-1]
+  // --- A. Frequency-dependent damping ---
+  // Real strings lose energy faster at high pitch.
+  const midi = midiFromFrequency(frequency);
+  const effectiveDamping = Math.max(0.98, Math.min(params.damping, params.damping - (midi - 40) * 0.00012));
+
+  // --- B. String stiffness coefficient (one-pole allpass) ---
+  // More stiffness at low frequencies → slightly inharmonic overtones
+  const stiffness = Math.max(0, Math.min(0.5, 0.5 - frequency / 20000));
+
+  // --- 1. Fill delay line with shaped excitation ---
+  // Half-sine amplitude window models a pluck displacement profile,
+  // then brightness low-pass filters the noise.
   let prev = 0;
   for (let i = 0; i < delayLength; i++) {
     const noise = Math.random() * 2 - 1;
     const filtered = params.brightness * noise + (1 - params.brightness) * prev;
     prev = filtered;
-    delayLine[i] = filtered;
+    // Half-sine window: peaks at center of delay line, zero at edges
+    const window = Math.sin(Math.PI * i / delayLength);
+    delayLine[i] = filtered * window;
   }
 
-  // 2. Pick-position comb filter: subtract a delayed copy to null the harmonic
-  //    at the pick point. Delay = pickPosition * delayLength samples.
+  // --- 2. Pick-position comb filter ---
   if (params.pickPosition > 0 && params.pickPosition < 1) {
     const pickDelay = Math.max(1, Math.round(params.pickPosition * delayLength));
     const copy = new Float32Array(delayLine);
@@ -185,8 +208,11 @@ export function generateKSBuffer(
     }
   }
 
-  // 3. KS loop: read from delay line, write averaged + damped sample back
+  // --- 3. KS loop with stiffness allpass ---
+  let allpassState = 0;
+  let prevInput = 0;
   let readIndex = 0;
+
   for (let i = 0; i < totalSamples; i++) {
     const current = delayLine[readIndex];
     const nextIndex = (readIndex + 1) % delayLength;
@@ -194,10 +220,52 @@ export function generateKSBuffer(
 
     output[i] = current;
 
-    // Lossy averaging filter (the heart of KS)
-    delayLine[readIndex] = params.damping * 0.5 * (current + next);
+    // Standard KS lossy averaging
+    let averaged = effectiveDamping * 0.5 * (current + next);
 
+    // One-pole allpass for string stiffness (shifts partials slightly)
+    const allpassOut = stiffness * (averaged - allpassState) + prevInput;
+    prevInput = averaged;
+    allpassState = allpassOut;
+    averaged = allpassOut;
+
+    delayLine[readIndex] = averaged;
     readIndex = nextIndex;
+  }
+
+  // --- 4. Body resonance simulation ---
+  // 2-pole bandpass at ~200 Hz simulates guitar body resonance.
+  // Blend 20% resonant + 80% dry.
+  const bodyFreq = 200;
+  const bodyQ = 1.5;
+  const w0 = 2 * Math.PI * bodyFreq / sampleRate;
+  const alpha = Math.sin(w0) / (2 * bodyQ);
+  const b0 = alpha;
+  const b1 = 0;
+  const b2 = -alpha;
+  const a0 = 1 + alpha;
+  const a1 = -2 * Math.cos(w0);
+  const a2 = 1 - alpha;
+
+  // Normalize coefficients
+  const nb0 = b0 / a0;
+  const nb1 = b1 / a0;
+  const nb2 = b2 / a0;
+  const na1 = a1 / a0;
+  const na2 = a2 / a0;
+
+  let x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+  const dryMix = 0.8;
+  const wetMix = 0.2;
+
+  for (let i = 0; i < totalSamples; i++) {
+    const x0 = output[i];
+    const y0 = nb0 * x0 + nb1 * x1 + nb2 * x2 - na1 * y1 - na2 * y2;
+    x2 = x1;
+    x1 = x0;
+    y2 = y1;
+    y1 = y0;
+    output[i] = dryMix * x0 + wetMix * y0;
   }
 
   return output;

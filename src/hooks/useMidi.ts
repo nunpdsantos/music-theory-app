@@ -6,7 +6,8 @@ import { initMidiInput, getInputs } from '../services/midiInput.ts';
 import { addStateChangeListener } from '../services/midiAccess.ts';
 
 export function useMidi() {
-  const { noteOn, noteOff } = useAudio();
+  const instrument = useAppStore((s) => s.instrument);
+  const { noteOn, noteOff } = useAudio(instrument);
   const activeMidiMap = useRef<Map<number, number>>(new Map());
   const midiInputEnabled = useAppStore((s) => s.midiInputEnabled);
   const midiInputDeviceId = useAppStore((s) => s.midiInputDeviceId);
