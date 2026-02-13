@@ -35,9 +35,9 @@ interface Voice {
 // ---------------------------------------------------------------------------
 
 const DEFAULT_PARAMS: KSParams = {
-  brightness: 0.9,
-  damping: 0.997,
-  pickPosition: 0.28,
+  brightness: 0.65,
+  damping: 0.9975,
+  pickPosition: 0.38,
   duration: 5,
 };
 
@@ -171,8 +171,9 @@ export function generateKSBuffer(
   const effectiveDamping = Math.max(0.990, Math.min(params.damping, params.damping - (midi - 40) * 0.00005));
 
   // --- B. String stiffness coefficient (one-pole allpass) ---
-  // More stiffness at low frequencies → slightly inharmonic overtones
-  const stiffness = Math.max(0, Math.min(0.4, 0.4 - frequency / 20000));
+  // Nylon strings have low stiffness → nearly harmonic overtones.
+  // Subtle allpass shift adds just enough life without metallic character.
+  const stiffness = Math.max(0, Math.min(0.25, 0.25 - frequency / 20000));
 
   // --- 1. Fill delay line with shaped excitation ---
   // Raised cosine window (never below 0.5) shapes the pluck displacement
@@ -235,10 +236,10 @@ export function generateKSBuffer(
   }
 
   // --- 4. Body resonance simulation ---
-  // 2-pole bandpass at ~180 Hz simulates guitar body resonance.
-  // Blend 15% resonant + 85% dry for warmth without muddiness.
-  const bodyFreq = 180;
-  const bodyQ = 1.2;
+  // 2-pole bandpass at ~220 Hz simulates classical guitar body resonance.
+  // Blend 18% resonant + 82% dry for warmth without muddiness.
+  const bodyFreq = 220;
+  const bodyQ = 1.0;
   const w0 = 2 * Math.PI * bodyFreq / sampleRate;
   const alpha = Math.sin(w0) / (2 * bodyQ);
   const b0 = alpha;
@@ -256,8 +257,8 @@ export function generateKSBuffer(
   const na2 = a2 / a0;
 
   let x1 = 0, x2 = 0, y1 = 0, y2 = 0;
-  const dryMix = 0.85;
-  const wetMix = 0.15;
+  const dryMix = 0.82;
+  const wetMix = 0.18;
 
   for (let i = 0; i < totalSamples; i++) {
     const x0 = output[i];
