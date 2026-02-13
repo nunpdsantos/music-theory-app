@@ -42,12 +42,12 @@ export const PianoKeyComponent = memo(function PianoKeyComponent({
 
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
-      if (sizeMode === 'mobile') {
-        (e.target as HTMLElement).setPointerCapture(e.pointerId);
-      } else {
+      if (sizeMode !== 'mobile') {
         e.preventDefault();
         // Don't capture pointer on desktop — container handles drag-to-scroll
       }
+      // No setPointerCapture on mobile — it blocks native touch scrolling.
+      // pointerLeave / pointerCancel handle note-off when finger moves away.
       isPressed.current = true;
       onNoteOn(keyData);
     },
