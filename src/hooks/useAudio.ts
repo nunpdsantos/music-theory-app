@@ -6,9 +6,11 @@ import {
   setMasterVolume,
   SYNTH_PRESETS,
 } from '../core/services/audio.ts';
+import * as ksEngine from '../services/karplusStrong.ts';
 import { sendNoteOn, sendNoteOff, initMidiOutput, selectOutput } from '../services/midiOutput.ts';
 import { recordNoteOn, recordNoteOff } from '../services/noteRecorder.ts';
 import { useAppStore } from '../state/store.ts';
+import { getPitchClass } from '../core/constants/notes.ts';
 import type { Note } from '../core/types/music.ts';
 
 export function useAudio() {
@@ -38,23 +40,30 @@ export function useAudio() {
     if (!resumed.current) {
       try {
         await resumeAudio();
+        await ksEngine.resumeContext();
       } catch (e) {
         console.warn('[useAudio] Failed to resume AudioContext:', e);
       }
       resumed.current = true;
     }
     setMasterVolume(volume);
+    ksEngine.setVolume(volume);
   }, [volume]);
 
   const noteOn = useCallback(
     async (note: Note, octave: number) => {
       await ensureResumed();
-      const config = SYNTH_PRESETS[synthPreset] ?? {};
-      const midi = startSustainedNote(note, octave, config);
+      const midi = 12 + octave * 12 + getPitchClass(note);
+
+      if (synthPreset === 'pluck') {
+        ksEngine.startNote(midi);
+      } else {
+        const config = SYNTH_PRESETS[synthPreset] ?? {};
+        startSustainedNote(note, octave, config);
+      }
+
       addActiveNote(midi);
-      // Send to MIDI output if enabled
       if (midiOutputEnabled) sendNoteOn(midi);
-      // Record note event
       recordNoteOn(midi);
       return midi;
     },
@@ -63,14 +72,17 @@ export function useAudio() {
 
   const noteOff = useCallback(
     (midi: number) => {
-      stopSustainedNote(midi);
+      if (synthPreset === 'pluck') {
+        ksEngine.stopNote(midi);
+      } else {
+        stopSustainedNote(midi);
+      }
+
       removeActiveNote(midi);
-      // Send to MIDI output if enabled
       if (midiOutputEnabled) sendNoteOff(midi);
-      // Record note event
       recordNoteOff(midi);
     },
-    [removeActiveNote, midiOutputEnabled]
+    [synthPreset, removeActiveNote, midiOutputEnabled]
   );
 
   return { noteOn, noteOff };
