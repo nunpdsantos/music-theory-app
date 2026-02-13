@@ -10,8 +10,8 @@ import { useAppStore } from '../../state/store.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
 import { useIsMobile, useIsCompact } from '../../hooks/useMediaQuery.ts';
 
-const START_OCTAVE = 2;
-const END_OCTAVE = 6;
+const START_OCTAVE = 0;
+const END_OCTAVE = 8;
 
 // Computer keyboard → semitone offset from base octave C
 // Bottom row = white keys, top row = black keys
@@ -285,7 +285,7 @@ export function Piano() {
       {/* Octave selector strip */}
       <div role="tablist" aria-label={t('instrument.baseOctave')} className="flex items-center gap-1 max-sm:gap-0.5 px-3 max-sm:px-2 py-1.5" style={{ borderBottom: '1px solid var(--border-subtle)' }}>
         <span className="text-[10px] uppercase tracking-wider mr-1" style={{ color: 'var(--text-dim)' }}>{t('play.octave')}</span>
-        {[2, 3, 4, 5, 6].map((oct) => {
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((oct) => {
           const isActive = baseOctave === oct;
           return (
             <button
@@ -312,7 +312,7 @@ export function Piano() {
         style={{
           height: containerHeight,
           cursor: mobile ? undefined : 'grab',
-          scrollbarWidth: 'none',
+          scrollbarWidth: 'thin',
           WebkitOverflowScrolling: 'touch',
         }}
         onPointerDown={mobile ? undefined : handleContainerPointerDown}

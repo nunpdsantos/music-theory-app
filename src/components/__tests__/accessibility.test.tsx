@@ -349,7 +349,7 @@ describe('Piano accessibility', () => {
     expect(tablist).toBeDefined();
 
     const tabs = within(tablist).getAllByRole('tab');
-    expect(tabs.length).toBe(5); // Octaves 2-6
+    expect(tabs.length).toBe(9); // Octaves 0-8 (full 88-key range)
 
     // Current octave (4) should be aria-selected=true
     const selected = tabs.find(

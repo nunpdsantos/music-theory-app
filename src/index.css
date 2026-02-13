@@ -289,8 +289,22 @@ body {
   background: var(--scrollbar-hover);
 }
 
-/* Hide scrollbar on piano keyboard and fretboard (drag-to-scroll instead) */
-.piano-scroll::-webkit-scrollbar,
+/* Thin scrollbar on piano keyboard for scroll affordance */
+.piano-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+.piano-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.piano-scroll::-webkit-scrollbar-thumb {
+  background: var(--scrollbar);
+  border-radius: 2px;
+}
+.piano-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-hover);
+}
+
+/* Hide scrollbar on fretboard (drag-to-scroll instead) */
 .fretboard-scroll::-webkit-scrollbar {
   display: none;
 }
