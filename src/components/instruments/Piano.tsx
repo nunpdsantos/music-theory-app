@@ -347,7 +347,8 @@ export function Piano() {
           height: containerHeight,
           cursor: mobile ? undefined : 'grab',
           scrollbarWidth: 'none',
-          WebkitOverflowScrolling: 'touch',
+          touchAction: mobile ? 'pan-x' : undefined,
+          overscrollBehavior: 'contain',
         }}
         onPointerDown={mobile ? undefined : handleContainerPointerDown}
         onPointerMove={mobile ? undefined : handleContainerPointerMove}
