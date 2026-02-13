@@ -76,10 +76,12 @@ export function Piano() {
   // Sizing mode passed to PianoKey
   const sizeMode: 'mobile' | 'tablet' | 'desktop' = mobile ? 'mobile' : compact ? 'tablet' : 'desktop';
 
-  // Drag-to-scroll state
+  // Drag-to-scroll state (threshold-based: distinguishes click from drag)
+  const DRAG_THRESHOLD = 8;
   const isDragging = useRef(false);
   const dragStartX = useRef(0);
   const dragScrollLeft = useRef(0);
+  const lastPointerNoteKey = useRef<PianoKey | null>(null);
 
   const allKeys = useMemo(() => generateKeyboardKeys(START_OCTAVE, END_OCTAVE), []);
 
@@ -116,6 +118,7 @@ export function Piano() {
 
   const handleNoteOn = useCallback(
     (key: PianoKey) => {
+      lastPointerNoteKey.current = key;
       noteOn(key.note, key.octave).then(
         (midi) => { activeMidiMap.current.set(key.midiNumber, midi); },
         (e) => { console.warn('[Piano] noteOn failed:', e); }
@@ -196,22 +199,45 @@ export function Piano() {
   }, [baseOctave]);
 
   const handleContainerPointerDown = useCallback((e: React.PointerEvent) => {
-    if ((e.target as HTMLElement).closest('[role="button"]')) return;
-    isDragging.current = true;
+    isDragging.current = false;
     dragStartX.current = e.clientX;
     dragScrollLeft.current = containerRef.current?.scrollLeft ?? 0;
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    // If pointer landed on empty space (not a key), clear stale note tracking
+    if (!(e.target as HTMLElement).closest('[role="button"]')) {
+      lastPointerNoteKey.current = null;
+    }
+    // Capture pointer on container — overrides PianoKey on desktop
+    containerRef.current?.setPointerCapture(e.pointerId);
   }, []);
 
   const handleContainerPointerMove = useCallback((e: React.PointerEvent) => {
-    if (!isDragging.current || !containerRef.current) return;
+    if (!containerRef.current) return;
     const dx = e.clientX - dragStartX.current;
-    containerRef.current.scrollLeft = dragScrollLeft.current - dx;
-  }, []);
+
+    if (!isDragging.current && Math.abs(dx) > DRAG_THRESHOLD) {
+      isDragging.current = true;
+      containerRef.current.style.cursor = 'grabbing';
+      // Cancel the note that started playing on pointer down
+      if (lastPointerNoteKey.current) {
+        handleNoteOff(lastPointerNoteKey.current);
+        lastPointerNoteKey.current = null;
+      }
+    }
+
+    if (isDragging.current) {
+      containerRef.current.scrollLeft = dragScrollLeft.current - dx;
+    }
+  }, [handleNoteOff]);
 
   const handleContainerPointerUp = useCallback(() => {
+    // Simple click (no drag) — release the note on mouse up
+    if (!isDragging.current && lastPointerNoteKey.current) {
+      handleNoteOff(lastPointerNoteKey.current);
+    }
     isDragging.current = false;
-  }, []);
+    lastPointerNoteKey.current = null;
+    if (containerRef.current) containerRef.current.style.cursor = 'grab';
+  }, [handleNoteOff]);
 
   // Computer keyboard → piano key mapping (uses all keys, not filtered)
   const midiLookup = useMemo(() => {
