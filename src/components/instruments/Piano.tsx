@@ -356,7 +356,7 @@ export function Piano() {
       >
         <div
           className="relative flex"
-          style={{ width: whiteKeys.length * keyWidth, height: whiteKeyHeight }}
+          style={{ minWidth: '100%', width: whiteKeys.length * keyWidth, height: whiteKeyHeight, backgroundColor: 'var(--card)' }}
         >
           {whiteKeys.map((wk) => (
             <PianoKeyComponent
