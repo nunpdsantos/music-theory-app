@@ -35,9 +35,9 @@ interface Voice {
 // ---------------------------------------------------------------------------
 
 const DEFAULT_PARAMS: KSParams = {
-  brightness: 0.65,
+  brightness: 0.45,
   damping: 0.9975,
-  pickPosition: 0.38,
+  pickPosition: 0.42,
   duration: 5,
 };
 
@@ -268,6 +268,19 @@ export function generateKSBuffer(
     y2 = y1;
     y1 = y0;
     output[i] = dryMix * x0 + wetMix * y0;
+  }
+
+  // --- 5. Output lowpass ---
+  // One-pole lowpass at ~3 kHz rolls off remaining high-frequency harshness.
+  // Gives the nylon-string warmth that KS noise excitation alone can't achieve.
+  const lpCutoff = 3000;
+  const lpRC = 1 / (2 * Math.PI * lpCutoff);
+  const lpDt = 1 / sampleRate;
+  const lpAlpha = lpDt / (lpRC + lpDt);
+  let lpPrev = output[0];
+  for (let i = 1; i < totalSamples; i++) {
+    lpPrev = lpPrev + lpAlpha * (output[i] - lpPrev);
+    output[i] = lpPrev;
   }
 
   return output;

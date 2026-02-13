@@ -14,22 +14,32 @@ import { getPitchClass } from '../core/constants/notes.ts';
 import type { Note } from '../core/types/music.ts';
 
 // Warmth overrides for FM synth presets (core presets are read-only).
-// Reduces metallic FM sidebands and adds lowpass filtering for a rounder tone.
+// FM synthesis is inherently metallic — these overrides aggressively tame
+// sidebands and add lowpass filtering for warm, round tones.
 const WARMTH_OVERRIDES: Record<string, Record<string, number | string>> = {
   piano: {
-    fmIndex: 80,        // 150 → 80: far less metallic
-    fmDecay: 0.5,       // 0.8 → 0.5: brightness fades faster
+    fmIndex: 30,        // 150 → 30: minimal FM, just enough hammer-strike character
+    fmDecay: 0.2,       // 0.8 → 0.2: metallic harmonics die almost immediately
+    fmSustain: 0,       // no sustained FM modulation
     filterType: 'lowpass',
-    filterFreq: 4000,   // tame harsh upper partials
-    filterQ: 0.5,
+    filterFreq: 2500,   // aggressive rolloff of harsh upper partials
+    filterQ: 0.4,
   },
   classic: {
     filterType: 'lowpass',
-    filterFreq: 3500,
-    filterQ: 0.5,
+    filterFreq: 2800,
+    filterQ: 0.4,
   },
   organ: {
-    fmIndex: 50,        // 80 → 50: softer harmonic content
+    fmIndex: 25,        // 80 → 25: organ drawbar warmth, not FM harshness
+    fmDecay: 0.3,
+    filterType: 'lowpass',
+    filterFreq: 3000,
+    filterQ: 0.5,
+  },
+  strings: {
+    filterFreq: 1800,   // 2500 → 1800: much warmer string ensemble
+    filterQ: 0.5,
   },
 };
 

@@ -128,9 +128,9 @@ describe('generateKSBuffer', () => {
 
   it('signal decays toward zero over time', () => {
     const buf = generateKSBuffer(44100, 440, {
-      brightness: 0.65,
+      brightness: 0.45,
       damping: 0.9975,
-      pickPosition: 0.38,
+      pickPosition: 0.42,
       duration: 5,
     });
 
