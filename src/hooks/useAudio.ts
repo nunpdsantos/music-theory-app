@@ -18,6 +18,7 @@ import type { Note } from '../core/types/music.ts';
 // sidebands and add lowpass filtering for warm, round tones.
 const WARMTH_OVERRIDES: Record<string, Record<string, number | string>> = {
   piano: {
+    volume: 0.65,       // 0.5 → 0.65: boost to match KS guitar levels
     fmIndex: 30,        // 150 → 30: minimal FM, just enough hammer-strike character
     fmDecay: 0.2,       // 0.8 → 0.2: metallic harmonics die almost immediately
     fmSustain: 0,       // no sustained FM modulation
@@ -26,11 +27,13 @@ const WARMTH_OVERRIDES: Record<string, Record<string, number | string>> = {
     filterQ: 0.4,
   },
   classic: {
+    volume: 0.65,
     filterType: 'lowpass',
     filterFreq: 2800,
     filterQ: 0.4,
   },
   organ: {
+    volume: 0.65,
     fmIndex: 25,        // 80 → 25: organ drawbar warmth, not FM harshness
     fmDecay: 0.3,
     filterType: 'lowpass',
@@ -38,6 +41,7 @@ const WARMTH_OVERRIDES: Record<string, Record<string, number | string>> = {
     filterQ: 0.5,
   },
   strings: {
+    volume: 0.65,
     filterFreq: 1800,   // 2500 → 1800: much warmer string ensemble
     filterQ: 0.5,
   },

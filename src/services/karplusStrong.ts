@@ -322,7 +322,7 @@ export function startNote(midiNumber: number, params: Partial<KSParams> = {}): v
   source.buffer = buffer;
 
   const gain = ctx.createGain();
-  gain.gain.value = 1;
+  gain.gain.value = 0.45; // Match FM synth levels (~0.5 default volume)
 
   source.connect(gain);
   gain.connect(masterGain!);
