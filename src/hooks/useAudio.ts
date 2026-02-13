@@ -52,8 +52,9 @@ export function useAudio(instrument?: 'piano' | 'guitar') {
 
   // Determine whether to use KS engine:
   // - guitar instrument always uses KS
-  // - piano/undefined uses KS only when preset is 'pluck'
-  const useKS = instrument === 'guitar' || (instrument !== 'piano' && synthPreset === 'pluck');
+  // - 'pluck' preset always uses KS (regardless of instrument)
+  // - all other piano presets use FM synth
+  const useKS = instrument === 'guitar' || synthPreset === 'pluck';
 
   const noteOn = useCallback(
     async (note: Note, octave: number) => {

@@ -130,8 +130,8 @@ describe('generateKSBuffer', () => {
     const buf = generateKSBuffer(44100, 440, {
       brightness: 0.9,
       damping: 0.997,
-      pickPosition: 0.13,
-      duration: 4,
+      pickPosition: 0.28,
+      duration: 5,
     });
 
     // Compare RMS of first 4410 samples vs last 4410
@@ -143,8 +143,7 @@ describe('generateKSBuffer', () => {
 
     const rmsStart = rms(buf, 0, 4410);
     const rmsEnd = rms(buf, buf.length - 4410, buf.length);
-    // With frequency-dependent damping, A440 (MIDI 69) decays faster
-    expect(rmsEnd).toBeLessThan(rmsStart * 0.15);
+    expect(rmsEnd).toBeLessThan(rmsStart * 0.1);
   });
 
   it('returns silent buffer for very high frequency (delay < 2)', () => {

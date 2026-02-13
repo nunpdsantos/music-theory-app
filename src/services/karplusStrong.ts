@@ -37,8 +37,8 @@ interface Voice {
 const DEFAULT_PARAMS: KSParams = {
   brightness: 0.9,
   damping: 0.997,
-  pickPosition: 0.13,
-  duration: 4,
+  pickPosition: 0.28,
+  duration: 5,
 };
 
 const MAX_POLYPHONY = 16;
@@ -73,7 +73,7 @@ function getContext(): AudioContext {
 
 function setupChain(ctx: AudioContext): void {
   masterGain = ctx.createGain();
-  masterGain.gain.value = 0.7;
+  masterGain.gain.value = 0.9;
 
   compressor = ctx.createDynamicsCompressor();
   compressor.threshold.value = -12;
@@ -84,14 +84,14 @@ function setupChain(ctx: AudioContext): void {
 
   // Dry path
   dryGain = ctx.createGain();
-  dryGain.gain.value = 0.85;
+  dryGain.gain.value = 0.7;
 
-  // Wet path (reverb)
+  // Wet path (reverb) — prominent for spatial presence
   wetGain = ctx.createGain();
-  wetGain.gain.value = 0.15;
+  wetGain.gain.value = 0.3;
 
   reverb = ctx.createConvolver();
-  reverb.buffer = createReverbImpulse(ctx, 1.2, 2);
+  reverb.buffer = createReverbImpulse(ctx, 1.8, 1.6);
 
   // Routing: masterGain → dry → compressor → destination
   //          masterGain → wet → reverb → compressor → destination
@@ -165,24 +165,25 @@ export function generateKSBuffer(
   const delayLine = new Float32Array(delayLength);
 
   // --- A. Frequency-dependent damping ---
-  // Real strings lose energy faster at high pitch.
+  // Real strings lose energy faster at high pitch. Gentle scaling so
+  // mid-range notes (A440) stay close to the base damping value.
   const midi = midiFromFrequency(frequency);
-  const effectiveDamping = Math.max(0.98, Math.min(params.damping, params.damping - (midi - 40) * 0.00012));
+  const effectiveDamping = Math.max(0.990, Math.min(params.damping, params.damping - (midi - 40) * 0.00005));
 
   // --- B. String stiffness coefficient (one-pole allpass) ---
   // More stiffness at low frequencies → slightly inharmonic overtones
-  const stiffness = Math.max(0, Math.min(0.5, 0.5 - frequency / 20000));
+  const stiffness = Math.max(0, Math.min(0.4, 0.4 - frequency / 20000));
 
   // --- 1. Fill delay line with shaped excitation ---
-  // Half-sine amplitude window models a pluck displacement profile,
-  // then brightness low-pass filters the noise.
+  // Raised cosine window (never below 0.5) shapes the pluck displacement
+  // while preserving strong initial energy.
   let prev = 0;
   for (let i = 0; i < delayLength; i++) {
     const noise = Math.random() * 2 - 1;
     const filtered = params.brightness * noise + (1 - params.brightness) * prev;
     prev = filtered;
-    // Half-sine window: peaks at center of delay line, zero at edges
-    const window = Math.sin(Math.PI * i / delayLength);
+    // Raised cosine: range [0.5, 1.0] — full energy at center, half at edges
+    const window = 0.5 + 0.5 * Math.sin(Math.PI * i / delayLength);
     delayLine[i] = filtered * window;
   }
 
@@ -234,10 +235,10 @@ export function generateKSBuffer(
   }
 
   // --- 4. Body resonance simulation ---
-  // 2-pole bandpass at ~200 Hz simulates guitar body resonance.
-  // Blend 20% resonant + 80% dry.
-  const bodyFreq = 200;
-  const bodyQ = 1.5;
+  // 2-pole bandpass at ~180 Hz simulates guitar body resonance.
+  // Blend 15% resonant + 85% dry for warmth without muddiness.
+  const bodyFreq = 180;
+  const bodyQ = 1.2;
   const w0 = 2 * Math.PI * bodyFreq / sampleRate;
   const alpha = Math.sin(w0) / (2 * bodyQ);
   const b0 = alpha;
@@ -255,8 +256,8 @@ export function generateKSBuffer(
   const na2 = a2 / a0;
 
   let x1 = 0, x2 = 0, y1 = 0, y2 = 0;
-  const dryMix = 0.8;
-  const wetMix = 0.2;
+  const dryMix = 0.85;
+  const wetMix = 0.15;
 
   for (let i = 0; i < totalSamples; i++) {
     const x0 = output[i];
