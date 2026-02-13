@@ -86,13 +86,8 @@ export function Piano() {
 
   const allKeys = useMemo(() => generateKeyboardKeys(START_OCTAVE, END_OCTAVE), []);
 
-  // On mobile, show only 2 octaves centered on baseOctave for larger touch targets
-  const keys = useMemo(() => {
-    if (!mobile) return allKeys;
-    const lo = Math.max(START_OCTAVE, baseOctave - 1);
-    const hi = Math.min(END_OCTAVE, lo + 1);
-    return allKeys.filter((k) => k.octave >= lo && k.octave <= hi);
-  }, [mobile, allKeys, baseOctave]);
+  // Show all keys on every device — octave buttons handle quick navigation
+  const keys = allKeys;
 
   const isInScale = useCallback(
     (key: PianoKey) => scaleMidiNumbers.has(key.midiNumber),
