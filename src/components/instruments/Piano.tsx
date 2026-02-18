@@ -249,7 +249,9 @@ export function Piano() {
     return m;
   }, [allKeys]);
 
-  const keyboardHeldKeys = useRef(new Set<string>());
+  // Maps held keyboard key → the PianoKey used for note-on, so note-off
+  // always targets the same pitch even if baseOctave changes mid-hold.
+  const keyboardHeldKeys = useRef(new Map<string, PianoKey>());
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -269,18 +271,12 @@ export function Piano() {
       if (!pk) return;
 
       e.preventDefault();
-      keyboardHeldKeys.current.add(e.key);
+      keyboardHeldKeys.current.set(e.key, pk);
       handleNoteOn(pk);
     };
 
     const onKeyUp = (e: KeyboardEvent) => {
-      const semitone = KEYBOARD_MAP[e.key.toLowerCase()];
-      if (semitone === undefined) return;
-      if (!keyboardHeldKeys.current.has(e.key)) return;
-
-      const oct = useAppStore.getState().baseOctave;
-      const midi = 12 + oct * 12 + semitone;
-      const pk = midiLookup.get(midi);
+      const pk = keyboardHeldKeys.current.get(e.key);
       if (!pk) return;
 
       keyboardHeldKeys.current.delete(e.key);
