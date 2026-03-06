@@ -5,7 +5,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { CurriculumProgress } from '../core/types/curriculum';
-import type { ModuleExerciseResult, ModuleReviewSchedule } from '../core/types/exercise';
 import {
   getDefaultProgress,
 } from '../data/curriculumLoader';

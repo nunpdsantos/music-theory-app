@@ -43,7 +43,7 @@ export function Fretboard() {
   }, [selectedChord, isStandardTuning]);
 
   useEffect(() => {
-    setSelectedShapeIdx(0);
+    queueMicrotask(() => setSelectedShapeIdx(0));
   }, [selectedChord]);
 
   const currentShape = chordShapes[selectedShapeIdx] ?? null;
@@ -174,7 +174,8 @@ export function Fretboard() {
   const activeTimeouts = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
 
   useEffect(() => {
-    return () => { activeTimeouts.current.forEach(clearTimeout); };
+    const timeouts = activeTimeouts.current;
+    return () => { timeouts.forEach(clearTimeout); };
   }, []);
 
   const handleFretClick = useCallback(
@@ -216,6 +217,8 @@ export function Fretboard() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const dragState = useRef({ startX: 0, startScroll: 0, dragged: false });
 
+  const onDragEndRef = useRef<() => void>(() => {});
+
   const onDragMove = useCallback((e: PointerEvent) => {
     const el = scrollContainerRef.current;
     if (!el) return;
@@ -226,9 +229,12 @@ export function Fretboard() {
     }
   }, []);
 
-  const onDragEnd = useCallback(() => {
-    document.removeEventListener('pointermove', onDragMove);
-    document.removeEventListener('pointerup', onDragEnd);
+  // Assign in an effect to avoid ref mutation during render
+  useEffect(() => {
+    onDragEndRef.current = () => {
+      document.removeEventListener('pointermove', onDragMove);
+      document.removeEventListener('pointerup', onDragEndRef.current);
+    };
   }, [onDragMove]);
 
   const handleFretboardPointerDown = useCallback((e: React.PointerEvent) => {
@@ -239,8 +245,8 @@ export function Fretboard() {
     dragState.current.startX = e.clientX;
     dragState.current.startScroll = scrollContainerRef.current?.scrollLeft ?? 0;
     document.addEventListener('pointermove', onDragMove);
-    document.addEventListener('pointerup', onDragEnd);
-  }, [onDragMove, onDragEnd]);
+    document.addEventListener('pointerup', onDragEndRef.current);
+  }, [onDragMove]);
 
   const handleFretboardClickCapture = useCallback((e: React.MouseEvent) => {
     if (dragState.current.dragged) {
@@ -254,6 +260,7 @@ export function Fretboard() {
   const fretboardRef = useRef<HTMLDivElement>(null);
   const [barreStyle, setBarreStyle] = useState<React.CSSProperties | null>(null);
 
+  /* eslint-disable react-hooks/set-state-in-effect -- synchronous setState required in useLayoutEffect for DOM measurement */
   useLayoutEffect(() => {
     if (!fretboardRef.current || !currentShape?.shape.barreInfo) {
       setBarreStyle(null);
@@ -295,6 +302,7 @@ export function Fretboard() {
       zIndex: 5,
     });
   }, [currentShape, visibleFrets]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // ─── Keyboard navigation (roving tabindex on 2D grid) ─
   const [focusedCell, setFocusedCell] = useState<{ stringIdx: number; fret: number } | null>(null);
@@ -345,6 +353,7 @@ export function Fretboard() {
   );
 
   // Announce focused note for screen readers + auto-scroll focused cell into view
+  /* eslint-disable react-hooks/set-state-in-effect -- screen reader announcement is a leaf update, not cascading */
   useEffect(() => {
     if (!focusedCell) {
       setAnnouncedNote('');
@@ -365,6 +374,7 @@ export function Fretboard() {
       cell.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
     }
   }, [focusedCell, getFretNote]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Auto-scroll to CAGED position when selected
   useEffect(() => {

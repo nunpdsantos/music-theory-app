@@ -44,6 +44,14 @@ export default defineConfig({
             urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
             handler: 'NetworkOnly',
           },
+          {
+            urlPattern: /\/assets\/vexflow-.*\.js$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'vexflow-cache',
+              expiration: { maxEntries: 2, maxAgeSeconds: 30 * 24 * 60 * 60 },
+            },
+          },
         ],
       },
       devOptions: {

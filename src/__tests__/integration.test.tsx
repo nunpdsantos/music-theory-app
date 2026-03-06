@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { cleanup } from '@testing-library/react';
 import { useAppStore } from '../state/store';
 import { useKeyContext } from '../hooks/useKeyContext';
-import { renderHook, act } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import { buildScale } from '../core/constants/scales';
 import { getDiatonicChordsForScale } from '../core/constants/chords';
 import type { Note } from '../core/types/music';

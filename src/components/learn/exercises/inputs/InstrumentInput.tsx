@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../../../../state/store';
-import type { NaturalNote, Accidental, PitchedNote } from '../../../../core/types/music';
-import { getPitchClass, PITCH_CLASS_SPELLINGS } from '../../../../core/constants/notes';
+import type { PitchedNote } from '../../../../core/types/music';
+import { PITCH_CLASS_SPELLINGS } from '../../../../core/constants/notes';
 
 interface InstrumentInputProps {
   expectedCount: number;
@@ -34,8 +34,9 @@ export function InstrumentInput({ expectedCount, submitted, onSubmit, accentColo
         newPCs.add(pc);
       }
     }
-    setToggledPCs(newPCs);
-  }, [activeNotes]); // Intentionally only depends on activeNotes
+    queueMicrotask(() => setToggledPCs(newPCs));
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- toggledPCs read via closure intentionally; submitted not relevant here
+  }, [activeNotes]);
 
   // Update highlighted notes on instrument whenever toggled set changes
   useEffect(() => {

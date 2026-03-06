@@ -14,7 +14,7 @@ vi.mock('../useAudio.ts', () => ({
 // ---------------------------------------------------------------------------
 // Mock MIDI services
 // ---------------------------------------------------------------------------
-const mockInputs: any[] = [];
+const mockInputs: Array<{ id: string; name: string; onmidimessage: ((e: { data: Uint8Array }) => void) | null }> = [];
 const mockInitMidiInput = vi.fn().mockResolvedValue(undefined);
 const mockGetInputs = vi.fn(() => mockInputs);
 
@@ -23,10 +23,8 @@ vi.mock('../../services/midiInput.ts', () => ({
   getInputs: () => mockGetInputs(),
 }));
 
-let stateChangeCallback: (() => void) | null = null;
 const mockRemoveStateChangeListener = vi.fn();
-const mockAddStateChangeListener = vi.fn((cb: () => void) => {
-  stateChangeCallback = cb;
+const mockAddStateChangeListener = vi.fn((_cb: () => void) => {
   return mockRemoveStateChangeListener;
 });
 
@@ -53,11 +51,13 @@ import { useAppStore } from '../../state/store';
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-function makeMockInput(id: string): any {
+type MockInput = { id: string; name: string; onmidimessage: ((e: { data: Uint8Array }) => void) | null };
+
+function makeMockInput(id: string): MockInput {
   return { id, name: `Input ${id}`, onmidimessage: null };
 }
 
-function fireMidiMessage(input: any, data: number[]) {
+function fireMidiMessage(input: MockInput, data: number[]) {
   const handler = input.onmidimessage;
   if (handler) handler({ data: new Uint8Array(data) });
 }
@@ -65,7 +65,6 @@ function fireMidiMessage(input: any, data: number[]) {
 beforeEach(() => {
   vi.clearAllMocks();
   mockInputs.length = 0;
-  stateChangeCallback = null;
   useAppStore.setState({
     instrument: 'piano',
     midiInputEnabled: false,

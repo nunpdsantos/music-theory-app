@@ -11,7 +11,7 @@ import {
 } from '../../core/services/audio.ts';
 import { SCALE_TYPE_NAMES, SCALE_FORMULAS } from '../../core/constants/scales.ts';
 import { buildAscendingMidi, buildDescendingMidi } from '../../utils/midiHelpers.ts';
-import { INTERVAL_SHORT_LABELS, buildChord, CHORD_QUALITY_NAMES, CHORD_SYMBOLS } from '../../core/constants/chords.ts';
+import { INTERVAL_SHORT_LABELS, buildChord, CHORD_SYMBOLS } from '../../core/constants/chords.ts';
 import { MODE_INFO } from '../../core/constants/modes.ts';
 import { getChordsForScale } from '../../core/constants/chordScaleRelationships.ts';
 import { useAppStore } from '../../state/store.ts';

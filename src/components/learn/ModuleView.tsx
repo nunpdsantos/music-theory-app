@@ -10,7 +10,6 @@ import { ExerciseRunner } from './exercises/ExerciseRunner';
 import { Confetti } from './Confetti';
 import { toast } from '../../state/toastStore';
 import { getSongReferences } from '../../data/songReferences';
-import { playCelebrationSound } from '../../utils/celebrationSound';
 
 interface ModuleViewProps {
   module: CurriculumModule;
@@ -41,7 +40,7 @@ export function ModuleView({
   module,
   unit,
   level,
-  unitIndex,
+  unitIndex: _unitIndex,
   moduleIndex,
   isModuleCompleted,
   isTaskCompleted,
@@ -348,7 +347,7 @@ export function ModuleView({
                     key={task.id}
                     onClick={() => onToggleTask(module.id, task.id)}
                     className="w-full text-left px-4 py-3 flex items-start gap-3 transition-colors group"
-                    style={{ ['--tw-bg-opacity' as any]: undefined }}
+                    style={{ ['--tw-bg-opacity' as string]: undefined }}
                     onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'color-mix(in srgb, var(--card-hover) 30%, transparent)'; }}
                     onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
                   >
@@ -399,7 +398,7 @@ export function ModuleView({
             <button
               onClick={() => {
                 onCompleteModule(module.id);
-                playCelebrationSound();
+                import('../../utils/celebrationSound').then(({ playCelebrationSound }) => playCelebrationSound());
                 setShowConfetti(true);
 
                 // Check if this was the last module in the level

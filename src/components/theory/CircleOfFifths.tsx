@@ -3,7 +3,6 @@ import { noteToString, type Note, type ScaleType } from '../../core/types/music.
 import { getPitchClass } from '../../core/constants/notes.ts';
 import { useAppStore } from '../../state/store.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
-import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
 import { resumeAudio, playChordVoiced, SYNTH_PRESETS } from '../../core/services/audio.ts';
 import {
   CIRCLE_MAJOR, CIRCLE_MINOR, KEY_SIGNATURES,

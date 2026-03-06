@@ -6,6 +6,7 @@
 import type { PreferencesSnapshot } from '../services/syncMerge';
 import type { CurriculumProgress } from '../core/types/curriculum';
 import type { GamificationData } from '../core/types/gamification';
+import type { ConceptRecord } from '../state/conceptStore';
 
 export interface Database {
   public: {
@@ -24,6 +25,7 @@ export interface Database {
         Update: {
           display_name?: string | null;
         };
+        Relationships: [];
       };
       user_preferences: {
         Row: {
@@ -39,6 +41,7 @@ export interface Database {
           data?: PreferencesSnapshot;
           updated_at?: string;
         };
+        Relationships: [];
       };
       curriculum_progress: {
         Row: {
@@ -54,6 +57,7 @@ export interface Database {
           data?: CurriculumProgress;
           updated_at?: string;
         };
+        Relationships: [];
       };
       gamification_data: {
         Row: {
@@ -69,6 +73,23 @@ export interface Database {
           data?: GamificationData;
           updated_at?: string;
         };
+        Relationships: [];
+      };
+      concept_tracking: {
+        Row: {
+          user_id: string;
+          data: Record<string, ConceptRecord>;
+          updated_at: string;
+        };
+        Insert: {
+          user_id: string;
+          data?: Record<string, ConceptRecord>;
+        };
+        Update: {
+          data?: Record<string, ConceptRecord>;
+          updated_at?: string;
+        };
+        Relationships: [];
       };
     };
     Views: Record<string, never>;

@@ -22,10 +22,10 @@ vi.mock('../../lib/supabase', () => ({
 
 // Mock syncMerge — we test merge functions separately in syncMerge.test.ts.
 // Here we verify sync.ts calls them correctly and returns their output.
-const mockMergePreferences = vi.fn((local: PreferencesSnapshot, _remote: PreferencesSnapshot) => local);
-const mockMergeProgress = vi.fn((local: CurriculumProgress, _remote: CurriculumProgress) => local);
-const mockMergeGamification = vi.fn((local: GamificationData, _remote: GamificationData) => local);
-const mockMergeConceptTracking = vi.fn((local: Record<string, unknown>, _remote: Record<string, unknown>) => local);
+const mockMergePreferences = vi.fn((local: PreferencesSnapshot, _remote?: PreferencesSnapshot) => local);
+const mockMergeProgress = vi.fn((local: CurriculumProgress, _remote?: CurriculumProgress) => local);
+const mockMergeGamification = vi.fn((local: GamificationData, _remote?: GamificationData) => local);
+const mockMergeConceptTracking = vi.fn((local: Record<string, unknown>, _remote?: Record<string, unknown>) => local);
 
 vi.mock('../syncMerge', () => ({
   mergePreferences: (...args: unknown[]) => mockMergePreferences(...args as [PreferencesSnapshot, PreferencesSnapshot]),

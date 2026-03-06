@@ -2,7 +2,7 @@
  * ConceptRadar — hand-rolled SVG polygon chart showing mastery
  * across 6 concept category axes.
  */
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useConceptStore } from '../../state/conceptStore';
 import { CONCEPT_GROUPS } from '../../services/conceptTagger';
@@ -30,10 +30,10 @@ function getAngle(index: number): number {
 export function ConceptRadar({ accentColor = '#60A5FA' }: ConceptRadarProps) {
   const { t } = useTranslation();
   const concepts = useConceptStore((s) => s.concepts);
+  const [now] = useState(() => Date.now());
 
   // Compute mastery per group: average windowed accuracy across concepts in each group
   const mastery = useMemo(() => {
-    const now = Date.now();
     return CONCEPT_GROUPS.map((group) => {
       let totalAcc = 0;
       let count = 0;
@@ -58,7 +58,7 @@ export function ConceptRadar({ accentColor = '#60A5FA' }: ConceptRadarProps) {
       }
       return count > 0 ? totalAcc / count : 0;
     });
-  }, [concepts]);
+  }, [concepts, now]);
 
   // Build polygon points for mastery values
   const polygonPoints = mastery

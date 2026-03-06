@@ -79,8 +79,10 @@ export function useStaffNotation(options: UseStaffNotationOptions) {
     const textColor = computedStyle.getPropertyValue('--text').trim() || '#e4e4e7';
 
     context.setFont('Arial', 10);
-    (context as any).setStrokeStyle?.(textColor);
-    (context as any).setFillStyle?.(textColor);
+    // VexFlow SVGContext exposes these methods but they're missing from RenderContext typings
+    const ctx = context as unknown as Record<string, ((v: string) => void) | undefined>;
+    ctx.setStrokeStyle?.(textColor);
+    ctx.setFillStyle?.(textColor);
 
     // Build stave
     const staveX = 10;
@@ -144,6 +146,7 @@ export function useStaffNotation(options: UseStaffNotationOptions) {
         }
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- themeMode triggers re-render so CSS custom properties are re-read
   }, [loading, containerWidth, options.notes, options.clef, options.keySignature, options.width, options.height, options.noteColors, options.duration, themeMode]);
 
   // Trigger render when dependencies change

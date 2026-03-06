@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getSongReferences, type SongReference } from '../songReferences';
+import { getSongReferences } from '../songReferences';
 
 describe('getSongReferences', () => {
   it('returns references for a known L1 module', () => {

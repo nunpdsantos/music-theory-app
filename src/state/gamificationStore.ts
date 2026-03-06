@@ -154,6 +154,7 @@ export const useGamificationStore = create<GamificationStore>()(
       name: 'music-theory-gamification',
       version: 1,
       storage: createJSONStorage(() => localStorage),
+      migrate: (state) => state,
       partialize: (state) => ({
         activityLog: state.activityLog,
         streak: state.streak,

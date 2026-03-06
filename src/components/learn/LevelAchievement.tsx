@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import { SPRING_SNAPPY } from '../../design/tokens/motion';
 import { Confetti } from './Confetti';
-import { playCelebrationSound } from '../../utils/celebrationSound';
 
 interface LevelAchievementProps {
   levelNumber: number;
@@ -19,7 +18,7 @@ export function LevelAchievement({ levelNumber, accentColor, moduleCount, onDism
   const [showConfetti, setShowConfetti] = useState(true);
 
   useEffect(() => {
-    playCelebrationSound();
+    import('../../utils/celebrationSound').then(({ playCelebrationSound }) => playCelebrationSound());
     const timer = setTimeout(onDismiss, AUTO_DISMISS_MS);
     return () => clearTimeout(timer);
   }, [onDismiss]);

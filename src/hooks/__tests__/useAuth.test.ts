@@ -11,7 +11,7 @@ const mockSignOut = vi.fn();
 const mockUnsubscribe = vi.fn();
 let authChangeCallback: ((event: string, session: unknown) => void) | null =
   null;
-const mockOnAuthStateChange = vi.fn((_cb?: unknown) => ({
+const mockOnAuthStateChange = vi.fn((_cb: (event: string, session: unknown) => void) => ({
   data: {
     subscription: { unsubscribe: mockUnsubscribe },
   },
@@ -49,7 +49,7 @@ const fakeSession = {
   user: { id: 'u1', email: 'test@example.com' },
   access_token: 'tok',
   refresh_token: 'ref',
-} as unknown;
+};
 
 // ---------------------------------------------------------------------------
 // Reset between tests
@@ -63,7 +63,7 @@ beforeEach(() => {
   mockGetSession.mockResolvedValue({ data: { session: null } });
 
   // Capture the auth-change listener so tests can invoke it
-  mockOnAuthStateChange.mockImplementation((cb: any) => {
+  mockOnAuthStateChange.mockImplementation((cb: (event: string, session: unknown) => void) => {
     authChangeCallback = cb;
     return { data: { subscription: { unsubscribe: mockUnsubscribe } } };
   });
@@ -139,7 +139,7 @@ describe('useAuth — supabase present', () => {
     await act(async () => {});
     expect(result.current.session).toBe(fakeSession);
     expect(result.current.user).toEqual(
-      (fakeSession as any).user,
+      fakeSession.user,
     );
     expect(result.current.loading).toBe(false);
     expect(result.current.isAuthenticated).toBe(true);
@@ -176,7 +176,7 @@ describe('useAuth — supabase present', () => {
 
     expect(result.current.session).toBe(fakeSession);
     expect(result.current.isAuthenticated).toBe(true);
-    expect(result.current.user).toEqual((fakeSession as any).user);
+    expect(result.current.user).toEqual(fakeSession.user);
   });
 
   it('unsubscribes from auth state changes on unmount', async () => {

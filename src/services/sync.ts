@@ -10,6 +10,7 @@
  */
 
 import { supabase } from '../lib/supabase';
+import type { Database } from '../lib/database.types';
 import {
   mergePreferences,
   mergeProgress,
@@ -22,6 +23,11 @@ import type { GamificationData } from '../core/types/gamification';
 import type { ConceptRecord } from '../state/conceptStore';
 
 type SyncDomain = 'preferences' | 'progress' | 'gamification' | 'concepts';
+type TableName = keyof Database['public']['Tables'];
+
+function typedFrom<T extends TableName>(table: T) {
+  return supabase!.from(table);
+}
 
 export interface SyncCallbacks {
   onSyncing: () => void;
@@ -73,14 +79,40 @@ async function pushToRemote(
   callbacks.onSyncing();
 
   try {
-    const table = domainToTable(domain);
-    const payload = {
-      user_id: userId,
-      data: data as Record<string, unknown>,
-      updated_at: new Date().toISOString(),
-    };
-    // Use type assertion to work with dynamic table names
-    const { error } = await (supabase.from(table) as any).upsert(payload);
+    const now = new Date().toISOString();
+    let error: { message: string } | null = null;
+
+    switch (domain) {
+      case 'preferences':
+        ({ error } = await typedFrom('user_preferences').upsert({
+          user_id: userId,
+          data: data as PreferencesSnapshot,
+          updated_at: now,
+        }));
+        break;
+      case 'progress':
+        ({ error } = await typedFrom('curriculum_progress').upsert({
+          user_id: userId,
+          data: data as CurriculumProgress,
+          updated_at: now,
+        }));
+        break;
+      case 'gamification':
+        ({ error } = await typedFrom('gamification_data').upsert({
+          user_id: userId,
+          data: data as GamificationData,
+          updated_at: now,
+        }));
+        break;
+      case 'concepts':
+        ({ error } = await typedFrom('concept_tracking').upsert({
+          user_id: userId,
+          data: data as Record<string, ConceptRecord>,
+          updated_at: now,
+        }));
+        break;
+    }
+
     if (error) throw error;
     callbacks.onSynced(Date.now());
   } catch (err) {
@@ -112,10 +144,10 @@ export async function pullAll(
 
   try {
     const [prefRes, progRes, gamRes, conRes] = await Promise.all([
-      (supabase.from('user_preferences') as any).select('data').eq('user_id', userId).maybeSingle(),
-      (supabase.from('curriculum_progress') as any).select('data').eq('user_id', userId).maybeSingle(),
-      (supabase.from('gamification_data') as any).select('data').eq('user_id', userId).maybeSingle(),
-      (supabase.from('concept_tracking') as any).select('data').eq('user_id', userId).maybeSingle(),
+      typedFrom('user_preferences').select('data').eq('user_id', userId).maybeSingle(),
+      typedFrom('curriculum_progress').select('data').eq('user_id', userId).maybeSingle(),
+      typedFrom('gamification_data').select('data').eq('user_id', userId).maybeSingle(),
+      typedFrom('concept_tracking').select('data').eq('user_id', userId).maybeSingle(),
     ]);
 
     if (prefRes.error) throw prefRes.error;
@@ -194,16 +226,6 @@ export async function flushOfflineQueue(userId: string, callbacks: SyncCallbacks
   }
 }
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function domainToTable(domain: SyncDomain): string {
-  switch (domain) {
-    case 'preferences': return 'user_preferences';
-    case 'progress': return 'curriculum_progress';
-    case 'gamification': return 'gamification_data';
-    case 'concepts': return 'concept_tracking';
-  }
-}
 
 export function cancelAllPendingPushes() {
   for (const domain of Object.keys(timers) as SyncDomain[]) {

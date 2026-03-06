@@ -81,11 +81,9 @@ export function LearnView() {
     getModuleCompletedTaskCount,
     getUnitCompletedModuleCount,
     getLevelCompletedModuleCount,
-    getLevelState,
     recordExerciseResult,
     markExercisesPassed,
     isModuleExercisesPassed,
-    scheduleModuleReview,
     recordReviewResult,
   } = useLearnProgress();
 
@@ -120,7 +118,7 @@ export function LearnView() {
   useEffect(() => {
     if (dashboardRequested) {
       clearDashboardRequest();
-      navigate({ type: 'dashboard' }, 'forward');
+      queueMicrotask(() => navigate({ type: 'dashboard' }, 'forward'));
     }
   }, [dashboardRequested, clearDashboardRequest, navigate]);
 
@@ -140,8 +138,10 @@ export function LearnView() {
 
   useEffect(() => {
     if (!activeLevelId) {
-      setLoadedLevel(null);
-      setExercisesByModule({});
+      queueMicrotask(() => {
+        setLoadedLevel(null);
+        setExercisesByModule({});
+      });
       return;
     }
 

@@ -30,6 +30,13 @@ CREATE TABLE IF NOT EXISTS gamification_data (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- 5. Concept tracking (per-concept accuracy over 30-day window)
+CREATE TABLE IF NOT EXISTS concept_tracking (
+  user_id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  data JSONB NOT NULL DEFAULT '{}'::jsonb,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- ============================================================
 -- Row Level Security — users can only access their own rows
 -- ============================================================
@@ -38,6 +45,7 @@ ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_preferences ENABLE ROW LEVEL SECURITY;
 ALTER TABLE curriculum_progress ENABLE ROW LEVEL SECURITY;
 ALTER TABLE gamification_data ENABLE ROW LEVEL SECURITY;
+ALTER TABLE concept_tracking ENABLE ROW LEVEL SECURITY;
 
 -- Profiles
 CREATE POLICY "Users can read own profile"
@@ -91,6 +99,19 @@ CREATE POLICY "Users can update own gamification"
   ON gamification_data FOR UPDATE
   USING (auth.uid() = user_id);
 
+-- Concept tracking
+CREATE POLICY "Users can read own concept tracking"
+  ON concept_tracking FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can upsert own concept tracking"
+  ON concept_tracking FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own concept tracking"
+  ON concept_tracking FOR UPDATE
+  USING (auth.uid() = user_id);
+
 -- ============================================================
 -- Auto-create profile + empty rows on signup
 -- ============================================================
@@ -108,6 +129,9 @@ BEGIN
   VALUES (NEW.id);
 
   INSERT INTO public.gamification_data (user_id)
+  VALUES (NEW.id);
+
+  INSERT INTO public.concept_tracking (user_id)
   VALUES (NEW.id);
 
   RETURN NEW;
@@ -146,4 +170,8 @@ CREATE TRIGGER update_progress_updated_at
 
 CREATE TRIGGER update_gamification_updated_at
   BEFORE UPDATE ON gamification_data
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at();
+
+CREATE TRIGGER update_concept_tracking_updated_at
+  BEFORE UPDATE ON concept_tracking
   FOR EACH ROW EXECUTE FUNCTION public.update_updated_at();

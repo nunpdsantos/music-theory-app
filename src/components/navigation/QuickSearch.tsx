@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, m } from 'framer-motion';
 import { useAppStore } from '../../state/store.ts';
-import { noteToString, stringToNote, type Note, type ScaleType } from '../../core/types/music.ts';
+import { noteToString, stringToNote, type ScaleType, type ChordQuality } from '../../core/types/music.ts';
 import { buildChord, CHORD_QUALITY_NAMES, CHORD_SYMBOLS } from '../../core/constants/chords.ts';
 import { getPitchClass } from '../../core/constants/notes.ts';
 import { SCALE_TYPE_NAMES } from '../../core/constants/scales.ts';
@@ -101,7 +101,6 @@ function getResults(query: string): SearchResult[] {
           type: 'Scale',
           label: name,
           action: () => {
-            const currentKey = useAppStore.getState().selectedKey;
             useAppStore.getState().setScale(scaleType as ScaleType);
           },
         });
@@ -124,7 +123,7 @@ function getResults(query: string): SearchResult[] {
           label: `${name} (${symbol || quality})`,
           action: () => {
             const root = useAppStore.getState().selectedKey;
-            const chord = buildChord(root, quality as any);
+            const chord = buildChord(root, quality as ChordQuality);
             useAppStore.getState().setSelectedChord(chord);
           },
         });
@@ -170,7 +169,7 @@ export function QuickSearch() {
 
   // Reset selection when results change
   useEffect(() => {
-    setSelectedIdx(0);
+    queueMicrotask(() => setSelectedIdx(0));
   }, [results.length, query]);
 
   const restoreFocus = useCallback(() => {

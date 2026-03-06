@@ -2,7 +2,6 @@ import { useEffect, Suspense, lazy } from 'react';
 import type { ExerciseDefinition } from '../../../core/types/exercise';
 import type { NaturalNote, Accidental, PitchedNote } from '../../../core/types/music';
 import { useAppStore } from '../../../state/store';
-import { getPitchClass } from '../../../core/constants/notes';
 import { StaffNotationSkeleton } from '../../notation/StaffNotationSkeleton';
 
 const StaffNotation = lazy(() =>

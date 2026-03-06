@@ -148,6 +148,7 @@ export const useConceptStore = create<ConceptStore>()(
       name: 'music-theory-concept-tracking',
       version: 1,
       storage: createJSONStorage(() => localStorage),
+      migrate: (state) => state,
       partialize: (state) => ({ concepts: state.concepts }),
     },
   ),

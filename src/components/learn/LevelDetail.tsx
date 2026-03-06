@@ -21,7 +21,7 @@ interface LevelDetailProps {
 export function LevelDetail({
   level,
   progress,
-  isModuleCompleted,
+  isModuleCompleted: _isModuleCompleted,
   getUnitCompletedModuleCount,
   onOpenUnit,
   onBack,

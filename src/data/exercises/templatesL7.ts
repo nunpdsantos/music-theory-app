@@ -7,8 +7,6 @@ import type { ModuleTemplateConfig } from './exerciseTemplates';
 // ---------------------------------------------------------------------------
 
 const ALL_ROOTS = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-const ALL_ROOTS_CHROMATIC = ['C', 'D', 'D', 'E', 'E', 'F', 'F', 'G', 'G', 'A', 'A', 'B'];
-const ALL_ACC_CHROMATIC = ['', 'b', '', 'b', '', '', '#', 'b', '', 'b', '', ''];
 
 const templates: ModuleTemplateConfig[] = [
   // =========================================================================

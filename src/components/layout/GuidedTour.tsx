@@ -24,7 +24,7 @@ function useTargetRect(selector: string | null) {
   const [rect, setRect] = useState<DOMRect | null>(null);
 
   useEffect(() => {
-    if (!selector) { setRect(null); return; }
+    if (!selector) return;
 
     const measure = () => {
       const el = document.querySelector<HTMLElement>(selector);
@@ -64,10 +64,17 @@ export function GuidedTour() {
   const currentStep = step !== null ? STEPS[step] : null;
   const rect = useTargetRect(currentStep?.selector ?? null);
 
+  const complete = useCallback(() => {
+    setStep(null);
+    try { localStorage.setItem(STORAGE_KEY, '1'); } catch { /* noop */ }
+  }, []);
+
   // Auto-dismiss when QuickSearch opens
   useEffect(() => {
-    if (quickSearchOpen && step !== null) complete();
-  }, [quickSearchOpen]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (quickSearchOpen && step !== null) {
+      queueMicrotask(complete);
+    }
+  }, [quickSearchOpen, step, complete]);
 
   // Step 2 auto-advance: watch activeNotes
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -81,11 +88,6 @@ export function GuidedTour() {
 
     return () => clearTimeout(debounceRef.current);
   }, [step, activeNotes.size]);
-
-  const complete = useCallback(() => {
-    setStep(null);
-    try { localStorage.setItem(STORAGE_KEY, '1'); } catch { /* noop */ }
-  }, []);
 
   const next = useCallback(() => {
     setStep((s) => {

@@ -11,7 +11,7 @@ import { ExerciseFeedback } from './ExerciseFeedback';
 import { ChoiceInput } from './inputs/ChoiceInput';
 import { InstrumentInput } from './inputs/InstrumentInput';
 import { playNote, playChord, resumeAudio } from '../../../core/services/audio';
-import type { NaturalNote, Accidental, Note } from '../../../core/types/music';
+import type { NaturalNote, Accidental, Note, ChordQuality } from '../../../core/types/music';
 import { buildChord } from '../../../core/constants/chords';
 import { useGamificationStore } from '../../../state/gamificationStore';
 import { useConceptStore } from '../../../state/conceptStore';
@@ -77,7 +77,7 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
       default:
         return [];
     }
-  }, [exercise?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [exercise]);
 
   // Ear training: play audio on mount and provide replay
   const playingRef = useRef(false);
@@ -112,13 +112,13 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
         }, 700);
       } else if (cfg.mode === 'chord' && cfg.chordRoot && cfg.quality) {
         const root: Note = { natural: cfg.chordRoot as NaturalNote, accidental: (cfg.chordRootAccidental ?? '') as Accidental };
-        const chord = buildChord(root, cfg.quality as any);
+        const chord = buildChord(root, cfg.quality as ChordQuality);
         playChord(chord.notes, 4, 1.2);
       }
     } finally {
       setTimeout(() => { playingRef.current = false; }, 800);
     }
-  }, [exercise?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [exercise]);
 
   // Auto-play ear training audio when exercise changes
   useEffect(() => {
@@ -127,7 +127,8 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
       const t = setTimeout(playEarAudio, 300);
       return () => clearTimeout(t);
     }
-  }, [exercise?.id, playEarAudio]); // eslint-disable-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- phase is read but intentionally omitted; we only auto-play on exercise change
+  }, [exercise, playEarAudio]);
 
   const handleSelectChoice = useCallback((value: string) => {
     setSelected(value);

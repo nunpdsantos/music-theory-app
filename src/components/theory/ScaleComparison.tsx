@@ -1,10 +1,9 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../../state/store.ts';
-import type { ScaleType, Note } from '../../core/types/music.ts';
+import type { ScaleType } from '../../core/types/music.ts';
 import { noteToString } from '../../core/types/music.ts';
-import { buildScale, SCALE_TYPE_NAMES, SCALE_FORMULAS } from '../../core/constants/scales.ts';
-import { INTERVAL_SHORT_LABELS } from '../../core/constants/chords.ts';
+import { buildScale, SCALE_TYPE_NAMES } from '../../core/constants/scales.ts';
 import { getPitchClass } from '../../core/constants/notes.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';

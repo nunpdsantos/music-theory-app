@@ -2,7 +2,7 @@
  * ReviewQueue — amber-themed card list showing modules due for spaced repetition review.
  * Displayed in LevelsOverview between Continue banner and level grid.
  */
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import type { CurriculumProgress } from '../../core/types/curriculum';
@@ -29,10 +29,11 @@ function getModuleInfo(moduleId: string) {
 
 export function ReviewQueue({ progress, onStartReview }: ReviewQueueProps) {
   const { t } = useTranslation();
+  const [now] = useState(() => Date.now());
 
   const dueModuleIds = useMemo(
-    () => getDueReviewModuleIds(progress, Date.now()),
-    [progress],
+    () => getDueReviewModuleIds(progress, now),
+    [progress, now],
   );
 
   // No schedules at all → user hasn't completed any modules with SRS
@@ -44,7 +45,7 @@ export function ReviewQueue({ progress, onStartReview }: ReviewQueueProps) {
 
     // All caught up — show next review date
     const earliest = Math.min(...Object.values(schedules).map((s) => s.nextReviewAt));
-    const relativeTime = formatNextReview({ nextReviewAt: earliest } as Parameters<typeof formatNextReview>[0], Date.now());
+    const relativeTime = formatNextReview({ nextReviewAt: earliest } as Parameters<typeof formatNextReview>[0], now);
 
     return (
       <m.div
@@ -98,7 +99,7 @@ export function ReviewQueue({ progress, onStartReview }: ReviewQueueProps) {
         {shown.map((moduleId) => {
           const schedule = (progress.reviewSchedules ?? {})[moduleId];
           const levelMeta = getModuleInfo(moduleId);
-          const reviewStatus = schedule ? formatNextReview(schedule, Date.now()) : '';
+          const reviewStatus = schedule ? formatNextReview(schedule, now) : '';
           const interval = schedule ? getIntervalLabel(schedule.intervalLevel) : '';
 
           return (

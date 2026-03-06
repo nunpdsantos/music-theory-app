@@ -38,6 +38,7 @@ import { useSyncStore } from '../../state/syncStore';
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- partial mock of Supabase User
 const fakeUser = { id: 'u1', email: 'test@example.com' } as any;
 
 // Capture initial states so we can reset

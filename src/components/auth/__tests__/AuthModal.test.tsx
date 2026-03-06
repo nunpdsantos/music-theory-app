@@ -20,8 +20,8 @@ vi.mock('framer-motion', async () => {
   const MOTION_RE =
     /^(while|initial|animate|exit|transition|layout|variants|drag|onDrag)/;
   function makeMotion(tag: string) {
-    return function MotionProxy(props: Record<string, any>) {
-      const clean: Record<string, any> = {};
+    return function MotionProxy(props: Record<string, unknown>) {
+      const clean: Record<string, unknown> = {};
       for (const [k, v] of Object.entries(props)) {
         if (k === 'children' || !MOTION_RE.test(k)) clean[k] = v;
       }
@@ -35,8 +35,8 @@ vi.mock('framer-motion', async () => {
   return {
     motion: proxy,
     m: proxy,
-    AnimatePresence: (p: any) => p.children,
-    LazyMotion: (p: any) => p.children,
+    AnimatePresence: (p: { children: React.ReactNode }) => p.children,
+    LazyMotion: (p: { children: React.ReactNode }) => p.children,
     domAnimation: {},
   };
 });

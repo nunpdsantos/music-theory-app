@@ -2,13 +2,12 @@
  * Thin wrapper around progressStore — preserves the exact same API surface
  * that all consumers expect, but backed by Zustand for sync support.
  */
-import { useCallback, useMemo, useEffect, useRef } from 'react';
+import { useCallback, useMemo, useEffect, useRef, useState } from 'react';
 import { useProgressStore } from '../state/progressStore';
 import type { CurriculumLevel, CurriculumUnit, LevelState } from '../core/types/curriculum';
 import type { ModuleExerciseResult, ModuleReviewSchedule } from '../core/types/exercise';
 import {
   getLevelCompletedModuleCount as _getLevelCompleted,
-  getLevelModuleCount,
   isLevelCompleted as _isLevelCompleted,
   isUnitCompleted as _isUnitCompleted,
   computeLevelState,
@@ -117,14 +116,20 @@ export function useLearnProgress() {
 
   // Spaced repetition
 
+  const [now, setNow] = useState(Date.now);
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
   const getReviewQueue = useCallback(
-    () => getDueReviewModuleIds(progress, Date.now()),
-    [progress],
+    () => getDueReviewModuleIds(progress, now),
+    [progress, now],
   );
 
   const reviewDueCount = useMemo(
-    () => getDueReviewCount(progress, Date.now()),
-    [progress],
+    () => getDueReviewCount(progress, now),
+    [progress, now],
   );
 
   const getModuleReviewSchedule = useCallback(

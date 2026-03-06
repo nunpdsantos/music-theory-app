@@ -8,7 +8,7 @@ import {
 import type { PreferencesSnapshot } from '../syncMerge';
 import type { CurriculumProgress } from '../../core/types/curriculum';
 import type { ModuleExerciseResult, ModuleReviewSchedule } from '../../core/types/exercise';
-import type { GamificationData, ActivityDay, AchievementRecord, XPEvent } from '../../core/types/gamification';
+import type { GamificationData, XPEvent } from '../../core/types/gamification';
 import { getDefaultGamificationData } from '../../core/types/gamification';
 
 // ─── Fixtures ───────────────────────────────────────────────────────────────

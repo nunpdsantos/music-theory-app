@@ -14,6 +14,7 @@ export function useMidi() {
 
   useEffect(() => {
     if (!midiInputEnabled) return;
+    let active = true;
 
     const handleMidiMessage = (e: MIDIMessageEvent) => {
       if (!e.data || e.data.length < 3) return;
@@ -36,6 +37,7 @@ export function useMidi() {
     };
 
     const attachListeners = () => {
+      if (!active) return;
       const inputs = getInputs();
       for (const input of inputs) {
         if (midiInputDeviceId && input.id !== midiInputDeviceId) {
@@ -49,11 +51,13 @@ export function useMidi() {
     let cleanupStateChange: (() => void) | undefined;
 
     initMidiInput().then(() => {
+      if (!active) return;
       attachListeners();
       cleanupStateChange = addStateChangeListener(attachListeners);
     });
 
     return () => {
+      active = false;
       cleanupStateChange?.();
       const inputs = getInputs();
       for (const input of inputs) {

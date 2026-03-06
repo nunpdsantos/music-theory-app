@@ -11,7 +11,7 @@ interface ModuleRowProps {
   onClick: () => void;
 }
 
-export function ModuleRow({ module, index, isCompleted, isLocked, isComingSoon, accentColor, onClick }: ModuleRowProps) {
+export function ModuleRow({ module, index, isCompleted, isLocked, isComingSoon, accentColor: _accentColor, onClick }: ModuleRowProps) {
   const { t } = useTranslation();
   const disabled = isComingSoon; // Only truly disable coming-soon modules; locked ones are browsable
 

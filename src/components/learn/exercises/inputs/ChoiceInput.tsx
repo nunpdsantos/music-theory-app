@@ -20,7 +20,7 @@ export function ChoiceInput({ options, selected, submitted, onSelect, accentColo
 
         let bg = '';
         let border = '';
-        let defaultStyle: React.CSSProperties = { backgroundColor: 'color-mix(in srgb, var(--card) 60%, transparent)', border: '1px solid color-mix(in srgb, var(--border) 50%, transparent)' };
+        const defaultStyle: React.CSSProperties = { backgroundColor: 'color-mix(in srgb, var(--card) 60%, transparent)', border: '1px solid color-mix(in srgb, var(--border) 50%, transparent)' };
         let textColor = '';
 
         if (isSelected && !submitted) {
