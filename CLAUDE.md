@@ -25,8 +25,8 @@ Interactive music theory education platform that teaches through instrument-firs
 ### Color System
 
 Scale degree function is encoded in color throughout the app:
-- Tonic (1) = blue, Supertonic (2) = indigo, Mediant (3) = violet
-- Subdominant (4) = green, Dominant (5) = amber, Submediant (6) = teal, Leading tone (7) = red
+- Tonic (1) = blue, Supertonic (2) = violet, Mediant (3) = pink
+- Subdominant (4) = emerald, Dominant (5) = amber, Submediant (6) = orange, Leading tone (7) = red
 
 ---
 
@@ -35,7 +35,7 @@ Scale degree function is encoded in color throughout the app:
 **Name:** Music Theory App
 **Domain:** Music theory education / interactive instrument
 **Stack:** React 19 + TypeScript 5.9 + Vite 7 + Tailwind CSS v4 + Zustand 5 + Framer Motion 12 + Supabase
-**Tests:** 764 passing (Vitest + React Testing Library, 40 test files)
+**Tests:** 841 passing (Vitest + React Testing Library, 45 test files)
 **Languages:** English + Portuguese + Spanish (react-i18next + content overlay system)
 **PWA:** Offline-capable with Workbox precaching
 **Backend:** Supabase (optional — app works fully without env vars)
@@ -200,7 +200,19 @@ src/
 - **Spanish:** 100% complete — 29 overlay files (levelMeta + 9×curriculum + 9×exercises + 9×templates + songs), 13,310 lines
 - **Music term dictionaries:** Scale types, chord qualities, directions for PT + ES (used by exercise generator)
 - **Tests:** 45 new tests (contentResolver 22, musicTerms 11, generatorLang 7, levelMetaResolver 5)
-- 764 tests passing (45 new), 40 test files
+- 841 tests passing, 45 test files
+
+### Audit Remediation (Phase 12.6) — COMPLETE
+- **React 19 lint compliance:** Fixed Date.now() in render, setState in effects, ref mutations during render, incomplete dep arrays (9 components)
+- **Type safety:** Removed all `as any` casts from source files, replaced with proper types (ChordQuality, typed Supabase helpers, Record<string, unknown>)
+- **Dead code removal:** Unused imports, variables, and functions across 6 source files
+- **PWA offline:** Added VexFlow runtime CacheFirst caching to workbox config
+- **Store migrations:** Added migration placeholders for gamificationStore and conceptStore
+- **Code splitting:** Converted celebrationSound to dynamic import in LevelAchievement + ModuleView
+- **Supabase schema:** Added concept_tracking table, RLS policies, signup trigger, database types
+- **Async safety:** Added cancelled-flag pattern to useMidi hook for race condition prevention
+- **ESLint config:** Added argsIgnorePattern/varsIgnorePattern for _ prefix convention, excluded src/core from linting
+- 841 tests passing, 45 test files. 0 lint errors. 0 type errors.
 
 ---
 

@@ -5,7 +5,7 @@
 All 29 Spanish content overlay files are written, type-checked, and tested. Spanish is at 100% parity with Portuguese.
 
 - **tsc:** clean
-- **Tests:** 764 passing (40 files)
+- **Tests:** 841 passing (45 files)
 - **Total lines:** 13,310 across 29 ES overlay files
 
 ## What's Done

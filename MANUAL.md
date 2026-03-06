@@ -1,6 +1,6 @@
 # Music Theory App — Manual
 
-A comprehensive interactive music theory application for learning scales, chords, harmony, and ear training. Runs entirely in the browser with no server required.
+A comprehensive interactive music theory application for learning scales, chords, harmony, and ear training. Runs entirely in the browser with optional cloud sync via Supabase.
 
 ---
 
@@ -17,18 +17,25 @@ A comprehensive interactive music theory application for learning scales, chords
 9. [Quick Search](#quick-search)
 10. [Scales Reference](#scales-reference)
 11. [Chord System](#chord-system)
-12. [Metronome](#metronome)
-13. [Chord Progression Builder](#chord-progression-builder)
-14. [Audio Recording](#audio-recording)
-15. [MIDI Output](#midi-output)
-16. [Scale Comparison](#scale-comparison)
-17. [Print and Export](#print-and-export)
-18. [Themes and Appearance](#themes-and-appearance)
-19. [Language](#language)
-20. [Offline Use (PWA)](#offline-use-pwa)
-21. [Settings and Persistence](#settings-and-persistence)
-22. [Accessibility](#accessibility)
-23. [Running the App](#running-the-app)
+12. [Staff Notation](#staff-notation)
+13. [Metronome](#metronome)
+14. [Chord Progression Builder](#chord-progression-builder)
+15. [Audio Recording](#audio-recording)
+16. [MIDI Output](#midi-output)
+17. [MIDI Input](#midi-input)
+18. [Scale Comparison](#scale-comparison)
+19. [Print and Export](#print-and-export)
+20. [Spaced Repetition and Review](#spaced-repetition-and-review)
+21. [Gamification](#gamification)
+22. [Adaptive Difficulty](#adaptive-difficulty)
+23. [Song References](#song-references)
+24. [Authentication and Cloud Sync](#authentication-and-cloud-sync)
+25. [Themes and Appearance](#themes-and-appearance)
+26. [Language](#language)
+27. [Offline Use (PWA)](#offline-use-pwa)
+28. [Settings and Persistence](#settings-and-persistence)
+29. [Accessibility](#accessibility)
+30. [Running the App](#running-the-app)
 
 ---
 
@@ -53,9 +60,10 @@ All your preferences (selected key, scale, instrument, volume, theme, language) 
 The header contains:
 
 - **View tabs** (Explore, Play, Learn) with an animated indicator showing the active view
-- **Language selector** dropdown (English, Portuguese)
+- **Language selector** dropdown (English, Portuguese, Spanish)
 - **Theme toggle** button cycling through Dark, Light, and System modes
 - **Quick Search** button (or press Cmd+K / Ctrl+K)
+- **Account menu** — sign in with magic link (email), or view your account and sync status when signed in
 
 ### Instrument Bar
 
@@ -126,11 +134,11 @@ Each degree is color-coded:
 | Degree | Name | Color |
 |--------|------|-------|
 | 1 | Tonic | Blue |
-| 2 | Supertonic | Teal |
-| 3 | Mediant | Green |
-| 4 | Subdominant | Purple |
+| 2 | Supertonic | Violet |
+| 3 | Mediant | Pink |
+| 4 | Subdominant | Emerald |
 | 5 | Dominant | Amber |
-| 6 | Submediant | Pink |
+| 6 | Submediant | Orange |
 | 7 | Leading Tone | Red |
 
 Click a degree to highlight its note on the instrument.
@@ -232,10 +240,12 @@ Levels 1 through 8 are sequential — each requires the previous level to be com
 Each module contains:
 
 - **Learning Objectives** — what you'll understand after completing it
+- **Key Concepts** — the theory topics covered
 - **Practice Tasks** — activities to work through (reading, practice, exploration)
+- **Song References** (L1–L3) — real songs that use the concepts being taught, with educational context
 - **Exercises** — interactive questions and instrument-based challenges
 
-Mark a module complete when you've finished all tasks and passed the exercises (80% or higher).
+Mark a module complete when you've finished all tasks and passed the exercises (80% or higher). Completed modules enter the spaced repetition review queue for long-term retention.
 
 ### Exercise Types
 
@@ -258,7 +268,7 @@ Seven kinds of exercises appear throughout the curriculum:
 - **Failed**: 0 points
 - **Pass threshold**: 80% average across all exercises in a module
 
-Your scores are saved to your browser. You can replay exercises to improve your score.
+Your scores are saved to your browser (and optionally synced to the cloud). You can replay exercises to improve your score. The adaptive difficulty system tracks your concept mastery and prioritizes weaker areas when selecting exercises for review.
 
 ---
 
@@ -448,6 +458,20 @@ Quick Search understands complex chord symbols like Cmaj7#11, G7b9#11, Dm7b5/A (
 
 ---
 
+## Staff Notation
+
+Standard music notation appears throughout the app, rendered by VexFlow 5.0 (lazy-loaded as a separate chunk).
+
+### Where It Appears
+
+- **Scale detail panel** — shows the current scale on a treble clef staff with key signature
+- **Chord detail panel** — shows chord voicings with correct accidentals
+- **Exercises** — note identification, interval, and chord exercises display notes on the staff for visual recognition
+
+The notation is theme-reactive (dark/light) and renders as SVG for crisp display at any zoom level.
+
+---
+
 ## Metronome
 
 Located in the Play view. Provides a click track for practice.
@@ -521,6 +545,24 @@ MIDI output requires a browser that supports the Web MIDI API (Chrome and Edge; 
 
 ---
 
+## MIDI Input
+
+Located in the Play view. Receive note input from external MIDI controllers.
+
+### Setup
+
+1. Connect a MIDI controller (keyboard, pad, etc.) to your computer
+2. Toggle **Enable MIDI input** on
+3. Select your device from the dropdown
+
+### How It Works
+
+When enabled, notes played on your MIDI controller are received by the app. In exercises, a MIDI badge appears on the instrument input, indicating that you can answer by playing your physical instrument instead of clicking the on-screen piano or fretboard. Hot-plug is supported — connect or disconnect devices and the list refreshes automatically.
+
+MIDI input and output share a single underlying MIDIAccess connection for efficiency. Both can be active simultaneously — play a note on your MIDI keyboard and hear it through the app's synth while also sending it to an external device.
+
+---
+
 ## Scale Comparison
 
 Located in the Explore view, below the Scale Degree Bar.
@@ -558,6 +600,125 @@ Click the **Print** button (or use Ctrl+P / Cmd+P). The app applies a print-opti
 
 ---
 
+## Spaced Repetition and Review
+
+Completed modules automatically enter a spaced repetition review queue for long-term retention.
+
+### How It Works
+
+The system uses a 6-level interval schedule:
+
+| Level | Review Interval |
+|-------|----------------|
+| 1 | 1 day |
+| 2 | 3 days |
+| 3 | 7 days |
+| 4 | 14 days |
+| 5 | 30 days |
+| 6 | 90 days |
+
+When a module comes due for review, it appears in the **Review Queue** at the top of the Learn view. Passing a review advances the module to the next interval level. Failing resets it to level 1.
+
+Modules completed before the spaced repetition system was introduced are automatically backfilled into the queue at level 1.
+
+---
+
+## Gamification
+
+The app tracks your progress with streaks, XP, and achievements to maintain motivation.
+
+### Streaks
+
+A daily streak counts consecutive days of activity. There is a 1-day grace period — missing a single day does not break your streak, but missing two consecutive days resets it to zero.
+
+### XP (Experience Points)
+
+| Activity | XP Earned |
+|----------|-----------|
+| Complete a module | 10–20 |
+| Answer an exercise correctly | 1–2 |
+| Complete a review session | 5 |
+| Complete an entire level | 50 (bonus) |
+
+### Achievements
+
+20 achievements across 4 categories:
+
+- **Milestones** — completing levels, reaching module counts
+- **Streaks** — maintaining daily practice streaks
+- **Exercises** — answering exercise counts, accuracy targets
+- **Reviews** — completing spaced repetition reviews
+
+### Progress Dashboard
+
+Accessible from the Learn view, the dashboard shows:
+
+- **Activity heatmap** — daily activity over time
+- **Weekly chart** — XP earned per day this week
+- **Stat cards** — total XP, current streak, modules completed, exercises answered
+- **Concept mastery radar** — a 6-axis radar chart showing strengths and weaknesses across concept areas
+- **Achievement grid** — all 20 achievements with progress indicators
+
+---
+
+## Adaptive Difficulty
+
+The app tracks your mastery of individual music theory concepts and uses this data to personalize exercise selection.
+
+### Concept Tracking
+
+Every exercise is automatically tagged with the concepts it tests (e.g., "treble clef note reading", "major triad construction", "interval quality"). Your accuracy on each concept is tracked over a 30-day sliding window.
+
+### Weighted Selection
+
+When you enter review mode or start a new exercise set, the system uses weighted selection to prioritize weak concepts. Concepts where your accuracy is below threshold receive 3x the selection weight, meaning you practice your weaknesses more often without completely ignoring your strengths.
+
+### Concept Radar
+
+The Progress Dashboard includes a radar chart showing your mastery across 6 concept axes, giving you a visual overview of where you're strong and where you need more practice.
+
+---
+
+## Song References
+
+Modules in Levels 1 through 3 include references to real songs that use the concepts being taught. Each reference shows the song title, artist, and a short explanation of how the song demonstrates the concept.
+
+Song references appear in the Module View between the key concepts and the exercises section, in a "Songs That Use This" card. This connects abstract theory to music you can listen to and recognize.
+
+---
+
+## Authentication and Cloud Sync
+
+The app works fully offline with local storage. Optionally, sign in with a Supabase account to sync your data across devices.
+
+### Sign In
+
+Click the account icon in the top bar to open the authentication modal. Sign in via magic link — enter your email address and click the link sent to your inbox. No passwords required.
+
+### What Syncs
+
+When signed in, the following data syncs automatically:
+
+| Data | Sync Strategy |
+|------|--------------|
+| Preferences (theme, instrument, volume, etc.) | Last-write-wins |
+| Curriculum progress (completed modules, scores) | Union merge (no data lost) |
+| Gamification (streaks, XP, achievements) | Max merge (highest values kept) |
+| Concept mastery tracking | Max per-date merge |
+
+### How Sync Works
+
+- **Push:** Changes are debounced and pushed to the server 2 seconds after the last change
+- **Pull:** Data is pulled from the server when you sign in
+- **Offline queue:** Changes made while offline are queued in localStorage and pushed when connectivity returns
+- **Conflict resolution:** Each data domain uses a merge strategy designed to never lose user progress
+
+### Sign Out
+
+Open the account menu in the top bar and click Sign Out. Your local data remains intact — signing out does not delete anything.
+
+---
+
 ## Themes and Appearance
 
 Three theme modes, toggled from the button in the top bar:
@@ -568,7 +729,7 @@ Three theme modes, toggled from the button in the top bar:
 | Light | Light backgrounds, dark text |
 | System | Follows your operating system's dark/light preference |
 
-The theme affects all surfaces, text, borders, and input fields through CSS custom properties. Degree colors (blue, teal, green, purple, amber, pink, red) remain consistent across themes.
+The theme affects all surfaces, text, borders, and input fields through CSS custom properties. Degree colors (blue, violet, pink, emerald, amber, orange, red) remain consistent across themes.
 
 Your theme preference is saved and restored on your next visit.
 
@@ -579,11 +740,14 @@ Your theme preference is saved and restored on your next visit.
 The app supports multiple languages. Currently available:
 
 - **English** (default)
-- **Portuguese**
+- **Portuguese** — full UI + complete educational content translation (all 9 levels)
+- **Spanish** — full UI + complete educational content translation (all 9 levels)
 
 Switch languages from the dropdown in the top bar. The language preference is saved.
 
-Musical nomenclature (scale type names, chord symbols, interval labels, note names) is not translated — these are universal in music education and remain in English across all languages.
+The translation system has two layers: UI chrome (buttons, labels, navigation) uses react-i18next with JSON locale files; educational content (curriculum descriptions, exercise prompts, hints, choices) uses a separate overlay system that lazy-loads translated content per level on demand.
+
+Note names remain in international notation (C, D, E, F#, Bb) across all languages. Music terminology (scale types, chord qualities, interval names) is translated in exercise prompts and hints but kept in standard notation in the instrument and theory views.
 
 ---
 
@@ -626,6 +790,8 @@ The following settings are automatically saved to your browser (localStorage) an
 | Metronome volume | 70% |
 | MIDI output enabled | Off |
 | MIDI output device | None |
+| MIDI input enabled | On |
+| MIDI input device | None |
 | Language | English |
 
 The following state resets on page reload or view switch:
@@ -637,7 +803,7 @@ The following state resets on page reload or view switch:
 - Scale comparison (resets on scale change)
 - Audio recordings (session only, not persisted)
 
-Curriculum progress (completed modules, exercise scores) is persisted separately and survives page reloads.
+Curriculum progress (completed modules, exercise scores), gamification data (streaks, XP, achievements), and concept mastery tracking are persisted separately in their own Zustand stores and survive page reloads. When signed in, all persisted data syncs to Supabase for cross-device access.
 
 ---
 
@@ -688,10 +854,10 @@ npm run build
 # Type-check
 npx tsc -b
 
-# Run tests (345 tests)
+# Run tests (841 tests)
 npm test
 ```
 
 ### Browser Support
 
-Requires a modern browser with Web Audio API support. Chrome, Firefox, Safari, and Edge are all supported. MIDI output requires Web MIDI API (Chrome/Edge only).
+Requires a modern browser with Web Audio API support. Chrome, Firefox, Safari, and Edge are all supported. MIDI input/output requires Web MIDI API (Chrome/Edge only). Cloud sync requires a Supabase backend (optional — the app works fully without it).

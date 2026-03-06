@@ -2,10 +2,10 @@
 
 ## Start Here (Session Handoff)
 
-**Last updated:** 2026-02-11
-**Tests:** 764 passing | **Build:** clean | **TypeScript:** clean
+**Last updated:** 2026-03-06
+**Tests:** 841 passing | **Build:** clean | **TypeScript:** clean
 
-**Completed:** Phases 1–12.5 (all complete). Supabase backend live. MIDI input/output with shared singleton. Song references for L1–L3. Trilingual content overlay system with Portuguese and Spanish both 100% complete (29 files each, verified structural parity).
+**Completed:** Phases 1–12.6 (all complete). Supabase backend live. MIDI input/output with shared singleton. Song references for L1–L3. Trilingual content overlay system with Portuguese and Spanish both 100% complete (29 files each, verified structural parity).
 
 **Next up:** Phase 13 (Distribution) — landing page, embeddable widgets, app store wrappers.
 
@@ -127,7 +127,20 @@
 - Portuguese: 100% complete — 29 overlay files (levelMeta + 9×curriculum + 9×exercises + 9×templates + songs)
 - Spanish: 100% complete — 29 overlay files (13,310 lines), verified structural parity with PT
 - Music term dictionaries: scale types, chord qualities, directions for PT + ES
-- 45 new tests, 764 total passing
+- 45 new tests (764 cumulative at that point)
+
+### Phase 12.6: Audit Remediation ✓
+- Full independent audit: 17 findings across type safety, React 19 compliance, dead code, PWA gaps, schema alignment
+- React 19 lint compliance: Date.now() in render, setState in effects, ref mutations, dep arrays (9 components)
+- Removed all `as any` from source files; replaced with proper types (ChordQuality, typed Supabase helpers)
+- Dead code removal across 6 source files (unused imports, variables, functions)
+- VexFlow runtime CacheFirst caching added to workbox config (was excluded from precache with no fallback)
+- Store migration placeholders for gamificationStore + conceptStore
+- celebrationSound converted to dynamic import (was defeating code splitting)
+- concept_tracking table, RLS policies, signup trigger added to Supabase migration
+- useMidi async race condition fixed with cancelled-flag pattern
+- ESLint config: _ prefix convention, src/core excluded from linting
+- 0 lint errors, 0 type errors, 841 tests passing (45 test files)
 
 ---
 
