@@ -109,5 +109,5 @@ export const DISTANCE_LABELS = [
   '4 shared notes',
   '3 shared notes',
   '2 shared notes',
-  'Tritone · 1 shared note',
+  'Tritone · 2 shared notes',
 ];

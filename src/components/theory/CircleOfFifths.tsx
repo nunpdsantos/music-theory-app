@@ -159,9 +159,6 @@ export const CircleOfFifths = memo(function CircleOfFifths() {
     };
   }, [hoveredIdx, selectedIdx, getNoteDegree]);
 
-  // Find selected position index for center display
-  const selectedMajorIdx = CIRCLE_MAJOR.findIndex((n) => getPitchClass(n) === selectedPc);
-
   const svgContent = (
     <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="w-full max-w-[300px] mx-auto">
       <defs>
@@ -322,7 +319,7 @@ export const CircleOfFifths = memo(function CircleOfFifths() {
             className="text-[8px] select-none"
             fill="var(--text-dim)"
           >
-            {selectedMajorIdx >= 0 ? KEY_SIGNATURES[selectedMajorIdx] || 'no \u266F/\u266D' : ''}
+            {selectedIdx >= 0 ? KEY_SIGNATURES[selectedIdx] || 'no \u266F/\u266D' : ''}
           </text>
         </>
       )}

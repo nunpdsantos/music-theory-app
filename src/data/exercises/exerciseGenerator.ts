@@ -75,12 +75,15 @@ function buildConfig(template: ExerciseTemplate, rand: () => number): ExerciseCo
       const scaleTypes = p.scaleTypes ?? ['major'];
       const noteCounts = p.noteCounts ?? [7];
       const idx = Math.floor(rand() * roots.length);
+      const scaleIdx = Math.floor(rand() * scaleTypes.length);
       return {
         type: 'scale_build',
         root: roots[idx],
         rootAccidental: accidentals[idx] ?? '',
-        scaleType: pick(scaleTypes, rand),
-        noteCount: pick(noteCounts, rand),
+        scaleType: scaleTypes[scaleIdx],
+        noteCount: scaleTypes.length === noteCounts.length
+          ? noteCounts[scaleIdx]
+          : pick(noteCounts, rand),
       };
     }
 
@@ -94,7 +97,9 @@ function buildConfig(template: ExerciseTemplate, rand: () => number): ExerciseCo
         type: 'chord_build',
         root: roots[idx],
         rootAccidental: accidentals[idx] ?? '',
-        quality: pick(qualities, rand),
+        quality: roots.length === qualities.length
+          ? qualities[idx]
+          : pick(qualities, rand),
         noteCount: pick(noteCounts, rand),
       };
     }

@@ -188,7 +188,7 @@ const l6u18m4: CurriculumModule = {
     {
       title: 'The Gr+6/V7 Pivot in Action',
       explanation:
-        'To modulate from C to Db using this technique: establish C as the key, approach the chord Ab-C-Eb-F# as Gr+6 in C, then resolve it as Ab7 (V7 of Db) to Db major. The listener\u2019s ear accepts both interpretations because the chord is acoustically identical. The resolution determines the perceived key. This single chord pivots between keys that are a half step apart \u2014 among the most distant relationships on the circle of fifths.',
+        'To modulate from C to Db using this technique: establish C as the key, approach the chord Ab-C-Eb-F# as Gr+6 in C, then resolve it as Ab7 (V7 of Db) to Db major. The listener\u2019s ear accepts both interpretations because the chord is acoustically identical. The resolution determines the perceived key. The same pitch (F\u266f/G\u266d) moves in opposite directions depending on interpretation: as \u266f4 in the augmented sixth, it resolves up; as \u266d7 of the dominant seventh, it resolves down. This single chord pivots between keys that are a half step apart \u2014 among the most distant relationships on the circle of fifths.',
       tryThisQuery: 'circle of fifths',
       tryThisLabel: 'See how distant C and Db are on the circle',
     },
@@ -221,7 +221,7 @@ const l6u18m4: CurriculumModule = {
     {
       id: 'l6u18m4t3',
       instruction:
-        "Type 'Db major chord' and hear the arrival key. A single enharmonic reinterpretation moved us from C to Db \u2014 six positions around the circle of fifths in one step",
+        "Type 'Db major chord' and hear the arrival key. A single enharmonic reinterpretation moved us from C to Db \u2014 five positions around the circle of fifths in one step",
       query: 'Db major chord',
     },
   ],
@@ -242,7 +242,7 @@ const l6u19m1: CurriculumModule = {
   subtitle: 'Four-way enharmonic flexibility of the fully diminished seventh chord',
   objectives: [
     'Understand that a fully diminished seventh chord divides the octave into four equal minor thirds',
-    'Reinterpret any note of a dim7 chord as the leading tone to resolve into four different keys',
+    'Reinterpret any note of a dim7 chord as the leading tone to resolve into four different tonics (each accessible in major or minor)',
     'Apply dim7 enharmonic modulation to reach keys a minor third, tritone, or major sixth away',
   ],
   concepts: [
@@ -298,21 +298,21 @@ const l6u19m2: CurriculumModule = {
   subtitle: 'The CTo7 chord as a chromatic embellishment sharing a common tone with its target',
   objectives: [
     'Build a CTo7 chord that shares the root of its target chord',
-    'Resolve CTo7 correctly by holding the common tone and moving the other three voices by half step',
+    'Resolve CTo7 correctly by holding the common tone and moving the other three voices by step (two by half step, one by whole step)',
     'Distinguish CTo7 from functional viio7 \u2014 CTo7 embellishes rather than modulates',
   ],
   concepts: [
     {
       title: 'What Is CTo7?',
       explanation:
-        'A common-tone diminished seventh chord shares one note (the common tone) with the chord it embellishes. The common tone is usually the root of the target chord. The other three notes of the dim7 chord each resolve by half step to the remaining chord tones. Unlike a functional viio7, CTo7 does not change the key \u2014 it creates a dramatic chromatic approach to a chord the listener already expects.',
+        'A common-tone diminished seventh chord shares one note (the common tone) with the chord it embellishes. The common tone is usually the root of the target chord. The other three notes of the dim7 chord each resolve by step (two by half step, one by whole step) to the remaining chord tones. Unlike a functional viio7, CTo7 does not change the key \u2014 it creates a dramatic chromatic approach to a chord the listener already expects.',
       tryThisQuery: 'C major chord',
       tryThisLabel: 'Hear C major \u2014 the target chord a CTo7 embellishes',
     },
     {
       title: 'Building CTo7',
       explanation:
-        'To build CTo7 of C major: keep C as the common tone, then fill in a diminished seventh chord that includes C. One option: C-D#-F#-A (= C with D#dim7 around it). D# resolves up to E, F# resolves up to G, A resolves down to G (or up to the octave). The three moving voices each shift by half step into the target chord while C holds firm. The result is a shimmering chromatic approach.',
+        'To build CTo7 of C major: keep C as the common tone, then fill in a diminished seventh chord that includes C. One option: C-D#-F#-A (= C with D#dim7 around it). D# resolves up by half step to E, F# resolves up by half step to G, A resolves down by whole step to G. Two voices move by half step, one by whole step, while C holds firm. The result is a shimmering chromatic approach.',
       tryThisQuery: 'C major chord',
       tryThisLabel: 'Play C major \u2014 hear the resolution target',
     },
@@ -328,7 +328,7 @@ const l6u19m2: CurriculumModule = {
     {
       id: 'l6u19m2t1',
       instruction:
-        'Build CTo7 of C major: keep C, add a dim7 chord containing C. One result: C-D#-F#-A. Check that D#, F#, and A each resolve by half step into C major chord tones (E, G, and G or C)',
+        'Build CTo7 of C major: keep C, add a dim7 chord containing C. One result: C-D#-F#-A. Check that D# and F# each resolve by half step (to E and G), while A resolves by whole step down to G',
     },
     {
       id: 'l6u19m2t2',
@@ -338,7 +338,7 @@ const l6u19m2: CurriculumModule = {
     {
       id: 'l6u19m2t3',
       instruction:
-        "Type 'C major chord' and hear the resolution target. Now imagine the CTo7 chord (C-D#-F#-A) approaching it \u2014 three voices shift by half step while C sustains. This is pure chromatic embellishment, not modulation",
+        "Type 'C major chord' and hear the resolution target. Now imagine the CTo7 chord (C-D#-F#-A) approaching it \u2014 three voices shift by step (two by half step, one by whole step) while C sustains. This is pure chromatic embellishment, not modulation",
       query: 'C major chord',
     },
   ],
@@ -361,7 +361,7 @@ const l6u19m3: CurriculumModule = {
     {
       title: 'Chromatic Mediants',
       explanation:
-        'A chromatic mediant is a chord whose root is a major or minor third away from the current chord, with at least one chromatic alteration between them. From C major, Ab major and E major are chromatic mediants \u2014 each shares one common tone with C but shifts the other notes chromatically. Doubly chromatic mediants share no common tones at all. These dramatic shifts are a signature of film scores and late Romantic music.',
+        'A chromatic mediant is a chord whose root is a major or minor third away from the current chord, with at least one chromatic alteration between them. From C major, Ab major and E major are chromatic mediants \u2014 each shares one common tone with C but shifts the other notes chromatically. Doubly chromatic mediants share no common tones at all. These dramatic shifts are a signature of film scores and late Romantic music. Some chromatic mediants (like \u266dVI) can also be analyzed as mode mixture \u2014 the distinction depends on context and function.',
       tryThisQuery: 'Ab major chord',
       tryThisLabel: 'Hear Ab major \u2014 chromatic mediant of C',
     },
@@ -417,7 +417,7 @@ const l6u19m4: CurriculumModule = {
     {
       title: 'Equal Division of the Octave',
       explanation:
-        'Symmetric patterns that divide the 12 semitones equally create tonal ambiguity because no single note feels like home. Division by 2 yields the whole-tone scale (6 notes, only 2 transpositions possible). Division by 3 yields the diminished seventh chord (4 notes). Division by 4 yields the augmented triad (3 notes). These structures were exploited by Debussy, Ravel, Liszt, and Wagner to blur or dissolve key centers.',
+        'Symmetric patterns that divide the 12 half steps equally create tonal ambiguity because no single note feels like home. Division by 2 yields the whole-tone scale (6 notes, only 2 transpositions possible). Division by 3 yields the diminished seventh chord (4 notes). Division by 4 yields the augmented triad (3 notes). These structures were exploited by Debussy, Ravel, Liszt, and Wagner to blur or dissolve key centers.',
       tryThisQuery: 'whole tone scale',
       tryThisLabel: 'Hear the whole-tone scale \u2014 division by 2',
     },
@@ -426,7 +426,7 @@ const l6u19m4: CurriculumModule = {
       explanation:
         'In late Romantic music, chord progressions increasingly abandon functional logic (T-PD-D-T). Instead, chords connect through voice-leading proximity (each voice moves minimally), common-tone persistence (a pitch sustains across chord changes), or pure sonority logic (chords chosen for color, not function). This marks the beginning of tonality\u2019s dissolution and the road toward atonality.',
       tryThisQuery: 'C diminished scale',
-      tryThisLabel: 'Hear the diminished scale \u2014 symmetric division by 3',
+      tryThisLabel: 'Hear the diminished scale \u2014 8 notes alternating whole and half steps',
     },
     {
       title: 'Chromatic Planing and Extended Tonality',
@@ -485,7 +485,7 @@ const l6u20m1: CurriculumModule = {
     {
       title: 'Second Species (2:1)',
       explanation:
-        'Two notes against each CF note. Strong beats must be consonant with the CF. Weak beats may be dissonant if approached and left by step (passing tone) or if they step away and return (neighbor tone). No unisons on strong beats except at the beginning and end. Second species introduces the fundamental principle of dissonance treatment: dissonance is permitted only when controlled by stepwise motion.',
+        'Two notes against each CF note. Strong beats must be consonant with the CF. Weak beats may also be consonant \u2014 a leap to a consonant interval is permitted. Weak beats may be dissonant if approached and left by step (passing tone) or if they step away and return (neighbor tone). No unisons on strong beats except at the beginning and end. Second species introduces the fundamental principle of dissonance treatment: dissonance is permitted only when controlled by stepwise motion.',
       tryThisQuery: 'G major scale',
       tryThisLabel: 'See G major \u2014 another common CF key',
     },

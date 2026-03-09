@@ -73,14 +73,14 @@ const exercises: Record<string, ExerciseDefinition[]> = {
     {
       id: 'l1u1m2e1',
       type: 'note_id',
-      prompt: 'Identify this note below the treble staff: it sits in the space just below middle C.',
+      prompt: 'Identify this note below the treble staff: it sits on the second ledger line below.',
       config: {
         type: 'note_id',
         note: 'A',
         accidental: '',
         octave: 3,
       },
-      hint: 'A3 is the note two ledger lines below the treble staff. Going down from middle C: B3 is in the space below the ledger line, A3 is on the next ledger line down.',
+      hint: 'Below the treble staff: B3 is in the space below the first ledger line (C4), and A3 is on the second ledger line.',
       points: 1,
     },
     {

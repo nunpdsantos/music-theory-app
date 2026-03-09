@@ -301,7 +301,7 @@ const exercises: Record<string, ExerciseDefinition[]> = {
       config: {
         type: 'multiple_choice',
         choices: [
-          { label: 'A cycle of dominant 7th chords descending by whole steps or moving around the cycle of fifths', correct: true },
+          { label: 'A cycle of dominant 7th chords moving through a cycle of fifths (each resolving down a fifth to the next)', correct: true },
           { label: 'A sustained pedal note with no chord changes', correct: false },
           { label: 'An exact repeat of the A section in a different key', correct: false },
           { label: 'A twelve-tone serial row', correct: false },
@@ -655,7 +655,7 @@ const exercises: Record<string, ExerciseDefinition[]> = {
           { label: 'A dissonant clash that sounds like a mistake', correct: false },
         ],
       },
-      hint: 'Chromatic mediants share one common tone (C major and Ab major share C and share the note Eb/E boundary). The root moves by a 3rd but the quality shift creates a lush, unexpected color change often heard in film scores and dramatic pop moments.',
+      hint: 'C major (C, E, G) and Ab major (Ab, C, Eb) share one common tone (C). The E and Eb are a half step apart, creating the smooth color shift characteristic of chromatic mediants.',
       points: 1,
     },
     {

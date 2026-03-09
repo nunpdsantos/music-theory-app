@@ -48,7 +48,7 @@ const overlay: SongOverlay = {
     'La melodía inicial es una escala mayor descendente de la tónica a la tónica.',
   ],
   'l1u3m2': [
-    'Compuesta en Lab mayor (cuatro bemoles), demostrando cómo suenan y se sienten las armaduras de clave con bemoles.',
+    'Escrita en Sol mayor (un sostenido — Fa#), demostrando cómo una armadura de clave sencilla moldea el sonido de una canción clásica.',
     'En la tonalidad de Fa mayor (un bemol), un buen punto de partida para leer armaduras de clave más allá de Do mayor.',
   ],
   'l1u3m3': [
@@ -80,21 +80,21 @@ const overlay: SongOverlay = {
 
   'l2u5m1': [
     'Construida sobre la escala menor natural (eólico) en La menor, con la característica séptima rebajada.',
-    'Una melodía modal/menor natural que evita la séptima elevada, acentuando el color del modo eólico.',
+    'Escrita íntegramente en Mi menor usando solo los acordes de Em y C — un sonido menor natural (eólico) puro, sin sexta ni séptima elevadas, lo que la convierte en un ejemplo de manual del modo eólico.',
   ],
   'l2u5m2': [
     'Utiliza la escala menor armónica — la segunda aumentada entre el b6 y el #7 le confiere su sonoridad distintiva.',
-    'La armonía del verso sugiere la menor melódica ascendente (6.º y 7.º grados elevados) sobre una tonalidad de La menor.',
+    'El uso de Mi mayor (V) sobre una tonalidad de La menor implica la menor armónica, con el 7.º grado elevado (Sol#) creando una fuerte atracción de vuelta a la tónica.',
   ],
   'l2u5m3': [
     'Comienza en La menor (relativa menor de Do mayor), modulando después — una relación clásica entre tonalidades relativas.',
-    'Alterna entre tonalidades relativas mayor y menor, demostrando la relación cercana entre ambas.',
+    'Alterna entre los versos en La menor y el contexto de su relativa mayor (Do mayor), demostrando la relación cercana entre tonalidades relativas que comparten la misma armadura de clave.',
   ],
 
   // ---- L2U6: Compás Compuesto y Síncopa ----
 
   'l2u6m1': [
-    'Escrita en compás 6/8 con una sensación de balanceo en compás compuesto binario a lo largo de toda la pieza.',
+    'El acompañamiento arpegiado en compás 6/8 demuestra el compás compuesto binario, donde cada uno de los dos tiempos principales se subdivide en grupos de tres corcheas.',
     'El verso está en 6/8 antes de que el estribillo cambie de sensación — un contraste entre compás compuesto y simple.',
   ],
   'l2u6m2': [
@@ -106,22 +106,22 @@ const overlay: SongOverlay = {
 
   'l2u7m1': [
     'Abre con un salto de cuarta justa, y la melodía delinea intervalos mayores y menores a lo largo de la pieza.',
-    'La figura inicial de cuatro notas delinea una tercera mayor seguida de una cuarta justa.',
+    'La figura inicial de cuatro notas (Do–Mi–Fa–Sol) comienza con un brillante salto de tercera mayor — una de las referencias clásicas de entrenamiento auditivo para identificar el intervalo de 3.ª mayor.',
   ],
   'l2u7m2': [
     'Abre con una cuarta aumentada (tritono) — el «intervalo del diablo» utilizado para efecto dramático.',
     'Contiene intervalos compuestos (novenas, décimas) en la melodía, extendiéndose más allá de la octava.',
   ],
   'l2u7m3': [
-    'Utiliza los cuatro tipos de tríadas en contexto — acordes mayores, menores, aumentados (de paso) y disminuidos.',
-    'La progresión I–III–IV–iv incluye tríadas mayores, aumentadas y menores en sucesión.',
+    'Presenta tríadas mayores, menores y aumentadas — el acorde de Mi aumentado crea tensión antes de resolver, demostrando cómo diferentes cualidades de tríadas sirven diferentes funciones armónicas.',
+    'La progresión I–III–IV–iv (Sol–Si–Do–Dom) presenta un acorde mayor cromático (III) tomado de fuera de la tonalidad y un subdominante menor prestado (iv), mostrando cómo la cualidad de las tríadas crea color emocional.',
   ],
   'l2u7m4': [
     'La línea de bajo se mueve por tríadas en posición fundamental y primera inversión — un ejemplo clásico de conducción de voces en el bajo cifrado.',
     'Cada compás arpeggia un acorde, muchos en primera o segunda inversión, siguiendo las convenciones del bajo cifrado.',
   ],
   'l2u7m5': [
-    'La progresión I–V–vi–iii–IV–I–IV–V utiliza todas las tríadas diatónicas, identificadas en números romanos.',
+    'La progresión I–V–vi–iii–IV–I–IV–V demuestra cinco de las siete tríadas diatónicas en un patrón de bajo descendente que se convirtió en una de las progresiones de acordes más famosas de la música occidental.',
     'Utiliza la progresión I–V–vi–IV — el patrón de números romanos diatónicos más común en la música pop.',
   ],
 
@@ -144,7 +144,7 @@ const overlay: SongOverlay = {
     'La progresión de «rhythm changes» (Imaj7–vi7–ii7–V7) se convirtió en un modelo para cientos de composiciones de jazz.',
   ],
   'l3u9m4': [
-    'Abre en Do menor con una progresión i7–iv7–V7, demostrando acordes de séptima diatónicos en un contexto de tonalidad menor.',
+    'Abre en Do menor con una progresión i7–iv7–iiø7–V7, demostrando cómo los acordes de séptima diatónicos y el movimiento cadencial ii–V funcionan en una tonalidad menor.',
     'La progresión de acordes de séptima en tonalidad menor (i–iv7–V7) crea la sensación lánguida de la canción.',
   ],
 

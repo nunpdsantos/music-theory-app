@@ -759,7 +759,7 @@ const l5u17m4: CurriculumModule = {
     {
       title: 'Tracing Guide Tone Lines Through ii–V–I',
       explanation:
-        'When you trace the 3rds and 7ths through a ii–V–I progression in C major, they form smooth voice-leading lines. Dm7: 3rd = F, 7th = C. G7: 3rd = B, 7th = F. Cmaj7: 3rd = E, 7th = B. The 7th of each chord becomes the 3rd of the next (C stays as common tone or moves to B; F drops to E). For improvisers, targeting guide tones guarantees you hit the essential chord tones. For arrangers, guide tone lines are the skeleton of inner voice parts.',
+        'When you trace the 3rds and 7ths through a ii–V–I progression in C major, they form smooth voice-leading lines. Dm7: 3rd = F, 7th = C. G7: 3rd = B, 7th = F. Cmaj7: 3rd = E, 7th = B. The 7th of each chord becomes the 3rd of the next (C (7th of Dm7) drops to B (3rd of G7); F (7th of G7) drops to E (3rd of Cmaj7)). For improvisers, targeting guide tones guarantees you hit the essential chord tones. For arrangers, guide tone lines are the skeleton of inner voice parts.',
       tryThisQuery: 'G7',
       tryThisLabel: 'See G7 — 3rd is B, 7th is F',
     },

@@ -127,7 +127,7 @@
 - Portuguese: 100% complete — 29 overlay files (levelMeta + 9×curriculum + 9×exercises + 9×templates + songs)
 - Spanish: 100% complete — 29 overlay files (13,310 lines), verified structural parity with PT
 - Music term dictionaries: scale types, chord qualities, directions for PT + ES
-- 45 new tests (764 cumulative at that point)
+- 45 new tests (841 cumulative after audit remediation)
 
 ### Phase 12.6: Audit Remediation ✓
 - Full independent audit: 17 findings across type safety, React 19 compliance, dead code, PWA gaps, schema alignment

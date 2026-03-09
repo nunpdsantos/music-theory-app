@@ -158,7 +158,7 @@ The existing app is a SPA with client-side routing, Zustand state, and heavy dep
 | Reddit | r/piano | 400K+ | "Free interactive piano with scale/chord visualization" |
 | Reddit | r/learnmusic | 100K+ | Curriculum walkthrough, exercise system explanation |
 | Reddit | r/musicproduction | 1.5M+ | "Free chord progression builder + theory reference" |
-| Reddit | r/webdev | 2M+ | Technical build story (React 19, PWA, VexFlow, 764 tests) |
+| Reddit | r/webdev | 2M+ | Technical build story (React 19, PWA, VexFlow, 841 tests) |
 | Hacker News | Show HN | High-quality tech audience | Technical post: architecture, offline-first, accessibility |
 | Product Hunt | Launch listing | Startup/product audience | Polished page with screenshots, feature list, maker story |
 | Discord | Music Theory servers | Varies | Share link with brief description in appropriate channels |

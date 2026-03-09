@@ -480,14 +480,14 @@ const l8u27m3: CurriculumModule = {
     {
       title: 'Polytonality, Polymodality, and Pandiatonicism',
       explanation:
-        'Polytonality layers two or more keys simultaneously — Milhaud\'s bitonality might place C major in the right hand against F# major in the left, creating a dense, shimmering sonority that is neither tonal nor atonal. Polymodality superimposes different modes on the same tonic: C Lydian in the melody with C Mixolydian in the accompaniment produces all seven diatonic pitches but with conflicting modal inflections across voices. Pandiatonicism uses all notes of a diatonic scale freely, discarding functional harmonic rules — any combination is valid, producing music that sounds tonal but resists resolution. Stravinsky\'s neoclassical works epitomize this technique.',
+        'Polytonality layers two or more keys simultaneously — Milhaud\'s bitonality might place C major in the right hand against F# major in the left, creating a dense, shimmering sonority that is neither tonal nor atonal. Polymodality superimposes different modes on the same tonic: C Lydian in the melody with C Mixolydian in the accompaniment produces nine distinct pitch classes \u2014 the standard seven plus F# (from Lydian) and Bb (from Mixolydian) \u2014 with conflicting modal inflections across voices. Pandiatonicism uses all notes of a diatonic scale freely, discarding functional harmonic rules — any combination is valid, producing music that sounds tonal but resists resolution. Stravinsky\'s neoclassical works epitomize this technique.',
       tryThisQuery: 'C augmented chord',
       tryThisLabel: 'Hear C augmented — the whole-tone triad, no tonal center',
     },
     {
       title: 'Microtonality and Spectral Awareness',
       explanation:
-        'Microtonality extends the pitch continuum beyond 12 equal divisions: quarter tones divide each semitone in half (24 notes per octave), just intonation tunes intervals to pure frequency ratios, and spectral tuning derives intervals from the overtone series. Alternative equal temperaments — 19-TET, 31-TET, 53-TET — offer different compromises between consonance and flexibility. While the app\'s engine operates in standard 12-TET, awareness of microtonal systems reveals that the 12-note chromatic scale is a historical convention, not an acoustic inevitability.',
+        'Microtonality extends the pitch continuum beyond 12 equal divisions: quarter tones divide each semitone in half (24 notes per octave), just intonation tunes intervals to pure frequency ratios, and spectral tuning, pioneered by Gérard Grisey and Tristan Murail, derives intervals from the overtone series. Alternative equal temperaments — 19-TET, 31-TET, 53-TET — offer different compromises between consonance and flexibility. While the app\'s engine operates in standard 12-TET, awareness of microtonal systems reveals that the 12-note chromatic scale is a historical convention, not an acoustic inevitability.',
       tryThisQuery: 'C chromatic scale',
       tryThisLabel: 'Hear the 12-TET chromatic scale — one of many possible divisions',
     },

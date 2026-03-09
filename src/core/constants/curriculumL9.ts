@@ -682,7 +682,7 @@ const l9u32m2: CurriculumModule = {
     {
       id: 'l9u32m2t1',
       instruction:
-        'Play a C major scale slowly, then insert a chromatic passing tone between E and F (play E-F-F). Now try C-C#-D. Hear how the chromatic note creates momentary color without disrupting the key',
+        'Play a C major scale slowly, then insert a chromatic passing tone between D and E (play D-D#-E). Now try C-C#-D. Hear how the chromatic note creates momentary color without disrupting the key',
     },
     {
       id: 'l9u32m2t2',

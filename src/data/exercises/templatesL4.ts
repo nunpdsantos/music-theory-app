@@ -122,8 +122,8 @@ const templates: ModuleTemplateConfig[] = [
     templates: [
       {
         type: 'chord_build',
-        promptTemplate: 'Build the V7 chord (dominant seventh) in the key of {root} major.',
-        hintTemplate: 'The V7 is built on the 5th degree of {root} major. It is a dominant seventh chord: major triad + minor 7th. The 7th resolves down, the leading tone resolves up.',
+        promptTemplate: 'Build a {root} dominant seventh chord.',
+        hintTemplate: 'A dominant seventh chord: major triad + minor 7th. The 7th resolves down, the leading tone resolves up.',
         params: {
           roots: ['C', 'G', 'D', 'F', 'A', 'E', 'B'],
           accidentals: ['', '', '', '', '', '', 'b'],
@@ -214,8 +214,8 @@ const templates: ModuleTemplateConfig[] = [
     templates: [
       {
         type: 'chord_build',
-        promptTemplate: 'Build the ii7 chord in {root} major. This pre-dominant seventh chord leads to V.',
-        hintTemplate: 'The ii7 in major is a minor seventh chord built on the 2nd degree of {root} major. It functions as a pre-dominant, leading to V or V7.',
+        promptTemplate: 'Build a {root} minor seventh chord.',
+        hintTemplate: 'A minor seventh chord: minor triad + minor 7th. It functions as a pre-dominant, leading to V or V7.',
         params: {
           roots: ['C', 'G', 'D', 'F', 'A', 'E'],
           accidentals: ['', '', '', '', '', ''],
@@ -393,8 +393,8 @@ const templates: ModuleTemplateConfig[] = [
       },
       {
         type: 'chord_build',
-        promptTemplate: 'Build the IV chord in {root} major. This is a primary pre-dominant chord.',
-        hintTemplate: 'The IV chord is a major triad built on the 4th degree of {root} major. It has a warm, subdominant character.',
+        promptTemplate: 'Build a {root} major triad.',
+        hintTemplate: 'A major triad: root + major 3rd + perfect 5th. The IV chord has a warm, subdominant character.',
         params: {
           roots: ['C', 'G', 'D', 'F', 'A'],
           accidentals: ['', '', '', '', ''],

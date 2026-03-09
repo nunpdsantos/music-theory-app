@@ -38,7 +38,7 @@ const l3u9m1: CurriculumModule = {
     {
       title: 'Comparing Seventh Chord Colors',
       explanation:
-        'The difference between Cmaj7 and C7 is a single semitone: B natural versus Bb. That one note transforms a lush, stable sonority into a chord bursting with tension. Similarly, Cm7 and Cm7b5 differ only in the fifth (G versus Gb), but the half-diminished quality is far darker and more restless. Training your ear to these subtle distinctions is the foundation of advanced harmonic listening.',
+        'The difference between Cmaj7 and C7 is a single half step: B natural versus Bb. That one note transforms a lush, stable sonority into a chord bursting with tension. Similarly, Cm7 and Cm7b5 differ only in the fifth (G versus Gb), but the half-diminished quality is far darker and more restless. Training your ear to these subtle distinctions is the foundation of advanced harmonic listening.',
       tryThisQuery: 'Cm7',
       tryThisLabel: 'Hear Cm7 — mellow and smooth',
     },
@@ -52,12 +52,12 @@ const l3u9m1: CurriculumModule = {
     {
       id: 'l3u9m1t2',
       instruction:
-        "Compare 'Cmaj7' and 'C7' back to back — the only difference is B vs. Bb. Hear how one semitone transforms warmth into tension",
+        "Compare 'Cmaj7' and 'C7' back to back — the only difference is B vs. Bb. Hear how one half step transforms warmth into tension",
     },
     {
       id: 'l3u9m1t3',
       instruction:
-        "Play 'Cdim7' — all four notes are exactly 3 semitones apart. This symmetry means there are only three distinct diminished seventh chords in the entire chromatic scale. Can you figure out which three?",
+        "Play 'Cdim7' — all four notes are exactly 3 half steps apart. This symmetry means there are only three distinct diminished seventh chords in the entire chromatic scale. Can you figure out which three?",
       query: 'Cdim7',
     },
   ],
@@ -132,7 +132,7 @@ const l3u9m3: CurriculumModule = {
   objectives: [
     'Build seventh chords on every degree of the major scale and identify each quality',
     'Understand the dominant seventh (V7) and its tritone as the engine of tonal resolution',
-    'Recognize the ii-V-I progression as the most common chord motion in Western music',
+    'Recognize the ii-V-I progression as a foundational harmonic motion across Western music',
   ],
   concepts: [
     {
@@ -153,7 +153,7 @@ const l3u9m3: CurriculumModule = {
     {
       title: 'The ii-V-I Progression',
       explanation:
-        'The most common chord progression in Western music chains the pre-dominant ii7 to the dominant V7 to the tonic Imaj7. In C major: Dm7-G7-Cmaj7. Each chord shares common tones with the next, producing smooth voice leading. The ii7 establishes subdominant tension, V7 intensifies it with the tritone, and Imaj7 resolves everything. This three-chord skeleton underpins everything from Bach chorales to jazz standards.',
+        'The most important chord progression in jazz — and a foundational harmonic motion across all Western music — chains the pre-dominant ii7 to the dominant V7 to the tonic Imaj7. In C major: Dm7-G7-Cmaj7. Each chord shares common tones with the next, producing smooth voice leading. The ii7 establishes subdominant tension, V7 intensifies it with the tritone, and Imaj7 resolves everything. This three-chord skeleton underpins everything from Bach chorales to jazz standards.',
       tryThisQuery: 'Dm7',
       tryThisLabel: 'Hear Dm7 — the ii7 sound in C major',
     },
@@ -267,7 +267,7 @@ const l3u10m1: CurriculumModule = {
     {
       title: 'Doubling and Spacing Rules',
       explanation:
-        'When four voices play a three-note triad, one note must be doubled. In root position, double the root — it is the strongest, most stable choice. In first inversion, double the soprano note for flexibility. Never double the leading tone: it has a mandatory resolution to the tonic, and doubling it creates unavoidable parallel octaves. In diminished triads, double the third (the most stable note in an unstable chord).',
+        'When four voices play a three-note triad, one note must be doubled. In root position, double the root — it is the strongest, most stable choice. In first inversion, double the soprano note — unless the soprano is a tendency tone (leading tone, chromatically altered note). Never double the leading tone: it has a mandatory resolution to the tonic, and doubling it creates unavoidable parallel octaves. In diminished triads, double the third (the most stable note in an unstable chord).',
       tryThisQuery: 'Bdim',
       tryThisLabel: 'See Bdim — in SATB, double the third (D), never the root',
     },
@@ -304,7 +304,7 @@ const l3u10m2: CurriculumModule = {
   id: 'l3u10m2',
   unitId: 'u10',
   levelId: 'l3',
-  title: 'Forbidden Parallels and Voice Motion',
+  title: 'Forbidden Parallels and Voice Motion (in Common-Practice Style)',
   subtitle:
     'The four motion types and the parallel fifths/octaves rules that govern part writing',
   objectives: [
@@ -349,7 +349,7 @@ const l3u10m2: CurriculumModule = {
     {
       id: 'l3u10m2t3',
       instruction:
-        'Write C major to G major in SATB where the bass moves C up to G (a fifth) and the soprano moves E up to D (a step down). Classify each voice pair\u2019s motion type. Verify no parallel fifths or octaves exist',
+        'Write C major to G major in SATB where the bass moves C up to G (a fifth) and the soprano moves E down to D (a step down). Classify each voice pair\u2019s motion type. Verify no parallel fifths or octaves exist',
     },
   ],
   prerequisites: ['l3u10m1'],
@@ -502,7 +502,7 @@ const l3u11m1: CurriculumModule = {
     {
       title: 'Half, Plagal, and Deceptive Cadences',
       explanation:
-        'A half cadence ends on V — any chord moving to the dominant. It sounds like an unanswered question, creating suspense at phrase boundaries. The plagal cadence (IV to I) is the gentle "Amen" cadence, softer than authentic. The deceptive cadence (V to vi) subverts the expected resolution: vi shares two tones with I (in C major, Am shares C and E with the C chord), producing a near-miss that surprises the listener and extends the phrase.',
+        'A half cadence ends on V — any chord moving to the dominant. It sounds like an unanswered question, creating suspense at phrase boundaries. The plagal cadence (IV to I) is the gentle "Amen" cadence, softer than authentic. The deceptive cadence (V to vi) subverts the expected resolution: vi shares two tones with I (in C major, Am shares C and E with the C chord), producing a near-miss that surprises the listener and extends the phrase. In minor keys, the deceptive cadence is V to VI — a major chord (e.g., E7 to F in A minor). Because VI is major rather than minor, the shared-tone logic differs: VI shares only one tone with i (the tonic note itself), giving the minor deceptive cadence a warmer, more dramatic surprise than its major-key counterpart.',
       tryThisQuery: 'C major chord',
       tryThisLabel:
         'Hear the tonic — the destination of authentic and plagal cadences',
@@ -510,7 +510,7 @@ const l3u11m1: CurriculumModule = {
     {
       title: 'The Phrygian Half Cadence',
       explanation:
-        'Unique to minor keys: iv6 resolving to V, with the bass descending by half step from scale degree b6 to 5. This half-step descent in the bass gives the cadence its name — it resembles the characteristic falling half step of the Phrygian mode. Common in Baroque music, the Phrygian half cadence has a distinctively dark, archaic quality that no other cadence replicates.',
+        'Characteristic of minor keys: iv6 resolving to V, with the bass descending by half step from scale degree b6 to 5. This half-step descent in the bass gives the cadence its name — it resembles the characteristic falling half step of the Phrygian mode. Common in Baroque music, the Phrygian half cadence has a distinctively dark, archaic quality that no other cadence replicates.',
       tryThisQuery: 'Am',
       tryThisLabel:
         'Hear vi — the surprise resolution target of a deceptive cadence',
@@ -735,7 +735,7 @@ const l3u11m5: CurriculumModule = {
     {
       title: 'Transposing Instruments and Concert Pitch',
       explanation:
-        'Some instruments sound a different pitch than they read. Bb instruments (trumpet, clarinet, tenor sax) sound a major second lower than written — to hear concert C, they read D. Eb instruments (alto sax) sound a major sixth lower. F instruments (French horn) sound a perfect fifth lower. Concert pitch is the actual sounding pitch; all instruments align to it when the orchestra tunes to A440.',
+        'Some instruments sound a different pitch than they read. Bb instruments (trumpet, clarinet, tenor sax) sound a major second lower than written — to hear concert C, they read D. Eb instruments like the alto saxophone sound a major sixth lower (or equivalently, a minor third higher). F instruments (French horn) sound a perfect fifth lower. Concert pitch is the actual sounding pitch; all instruments align to it when the orchestra tunes to A440.',
       tryThisQuery: 'Bb major scale',
       tryThisLabel:
         'See Bb major — what a Bb trumpet sounds when reading C major',

@@ -19,7 +19,7 @@ const l4u12m1: CurriculumModule = {
     {
       title: 'The Suspension Mechanism',
       explanation:
-        'A suspension is a note held (tied) from the previous chord into the new chord, creating a dissonance that resolves downward by step. It has three phases: preparation (consonant note in the previous chord), suspension (the same note held over into the new chord, now dissonant, on a strong beat), and resolution (the held note moves down by step to a consonant chord tone). The dissonance on the strong beat is what gives suspensions their expressive power \u2014 the listener expects consonance and gets tension instead.',
+        'A suspension is a note held (tied) from the previous chord into the new chord, creating a dissonance that resolves by step (usually downward). It has three phases: preparation (consonant note in the previous chord), suspension (the same note held over into the new chord, now dissonant, on a strong beat), and resolution (the held note moves by step to a consonant chord tone). The dissonance on the strong beat is what gives suspensions their expressive power \u2014 the listener expects consonance and gets tension instead.',
       tryThisQuery: 'C major chord',
       tryThisLabel: 'Hear the consonant resolution target',
     },
@@ -285,7 +285,7 @@ const l4u13m1: CurriculumModule = {
     {
       title: 'The ii7 Chord',
       explanation:
-        'The ii7 is the most important pre-dominant chord. In major keys it is a minor seventh chord; in minor keys it becomes a half-diminished seventh (ii\u00F87). The progression ii7-V7-I is the strongest functional sequence in tonal harmony because the 7th of ii7 is a common tone with the root of V, creating a seamless voice-leading connection. The bass moves by descending fifth (or ascending fourth) at each step, reinforcing the gravitational pull toward the tonic.',
+        'The ii7 is the most important pre-dominant chord. In major keys it is a minor seventh chord; in minor keys it becomes a half-diminished seventh (ii\u00F87). The progression ii7-V7-I is the strongest functional sequence in tonal harmony because the root of ii7 (D) is a common tone with the 5th of V (D in G-B-D-F), creating a seamless voice-leading connection. The bass moves by descending fifth (or ascending fourth) at each step, reinforcing the gravitational pull toward the tonic.',
       tryThisQuery: 'Dm7',
       tryThisLabel: 'Hear ii7 in the key of C',
     },
@@ -403,7 +403,7 @@ const l4u13m3: CurriculumModule = {
     {
       title: 'Enharmonic Flexibility',
       explanation:
-        'Because the fully diminished seventh chord divides the octave into four equal minor thirds, any of its four notes can be respelled as the root. G#dim7, Bdim7, Ddim7, and Fdim7 all contain the same pitches (enharmonically). This makes the fully diminished seventh a powerful pivot chord for modulation \u2014 one chord can resolve to four different keys. This enharmonic flexibility becomes central to chromatic modulation in Level 5.',
+        'Because the fully diminished seventh chord divides the octave into four equal minor thirds, any of its four notes can be respelled as the root. G#dim7, Bdim7, Ddim7, and Fdim7 all contain the same pitches (enharmonically). This makes the fully diminished seventh a powerful pivot chord for modulation \u2014 one chord can resolve to four different keys. This enharmonic flexibility becomes central to chromatic modulation in Level 6.',
       tryThisQuery: 'Bdim7',
       tryThisLabel: 'Same pitches as G#dim7, Ddim7, Fdim7',
     },
@@ -566,7 +566,7 @@ const l4u14m1: CurriculumModule = {
     {
       title: 'First and Second Species',
       explanation:
-        'First species (1:1) places one counterpoint note against each note in the cantus firmus (given melody). Every interval must be consonant. Begin and end on P1, P5, or P8, use mostly imperfect consonances, and never approach perfect consonances in parallel motion. Second species (2:1) adds two notes against each cantus firmus note. Strong beats must be consonant; weak beats may be dissonant if they are passing tones or neighbor tones approached and left by step. This is where non-chord tones first enter counterpoint.',
+        'First species (1:1) places one counterpoint note against each note in the cantus firmus (given melody). Every interval must be consonant. Begin and end on P1, P5, or P8, use mostly imperfect consonances, and never approach perfect consonances in parallel motion. Second species (2:1) adds two notes against each cantus firmus note. Strong beats must be consonant; weak beats may be dissonant if they are passing tones or neighbor tones approached and left by step. Weak beats may also be consonant — a leap to a consonant interval is permitted. This is where non-chord tones first enter counterpoint.',
       tryThisQuery: 'G major scale',
       tryThisLabel: 'Imagine a second voice against this line',
     },

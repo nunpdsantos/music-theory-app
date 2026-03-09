@@ -169,7 +169,7 @@ new_music_app/
 
 ## Risks and Mitigations
 
-1. **Core imports pulling unexpected deps** — Mitigated: core/ is pure TS with zero React/Zustand imports. Verified by 764 existing tests.
+1. **Core imports pulling unexpected deps** — Mitigated: core/ is pure TS with zero React/Zustand imports. Verified by 841 existing tests.
 2. **`circleOfFifthsConstants.ts` has CSS var refs** — Mitigated: copy only the 3 data arrays, not the full file.
 3. **`songReferences.ts` import chain** — Mitigated: file has zero deps beyond its own interface type. Direct import safe.
 4. **Build time with 1,350 pages** — Mitigated: Astro 5.x handles thousands of pages in <30s. All computation is O(1) per page.

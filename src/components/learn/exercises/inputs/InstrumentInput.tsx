@@ -67,10 +67,10 @@ export function InstrumentInput({ expectedCount, submitted, onSubmit, accentColo
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="text-xs" style={{ color: 'var(--text-dim)' }}>
-          Selected {toggledPCs.size} of {expectedCount} notes
+          {t('exercise.instrumentSelected', { selected: toggledPCs.size, expected: expectedCount })}
         </span>
         <span className="text-[10px] flex items-center gap-1.5" style={{ color: 'var(--text-dim)' }}>
-          Play notes on the instrument to toggle
+          {t('exercise.instrumentToggle')}
           {midiInputEnabled && (
             <span className="px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-blue-500/15 text-blue-400">
               {t('midiInput.badge')}
@@ -110,7 +110,7 @@ export function InstrumentInput({ expectedCount, submitted, onSubmit, accentColo
             onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'var(--card-hover)'; }}
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = ''; }}
           >
-            Clear
+            {t('common.clear')}
           </button>
           <button
             onClick={handleCheck}
@@ -121,7 +121,7 @@ export function InstrumentInput({ expectedCount, submitted, onSubmit, accentColo
               color: accentColor,
             }}
           >
-            Check Answer
+            {t('exercise.checkAnswer')}
           </button>
         </div>
       )}

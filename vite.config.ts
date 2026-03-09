@@ -59,4 +59,17 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/vexflow')) return 'vexflow';
+          if (id.includes('node_modules/framer-motion')) return 'framer-motion';
+          if (id.includes('node_modules/zustand')) return 'zustand';
+          if (id.includes('node_modules/react-i18next') || id.includes('node_modules/i18next')) return 'i18next';
+          if (id.includes('node_modules/@supabase')) return 'supabase';
+        },
+      },
+    },
+  },
 })

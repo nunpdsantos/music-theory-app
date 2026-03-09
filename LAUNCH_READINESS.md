@@ -185,7 +185,7 @@ Safari (desktop and iOS) blocks AudioContext creation until a user gesture (clic
 1. Run QA checklist on Chrome desktop
 2. Run QA checklist on mobile (Chrome Android or Safari iOS)
 3. Fix all issues found
-4. Hide Spanish (1-line change) or complete Spanish translations
+4. ~~Hide Spanish (1-line change) or complete Spanish translations~~ — DONE (Spanish 100% complete)
 
 ### Phase B: Closed Beta (After Phase A)
 
@@ -199,7 +199,7 @@ Safari (desktop and iOS) blocks AudioContext creation until a user gesture (clic
 ### Phase C: Public Launch (After Phase B)
 
 11. Build landing page
-12. Complete Spanish content overlays
+12. ~~Complete Spanish content overlays~~ — DONE
 13. Get curriculum review from a music educator (at least L1–L3)
 14. Add data export
 15. Populate L4–L9 song references

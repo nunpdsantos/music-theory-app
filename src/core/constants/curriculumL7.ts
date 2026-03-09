@@ -187,7 +187,7 @@ const l7u21m4: CurriculumModule = {
     {
       title: 'The Tritone Substitution',
       explanation:
-        'Replace any dominant 7th chord with the dominant 7th a tritone away. G7 resolving to C becomes Db7 resolving to C. This works because G7 and Db7 share the same tritone interval (B-F enharmonic to Cb-F) — the pair of notes that drives the resolution. The root and fifth change, but the tritone engine stays intact. The resulting chromatic bass motion (Db down to C) is smoother than the cycle-of-fifths motion (G to C), creating a sophisticated half-step descent.',
+        'Replace any dominant 7th chord with the dominant 7th a tritone away. G7 resolving to C becomes Db7 resolving to C. This works because G7 and Db7 share the same tritone interval (B-F enharmonic to Cb-F) — the 3rd of G7 (B) becomes the 7th of Db7, and vice versa. This guide-tone swap means the pair of notes that drives the resolution stays intact. The root and fifth change, but the tritone engine stays intact. The resulting chromatic bass motion (Db down to C) is smoother than the cycle-of-fifths motion (G to C), creating a sophisticated half-step descent.',
       tryThisQuery: 'Db7',
       tryThisLabel: 'Hear Db7 — the tritone sub of G7',
     },
@@ -201,7 +201,7 @@ const l7u21m4: CurriculumModule = {
     {
       title: 'The Back-Door Dominant',
       explanation:
-        'The back-door dominant (bVII7-I) approaches the tonic from a whole step below instead of a fifth above. In C: Bb7-Cmaj7. The 3rd of Bb7 (D) resolves up to the 3rd of Cmaj7 (E), and the 7th of Bb7 (Ab) resolves down to the 5th of Cmaj7 (G). This creates a surprising, warm resolution that avoids the expected V7-I cadence. Common in jazz standards and bossa nova, the back-door dominant is a relative of tritone substitution — Bb7 is the tritone sub of E7, the V7/iii.',
+        'The back-door dominant (bVII7-I) approaches the tonic from a whole step below instead of a fifth above. In C: Bb7-Cmaj7. The 3rd of Bb7 (D) resolves up to the 3rd of Cmaj7 (E), and the 7th of Bb7 (Ab) resolves down to the 5th of Cmaj7 (G). This creates a surprising, warm resolution that avoids the expected V7-I cadence. Common in jazz standards and bossa nova, the back-door dominant is a relative of tritone substitution — Bb7 is the tritone sub of E7, the V7/vi.',
       tryThisQuery: 'Bb7',
       tryThisLabel: 'Hear Bb7 — the back-door dominant in C',
     },
@@ -330,7 +330,7 @@ const l7u21m6: CurriculumModule = {
     {
       id: 'l7u21m6t3',
       instruction:
-        "Apply the chromatic turnaround: play 'Cmaj7', 'Eb7', 'Ab7', 'Db7'. Every chord after the I is a tritone substitution — Eb7 subs for A7, Ab7 subs for D7, Db7 subs for G7. The bass descends chromatically: C-Eb-Ab-Db.",
+        "Apply the chromatic turnaround: play 'Cmaj7', 'Eb7', 'Ab7', 'Db7'. Every chord after the I is a tritone substitution — Eb7 subs for A7, Ab7 subs for D7, Db7 subs for G7. The bass descends chromatically by minor thirds and fourths: C–Eb–Ab–Db.",
     },
   ],
   prerequisites: ['l7u21m5'],
@@ -347,7 +347,7 @@ const l7u22m1: CurriculumModule = {
   unitId: 'u22',
   levelId: 'l7',
   title: 'Chord-Scale Theory',
-  subtitle: 'Matching scales to chord symbols — the core of jazz improvisation',
+  subtitle: 'Matching scales to chord symbols — a foundational approach to jazz improvisation',
   objectives: [
     'Map every standard chord quality to its primary and alternative scales',
     'Understand why certain scales "work" over certain chords — shared chord tones as the basis',
@@ -515,7 +515,7 @@ const l7u22m4: CurriculumModule = {
   title: 'Modal Harmony Fundamentals',
   subtitle: 'Composing outside tonal gravity — modes as harmonic systems',
   objectives: [
-    'Distinguish modal harmony from tonal harmony and understand why V-I is avoided',
+    'Distinguish modal harmony from tonal harmony and understand why V-I is generally avoided',
     'Identify the characteristic tone of each mode and use it to select chords',
     'Build modal chord progressions that preserve the modal color',
     'Use pedal points, drones, and ostinato patterns to anchor the modal tonic',
@@ -524,7 +524,7 @@ const l7u22m4: CurriculumModule = {
     {
       title: 'Modal vs. Tonal Thinking',
       explanation:
-        'In tonal music, the V-I relationship defines the key and creates the gravitational pull that organizes all harmony. In modal music, V-I is deliberately avoided because it collapses the modal color back into major or minor tonality. Modal harmony establishes the tonic through repetition, pedal points, drones, and non-dominant chord relationships. Miles Davis, McCoy Tyner, and Herbie Hancock built entire compositions on this principle — "So What" uses just two chords over a Dorian pedal. The mode itself IS the harmony.',
+        'In tonal music, the V-I relationship defines the key and creates the gravitational pull that organizes all harmony. In modal music, V-I is generally avoided because it tends to collapse the modal color back into major or minor tonality. Modal harmony establishes the tonic through repetition, pedal points, drones, and non-dominant chord relationships. Miles Davis, McCoy Tyner, and Herbie Hancock built entire compositions on this principle — "So What" uses just two chords over a Dorian pedal. The mode itself IS the harmony.',
       tryThisQuery: 'D dorian',
       tryThisLabel: 'See D Dorian — the jazz modal staple',
     },

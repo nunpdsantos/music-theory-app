@@ -86,12 +86,26 @@ export function generateIntervalChoices(correctSemitones: number): ChoiceOption[
   return shuffle(options);
 }
 
-const DEGREE_LABELS = ['', '1st (Tonic)', '2nd (Supertonic)', '3rd (Mediant)', '4th (Subdominant)', '5th (Dominant)', '6th (Submediant)', '7th (Leading)'];
+type TFunc = (key: string) => string;
+
+function getDegreeLabels(t: TFunc): string[] {
+  return [
+    '',
+    t('exercise.degree1'),
+    t('exercise.degree2'),
+    t('exercise.degree3'),
+    t('exercise.degree4'),
+    t('exercise.degree5'),
+    t('exercise.degree6'),
+    t('exercise.degree7'),
+  ];
+}
 
 /**
  * Generate 4 scale-degree choices: the correct degree + 3 distractors.
  */
-export function generateDegreeChoices(correctDegree: number): ChoiceOption[] {
+export function generateDegreeChoices(correctDegree: number, t: TFunc): ChoiceOption[] {
+  const DEGREE_LABELS = getDegreeLabels(t);
   const correctLabel = DEGREE_LABELS[correctDegree] || `${correctDegree}th`;
   const distractors: ChoiceOption[] = [];
   const used = new Set<number>([correctDegree]);

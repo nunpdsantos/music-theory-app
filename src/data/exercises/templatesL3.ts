@@ -126,11 +126,11 @@ const templates: ModuleTemplateConfig[] = [
       {
         type: 'chord_build',
         promptTemplate: 'Build the diatonic seventh chord on {root} in A minor (harmonic minor).',
-        hintTemplate: 'In harmonic minor, the raised 7th creates different chord qualities than natural minor. The V chord becomes dominant7 and vii becomes diminished7.',
+        hintTemplate: 'In harmonic minor, the raised 7th creates different chord qualities than natural minor. The V chord becomes dominant7 and vii becomes diminished7. The raised 7th degree creates unusual chord qualities — don\'t be surprised by unfamiliar sonorities.',
         params: {
           roots: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
           accidentals: ['', '', '', '', '', '', '#'],
-          chordQualities: ['minor7', 'half_diminished7', 'major7', 'minor7', 'dominant7', 'major7', 'diminished7'],
+          chordQualities: ['minor_major7', 'half_diminished7', 'augmented_major7', 'minor7', 'dominant7', 'major7', 'diminished7'],
           noteCounts: [4],
         },
         points: 2,

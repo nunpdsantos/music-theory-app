@@ -73,11 +73,11 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
         return [];
       }
       case 'scale_degree_id':
-        return generateDegreeChoices(cfg.correctDegree);
+        return generateDegreeChoices(cfg.correctDegree, t);
       default:
         return [];
     }
-  }, [exercise]);
+  }, [exercise, t]);
 
   // Ear training: play audio on mount and provide replay
   const playingRef = useRef(false);
@@ -127,8 +127,7 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
       const t = setTimeout(playEarAudio, 300);
       return () => clearTimeout(t);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- phase is read but intentionally omitted; we only auto-play on exercise change
-  }, [exercise, playEarAudio]);
+  }, [exercise, playEarAudio, phase]);
 
   const handleSelectChoice = useCallback((value: string) => {
     setSelected(value);
@@ -136,7 +135,7 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
 
   const handleSubmitChoice = useCallback(() => {
     if (!exercise || selected === null) return;
-    const result = validateAnswer(exercise.config, selected);
+    const result = validateAnswer(exercise.config, selected, t);
     setValidationResult(result);
     setPhase('submitted');
 
@@ -156,11 +155,11 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
       gamIncrementExercise(false);
       recordConceptResult(concepts, false);
     }
-  }, [exercise, selected, attempt, onRecordResult, gamLogActivity, gamIncrementExercise, gamAddXP, recordConceptResult]);
+  }, [exercise, selected, attempt, onRecordResult, gamLogActivity, gamIncrementExercise, gamAddXP, recordConceptResult, t]);
 
   const handleSubmitInstrument = useCallback((pitchClasses: Set<number>) => {
     if (!exercise) return;
-    const result = validateAnswer(exercise.config, pitchClasses);
+    const result = validateAnswer(exercise.config, pitchClasses, t);
     setValidationResult(result);
     setPhase('submitted');
 
@@ -180,7 +179,7 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
       gamIncrementExercise(false);
       recordConceptResult(concepts, false);
     }
-  }, [exercise, attempt, onRecordResult, gamLogActivity, gamIncrementExercise, gamAddXP, recordConceptResult]);
+  }, [exercise, attempt, onRecordResult, gamLogActivity, gamIncrementExercise, gamAddXP, recordConceptResult, t]);
 
   const handleTryAgain = useCallback(() => {
     setAttempt(2);
@@ -233,7 +232,7 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
               : (passed ? t('exercise.exercisesComplete') : t('exercise.keepPracticing'))}
           </h3>
           <p className="text-xs mb-3" style={{ color: 'var(--text-dim)' }}>
-            Score: {accumulatedScore % 1 === 0 ? accumulatedScore : accumulatedScore.toFixed(1)}/{orderedExercises.length}
+            {t('exercise.score', { score: accumulatedScore % 1 === 0 ? accumulatedScore : accumulatedScore.toFixed(1), total: orderedExercises.length })}
             {passed
               ? ' — ' + t('exercise.passed')
               : ' — ' + t('exercise.needToPass', { score: Math.ceil(orderedExercises.length * 0.8) })}

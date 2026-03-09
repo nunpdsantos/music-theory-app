@@ -27,6 +27,13 @@ function getModuleInfo(moduleId: string) {
   return meta;
 }
 
+/** Parse a module ID like 'l1u2m3' into numeric parts for display */
+function parseModuleId(moduleId: string): { level: number; unit: number; module: number } | null {
+  const match = moduleId.match(/^l(\d+)u(\d+)m(\d+)$/);
+  if (!match) return null;
+  return { level: Number(match[1]), unit: Number(match[2]), module: Number(match[3]) };
+}
+
 export function ReviewQueue({ progress, onStartReview }: ReviewQueueProps) {
   const { t } = useTranslation();
   const [now] = useState(() => Date.now());
@@ -99,8 +106,12 @@ export function ReviewQueue({ progress, onStartReview }: ReviewQueueProps) {
         {shown.map((moduleId) => {
           const schedule = (progress.reviewSchedules ?? {})[moduleId];
           const levelMeta = getModuleInfo(moduleId);
+          const parsed = parseModuleId(moduleId);
           const reviewStatus = schedule ? formatNextReview(schedule, now) : '';
           const interval = schedule ? getIntervalLabel(schedule.intervalLevel) : '';
+          const moduleLabel = parsed
+            ? `${t('learn.level', { n: parsed.level })} · ${t('learn.unit', { n: parsed.unit })} · ${t('learn.module', { n: parsed.module })}`
+            : moduleId;
 
           return (
             <m.button
@@ -137,7 +148,7 @@ export function ReviewQueue({ progress, onStartReview }: ReviewQueueProps) {
                   </span>
                   <div className="min-w-0">
                     <p className="text-sm font-medium truncate" style={{ color: 'var(--text)' }}>
-                      {moduleId}
+                      {moduleLabel}
                     </p>
                     <p className="text-[10px]" style={{ color: 'var(--text-dim)' }}>
                       {levelMeta?.title ?? ''} &middot; {t('review.interval', { interval })}

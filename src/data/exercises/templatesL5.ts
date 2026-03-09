@@ -17,8 +17,8 @@ const templates: ModuleTemplateConfig[] = [
     templates: [
       {
         type: 'chord_build',
-        promptTemplate: 'Build V/V (the secondary dominant of V) in the key of {root} major.',
-        hintTemplate: 'V/V is the dominant of the dominant. In {root} major, find the V chord, then build a dominant 7th (or major triad) on its 5th scale degree.',
+        promptTemplate: 'Build a {root} major triad.',
+        hintTemplate: 'A major triad: root + major 3rd + perfect 5th. This chord quality is used for secondary dominants like V/V.',
         params: {
           roots: ['C', 'G', 'D', 'F', 'A', 'E'],
           accidentals: ['', '', '', '', '', ''],

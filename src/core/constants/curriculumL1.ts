@@ -186,7 +186,7 @@ const l1u2m1: CurriculumModule = {
     {
       title: 'Dots and Ties',
       explanation:
-        "A dot after a note increases its duration by half — a dotted half note lasts three beats instead of two. A tie connects two notes of the same pitch into one continuous sound — a half note tied to a quarter note lasts three beats total. Dots and ties let you create durations that don't fit neatly into the basic hierarchy.",
+        "A dot after a note increases its duration by half — a dotted half note lasts three beats instead of two (when the quarter note gets the beat). A tie connects two notes of the same pitch into one continuous sound — a half note tied to a quarter note lasts three beats total. Dots and ties let you create durations that don't fit neatly into the basic hierarchy.",
       tryThisQuery: 'G major scale',
       tryThisLabel: 'Hear the scale at a steady tempo',
     },

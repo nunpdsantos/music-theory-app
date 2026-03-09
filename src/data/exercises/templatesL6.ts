@@ -17,8 +17,8 @@ const templates: ModuleTemplateConfig[] = [
     templates: [
       {
         type: 'chord_build',
-        promptTemplate: 'Build the Neapolitan chord (bII6) in {root} minor. This is a major triad on the lowered 2nd degree, typically in first inversion.',
-        hintTemplate: 'The Neapolitan in {root} minor is a major triad built on the note a half step above {root}. In first inversion, the 4th degree is in the bass.',
+        promptTemplate: 'Build a {root}{accidental} major triad in first inversion (Neapolitan chord).',
+        hintTemplate: 'The Neapolitan is a major triad typically in first inversion. Build a major triad on {root}{accidental} and place the 3rd in the bass.',
         params: {
           roots: ['D', 'E', 'A', 'G', 'C', 'F'],
           accidentals: ['b', 'b', 'b', 'b', 'b', ''],
@@ -126,8 +126,8 @@ const templates: ModuleTemplateConfig[] = [
       },
       {
         type: 'chord_build',
-        promptTemplate: 'Build the German augmented 6th chord in {root} minor. Include all 4 notes.',
-        hintTemplate: 'In {root} minor, the German Aug6 uses: lowered 6th degree, tonic, lowered 3rd, and raised 4th degree. The outer voices form an augmented 6th.',
+        promptTemplate: 'Build a {root}{accidental} dominant seventh chord (enharmonic German augmented sixth).',
+        hintTemplate: 'The German Aug6 is enharmonically equivalent to a dominant seventh chord. Build a dominant 7th on {root}{accidental}: root + major 3rd + perfect 5th + minor 7th.',
         params: {
           roots: ['A', 'C', 'D', 'E', 'G'],
           accidentals: ['b', 'b', 'b', 'b', 'b'],
@@ -295,7 +295,7 @@ const templates: ModuleTemplateConfig[] = [
               { label: 'Chromatic mediants are limited to major-key pieces', correct: false },
             ],
             [
-              { label: 'C major to Ab major is a chromatic mediant: roots a M3 apart, sharing one common tone (C/Eb)', correct: true },
+              { label: 'C major to Ab major is a chromatic mediant: roots a M3 apart, sharing one common tone (C)', correct: true },
               { label: 'C major to Ab is a dominant relationship', correct: false },
               { label: 'This relationship has no common tones', correct: false },
               { label: 'C to Ab is a subdominant relationship', correct: false },

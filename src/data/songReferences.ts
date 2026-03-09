@@ -48,7 +48,7 @@ const SONG_REFERENCES: Record<string, SongReference[]> = {
     { song: 'Joy to the World', artist: 'Traditional (Handel arrangement)', context: 'The opening melody is a descending major scale from tonic to tonic.' },
   ],
   'l1u3m2': [
-    { song: 'Viva la Vida', artist: 'Coldplay', context: 'Composed in Ab major (four flats), demonstrating how key signatures with flats sound and feel.' },
+    { song: 'Brown Eyed Girl', artist: 'Van Morrison', context: 'Written in G major (one sharp — F#), demonstrating how a simple key signature shapes the sound of a classic song.' },
     { song: 'Hey Jude', artist: 'The Beatles', context: 'In the key of F major (one flat), a good entry point for reading key signatures beyond C major.' },
   ],
   'l1u3m3': [
@@ -76,20 +76,20 @@ const SONG_REFERENCES: Record<string, SongReference[]> = {
   // L2U5: Minor Scales and Key Relationships
   'l2u5m1': [
     { song: 'Losing My Religion', artist: 'R.E.M.', context: 'Built on the natural minor (Aeolian) scale in A minor, with the characteristic flat seventh.' },
-    { song: 'Scarborough Fair', artist: 'Traditional (Simon & Garfunkel)', context: 'A modal/natural minor melody that avoids the raised seventh, emphasizing the Aeolian color.' },
+    { song: 'Eleanor Rigby', artist: 'The Beatles', context: 'Written entirely in E minor using only Em and C chords — a pure natural minor (Aeolian) sound with no raised 6th or 7th, making it a textbook Aeolian example.' },
   ],
   'l2u5m2': [
     { song: 'Hava Nagila', artist: 'Traditional', context: 'Uses the harmonic minor scale — the augmented second between b6 and #7 gives it its distinctive sound.' },
-    { song: 'Smooth Criminal', artist: 'Michael Jackson', context: 'The verse harmony implies melodic minor ascending (raised 6th and 7th) over an A minor tonality.' },
+    { song: 'Smooth Criminal', artist: 'Michael Jackson', context: 'The use of E major (V) over an A minor tonality implies harmonic minor, with the raised 7th degree (G#) creating a strong pull back to the tonic.' },
   ],
   'l2u5m3': [
     { song: 'Stairway to Heaven', artist: 'Led Zeppelin', context: 'Begins in A minor (relative minor of C major), then modulates — a classic relative key relationship.' },
-    { song: 'My Heart Will Go On', artist: 'Celine Dion', context: 'Shifts between relative major and minor keys, demonstrating the close relationship between them.' },
+    { song: 'While My Guitar Gently Weeps', artist: 'The Beatles', context: 'Moves between A minor verses and its relative major context (C major), demonstrating the close relationship between relative keys that share the same key signature.' },
   ],
 
   // L2U6: Compound Meter and Syncopation
   'l2u6m1': [
-    { song: 'Norwegian Wood', artist: 'The Beatles', context: 'Written in 6/8 time with a lilting compound-duple feel throughout.' },
+    { song: 'House of the Rising Sun', artist: 'Traditional (The Animals)', context: 'The arpeggiated accompaniment in 6/8 time demonstrates compound-duple meter, where each of the two main beats subdivides into groups of three eighth notes.' },
     { song: 'We Are the Champions', artist: 'Queen', context: 'The verse is in 6/8 before the chorus shifts feel — a contrast between compound and simple meter.' },
   ],
   'l2u6m2': [
@@ -100,22 +100,22 @@ const SONG_REFERENCES: Record<string, SongReference[]> = {
   // L2U7: Intervals, Triads, and Diatonic Harmony
   'l2u7m1': [
     { song: 'Amazing Grace', artist: 'Traditional', context: 'Opens with a perfect fourth leap, and the melody outlines major and minor intervals throughout.' },
-    { song: 'When the Saints Go Marching In', artist: 'Traditional', context: 'The opening four-note figure outlines a major third followed by a perfect fourth.' },
+    { song: 'When the Saints Go Marching In', artist: 'Traditional', context: 'The opening four-note figure (C–E–F–G) begins with a bright major third leap — one of the classic ear-training references for identifying the M3 interval.' },
   ],
   'l2u7m2': [
     { song: 'Maria', artist: 'Leonard Bernstein (West Side Story)', context: 'Opens with an augmented fourth (tritone) — the "devil\'s interval" used for dramatic effect.' },
     { song: 'A Whole New World', artist: 'Alan Menken (Aladdin)', context: 'Contains compound intervals (9ths, 10ths) in the melody, extending beyond the octave.' },
   ],
   'l2u7m3': [
-    { song: 'House of the Rising Sun', artist: 'Traditional (The Animals)', context: 'Uses all four triad types in context — major, minor, augmented (passing), and diminished chords.' },
-    { song: 'Creep', artist: 'Radiohead', context: 'The I–III–IV–iv progression includes major, augmented, and minor triads in succession.' },
+    { song: 'Oh! Darling', artist: 'The Beatles', context: 'Features major, minor, and augmented triads — the E augmented chord creates tension before resolving, demonstrating how different triad qualities serve different harmonic functions.' },
+    { song: 'Creep', artist: 'Radiohead', context: 'The I–III–IV–iv progression (G–B–C–Cm) features a chromatic major chord (III) borrowed from outside the key and a borrowed minor subdominant (iv), showing how triad quality creates emotional color.' },
   ],
   'l2u7m4': [
     { song: 'Canon in D', artist: 'Johann Pachelbel', context: 'The bass line moves through root position and first inversion triads — a textbook example of figured bass voice leading.' },
     { song: 'Prelude in C Major (BWV 846)', artist: 'J.S. Bach', context: 'Each measure arpegiates a chord, many in first or second inversion, following figured bass conventions.' },
   ],
   'l2u7m5': [
-    { song: 'Pachelbel Canon', artist: 'Johann Pachelbel', context: 'The progression I–V–vi–iii–IV–I–IV–V uses every diatonic triad, labeled in Roman numerals.' },
+    { song: 'Pachelbel Canon', artist: 'Johann Pachelbel', context: 'The progression I–V–vi–iii–IV–I–IV–V demonstrates five of the seven diatonic triads in a descending bass pattern that became one of the most famous chord progressions in Western music.' },
     { song: 'No Woman No Cry', artist: 'Bob Marley', context: 'Uses the I–V–vi–IV progression — the most common diatonic Roman numeral pattern in pop music.' },
   ],
 
@@ -135,7 +135,7 @@ const SONG_REFERENCES: Record<string, SongReference[]> = {
     { song: 'I Got Rhythm', artist: 'George Gershwin', context: 'The "rhythm changes" progression (Imaj7–vi7–ii7–V7) became a template for hundreds of jazz compositions.' },
   ],
   'l3u9m4': [
-    { song: 'Blue Bossa', artist: 'Kenny Dorham', context: 'Opens in C minor with a i7–iv7–V7 progression, demonstrating diatonic seventh chords in a minor key context.' },
+    { song: 'Blue Bossa', artist: 'Kenny Dorham', context: 'Opens in C minor with a i7–iv7–iiø7–V7 progression, demonstrating how diatonic seventh chords and the ii–V cadential motion function in a minor key.' },
     { song: 'Summertime', artist: 'George Gershwin (Porgy and Bess)', context: 'The minor-key seventh chord progression (i–iv7–V7) creates the languid feel of the song.' },
   ],
 
