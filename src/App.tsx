@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LazyMotion, domAnimation, AnimatePresence, m } from 'framer-motion';
+import { LazyMotion, MotionConfig, domAnimation, AnimatePresence, m } from 'framer-motion';
 import { AppShell } from './components/layout/AppShell.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 import { QuickSearch } from './components/navigation/QuickSearch.tsx';
@@ -75,6 +75,7 @@ function App() {
 
   return (
     <LazyMotion features={domAnimation}>
+      <MotionConfig reducedMotion="user">
       <AppShell>
         <AnimatePresence mode="wait">
           <m.div
@@ -100,6 +101,7 @@ function App() {
       <PWAPrompts />
       <ToastContainer />
       <GuidedTour />
+      </MotionConfig>
     </LazyMotion>
   );
 }

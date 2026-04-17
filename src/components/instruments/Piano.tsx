@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useRef, useEffect } from 'react';
+import { useMemo, useCallback, useRef, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   generateKeyboardKeys,
@@ -88,6 +88,40 @@ export function Piano() {
 
   // Show all keys on every device — octave buttons handle quick navigation
   const keys = allKeys;
+
+  // ─── Keyboard navigation (roving tabindex) ───────────────────────
+  // Focused key is tracked by MIDI number. Arrow L/R move between adjacent
+  // keys (including black/white sequence); Home/End jump to endpoints.
+  const sortedKeys = useMemo(
+    () => [...keys].sort((a, b) => a.midiNumber - b.midiNumber),
+    [keys],
+  );
+  const [focusedMidi, setFocusedMidi] = useState<number>(() => {
+    // Default focus: middle C (60) if present, else first key.
+    const hasMidi60 = sortedKeys.some((k) => k.midiNumber === 60);
+    return hasMidi60 ? 60 : sortedKeys[0]?.midiNumber ?? 0;
+  });
+
+  const handleKeyFocus = useCallback((k: PianoKey) => {
+    setFocusedMidi(k.midiNumber);
+  }, []);
+
+  const handleKeyNavKeyDown = useCallback(
+    (e: React.KeyboardEvent, k: PianoKey) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Home' && e.key !== 'End') return;
+      e.preventDefault();
+      const idx = sortedKeys.findIndex((sk) => sk.midiNumber === k.midiNumber);
+      if (idx < 0) return;
+      let target = idx;
+      if (e.key === 'ArrowLeft') target = Math.max(0, idx - 1);
+      else if (e.key === 'ArrowRight') target = Math.min(sortedKeys.length - 1, idx + 1);
+      else if (e.key === 'Home') target = 0;
+      else if (e.key === 'End') target = sortedKeys.length - 1;
+      const next = sortedKeys[target];
+      if (next) setFocusedMidi(next.midiNumber);
+    },
+    [sortedKeys],
+  );
 
   const isInScale = useCallback(
     (key: PianoKey) => scaleMidiNumbers.has(key.midiNumber),
@@ -364,6 +398,9 @@ export function Piano() {
               onNoteOff={handleNoteOff}
               showLabel={!mobile || isInScale(wk) || activeNotes.has(wk.midiNumber) || (wk.note.natural === 'C' && wk.note.accidental === '')}
               sizeMode={sizeMode}
+              isFocused={focusedMidi === wk.midiNumber}
+              onKeyDown={handleKeyNavKeyDown}
+              onFocus={handleKeyFocus}
             />
           ))}
 
@@ -385,6 +422,9 @@ export function Piano() {
                 onNoteOff={handleNoteOff}
                 showLabel={!mobile || isInScale(bk) || activeNotes.has(bk.midiNumber)}
                 sizeMode={sizeMode}
+                isFocused={focusedMidi === bk.midiNumber}
+                onKeyDown={handleKeyNavKeyDown}
+                onFocus={handleKeyFocus}
               />
             </div>
           ))}

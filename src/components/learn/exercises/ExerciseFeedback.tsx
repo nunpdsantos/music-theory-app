@@ -26,6 +26,9 @@ export function ExerciseFeedback({
 
   return (
     <m.div
+      role="status"
+      aria-live="assertive"
+      aria-atomic="true"
       initial={isCorrect ? { opacity: 0, y: 8, scale: 0.95 } : { opacity: 0, x: 0 }}
       animate={isCorrect ? { opacity: 1, y: 0, scale: 1 } : { opacity: 1, x: [0, -4, 4, -2, 0] }}
       transition={isCorrect ? SPRING_SNAPPY : { duration: 0.3 }}

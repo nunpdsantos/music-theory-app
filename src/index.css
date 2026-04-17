@@ -188,6 +188,32 @@ body {
   font-family: var(--font-sans);
 }
 
+/* ─── Focus ring (a11y) ──────────────────────────────────────────
+   Visible for keyboard users only — :focus-visible excludes pointer focus. */
+*:focus {
+  outline: none;
+}
+*:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+/* Opt-out for components that draw their own focus affordance. */
+[data-focus-ring="custom"]:focus-visible {
+  outline: none;
+}
+
+/* ─── Reduced motion (a11y) ──────────────────────────────────────
+   Users with prefers-reduced-motion get near-instant transitions. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ─── Button utilities ───────────────────────────────────────── */
 .btn-accent {
   display: inline-flex;

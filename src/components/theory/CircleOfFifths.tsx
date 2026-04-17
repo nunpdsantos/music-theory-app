@@ -1,4 +1,4 @@
-import { memo, useMemo, useState, useCallback } from 'react';
+import { memo, useMemo, useState, useCallback, useEffect, useRef } from 'react';
 import { noteToString, type Note, type ScaleType } from '../../core/types/music.ts';
 import { getPitchClass } from '../../core/constants/notes.ts';
 import { useAppStore } from '../../state/store.ts';
@@ -54,6 +54,9 @@ export const CircleOfFifths = memo(function CircleOfFifths() {
   const { getNoteDegree } = useKeyContext();
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [hoveredRing, setHoveredRing] = useState<'major' | 'minor' | null>(null);
+  const [focusKey, setFocusKey] = useState<{ ring: 'major' | 'minor'; idx: number }>(
+    { ring: 'major', idx: 0 },
+  );
 
   const selectedPc = getPitchClass(selectedKey);
   const isMinorSel = isMinorScale(selectedScale);
@@ -87,6 +90,33 @@ export const CircleOfFifths = memo(function CircleOfFifths() {
       selectedDegree: null,
     });
   };
+
+  const handleSegmentKeyDown = useCallback(
+    (e: React.KeyboardEvent, ring: 'major' | 'minor', idx: number, note: Note) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleKeyClick(note, ring === 'major');
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        setFocusKey({ ring, idx: (idx + 1) % 12 });
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        setFocusKey({ ring, idx: (idx + 11) % 12 });
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        setFocusKey({ ring: ring === 'major' ? 'minor' : 'major', idx });
+      }
+    },
+    [handleKeyClick],
+  );
+
+  // Focus the segment that matches focusKey when it changes.
+  // SVG <g> doesn't focus natively via React state; use useEffect with ref map.
+  const segmentRefs = useRef(new Map<string, SVGGElement | null>());
+  useEffect(() => {
+    const el = segmentRefs.current.get(`${focusKey.ring}-${focusKey.idx}`);
+    if (el && document.activeElement !== el) el.focus();
+  }, [focusKey]);
 
   // Build segment data — coloring based on harmonic distance from selected key
   const majorSegs = useMemo(() => {
@@ -194,11 +224,20 @@ export const CircleOfFifths = memo(function CircleOfFifths() {
       {majorSegs.map((s) => (
         <g
           key={`maj-${s.i}`}
+          ref={(el) => { segmentRefs.current.set(`major-${s.i}`, el); }}
+          role="button"
+          tabIndex={focusKey.ring === 'major' && focusKey.idx === s.i ? 0 : -1}
+          aria-label={`${noteToString(s.note)} major`}
+          aria-pressed={s.selected}
+          data-focus-ring="custom"
+          style={{ filter: s.selected ? 'url(#cof-glow)' : 'none', outline: focusKey.ring === 'major' && focusKey.idx === s.i ? '2px solid var(--focus-ring)' : 'none' }}
           onClick={() => handleKeyClick(s.note, true)}
           onMouseEnter={() => { setHoveredIdx(s.i); setHoveredRing('major'); }}
           onMouseLeave={() => { setHoveredIdx(null); setHoveredRing(null); }}
+          onFocus={() => { setHoveredIdx(s.i); setHoveredRing('major'); }}
+          onBlur={() => { setHoveredIdx(null); setHoveredRing(null); }}
+          onKeyDown={(e) => handleSegmentKeyDown(e, 'major', s.i, s.note)}
           className="cursor-pointer"
-          style={{ filter: s.selected ? 'url(#cof-glow)' : 'none' }}
         >
           <path
             d={s.path}
@@ -236,11 +275,20 @@ export const CircleOfFifths = memo(function CircleOfFifths() {
       {minorSegs.map((s) => (
         <g
           key={`min-${s.i}`}
+          ref={(el) => { segmentRefs.current.set(`minor-${s.i}`, el); }}
+          role="button"
+          tabIndex={focusKey.ring === 'minor' && focusKey.idx === s.i ? 0 : -1}
+          aria-label={`${noteToString(s.note)} minor`}
+          aria-pressed={s.selected}
+          data-focus-ring="custom"
+          style={{ filter: s.selected ? 'url(#cof-glow)' : 'none', outline: focusKey.ring === 'minor' && focusKey.idx === s.i ? '2px solid var(--focus-ring)' : 'none' }}
           onClick={() => handleKeyClick(s.note, false)}
           onMouseEnter={() => { setHoveredIdx(s.i); setHoveredRing('minor'); }}
           onMouseLeave={() => { setHoveredIdx(null); setHoveredRing(null); }}
+          onFocus={() => { setHoveredIdx(s.i); setHoveredRing('minor'); }}
+          onBlur={() => { setHoveredIdx(null); setHoveredRing(null); }}
+          onKeyDown={(e) => handleSegmentKeyDown(e, 'minor', s.i, s.note)}
           className="cursor-pointer"
-          style={{ filter: s.selected ? 'url(#cof-glow)' : 'none' }}
         >
           <path
             d={s.path}

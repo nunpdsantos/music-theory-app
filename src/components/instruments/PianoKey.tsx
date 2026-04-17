@@ -1,4 +1,4 @@
-import { memo, useCallback, useRef } from 'react';
+import { memo, useCallback, useEffect, useRef } from 'react';
 import type { PianoKey as PianoKeyData } from '../../core/utils/pianoLayout.ts';
 import { noteToString } from '../../core/types/music.ts';
 
@@ -22,6 +22,10 @@ interface PianoKeyProps {
   onNoteOff: (keyData: PianoKeyData) => void;
   showLabel: boolean;
   sizeMode?: SizeMode;
+  isFocused?: boolean;
+  onKeyDown?: (e: React.KeyboardEvent, keyData: PianoKeyData) => void;
+  onKeyUp?: (e: React.KeyboardEvent, keyData: PianoKeyData) => void;
+  onFocus?: (keyData: PianoKeyData) => void;
 }
 
 export const PianoKeyComponent = memo(function PianoKeyComponent({
@@ -36,9 +40,56 @@ export const PianoKeyComponent = memo(function PianoKeyComponent({
   onNoteOff,
   showLabel,
   sizeMode = 'desktop',
+  isFocused = false,
+  onKeyDown,
+  onKeyUp,
+  onFocus,
 }: PianoKeyProps) {
   const isPressed = useRef(false);
+  const elementRef = useRef<HTMLDivElement>(null);
   const dims = DIMS[sizeMode];
+
+  useEffect(() => {
+    if (isFocused && elementRef.current && document.activeElement !== elementRef.current) {
+      elementRef.current.focus({ preventScroll: false });
+    }
+  }, [isFocused]);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if ((e.key === 'Enter' || e.key === ' ') && !e.repeat) {
+        e.preventDefault();
+        if (!isPressed.current) {
+          isPressed.current = true;
+          onNoteOn(keyData);
+        }
+      }
+      onKeyDown?.(e, keyData);
+    },
+    [keyData, onNoteOn, onKeyDown],
+  );
+
+  const handleKeyUp = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if ((e.key === 'Enter' || e.key === ' ') && isPressed.current) {
+        isPressed.current = false;
+        onNoteOff(keyData);
+      }
+      onKeyUp?.(e, keyData);
+    },
+    [keyData, onNoteOff, onKeyUp],
+  );
+
+  const handleFocus = useCallback(() => {
+    onFocus?.(keyData);
+  }, [keyData, onFocus]);
+
+  const handleBlur = useCallback(() => {
+    if (isPressed.current) {
+      isPressed.current = false;
+      onNoteOff(keyData);
+    }
+  }, [keyData, onNoteOff]);
 
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
@@ -119,19 +170,29 @@ export const PianoKeyComponent = memo(function PianoKeyComponent({
 
     return (
       <div
+        ref={elementRef}
         role="button"
         aria-label={`${label}${keyData.octave}`}
+        aria-pressed={isActive}
+        tabIndex={isFocused ? 0 : -1}
+        data-focus-ring="custom"
         className={`absolute z-10 cursor-pointer select-none ${sizeMode === 'mobile' ? 'touch-pan-x' : 'touch-none'}`}
         style={{
           width: bw + touchPad * 2,
           height: bh + touchPad,
           padding: touchPad ? `0 ${touchPad}px ${touchPad}px` : undefined,
           left: -touchPad,
+          outline: isFocused ? '2px solid var(--focus-ring)' : 'none',
+          outlineOffset: 2,
         }}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onPointerLeave={handlePointerLeave}
         onPointerCancel={handlePointerUp}
+        onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyUp}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       >
         <div
           style={{
@@ -196,8 +257,12 @@ export const PianoKeyComponent = memo(function PianoKeyComponent({
 
   return (
     <div
+      ref={elementRef}
       role="button"
       aria-label={`${label}${keyData.octave}`}
+      aria-pressed={isActive}
+      tabIndex={isFocused ? 0 : -1}
+      data-focus-ring="custom"
       className={`relative shrink-0 cursor-pointer select-none ${sizeMode === 'mobile' ? 'touch-pan-x' : 'touch-none'}`}
       style={{
         width: ww,
@@ -205,7 +270,7 @@ export const PianoKeyComponent = memo(function PianoKeyComponent({
         backgroundColor: bg,
         opacity,
         borderRadius: '0 0 6px 6px',
-        border,
+        border: isFocused ? '2px solid var(--focus-ring)' : border,
         borderTop: 'none',
         boxShadow: shadow,
         transform,
@@ -215,6 +280,10 @@ export const PianoKeyComponent = memo(function PianoKeyComponent({
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerLeave}
       onPointerCancel={handlePointerUp}
+      onKeyDown={handleKeyDown}
+      onKeyUp={handleKeyUp}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
     >
       <span
         className="absolute bottom-2 left-1/2 -translate-x-1/2 font-bold"
