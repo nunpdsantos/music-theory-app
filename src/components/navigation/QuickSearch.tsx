@@ -8,8 +8,10 @@ import { getPitchClass } from '../../core/constants/notes.ts';
 import { SCALE_TYPE_NAMES } from '../../core/constants/scales.ts';
 import { parseChordSymbol, formatParsedChordName } from '../../core/utils/chordParser.ts';
 import { parseScaleSymbol, formatParsedScaleName } from '../../core/utils/scaleParser.ts';
+import { findModulesByQuery } from '../../data/moduleIndex.ts';
+import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
 
-type SearchResultType = 'Scale' | 'Chord' | 'Key';
+type SearchResultType = 'Scale' | 'Chord' | 'Key' | 'Lesson';
 
 interface SearchResult {
   type: SearchResultType;
@@ -146,13 +148,34 @@ function getResults(query: string): SearchResult[] {
     }
   }
 
-  return results.slice(0, 8);
+  // Learn module lookup — independent of scale/chord parsing so users can
+  // search for concepts like "dorian", "tritone", "suspension", "fugue".
+  const moduleHits = findModulesByQuery(q, 4);
+  for (const mod of moduleHits) {
+    if (results.length >= 10) break;
+    const key = `lesson:${mod.id}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    results.push({
+      type: 'Lesson',
+      label: mod.title,
+      action: () => {
+        useAppStore.setState({
+          view: 'learn',
+          pendingLearnTarget: { levelId: mod.level, unitId: mod.unitId, moduleId: mod.id },
+        });
+      },
+    });
+  }
+
+  return results.slice(0, 10);
 }
 
 const TYPE_KEYS: Record<SearchResultType, string> = {
   Scale: 'search.typeScale',
   Chord: 'search.typeChord',
   Key: 'search.typeKey',
+  Lesson: 'search.typeLesson',
 };
 
 export function QuickSearch() {
@@ -322,12 +345,14 @@ export function QuickSearch() {
                         style={{
                           backgroundColor:
                             r.type === 'Scale' ? 'var(--accent-dim)' :
-                            r.type === 'Chord' ? 'rgba(251, 191, 36, 0.08)' :
-                            'rgba(52, 211, 153, 0.08)',
+                            r.type === 'Chord' ? `${DEGREE_COLORS[5]}14` :
+                            r.type === 'Lesson' ? `${DEGREE_COLORS[2]}1a` :
+                            `${DEGREE_COLORS[4]}14`,
                           color:
                             r.type === 'Scale' ? 'var(--accent)' :
-                            r.type === 'Chord' ? '#FBBF24' :
-                            '#34D399',
+                            r.type === 'Chord' ? DEGREE_COLORS[5] :
+                            r.type === 'Lesson' ? DEGREE_COLORS[2] :
+                            DEGREE_COLORS[4],
                         }}
                       >
                         {t(TYPE_KEYS[r.type])}

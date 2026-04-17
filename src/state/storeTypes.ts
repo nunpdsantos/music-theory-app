@@ -62,15 +62,24 @@ export interface AudioSlice {
   setMidiInputDeviceId: (id: string | null) => void;
 }
 
+export interface LearnDeepLink {
+  levelId: string;
+  unitId: string;
+  moduleId: string;
+}
+
 export interface NavigationSlice {
   view: ViewMode;
   detailPanelOpen: boolean;
   quickSearchOpen: boolean;
   comparisonScale: ScaleType | null;
+  /** Pending Learn target set by Explore/search so LearnView can deep-link to a module on mount. Cleared after consumption. */
+  pendingLearnTarget: LearnDeepLink | null;
   setView: (view: ViewMode) => void;
   setDetailPanelOpen: (open: boolean) => void;
   setQuickSearchOpen: (open: boolean) => void;
   setComparisonScale: (scale: ScaleType | null) => void;
+  setPendingLearnTarget: (target: LearnDeepLink | null) => void;
 }
 
 export interface MetronomeSlice {

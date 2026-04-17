@@ -388,6 +388,7 @@
     "staff": "Staff",
     "voicing": "Voicing",
     "formula": "Formula",
+    "learnMore": "Learn about this",
     "compatibleScales": "Compatible Scales",
     "compatibleChords": "Compatible Chords",
     "degree": "Degree {{n}}",
@@ -431,7 +432,8 @@
     "noMatch": "No match. Try a chord (Cmaj7#11), scale (D harmonic minor), or note (Ab).",
     "typeScale": "Scale",
     "typeChord": "Chord",
-    "typeKey": "Key"
+    "typeKey": "Key",
+    "typeLesson": "Lesson"
   },
   "chordCategory": {
     "triads": "Triads",

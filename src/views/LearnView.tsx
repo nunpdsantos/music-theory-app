@@ -122,6 +122,17 @@ export function LearnView() {
     }
   }, [dashboardRequested, clearDashboardRequest, navigate]);
 
+  // Consume deep-link targets set by Explore or QuickSearch so the user lands
+  // directly on a module view instead of the levels overview.
+  const pendingLearnTarget = useAppStore((s) => s.pendingLearnTarget);
+  const setPendingLearnTarget = useAppStore((s) => s.setPendingLearnTarget);
+  useEffect(() => {
+    if (!pendingLearnTarget) return;
+    const { levelId, unitId, moduleId } = pendingLearnTarget;
+    setPendingLearnTarget(null);
+    queueMicrotask(() => navigate({ type: 'module', levelId, unitId, moduleId }, 'forward'));
+  }, [pendingLearnTarget, setPendingLearnTarget, navigate]);
+
   // Scroll to top on screen change
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' });

@@ -384,6 +384,7 @@
     "earTraining": "O\u00eddo"
   },
   "panel": {
+    "learnMore": "Aprende sobre esto",
     "notes": "Notas",
     "staff": "Pentagrama",
     "voicing": "Voicing",
@@ -431,7 +432,8 @@
     "noMatch": "Sin resultados. Prueba un acorde (Cmaj7#11), escala (D harmonic minor) o nota (Ab).",
     "typeScale": "Escala",
     "typeChord": "Acorde",
-    "typeKey": "Tonalidad"
+    "typeKey": "Tonalidad",
+    "typeLesson": "Lecci\u00f3n"
   },
   "chordCategory": {
     "triads": "Tr\u00edadas",

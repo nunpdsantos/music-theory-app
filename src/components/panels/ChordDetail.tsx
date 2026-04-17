@@ -18,6 +18,7 @@ import {
 } from '../../core/constants/chords.ts';
 import { getVoicedChordNotes } from '../../core/utils/pianoLayout.ts';
 import { StaffNotationSkeleton } from '../notation/StaffNotationSkeleton.tsx';
+import { LearnMoreButton } from './LearnMoreButton.tsx';
 
 const StaffNotation = lazy(() =>
   import('../notation/StaffNotation.tsx').then((m) => ({ default: m.StaffNotation }))
@@ -145,6 +146,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
             {t('panel.degree', { n: degree })}
           </span>
         )}
+        <LearnMoreButton query={CHORD_QUALITY_NAMES[chord.quality]} />
       </div>
 
       {/* Notes */}

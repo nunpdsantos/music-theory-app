@@ -10,6 +10,7 @@ import {
   resumeAudio,
 } from '../../core/services/audio.ts';
 import { SCALE_TYPE_NAMES, SCALE_FORMULAS, getScaleDegreeIntervalLabel } from '../../core/constants/scales.ts';
+import { LearnMoreButton } from './LearnMoreButton.tsx';
 import { buildAscendingMidi, buildDescendingMidi } from '../../utils/midiHelpers.ts';
 import { buildChord, CHORD_SYMBOLS } from '../../core/constants/chords.ts';
 import { MODE_INFO } from '../../core/constants/modes.ts';
@@ -191,6 +192,7 @@ export function ScaleDetail() {
         <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full mt-2 inline-block" style={{ color: 'var(--text-dim)', backgroundColor: 'color-mix(in srgb, var(--card) 60%, transparent)' }}>
           {t('panel.noteCount', { count: scale.notes.length })}
         </span>
+        <LearnMoreButton query={SCALE_TYPE_NAMES[selectedScale]} />
       </div>
 
       {/* Notes with degree colors */}
