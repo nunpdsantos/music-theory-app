@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ActivityDay } from '../../core/types/gamification';
+import { palette } from '../../design/tokens/palette';
 
 interface WeeklyChartProps {
   activityLog: ActivityDay[];
@@ -52,7 +53,7 @@ export function WeeklyChart({ activityLog }: WeeklyChartProps) {
                 className="w-full max-w-[28px] rounded-t-md transition-all"
                 style={{
                   height: bar.count > 0 ? Math.max(6, (bar.count / maxCount) * 72) : 3,
-                  backgroundColor: bar.count > 0 ? '#60A5FA' : 'color-mix(in srgb, var(--card-hover) 80%, transparent)',
+                  backgroundColor: bar.count > 0 ? palette.accent : 'color-mix(in srgb, var(--card-hover) 80%, transparent)',
                   opacity: bar.isToday ? 1 : 0.7,
                 }}
               />

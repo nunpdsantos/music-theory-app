@@ -1,3 +1,6 @@
+/* eslint-disable no-restricted-syntax -- legacy instrument palette (fret
+   marker outlines, contrast borders). Migration deferred alongside
+   PianoKey — needs instrument-specific SURFACE tokens. */
 import { memo } from 'react';
 import { noteToString } from '../../core/types/music.ts';
 import type { PitchedNote } from '../../core/types/music.ts';

@@ -6,6 +6,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useConceptStore } from '../../state/conceptStore';
 import { CONCEPT_GROUPS } from '../../services/conceptTagger';
+import { palette } from '../../design/tokens/palette';
 
 interface ConceptRadarProps {
   accentColor?: string;
@@ -27,7 +28,7 @@ function getAngle(index: number): number {
   return (360 / AXES) * index;
 }
 
-export function ConceptRadar({ accentColor = '#60A5FA' }: ConceptRadarProps) {
+export function ConceptRadar({ accentColor = palette.accent }: ConceptRadarProps) {
   const { t } = useTranslation();
   const concepts = useConceptStore((s) => s.concepts);
   const [now] = useState(() => Date.now());

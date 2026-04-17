@@ -18,6 +18,7 @@ import { LevelCard } from './LevelCard';
 import { ProgressBar } from './ProgressBar';
 import { XPDisplay } from '../gamification/XPDisplay';
 import { Button } from '../ui/Button';
+import { DEGREE_COLORS } from '../../design/tokens/colors';
 import { useGamificationStore } from '../../state/gamificationStore';
 import { useAppStore } from '../../state/store.ts';
 
@@ -93,7 +94,7 @@ export function LevelsOverview({
           <div className="flex-1">
             <ProgressBar
               percent={totalModules > 0 ? (totalCompleted / totalModules) * 100 : 0}
-              color="#60A5FA"
+              color={DEGREE_COLORS[1]}
               height={6}
             />
           </div>
@@ -119,9 +120,13 @@ export function LevelsOverview({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
           className="mb-6 rounded-xl px-6 py-6 text-center"
-          style={{ backgroundColor: '#60A5FA12', border: '1px solid #60A5FA20', boxShadow: 'var(--shadow-sm)' }}
+          style={{
+            backgroundColor: `color-mix(in srgb, ${DEGREE_COLORS[1]} 7%, transparent)`,
+            border: `1px solid color-mix(in srgb, ${DEGREE_COLORS[1]} 12%, transparent)`,
+            boxShadow: 'var(--shadow-sm)',
+          }}
         >
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-3">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke={DEGREE_COLORS[1]} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-3">
             <path d="M9 18V5l12-2v13" />
             <circle cx="6" cy="18" r="3" />
             <circle cx="18" cy="16" r="3" />
@@ -136,9 +141,9 @@ export function LevelsOverview({
             onClick={() => onOpenLevel('l1')}
             className="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-150 hover:scale-[1.03]"
             style={{
-              backgroundColor: '#60A5FA20',
-              color: '#60A5FA',
-              border: '1px solid #60A5FA30',
+              backgroundColor: `color-mix(in srgb, ${DEGREE_COLORS[1]} 12%, transparent)`,
+              color: DEGREE_COLORS[1],
+              border: `1px solid color-mix(in srgb, ${DEGREE_COLORS[1]} 19%, transparent)`,
             }}
           >
             {t('learn.startLevel1')}

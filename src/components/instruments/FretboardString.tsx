@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax -- legacy instrument palette (string
+   shading, muted/active markers). Migration deferred alongside PianoKey. */
 import { memo } from 'react';
 import { noteToString } from '../../core/types/music.ts';
 import type { PitchedNote } from '../../core/types/music.ts';

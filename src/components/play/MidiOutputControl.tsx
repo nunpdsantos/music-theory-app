@@ -34,7 +34,7 @@ export function MidiOutputControl() {
           onClick={() => setMidiOutputEnabled(!midiOutputEnabled)}
           className="relative w-8 h-4 rounded-full transition-colors"
           style={{
-            backgroundColor: midiOutputEnabled ? '#3b82f6' : 'var(--card-hover)',
+            backgroundColor: midiOutputEnabled ? 'var(--accent)' : 'var(--card-hover)',
           }}
           role="switch"
           aria-checked={midiOutputEnabled}

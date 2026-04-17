@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax -- legacy instrument palette (fret
+   dot highlights, bridge shading). Migration deferred alongside PianoKey. */
 import { useMemo, useCallback, useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getTuningById, getTuningPitchClasses, GUITAR_TUNINGS } from '../../core/constants/guitarTunings.ts';

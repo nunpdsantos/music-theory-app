@@ -8,6 +8,7 @@ import {
 } from '../../services/noteRecorder.ts';
 import { midiToNote } from '../../core/utils/pianoLayout.ts';
 import { useAudio } from '../../hooks/useAudio.ts';
+import { palette } from '../../design/tokens/palette';
 
 export function RecordingControl() {
   const { t } = useTranslation();
@@ -85,20 +86,22 @@ export function RecordingControl() {
           onClick={handleToggleRecord}
           className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-medium transition-colors"
           style={{
-            backgroundColor: recording ? '#F8717120' : 'color-mix(in srgb, var(--card-hover) 50%, transparent)',
-            color: recording ? '#F87171' : 'var(--text-muted)',
-            border: `1px solid ${recording ? '#F8717130' : 'var(--border)'}`,
+            backgroundColor: recording
+              ? `color-mix(in srgb, ${palette.danger} 12%, transparent)`
+              : 'color-mix(in srgb, var(--card-hover) 50%, transparent)',
+            color: recording ? palette.danger : 'var(--text-muted)',
+            border: `1px solid ${recording ? `color-mix(in srgb, ${palette.danger} 19%, transparent)` : 'var(--border)'}`,
           }}
           aria-label={recording ? t('recording.stopRecording') : t('recording.startRecording')}
         >
           {recording ? (
             <>
-              <span className="w-2 h-2 rounded-sm" style={{ backgroundColor: '#F87171' }} />
+              <span className="w-2 h-2 rounded-sm" style={{ backgroundColor: palette.danger }} />
               {t('common.stop')}
             </>
           ) : (
             <>
-              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: '#F87171' }} />
+              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: palette.danger }} />
               {t('common.record')}
             </>
           )}
@@ -106,7 +109,7 @@ export function RecordingControl() {
       </div>
 
       {recording && (
-        <p className="text-[10px] mb-2" style={{ color: '#F87171' }}>
+        <p className="text-[10px] mb-2" style={{ color: palette.danger }}>
           {t('recording.recordingActive')}
         </p>
       )}
@@ -118,8 +121,12 @@ export function RecordingControl() {
               key={rec.createdAt}
               className="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs"
               style={{
-                backgroundColor: playingIndex === i ? '#3b82f610' : 'var(--card)',
-                border: `1px solid ${playingIndex === i ? '#3b82f630' : 'var(--border)'}`,
+                backgroundColor: playingIndex === i
+                  ? `color-mix(in srgb, ${palette.accent} 6%, transparent)`
+                  : 'var(--card)',
+                border: `1px solid ${playingIndex === i
+                  ? `color-mix(in srgb, ${palette.accent} 19%, transparent)`
+                  : 'var(--border)'}`,
               }}
             >
               <span style={{ color: 'var(--text-muted)' }}>
@@ -129,7 +136,7 @@ export function RecordingControl() {
                 <button
                   onClick={() => handlePlayback(rec, i)}
                   className="p-1 rounded transition-colors"
-                  style={{ color: playingIndex === i ? '#3b82f6' : 'var(--text-dim)' }}
+                  style={{ color: playingIndex === i ? palette.accent : 'var(--text-dim)' }}
                   aria-label={t('recording.playRecording', { n: i + 1 })}
                 >
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">

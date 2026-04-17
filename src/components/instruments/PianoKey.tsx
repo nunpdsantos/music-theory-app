@@ -1,3 +1,6 @@
+/* eslint-disable no-restricted-syntax -- legacy instrument palette (key
+   shadows, active/hover tints). Migration deferred: needs instrument-specific
+   SURFACE tokens that don't overlap the app-wide palette. */
 import { memo, useCallback, useEffect, useRef } from 'react';
 import type { PianoKey as PianoKeyData } from '../../core/utils/pianoLayout.ts';
 import { noteToString } from '../../core/types/music.ts';

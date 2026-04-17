@@ -7,6 +7,7 @@ import { buildScale, SCALE_TYPE_NAMES } from '../../core/constants/scales.ts';
 import { getPitchClass } from '../../core/constants/notes.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
+import { palette } from '../../design/tokens/palette';
 
 const CHROMATIC_LABELS = ['1', 'b2', '2', 'b3', '3', '4', 'b5', '5', 'b6', '6', 'b7', '7'];
 
@@ -214,7 +215,7 @@ export function ScaleComparison() {
             className="flex items-center justify-center h-4"
           >
             {slot.shared && (
-              <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#34D399' }} title={t('explore.sharedLegend')} />
+              <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: palette.success }} title={t('explore.sharedLegend')} />
             )}
             {slot.onlyA && (
               <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: DEGREE_COLORS[1] }} title={t('explore.onlyLegend', { name: SCALE_TYPE_NAMES[selectedScale] })} />
@@ -252,7 +253,7 @@ export function ScaleComparison() {
       {/* Legend */}
       <div className="flex items-center gap-4 mt-2 text-[9px]" style={{ color: 'var(--text-dim)' }}>
         <span className="flex items-center gap-1">
-          <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: '#34D399' }} />
+          <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: palette.success }} />
           {t('explore.sharedLegend')}
         </span>
         <span className="flex items-center gap-1">

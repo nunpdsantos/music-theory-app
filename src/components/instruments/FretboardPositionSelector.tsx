@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax -- legacy instrument palette
+   (position selector tints). Migration deferred alongside PianoKey. */
 import { useTranslation } from 'react-i18next';
 import type { Chord } from '../../core/types/music.ts';
 import type { ScalePosition } from '../../core/constants/guitarScalePositions.ts';

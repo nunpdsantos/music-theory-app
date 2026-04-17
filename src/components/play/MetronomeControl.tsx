@@ -89,7 +89,9 @@ export function MetronomeControl() {
                 backgroundColor: isActive
                   ? (isAccent ? tonicColor : 'var(--text-muted)')
                   : 'var(--border)',
-                boxShadow: isActive ? `0 0 12px ${isAccent ? tonicColor : '#a1a1aa'}40` : 'none',
+                // Non-accent beats glow with the muted text tone — matches the
+                // dot's resting fill so the halo reads as a brightness pulse.
+                boxShadow: isActive ? `0 0 12px ${isAccent ? tonicColor : 'var(--text-muted)'}` : 'none',
                 transform: isActive ? 'scale(1.3)' : 'scale(1)',
               }}
             />

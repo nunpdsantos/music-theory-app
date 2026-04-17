@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax -- legacy instrument palette.
+   Migration deferred alongside PianoKey. */
 import { useMemo, useCallback, useRef, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {

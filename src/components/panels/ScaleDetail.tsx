@@ -61,10 +61,12 @@ function computeScaleSequenceMidi(
   return sequence;
 }
 
+// Reuses DEGREE_COLORS 1/2/3 deliberately — "primary fit" reads as tonic,
+// "secondary" as supertonic, "color" as mediant. Shared visual language.
 const FIT_COLORS = {
-  primary: '#60A5FA',
-  secondary: '#A78BFA',
-  color: '#F472B6',
+  primary: DEGREE_COLORS[1],
+  secondary: DEGREE_COLORS[2],
+  color: DEGREE_COLORS[3],
 } as const;
 
 // Mode name → i18n key mapping (core/modes.ts is read-only)

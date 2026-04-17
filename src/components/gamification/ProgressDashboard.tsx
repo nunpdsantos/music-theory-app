@@ -10,6 +10,7 @@ import { AchievementGrid } from './AchievementGrid';
 import { ConceptRadar } from './ConceptRadar';
 import { useConceptStore } from '../../state/conceptStore';
 import { CONCEPT_LABELS } from '../../services/conceptTagger';
+import { palette, paletteAlt } from '../../design/tokens/palette';
 
 interface ProgressDashboardProps {
   progress: CurriculumProgress;
@@ -69,9 +70,9 @@ export function ProgressDashboard({ progress, onBack }: ProgressDashboardProps) 
         transition={{ duration: 0.3, delay: 0.05 }}
         className="grid grid-cols-3 gap-3 mb-8"
       >
-        <StatCard value={totalXP.toLocaleString()} label={t('gamification.dashboard.xp')} accent="#60A5FA" />
+        <StatCard value={totalXP.toLocaleString()} label={t('gamification.dashboard.xp')} accent={palette.accent} />
         <StatCard value={`${completedModules}/${totalModules}`} label={t('gamification.dashboard.modules')} />
-        <StatCard value={currentStreak > 0 ? `${currentStreak}d` : '—'} label={t('gamification.dashboard.streak')} accent="#F59E0B" />
+        <StatCard value={currentStreak > 0 ? `${currentStreak}d` : '—'} label={t('gamification.dashboard.streak')} accent={paletteAlt.warningDeep} />
         <StatCard value={totalExercises} label={t('gamification.dashboard.exercises')} />
         <StatCard value={totalExercises > 0 ? `${accuracy}%` : '—'} label={t('gamification.dashboard.accuracy')} />
         <StatCard value={totalReviews} label={t('gamification.dashboard.reviews')} />

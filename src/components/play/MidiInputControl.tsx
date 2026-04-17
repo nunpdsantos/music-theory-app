@@ -34,7 +34,7 @@ export function MidiInputControl() {
           onClick={() => setMidiInputEnabled(!midiInputEnabled)}
           className="relative w-8 h-4 rounded-full transition-colors"
           style={{
-            backgroundColor: midiInputEnabled ? '#3b82f6' : 'var(--card-hover)',
+            backgroundColor: midiInputEnabled ? 'var(--accent)' : 'var(--card-hover)',
           }}
           role="switch"
           aria-checked={midiInputEnabled}

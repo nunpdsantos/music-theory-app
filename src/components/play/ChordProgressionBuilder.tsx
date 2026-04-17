@@ -6,6 +6,7 @@ import { noteToString } from '../../core/types/music.ts';
 import type { Chord } from '../../core/types/music.ts';
 import { useAppStore } from '../../state/store.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
+import { palette } from '../../design/tokens/palette';
 import { playChord, resumeAudio, stopPlayback, SYNTH_PRESETS } from '../../core/services/audio.ts';
 
 interface ProgressionSlot {
@@ -90,9 +91,13 @@ export function ChordProgressionBuilder() {
               onClick={isPlaying ? stopPlaying : playProgression}
               className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-medium transition-colors"
               style={{
-                backgroundColor: isPlaying ? '#F8717120' : `${DEGREE_COLORS[1]}15`,
-                color: isPlaying ? '#F87171' : DEGREE_COLORS[1],
-                border: `1px solid ${isPlaying ? '#F8717130' : `${DEGREE_COLORS[1]}30`}`,
+                backgroundColor: isPlaying
+                  ? `color-mix(in srgb, ${palette.danger} 12%, transparent)`
+                  : `${DEGREE_COLORS[1]}15`,
+                color: isPlaying ? palette.danger : DEGREE_COLORS[1],
+                border: `1px solid ${isPlaying
+                  ? `color-mix(in srgb, ${palette.danger} 19%, transparent)`
+                  : `${DEGREE_COLORS[1]}30`}`,
               }}
             >
               {isPlaying ? (

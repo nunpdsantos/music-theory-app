@@ -13,6 +13,7 @@ import { InstrumentInput } from './inputs/InstrumentInput';
 import { playNote, playChord, resumeAudio } from '../../../core/services/audio';
 import type { NaturalNote, Accidental, Note, ChordQuality } from '../../../core/types/music';
 import { buildChord } from '../../../core/constants/chords';
+import { palette } from '../../../design/tokens/palette';
 import { useGamificationStore } from '../../../state/gamificationStore';
 import { useConceptStore } from '../../../state/conceptStore';
 import { getExerciseConcepts } from '../../../services/conceptTagger';
@@ -217,11 +218,11 @@ export function ExerciseRunner({ exercises, accentColor, reviewMode = false, onR
         <div className="text-center">
           <span className={`text-3xl mb-3 block ${passed ? '' : ''}`}>
             {passed ? (
-              <svg className="mx-auto" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#34D399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg className="mx-auto" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={palette.success} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
               </svg>
             ) : (
-              <svg className="mx-auto" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#F87171" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg className="mx-auto" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={palette.danger} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" />
               </svg>
             )}

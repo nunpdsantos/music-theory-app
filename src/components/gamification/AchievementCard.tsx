@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import type { AchievementRecord } from '../../core/types/gamification';
 import type { AchievementDefinition } from '../../services/gamification';
+import { paletteAlt } from '../../design/tokens/palette';
 
 interface AchievementCardProps {
   definition: AchievementDefinition;
@@ -24,7 +25,9 @@ export function AchievementCard({ definition, record }: AchievementCardProps) {
         <div
           className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
           style={{
-            backgroundColor: unlocked ? '#F59E0B18' : 'color-mix(in srgb, var(--card-hover) 60%, transparent)',
+            backgroundColor: unlocked
+              ? `color-mix(in srgb, ${paletteAlt.warningDeep} 10%, transparent)`
+              : 'color-mix(in srgb, var(--card-hover) 60%, transparent)',
           }}
         >
           <svg
@@ -32,7 +35,7 @@ export function AchievementCard({ definition, record }: AchievementCardProps) {
             height="18"
             viewBox="0 0 24 24"
             fill="none"
-            stroke={unlocked ? '#F59E0B' : 'var(--text-dim)'}
+            stroke={unlocked ? paletteAlt.warningDeep : 'var(--text-dim)'}
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"

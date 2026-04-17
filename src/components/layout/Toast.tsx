@@ -3,39 +3,37 @@ import { AnimatePresence, m } from 'framer-motion';
 import { useToastStore, type ToastType } from '../../state/toastStore.ts';
 import { Card } from '../ui/Card';
 import { SPRING_SNAPPY } from '../../design/tokens/motion';
+import { palette } from '../../design/tokens/palette';
 
-// Semantic color map for toast types. These aren't DEGREE_COLORS — they carry
-// cross-app meaning (success/info/warning/error). Kept inline until the
-// color-unification pass exposes palette.success/info/warning/danger.
-const BORDER_COLORS: Record<ToastType, string> = {
-  success: '#34d399',
-  info: '#60a5fa',
-  warning: '#fbbf24',
-  error: '#f87171',
+const TONE_COLORS: Record<ToastType, string> = {
+  success: palette.success,
+  info: palette.accent,   // info toast uses brand blue, not sky — longstanding choice
+  warning: palette.warning,
+  error: palette.danger,
 };
 
 const ICONS: Record<ToastType, ReactNode> = {
   success: (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2.5" strokeLinecap="round">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={palette.success} strokeWidth="2.5" strokeLinecap="round">
       <polyline points="20 6 9 17 4 12" />
     </svg>
   ),
   info: (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2.5" strokeLinecap="round">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={palette.accent} strokeWidth="2.5" strokeLinecap="round">
       <circle cx="12" cy="12" r="10" />
       <line x1="12" y1="16" x2="12" y2="12" />
       <line x1="12" y1="8" x2="12.01" y2="8" />
     </svg>
   ),
   warning: (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={palette.warning} strokeWidth="2.5" strokeLinecap="round">
       <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
       <line x1="12" y1="9" x2="12" y2="13" />
       <line x1="12" y1="17" x2="12.01" y2="17" />
     </svg>
   ),
   error: (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f87171" strokeWidth="2.5" strokeLinecap="round">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={palette.danger} strokeWidth="2.5" strokeLinecap="round">
       <circle cx="12" cy="12" r="10" />
       <line x1="15" y1="9" x2="9" y2="15" />
       <line x1="9" y1="9" x2="15" y2="15" />
@@ -66,7 +64,7 @@ export function ToastContainer() {
             style={{ minWidth: 220, maxWidth: 360 }}
           >
             <Card
-              accentColor={BORDER_COLORS[t.type]}
+              accentColor={TONE_COLORS[t.type]}
               accentEdge="left"
               padding="none"
               className="flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium shadow-lg"

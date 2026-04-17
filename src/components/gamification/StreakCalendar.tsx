@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ActivityDay } from '../../core/types/gamification';
+import { palette } from '../../design/tokens/palette';
 
 interface StreakCalendarProps {
   activityLog: ActivityDay[];
@@ -78,10 +79,10 @@ export function StreakCalendar({ activityLog, weeks = 12 }: StreakCalendarProps)
                     : day.count === 0
                       ? 'color-mix(in srgb, var(--card-hover) 60%, transparent)'
                       : day.count <= 2
-                        ? '#60A5FA40'
+                        ? `color-mix(in srgb, ${palette.accent} 25%, transparent)`
                         : day.count <= 5
-                          ? '#60A5FA70'
-                          : '#60A5FA',
+                          ? `color-mix(in srgb, ${palette.accent} 44%, transparent)`
+                          : palette.accent,
                 }}
                 title={day.count >= 0 ? `${day.date}: ${day.count} activities` : undefined}
               />

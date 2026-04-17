@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSyncStore } from '../../state/syncStore';
 import { Button } from '../ui/Button';
+import { paletteAlt } from '../../design/tokens/palette';
 
 interface AccountMenuProps {
   email: string;
@@ -43,10 +44,10 @@ export function AccountMenu({ email, onSignOut }: AccountMenuProps) {
   const syncDotColor = syncStatus === 'syncing'
     ? 'var(--accent)'
     : syncStatus === 'error'
-      ? '#ef4444'
+      ? paletteAlt.dangerBright
       : syncStatus === 'offline'
-        ? '#f59e0b'
-        : '#22c55e';
+        ? paletteAlt.warningDeep
+        : paletteAlt.successBright;
 
   return (
     <div className="relative" ref={ref}>

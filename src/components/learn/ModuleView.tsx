@@ -11,6 +11,7 @@ import { Confetti } from './Confetti';
 import { toast } from '../../state/toastStore';
 import { getSongReferences } from '../../data/songReferences';
 import { SPRING_BOUNCY } from '../../design/tokens/motion';
+import { palette } from '../../design/tokens/palette';
 
 // Matches a quoted token that follows a "Type "/"Open "/"Search for " verb,
 // e.g. "Type 'C major scale'". Quotes can be straight or curly.
@@ -410,7 +411,7 @@ export function ModuleView({
                             exit={{ scale: 0, opacity: 0 }}
                             transition={SPRING_BOUNCY}
                             width="10" height="10" viewBox="0 0 24 24" fill="none"
-                            stroke="#34D399" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
+                            stroke={palette.success} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
                           >
                             <polyline points="20 6 9 17 4 12" />
                           </m.svg>

@@ -10,8 +10,9 @@ import { LEVEL_METADATA } from '../../data/curriculumLoader';
 import { getDueReviewModuleIds } from '../../services/spacedRepetition';
 import { formatNextReview, getIntervalLabel } from '../../services/spacedRepetition';
 import { Card } from '../ui/Card';
+import { palette } from '../../design/tokens/palette';
 
-const AMBER = '#FBBF24';
+const AMBER = palette.warning;
 const MAX_SHOWN = 5;
 
 interface ReviewQueueProps {

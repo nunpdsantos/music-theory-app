@@ -1,6 +1,16 @@
 import { useEffect, useRef } from 'react';
+import { DEGREE_COLORS } from '../../design/tokens/colors';
 
-const COLORS = ['#60A5FA', '#34D399', '#FBBF24', '#F472B6', '#A78BFA', '#FB923C'];
+// Confetti particles reuse the DEGREE_COLORS palette deliberately — it gives
+// the celebration the same color language as the rest of the app.
+const COLORS = [
+  DEGREE_COLORS[1],
+  DEGREE_COLORS[4],
+  DEGREE_COLORS[5],
+  DEGREE_COLORS[3],
+  DEGREE_COLORS[2],
+  DEGREE_COLORS[6],
+];
 const PARTICLE_COUNT = 60;
 const DURATION_MS = 2200;
 const GRAVITY = 0.12;

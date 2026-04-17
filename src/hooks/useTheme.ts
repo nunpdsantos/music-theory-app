@@ -1,3 +1,7 @@
+/* eslint-disable no-restricted-syntax -- theme-color meta tag values are
+   set inline because they must match the :root CSS vars exactly. Moving
+   them to tokens creates a sync-or-drift problem with the source-of-truth
+   CSS. Migration deferred; the theme system is load-bearing for a11y. */
 import { useEffect } from 'react';
 import { useAppStore } from '../state/store.ts';
 

@@ -1,3 +1,7 @@
+/* eslint-disable no-restricted-syntax -- VexFlow injects raw hex values
+   ('#000000', 'black') into SVG style attributes; this hook re-colors them
+   to match the app theme. The hex literals here are comparison targets,
+   not new design decisions. */
 /**
  * Hook managing VexFlow loading + rendering lifecycle.
  * Handles dynamic import, ResizeObserver, theme reactivity.

@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { paletteAlt } from '../../design/tokens/palette';
 
 interface StreakBadgeProps {
   streak: number;
@@ -18,7 +19,7 @@ export function StreakBadge({ streak, onClick }: StreakBadgeProps) {
         color: 'var(--text-dim)',
         border: '1px solid color-mix(in srgb, var(--border) 50%, transparent)',
       }}
-      onMouseEnter={(e) => { e.currentTarget.style.color = '#F59E0B'; }}
+      onMouseEnter={(e) => { e.currentTarget.style.color = paletteAlt.warningDeep; }}
       onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-dim)'; }}
       aria-label={t('gamification.streakLabel', { days: streak })}
       title={t('gamification.streakLabel', { days: streak })}
