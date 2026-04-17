@@ -18,6 +18,7 @@ import { LevelDetail } from '../components/learn/LevelDetail';
 import { UnitDetail } from '../components/learn/UnitDetail';
 import { ModuleView } from '../components/learn/ModuleView';
 import { LevelAchievement } from '../components/learn/LevelAchievement';
+import { SPRING_NAV } from '../design/tokens/motion';
 
 const ProgressDashboard = lazy(() => import('../components/gamification/ProgressDashboard').then((m) => ({ default: m.ProgressDashboard })));
 
@@ -31,7 +32,6 @@ type LearnScreen =
   | { type: 'review'; levelId: string; unitId: string; moduleId: string }
   | { type: 'dashboard' };
 
-const SPRING = { type: 'spring' as const, stiffness: 400, damping: 35 };
 
 interface LevelCelebration {
   levelNumber: number;
@@ -215,7 +215,7 @@ export function LearnView() {
             initial={{ opacity: 0, x: -xOffset }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: xOffset }}
-            transition={SPRING}
+            transition={SPRING_NAV}
           >
             <LevelsOverview
               progress={progress}
@@ -240,7 +240,7 @@ export function LearnView() {
             initial={{ opacity: 0, x: xOffset }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -xOffset }}
-            transition={SPRING}
+            transition={SPRING_NAV}
           >
             {!loadedLevel ? loadingSpinner : (
               <LevelDetail
@@ -261,7 +261,7 @@ export function LearnView() {
             initial={{ opacity: 0, x: xOffset }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -xOffset }}
-            transition={SPRING}
+            transition={SPRING_NAV}
           >
             {!loadedLevel ? loadingSpinner : (() => {
               const unitIndex = loadedLevel.units.findIndex((u) => u.id === screen.unitId);
@@ -289,7 +289,7 @@ export function LearnView() {
             initial={{ opacity: 0, x: xOffset }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -xOffset }}
-            transition={SPRING}
+            transition={SPRING_NAV}
           >
             {!loadedLevel ? loadingSpinner : (() => {
               const unit = loadedLevel.units.find((u) => u.id === screen.unitId);
@@ -350,7 +350,7 @@ export function LearnView() {
             initial={{ opacity: 0, x: xOffset }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -xOffset }}
-            transition={SPRING}
+            transition={SPRING_NAV}
           >
             {!loadedLevel ? loadingSpinner : (() => {
               const unit = loadedLevel.units.find((u) => u.id === screen.unitId);
@@ -405,7 +405,7 @@ export function LearnView() {
             initial={{ opacity: 0, x: xOffset }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -xOffset }}
-            transition={SPRING}
+            transition={SPRING_NAV}
           >
             <Suspense fallback={loadingSpinner}>
               <ProgressDashboard

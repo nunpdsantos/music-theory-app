@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { AnimatePresence, m } from 'framer-motion';
 import { useToastStore, type ToastType } from '../../state/toastStore.ts';
 import { Card } from '../ui/Card';
+import { SPRING_SNAPPY } from '../../design/tokens/motion';
 
 // Semantic color map for toast types. These aren't DEGREE_COLORS — they carry
 // cross-app meaning (success/info/warning/error). Kept inline until the
@@ -60,7 +61,7 @@ export function ToastContainer() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+            transition={SPRING_SNAPPY}
             className="pointer-events-auto max-sm:w-full"
             style={{ minWidth: 220, maxWidth: 360 }}
           >

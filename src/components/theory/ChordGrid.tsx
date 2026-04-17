@@ -83,6 +83,9 @@ export function ChordGrid() {
             }}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
+            // one-off spring (400/25) — balances the staggered reveal so
+            // adjacent chips don't feel identical; tighter than GENTLE but
+            // less damped than SNAPPY. Only used here.
             transition={{ delay: i * 0.04, type: 'spring', stiffness: 400, damping: 25 }}
             whileHover={{ scale: 1.04, y: -2, boxShadow: 'var(--shadow-md)' }}
             whileTap={{ scale: 0.96 }}

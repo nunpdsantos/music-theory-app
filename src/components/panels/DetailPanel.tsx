@@ -4,6 +4,7 @@ import { useAppStore } from '../../state/store.ts';
 import { ChordDetail } from './ChordDetail.tsx';
 import { ScaleDetail } from './ScaleDetail.tsx';
 import { useIsCompact } from '../../hooks/useMediaQuery.ts';
+import { SPRING_PANEL } from '../../design/tokens/motion';
 
 export function DetailPanel() {
   const { t } = useTranslation();
@@ -33,7 +34,7 @@ export function DetailPanel() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+            transition={SPRING_PANEL}
             className="overflow-hidden backdrop-blur-md"
             style={{ borderBottom: '1px solid var(--border-subtle)', backgroundColor: 'color-mix(in srgb, var(--bg-raised) 95%, transparent)' }}
           >
@@ -77,7 +78,7 @@ export function DetailPanel() {
           initial={{ x: '100%', opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: '100%', opacity: 0 }}
-          transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+          transition={SPRING_PANEL}
           className="w-80 shrink-0 backdrop-blur-md overflow-y-auto relative"
           style={{ backgroundColor: 'color-mix(in srgb, var(--bg-raised) 95%, transparent)', borderLeft: '1px solid var(--border-subtle)', boxShadow: 'var(--shadow-lg)' }}
         >

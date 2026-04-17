@@ -10,6 +10,7 @@ import {
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
 import { useAppStore } from '../../state/store.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
+import { SPRING_SNAPPY } from '../../design/tokens/motion';
 
 export function ScaleDegreeBar() {
   const { t } = useTranslation();
@@ -57,7 +58,7 @@ export function ScaleDegreeBar() {
             }}
             whileTap={{ scale: 0.94 }}
             animate={isSelected ? { scale: 1.04 } : { scale: 1 }}
-            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+            transition={SPRING_SNAPPY}
             title={funcLabel}
             aria-pressed={isSelected}
             aria-label={`Degree ${degree}, ${intervalLabel}, ${noteToString(note)}`}

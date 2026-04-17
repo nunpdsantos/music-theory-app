@@ -13,6 +13,7 @@ import { MidiInputControl } from '../components/play/MidiInputControl.tsx';
 import { ChordProgressionBuilder } from '../components/play/ChordProgressionBuilder.tsx';
 import { RecordingControl } from '../components/play/RecordingControl.tsx';
 import type { SynthPresetName } from '../core/types/visual.ts';
+import { SPRING_BOUNCY } from '../design/tokens/motion';
 
 // ─── Animation variants ─────────────────────────────────────────────────────
 
@@ -356,7 +357,7 @@ export function PlayView() {
                       initial={{ scale: 0.6, opacity: 0, y: 8 }}
                       animate={{ scale: 1, opacity: 1, y: 0 }}
                       exit={{ scale: 0.6, opacity: 0, y: -8 }}
-                      transition={{ type: 'spring', stiffness: 500, damping: 25 }}
+                      transition={SPRING_BOUNCY}
                       className="flex flex-col items-center px-5 py-3 rounded-xl"
                       style={{
                         backgroundColor: `${color}15`,

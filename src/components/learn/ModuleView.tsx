@@ -10,6 +10,7 @@ import { ExerciseRunner } from './exercises/ExerciseRunner';
 import { Confetti } from './Confetti';
 import { toast } from '../../state/toastStore';
 import { getSongReferences } from '../../data/songReferences';
+import { SPRING_BOUNCY } from '../../design/tokens/motion';
 
 // Matches a quoted token that follows a "Type "/"Open "/"Search for " verb,
 // e.g. "Type 'C major scale'". Quotes can be straight or curly.
@@ -407,7 +408,7 @@ export function ModuleView({
                             initial={{ scale: 0, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0, opacity: 0 }}
-                            transition={{ type: 'spring', stiffness: 500, damping: 25 }}
+                            transition={SPRING_BOUNCY}
                             width="10" height="10" viewBox="0 0 24 24" fill="none"
                             stroke="#34D399" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"
                           >
