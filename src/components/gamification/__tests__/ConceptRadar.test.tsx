@@ -21,6 +21,8 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
+const today = new Date().toISOString().slice(0, 10);
+
 beforeEach(() => {
   useConceptStore.setState({ concepts: {} });
 });
@@ -59,12 +61,12 @@ describe('ConceptRadar', () => {
         intervals: {
           correct: 8,
           total: 10,
-          history: [{ date: '2026-02-10', correct: 8, total: 10 }],
+          history: [{ date: today, correct: 8, total: 10 }],
         },
         chords: {
           correct: 5,
           total: 10,
-          history: [{ date: '2026-02-10', correct: 5, total: 10 }],
+          history: [{ date: today, correct: 5, total: 10 }],
         },
       },
     });
@@ -81,7 +83,7 @@ describe('ConceptRadar', () => {
         intervals: {
           correct: 8,
           total: 10,
-          history: [{ date: '2026-02-10', correct: 8, total: 10 }],
+          history: [{ date: today, correct: 8, total: 10 }],
         },
       },
     });
@@ -97,7 +99,7 @@ describe('ConceptRadar', () => {
         intervals: {
           correct: 5,
           total: 5,
-          history: [{ date: '2026-02-10', correct: 5, total: 5 }],
+          history: [{ date: today, correct: 5, total: 5 }],
         },
       },
     });

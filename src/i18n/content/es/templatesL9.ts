@@ -247,23 +247,8 @@ const overlay: TemplateLevelOverlay = {
     },
   ],
 
-  // ---- l9u32m5: Lectura a Primera Vista — Cromática y Modal ----
-  l9u32m5: [
-    {
-      // scale_build
-      promptTemplate:
-        'Construye la escala de {root} {scaleType} y después cántala usando solfeo o números.',
-      hintTemplate:
-        'Las escalas modales tienen notas características: dórico=#6, frigio=b2, lidio=#4, mixolidio=b7. Los pasajes cromáticos usan sílabas de solfeo alteradas.',
-    },
-    {
-      // scale_degree_id
-      promptTemplate:
-        'En el modo {root} {scaleType}, identifica el grado {degree}. Observa cualquier alteración respecto a la escala mayor.',
-      hintTemplate:
-        'En {root} {scaleType}, algunos grados están alterados respecto al mayor. Canta desde la tónica para encontrar el grado {degree}, observando cualquier sostenido o bemol.',
-    },
-  ],
+  // l9u32m5 (Escucha Contextual) no tiene plantillas generadas — usa los
+  // ejercicios multiple_choice escritos a mano en exercisesL9.ts.
 };
 
 export default overlay;

@@ -27,3 +27,15 @@ dev-dist
 *.sw?
 .vercel
 coverage
+
+# TypeScript incremental build artifacts
+*.tsbuildinfo
+
+# AI tooling scratch
+.ai-orchestrator.json
+.ai-runtime/
+
+# Local design / audit scratch — not shipped
+design-experiments/
+docs/ai-conversations/
+Codex review.md

@@ -380,36 +380,10 @@ const templates: ModuleTemplateConfig[] = [
     targetCount: 5,
   },
 
-  // ---- l9u32m5: Sight Singing — Chromatic and Modal ----
-  {
-    moduleId: 'l9u32m5',
-    templates: [
-      {
-        type: 'scale_build',
-        promptTemplate: 'Build the {root} {scaleType} scale, then sing it using solfege or numbers.',
-        hintTemplate: 'Modal scales have characteristic tones: Dorian=#6, Phrygian=b2, Lydian=#4, Mixolydian=b7. Chromatic passages use altered solfege syllables.',
-        params: {
-          roots: ['C', 'D', 'E', 'F', 'G', 'A'],
-          accidentals: ['', '', '', '', '', ''],
-          scaleTypes: ['dorian', 'mixolydian', 'harmonic_minor', 'melodic_minor'],
-          noteCounts: [7],
-        },
-        points: 2,
-      },
-      {
-        type: 'scale_degree_id',
-        promptTemplate: 'In the {root} {scaleType} mode, identify degree {degree}. Note any alterations from the major scale.',
-        hintTemplate: 'In {root} {scaleType}, some degrees are altered from major. Sing from the tonic to find degree {degree}, noting any sharps or flats.',
-        params: {
-          roots: ['D', 'E', 'F', 'G', 'A'],
-          accidentals: ['', '', '', '', ''],
-          scaleTypes: ['dorian', 'phrygian', 'lydian', 'mixolydian'],
-          degrees: [1, 2, 3, 4, 5, 6, 7],
-        },
-      },
-    ],
-    targetCount: 6,
-  },
+  // l9u32m5 (Contextual Listening) intentionally has no generated templates.
+  // Texture/form/style-period identification doesn't map to the current
+  // template types (scale_build, scale_degree_id, etc.), so the module relies
+  // on its hand-authored multiple_choice exercises in exercisesL9.ts.
 ];
 
 export default templates;

@@ -586,7 +586,7 @@ const curriculumL9: CurriculumLevelOverlay = {
       tasks: [
         {
           instruction:
-            'Toca a escala de C maior lentamente, depois insere uma nota cromatica de passagem entre E e F (toca E-F-F). Agora experimenta C-C#-D. Ouve como a nota cromatica cria cor momentanea sem perturbar a tonalidade',
+            'Toca a escala de C maior lentamente, depois insere uma nota cromatica de passagem entre D e E (toca D-D#-E). Agora experimenta C-C#-D. Ouve como a nota cromatica cria cor momentanea sem perturbar a tonalidade',
         },
         {
           instruction:
