@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { m, AnimatePresence } from 'framer-motion';
 import type { CurriculumModule, CurriculumUnit, CurriculumLevel } from '../../core/types/curriculum';
@@ -10,6 +10,48 @@ import { ExerciseRunner } from './exercises/ExerciseRunner';
 import { Confetti } from './Confetti';
 import { toast } from '../../state/toastStore';
 import { getSongReferences } from '../../data/songReferences';
+
+// Matches a quoted token that follows a "Type "/"Open "/"Search for " verb,
+// e.g. "Type 'C major scale'". Quotes can be straight or curly.
+const QUERY_VERB_PATTERN = /(Type|Open|Search for)\s+['"\u2018\u201C]([^'"\u2019\u201D]+)['"\u2019\u201D]/gi;
+
+function renderTaskInstruction(
+  instruction: string,
+  onTryQuery: (query: string) => void,
+  accent: string,
+): ReactNode[] {
+  const parts: ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  // Reset lastIndex — the regex is a stateful /g object defined at module scope.
+  QUERY_VERB_PATTERN.lastIndex = 0;
+  while ((match = QUERY_VERB_PATTERN.exec(instruction)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(instruction.slice(lastIndex, match.index));
+    }
+    const verb = match[1];
+    const query = match[2];
+    parts.push(
+      <button
+        key={`${match.index}-${query}`}
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onTryQuery(query);
+        }}
+        className="inline-flex items-baseline font-medium rounded px-1 py-0.5 -my-0.5 transition-colors cursor-pointer underline decoration-dotted underline-offset-2"
+        style={{ color: accent, backgroundColor: `${accent}0d` }}
+      >
+        {verb} &lsquo;{query}&rsquo;
+      </button>,
+    );
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < instruction.length) {
+    parts.push(instruction.slice(lastIndex));
+  }
+  return parts.length > 0 ? parts : [instruction];
+}
 
 interface ModuleViewProps {
   module: CurriculumModule;
@@ -378,7 +420,7 @@ export function ModuleView({
                       className={`text-sm transition-colors ${done ? 'line-through' : ''}`}
                       style={{ color: done ? 'var(--text-dim)' : 'var(--text-muted)' }}
                     >
-                      {task.instruction}
+                      {renderTaskInstruction(task.instruction, handleTryThis, accent)}
                     </span>
                   </button>
                 );

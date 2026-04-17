@@ -8,7 +8,15 @@ export const createNavigationSlice: StateCreator<AppState, [], [], NavigationSli
   comparisonScale: null,
 
   setView: (view) =>
-    set({ view, detailPanelOpen: false, selectedChord: null, selectedDegree: null }),
+    // Clear view-bound selections + stop any held notes so audio doesn't bleed
+    // across views (e.g. MIDI/keyboard note held while switching tabs).
+    set({
+      view,
+      detailPanelOpen: false,
+      selectedChord: null,
+      selectedDegree: null,
+      activeNotes: new Set(),
+    }),
   setDetailPanelOpen: (open) => set({ detailPanelOpen: open }),
   setQuickSearchOpen: (open) => set({ quickSearchOpen: open }),
   setComparisonScale: (scale) => set({ comparisonScale: scale }),
