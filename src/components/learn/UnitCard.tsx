@@ -2,6 +2,7 @@ import { m } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import type { CurriculumUnit } from '../../core/types/curriculum';
 import { ProgressBar } from './ProgressBar';
+import { Card } from '../ui/Card';
 
 interface UnitCardProps {
   unit: CurriculumUnit;
@@ -41,21 +42,13 @@ export function UnitCard({ unit, index, completedCount, accentColor, isComplete,
         )}
       </div>
 
-      <button
+      <Card
+        variant="interactive"
+        accentColor={accentColor}
+        accentEdge="all"
+        padding="none"
         onClick={onClick}
-        className="w-full text-left rounded-xl border overflow-hidden transition-colors group hover:scale-[1.002]"
-        style={{
-          borderColor: `${accentColor}18`,
-          backgroundColor: `${accentColor}05`,
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.borderColor = `${accentColor}30`;
-          e.currentTarget.style.backgroundColor = `${accentColor}08`;
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.borderColor = `${accentColor}18`;
-          e.currentTarget.style.backgroundColor = `${accentColor}05`;
-        }}
+        className="overflow-hidden group hover:scale-[1.002]"
       >
         <div className="px-4 py-4">
           <div className="flex items-start justify-between mb-2">
@@ -109,7 +102,7 @@ export function UnitCard({ unit, index, completedCount, accentColor, isComplete,
             </span>
           </div>
         </div>
-      </button>
+      </Card>
     </m.div>
   );
 }

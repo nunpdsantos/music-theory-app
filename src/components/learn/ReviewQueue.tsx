@@ -7,9 +7,9 @@ import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import type { CurriculumProgress } from '../../core/types/curriculum';
 import { LEVEL_METADATA } from '../../data/curriculumLoader';
-import { SPRING_MICRO } from '../../design/tokens/motion';
 import { getDueReviewModuleIds } from '../../services/spacedRepetition';
 import { formatNextReview, getIntervalLabel } from '../../services/spacedRepetition';
+import { Card } from '../ui/Card';
 
 const AMBER = '#FBBF24';
 const MAX_SHOWN = 5;
@@ -59,19 +59,27 @@ export function ReviewQueue({ progress, onStartReview }: ReviewQueueProps) {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.1 }}
-        className="mb-6 rounded-xl px-5 py-4 text-center"
-        style={{ backgroundColor: `${AMBER}08`, border: `1px solid ${AMBER}15`, boxShadow: 'var(--shadow-sm)' }}
+        className="mb-6"
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={AMBER} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-1.5">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-          <polyline points="22 4 12 14.01 9 11.01" />
-        </svg>
-        <h3 className="text-sm font-bold mb-0.5" style={{ color: AMBER }}>
-          {t('review.allCaughtUp')}
-        </h3>
-        <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
-          {t('review.nextReview', { time: relativeTime })}
-        </p>
+        <Card
+          variant="raised"
+          accentColor={AMBER}
+          accentEdge="all"
+          accentStrength="subtle"
+          padding="none"
+          className="px-5 py-4 text-center"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={AMBER} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-1.5">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+            <polyline points="22 4 12 14.01 9 11.01" />
+          </svg>
+          <h3 className="text-sm font-bold mb-0.5" style={{ color: AMBER }}>
+            {t('review.allCaughtUp')}
+          </h3>
+          <p className="text-xs" style={{ color: 'var(--text-dim)' }}>
+            {t('review.nextReview', { time: relativeTime })}
+          </p>
+        </Card>
       </m.div>
     );
   }
@@ -114,26 +122,16 @@ export function ReviewQueue({ progress, onStartReview }: ReviewQueueProps) {
             : moduleId;
 
           return (
-            <m.button
+            <Card
               key={moduleId}
-              whileTap={{ scale: 0.97, transition: SPRING_MICRO }}
+              variant="interactive"
+              accentColor={AMBER}
+              accentEdge="all"
+              accentStrength="subtle"
+              tappable
               onClick={() => onStartReview(moduleId)}
-              className="w-full text-left px-4 py-3 rounded-xl transition-all duration-150 hover:scale-[1.01] group"
-              style={{
-                backgroundColor: `${AMBER}08`,
-                border: `1px solid ${AMBER}15`,
-                boxShadow: 'var(--shadow-sm)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = `${AMBER}15`;
-                e.currentTarget.style.borderColor = `${AMBER}30`;
-                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = `${AMBER}08`;
-                e.currentTarget.style.borderColor = `${AMBER}15`;
-                e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-              }}
+              padding="none"
+              className="px-4 py-3 transition-all duration-150 hover:scale-[1.01] group"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 min-w-0">
@@ -172,7 +170,7 @@ export function ReviewQueue({ progress, onStartReview }: ReviewQueueProps) {
                   </svg>
                 </div>
               </div>
-            </m.button>
+            </Card>
           );
         })}
       </div>

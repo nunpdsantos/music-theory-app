@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import type { CurriculumModule, CurriculumUnit, CurriculumLevel } from '../../core/types/curriculum';
+import { Card } from '../ui/Card';
 
 interface ContinueBannerProps {
   module: CurriculumModule;
@@ -14,25 +15,21 @@ export function ContinueBanner({ module, unit, level, onClick }: ContinueBannerP
   const accent = level.accentColor;
 
   return (
-    <m.button
+    <m.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
-      onClick={onClick}
-      className="w-full mb-8 rounded-xl px-4 py-3.5 text-left transition-all duration-200 group hover:scale-[1.005]"
-      style={{
-        backgroundColor: `${accent}10`,
-        border: `1px solid ${accent}25`,
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.backgroundColor = `${accent}18`;
-        e.currentTarget.style.borderColor = `${accent}40`;
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.backgroundColor = `${accent}10`;
-        e.currentTarget.style.borderColor = `${accent}25`;
-      }}
+      className="mb-8"
     >
+      <Card
+        variant="interactive"
+        accentColor={accent}
+        accentEdge="all"
+        accentStrength="strong"
+        onClick={onClick}
+        padding="none"
+        className="px-4 py-3.5 transition-all duration-200 group hover:scale-[1.005]"
+      >
       <div className="flex items-center justify-between">
         <div>
           <span
@@ -62,6 +59,7 @@ export function ContinueBanner({ module, unit, level, onClick }: ContinueBannerP
           <path d="M5 12h14M12 5l7 7-7 7" />
         </svg>
       </div>
-    </m.button>
+      </Card>
+    </m.div>
   );
 }

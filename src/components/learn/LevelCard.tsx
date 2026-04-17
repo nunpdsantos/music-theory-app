@@ -2,9 +2,9 @@ import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import type { LevelState } from '../../core/types/curriculum';
 import type { LevelMeta } from '../../data/curriculumLoader';
-import { SPRING_MICRO } from '../../design/tokens/motion';
 import { ProgressBar } from './ProgressBar';
 import { DifficultyBadge } from './DifficultyBadge';
+import { Card } from '../ui/Card';
 
 interface LevelCardProps {
   level: LevelMeta;
@@ -25,39 +25,25 @@ export function LevelCard({ level, state, completedModuleCount, index, onClick }
   const isActive = !isLocked && !isComingSoon;
 
   return (
-    <m.button
+    <m.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.06 }}
-      whileTap={isClickable ? { scale: 0.97, transition: SPRING_MICRO } : undefined}
-      onClick={isClickable ? onClick : undefined}
-      disabled={!isClickable}
-      className={`w-full text-left rounded-xl border overflow-hidden transition-all duration-200 ${
-        isActive
-          ? 'hover:scale-[1.01] cursor-pointer'
-          : 'hover:scale-[1.005] cursor-pointer opacity-60'
-      }`}
-      style={{
-        borderColor: `${accent}${isActive ? '20' : '10'}`,
-        backgroundColor: `${accent}${isActive ? '06' : '03'}`,
-        boxShadow: 'var(--shadow-sm)',
-      }}
-      onMouseEnter={(e) => {
-        if (isClickable) {
-          e.currentTarget.style.borderColor = `${accent}${isActive ? '35' : '20'}`;
-          e.currentTarget.style.backgroundColor = `${accent}${isActive ? '0a' : '06'}`;
-          e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (isClickable) {
-          e.currentTarget.style.borderColor = `${accent}${isActive ? '20' : '10'}`;
-          e.currentTarget.style.backgroundColor = `${accent}${isActive ? '06' : '03'}`;
-          e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-        }
-      }}
     >
-      <div className="px-4 py-4">
+      <Card
+        variant="interactive"
+        accentColor={accent}
+        accentEdge="all"
+        accentStrength="subtle"
+        tappable={isClickable}
+        onClick={isClickable ? onClick : undefined}
+        disabled={!isClickable}
+        padding="none"
+        className={`overflow-hidden transition-all duration-200 ${
+          isActive ? 'hover:scale-[1.01]' : 'hover:scale-[1.005] opacity-60'
+        }`}
+      >
+        <div className="px-4 py-4">
         {/* Top row: number + badge */}
         <div className="flex items-center justify-between mb-3">
           <div
@@ -117,7 +103,8 @@ export function LevelCard({ level, state, completedModuleCount, index, onClick }
             </span>
           </div>
         )}
-      </div>
-    </m.button>
+        </div>
+      </Card>
+    </m.div>
   );
 }

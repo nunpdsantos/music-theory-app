@@ -1,7 +1,11 @@
 import type { ReactNode } from 'react';
 import { AnimatePresence, m } from 'framer-motion';
 import { useToastStore, type ToastType } from '../../state/toastStore.ts';
+import { Card } from '../ui/Card';
 
+// Semantic color map for toast types. These aren't DEGREE_COLORS — they carry
+// cross-app meaning (success/info/warning/error). Kept inline until the
+// color-unification pass exposes palette.success/info/warning/danger.
 const BORDER_COLORS: Record<ToastType, string> = {
   success: '#34d399',
   info: '#60a5fa',
@@ -57,32 +61,30 @@ export function ToastContainer() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-            className="pointer-events-auto flex items-center gap-2.5 rounded-lg px-3.5 py-2.5 text-xs font-medium shadow-lg max-sm:w-full"
-            style={{
-              backgroundColor: 'var(--card)',
-              color: 'var(--text)',
-              border: '1px solid var(--border)',
-              borderLeft: `3px solid ${BORDER_COLORS[t.type]}`,
-              minWidth: 220,
-              maxWidth: 360,
-            }}
-            role="status"
+            className="pointer-events-auto max-sm:w-full"
+            style={{ minWidth: 220, maxWidth: 360 }}
           >
-            <span className="shrink-0">{ICONS[t.type]}</span>
-            <span className="flex-1">{t.message}</span>
-            <button
-              onClick={() => removeToast(t.id)}
-              className="shrink-0 rounded p-0.5 transition-colors"
-              style={{ color: 'var(--text-dim)' }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-dim)'; }}
-              aria-label="Dismiss"
+            <Card
+              accentColor={BORDER_COLORS[t.type]}
+              accentEdge="left"
+              padding="none"
+              className="flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-medium shadow-lg"
+              role="status"
             >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
+              <span className="shrink-0">{ICONS[t.type]}</span>
+              <span className="flex-1">{t.message}</span>
+              <button
+                onClick={() => removeToast(t.id)}
+                className="shrink-0 rounded p-0.5 transition-colors hover:text-[color:var(--text)]"
+                style={{ color: 'var(--text-dim)' }}
+                aria-label="Dismiss"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </Card>
           </m.div>
         ))}
       </AnimatePresence>
