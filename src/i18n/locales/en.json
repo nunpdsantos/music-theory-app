@@ -446,13 +446,13 @@
   },
   "degreeShort": {
     "tonic": "Tonic",
-    "supertonic": "Super.",
+    "supertonic": "Supertonic",
     "mediant": "Mediant",
-    "subdominant": "Subdom.",
+    "subdominant": "Subdominant",
     "tritone": "Tritone",
     "dominant": "Dominant",
     "augFifth": "Aug. 5th",
-    "submediant": "Submed.",
+    "submediant": "Submediant",
     "subtonic": "Subtonic",
     "leading": "Leading"
   },
