@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { usePWA } from '../../hooks/usePWA.ts';
+import { Button } from '../ui/Button';
 
 export function PWAPrompts() {
   const { t } = useTranslation();
@@ -61,13 +62,9 @@ function Toast({
     >
       <span>{message}</span>
       {action && onAction && (
-        <button
-          onClick={onAction}
-          className="px-3 py-1 rounded-md text-xs font-medium transition-colors"
-          style={{ backgroundColor: '#3b82f6', color: '#fff' }}
-        >
+        <Button variant="accent" size="sm" onClick={onAction}>
           {action}
-        </button>
+        </Button>
       )}
       {onDismiss && (
         <button

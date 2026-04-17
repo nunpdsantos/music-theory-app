@@ -5,6 +5,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, m } from 'framer-motion';
+import { Button } from '../ui/Button';
 
 interface AuthModalProps {
   open: boolean;
@@ -111,16 +112,13 @@ export function AuthModal({ open, onClose, onSignIn }: AuthModalProps) {
                 >
                   {t('auth.magicLinkSent', { email })}
                 </p>
-                <button
+                <Button
+                  variant="secondary"
                   onClick={handleClose}
-                  className="mt-4 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                  style={{
-                    color: 'var(--text-muted)',
-                    border: '1px solid var(--border)',
-                  }}
+                  className="mt-4"
                 >
                   {t('common.dismiss')}
-                </button>
+                </Button>
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
@@ -152,25 +150,23 @@ export function AuthModal({ open, onClose, onSignIn }: AuthModalProps) {
                 )}
 
                 <div className="flex gap-2">
-                  <button
+                  <Button
                     type="button"
+                    variant="secondary"
                     onClick={handleClose}
-                    className="flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                    style={{
-                      color: 'var(--text-muted)',
-                      border: '1px solid var(--border)',
-                    }}
+                    className="flex-1"
                   >
                     {t('auth.cancel')}
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="submit"
-                    disabled={sending || !email.trim()}
-                    className="flex-1 px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors disabled:opacity-50"
-                    style={{ backgroundColor: 'var(--accent)' }}
+                    variant="accent"
+                    loading={sending}
+                    disabled={!email.trim()}
+                    className="flex-1"
                   >
                     {sending ? t('auth.sending') : t('auth.sendLink')}
-                  </button>
+                  </Button>
                 </div>
               </form>
             )}

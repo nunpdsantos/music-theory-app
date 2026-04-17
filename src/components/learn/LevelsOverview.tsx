@@ -17,6 +17,7 @@ import { ReviewQueue } from './ReviewQueue';
 import { LevelCard } from './LevelCard';
 import { ProgressBar } from './ProgressBar';
 import { XPDisplay } from '../gamification/XPDisplay';
+import { Button } from '../ui/Button';
 import { useGamificationStore } from '../../state/gamificationStore';
 import { useAppStore } from '../../state/store.ts';
 
@@ -104,18 +105,9 @@ export function LevelsOverview({
         <div className="mt-2 flex items-center justify-between">
           <XPDisplay weeklyXP={weeklyXP} totalXP={totalXP} />
           {onOpenDashboard && (
-            <button
-              onClick={onOpenDashboard}
-              className="text-xs px-2.5 py-1 rounded-lg transition-colors"
-              style={{
-                color: 'var(--text-dim)',
-                border: '1px solid color-mix(in srgb, var(--border) 50%, transparent)',
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-dim)'; }}
-            >
+            <Button variant="ghost" size="sm" onClick={onOpenDashboard}>
               {t('gamification.stats')}
-            </button>
+            </Button>
           )}
         </div>
       </m.div>

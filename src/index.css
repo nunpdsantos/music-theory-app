@@ -214,7 +214,10 @@ body {
   }
 }
 
-/* ─── Button utilities ───────────────────────────────────────── */
+/* ─── Button utilities ─────────────────────────────────────────
+   Consumed by <Button> primitive (src/components/ui/Button.tsx).
+   Hover states are gated with :not(:disabled) so disabled/loading
+   buttons don't respond to pointer hover. */
 .btn-accent {
   display: inline-flex;
   align-items: center;
@@ -228,10 +231,10 @@ body {
   color: #fff;
   border: none;
   cursor: pointer;
-  transition: background 0.15s ease, box-shadow 0.15s ease;
+  transition: background 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
   box-shadow: var(--shadow-sm);
 }
-.btn-accent:hover {
+.btn-accent:not(:disabled):hover {
   background: var(--accent-hover);
   box-shadow: var(--shadow-md);
 }
@@ -249,9 +252,9 @@ body {
   color: var(--text-muted);
   border: 1px solid var(--border);
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 }
-.btn-secondary:hover {
+.btn-secondary:not(:disabled):hover {
   background: var(--card-hover);
   color: var(--text);
   border-color: var(--border-light);
@@ -270,11 +273,32 @@ body {
   color: var(--text-muted);
   border: none;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
 }
-.btn-ghost:hover {
+.btn-ghost:not(:disabled):hover {
   background: var(--card-hover);
   color: var(--text);
+}
+
+/* Size modifier — smaller padding + smaller type */
+.btn-sm {
+  padding: var(--space-1) var(--space-2-5);
+  font-size: var(--text-xs);
+  gap: var(--space-1);
+}
+
+/* Disabled + loading (shared across variants) */
+.btn-accent:disabled,
+.btn-secondary:disabled,
+.btn-ghost:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-accent[aria-busy="true"],
+.btn-secondary[aria-busy="true"],
+.btn-ghost[aria-busy="true"] {
+  cursor: progress;
+  opacity: 0.75;
 }
 
 /* ─── Type scale ─────────────────────────────────────────────── */

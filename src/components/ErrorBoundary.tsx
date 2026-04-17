@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import type { ErrorInfo, ReactNode } from 'react';
 import i18n from '../i18n';
+import { Button } from './ui/Button';
 
 interface Props {
   children: ReactNode;
@@ -72,21 +73,9 @@ export class ErrorBoundary extends Component<Props, State> {
             <p style={{ fontSize: 14, color: 'var(--text-muted)', marginBottom: 20 }}>
               {error.message}
             </p>
-            <button
-              onClick={() => window.location.reload()}
-              style={{
-                padding: '8px 20px',
-                borderRadius: 8,
-                border: 'none',
-                backgroundColor: '#3b82f6',
-                color: '#fff',
-                fontSize: 14,
-                fontWeight: 600,
-                cursor: 'pointer',
-              }}
-            >
+            <Button variant="accent" onClick={() => window.location.reload()}>
               {i18n.t('common.reload')}
-            </button>
+            </Button>
           </div>
         </div>
       );

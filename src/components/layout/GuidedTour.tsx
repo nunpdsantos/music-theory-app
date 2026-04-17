@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, m } from 'framer-motion';
 import { useAppStore } from '../../state/store.ts';
+import { Button } from '../ui/Button';
 
 const STORAGE_KEY = 'music-theory-onboarding-complete';
 
@@ -200,21 +201,23 @@ export function GuidedTour() {
 
             <div className="flex items-center gap-2">
               {!isLast && (
-                <button
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={complete}
-                  className="px-3 py-1.5 text-xs rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
-                  style={{ color: 'var(--text-dim)' }}
+                  className="min-h-[44px] min-w-[44px]"
                 >
                   {t('tour.skip')}
-                </button>
+                </Button>
               )}
-              <button
+              <Button
+                variant="accent"
+                size="sm"
                 onClick={next}
-                className="px-4 py-1.5 text-xs font-medium rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
-                style={{ backgroundColor: 'var(--accent)', color: 'var(--text-on-accent, #fff)' }}
+                className="min-h-[44px] min-w-[44px]"
               >
                 {isLast ? t('tour.finish') : t('tour.next')}
-              </button>
+              </Button>
             </div>
           </div>
         </m.div>

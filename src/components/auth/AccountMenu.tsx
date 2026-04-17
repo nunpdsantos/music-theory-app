@@ -4,6 +4,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSyncStore } from '../../state/syncStore';
+import { Button } from '../ui/Button';
 
 interface AccountMenuProps {
   email: string;
@@ -102,19 +103,17 @@ export function AccountMenu({ email, onSignOut }: AccountMenuProps) {
           </div>
 
           {/* Sign out */}
-          <button
+          <Button
+            variant="secondary"
+            size="sm"
+            className="w-full justify-start"
             onClick={async () => {
               setOpen(false);
               await onSignOut();
             }}
-            className="w-full px-3 py-1.5 rounded-md text-xs font-medium text-left transition-colors"
-            style={{
-              color: 'var(--text-muted)',
-              border: '1px solid var(--border)',
-            }}
           >
             {t('auth.signOut')}
-          </button>
+          </Button>
         </div>
       )}
     </div>
