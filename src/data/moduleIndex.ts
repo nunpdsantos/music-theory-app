@@ -21,7 +21,44 @@ export interface ModuleIndexEntry {
   title: string;
   /** Display subtitle in English */
   subtitle: string;
+  /** Extra search keywords not present in the title/subtitle. Lowercase. */
+  keywords: string[];
 }
+
+/**
+ * Concept keywords per module. Only populate entries whose titles don't
+ * already carry the search terms a student might type. Lowercase.
+ */
+const EXTRA_KEYWORDS: Record<string, string[]> = {
+  // Modes bundled into generic titles
+  'l7u22m4': ['dorian', 'phrygian', 'lydian', 'mixolydian', 'aeolian', 'locrian', 'ionian', 'modal'],
+  'l7u23m3': ['dorian b2', 'lydian augmented', 'lydian dominant', 'mixolydian b6', 'altered', 'super locrian'],
+  'l7u23m4': ['phrygian dominant', 'hungarian', 'double harmonic', 'whole tone', 'diminished', 'octatonic'],
+  'l9u31m2': ['dorian', 'phrygian', 'lydian', 'mixolydian', 'aeolian', 'locrian', 'ionian', 'modes', 'church modes'],
+  // Chord types that aren't title-obvious
+  'l2u7m3': ['triad', 'triads', 'major triad', 'minor triad', 'diminished triad', 'augmented triad'],
+  'l3u9m1': ['maj7', 'm7', 'dominant 7', 'half diminished', 'diminished 7', 'seventh chord'],
+  'l4u12m4': ['tritone', 'dominant seventh', 'v7 resolution'],
+  'l7u21m1': ['maj9', 'add9', 'm11', 'alt', 'sus2', 'sus4', 'extensions'],
+  // Pop / jazz subjects
+  'l7u21m3': ['ii-v-i', '2-5-1', 'ii V I', 'jazz standard', 'turnaround'],
+  'l7u21m5': ['12 bar', '12-bar', 'blues', 'shuffle'],
+  'l7u23m1': ['nashville numbers', 'pop progression', '1-5-6-4', 'four chords'],
+  // Ear training handles
+  'l9u30m3': ['interval', 'perfect fifth', 'perfect fourth', 'major third', 'minor third', 'second', 'unison'],
+  'l9u30m4': ['minor sixth', 'major sixth', 'minor seventh', 'major seventh', 'octave', 'interval'],
+  'l9u31m4': ['triad quality', 'major', 'minor', 'diminished', 'augmented', 'ear'],
+  // Form and large forms
+  'l5u17m2': ['sonata', 'rondo', 'aaba', 'verse chorus', 'theme variations', 'song form'],
+  'l8u26m1': ['sonata', 'exposition', 'recapitulation', 'development'],
+  'l8u25m1': ['fugue', 'subject', 'answer', 'countersubject'],
+  // Counterpoint
+  'l4u14m1': ['counterpoint', 'species', 'first species', 'second species'],
+  'l6u20m1': ['counterpoint', 'cantus firmus', 'species', 'florid'],
+  // 20th century
+  'l8u27m1': ['set theory', 'pitch class', 'forte'],
+  'l8u27m2': ['twelve-tone', 'serialism', 'tone row', 'schoenberg'],
+};
 
 const RAW: Array<[string, string, string]> = [
   ['l1u1m1', 'The Staff and Clefs', 'The five-line grid that maps pitch to paper'],
@@ -154,7 +191,15 @@ export const MODULE_INDEX: ModuleIndexEntry[] = (() => {
     const unitKey = `${level}:${unitId}`;
     const moduleIndex = (byUnit.get(unitKey) ?? 0) + 1;
     byUnit.set(unitKey, moduleIndex);
-    return { id, level, unitId, moduleIndex, title, subtitle };
+    return {
+      id,
+      level,
+      unitId,
+      moduleIndex,
+      title,
+      subtitle,
+      keywords: EXTRA_KEYWORDS[id] ?? [],
+    };
   });
 })();
 
@@ -169,7 +214,14 @@ export function findModulesByQuery(query: string, limit = 5): ModuleIndexEntry[]
     if (t === q) score = 100;
     else if (t.startsWith(q)) score = 50;
     else if (t.includes(q)) score = 25;
-    else if (s.includes(q)) score = 10;
+    else if (s.includes(q)) score = 12;
+    else {
+      for (const kw of entry.keywords) {
+        if (kw === q) { score = Math.max(score, 40); break; }
+        if (kw.startsWith(q)) { score = Math.max(score, 20); }
+        else if (kw.includes(q)) { score = Math.max(score, 8); }
+      }
+    }
     if (score > 0) matches.push({ entry, score });
   }
   matches.sort((a, b) => b.score - a.score);
