@@ -5,6 +5,8 @@ import type { LevelMeta } from '../../data/curriculumLoader';
 import { ProgressBar } from './ProgressBar';
 import { DifficultyBadge } from './DifficultyBadge';
 import { Card } from '../ui/Card';
+import { Badge } from '../ui/Badge';
+import { DEGREE_COLORS } from '../../design/tokens/colors';
 
 interface LevelCardProps {
   level: LevelMeta;
@@ -54,20 +56,20 @@ export function LevelCard({ level, state, completedModuleCount, index, onClick }
           </div>
           <div className="flex items-center gap-2">
             {state === 'locked' && (
-              <span className="text-2xs font-medium px-2 py-0.5 rounded-full flex items-center gap-1" style={{ color: 'var(--text-dim)', backgroundColor: 'var(--card-hover)' }}>
+              <Badge shape="pill" size="xs">
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
                 {t('learn.lockedBy', { n: level.prerequisites?.[0]?.replace('l', '') ?? '' })}
-              </span>
+              </Badge>
             )}
             {state === 'coming-soon' && (
-              <span className="text-2xs font-medium px-2 py-0.5 rounded-full" style={{ color: 'var(--text-dim)', backgroundColor: 'var(--card-hover)' }}>
+              <Badge shape="pill" size="xs">
                 {t('status.comingSoon')}
-              </span>
+              </Badge>
             )}
             {state === 'completed' && (
-              <span className="text-2xs font-medium text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full">
+              <Badge shape="pill" size="xs" accentColor={DEGREE_COLORS[4]}>
                 {t('status.complete')}
-              </span>
+              </Badge>
             )}
             <DifficultyBadge difficulty={level.difficulty} label={level.difficultyLabel} />
           </div>

@@ -19,6 +19,7 @@ import {
 import { getVoicedChordNotes } from '../../core/utils/pianoLayout.ts';
 import { StaffNotationSkeleton } from '../notation/StaffNotationSkeleton.tsx';
 import { LearnMoreButton } from './LearnMoreButton.tsx';
+import { Badge } from '../ui/Badge';
 
 const StaffNotation = lazy(() =>
   import('../notation/StaffNotation.tsx').then((m) => ({ default: m.StaffNotation }))
@@ -139,12 +140,15 @@ export function ChordDetail({ chord }: ChordDetailProps) {
           )}
         </h2>
         {degree && (
-          <span
-            className="text-[10px] font-semibold px-2 py-0.5 rounded-full mt-2 inline-block"
-            style={{ backgroundColor: `${color}18`, color, border: `1px solid ${color}35` }}
+          <Badge
+            degree={degree as keyof typeof DEGREE_COLORS}
+            shape="pill"
+            size="xs"
+            outlined
+            className="mt-2"
           >
             {t('panel.degree', { n: degree })}
-          </span>
+          </Badge>
         )}
         <LearnMoreButton query={CHORD_QUALITY_NAMES[chord.quality]} />
       </div>

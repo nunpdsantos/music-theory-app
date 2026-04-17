@@ -19,6 +19,7 @@ import { useAppStore } from '../../state/store.ts';
 import { getScaleNotesWithOctaves } from '../../core/utils/pianoLayout.ts';
 import { getKeySignatureForScale } from '../../utils/notationHelpers.ts';
 import { StaffNotationSkeleton } from '../notation/StaffNotationSkeleton.tsx';
+import { Badge } from '../ui/Badge';
 
 const StaffNotation = lazy(() =>
   import('../notation/StaffNotation.tsx').then((m) => ({ default: m.StaffNotation }))
@@ -189,9 +190,9 @@ export function ScaleDetail() {
             {SCALE_TYPE_NAMES[selectedScale]}
           </span>
         </h2>
-        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full mt-2 inline-block" style={{ color: 'var(--text-dim)', backgroundColor: 'color-mix(in srgb, var(--card) 60%, transparent)' }}>
+        <Badge shape="pill" size="xs" className="mt-2">
           {t('panel.noteCount', { count: scale.notes.length })}
-        </span>
+        </Badge>
         <LearnMoreButton query={SCALE_TYPE_NAMES[selectedScale]} />
       </div>
 
@@ -203,19 +204,10 @@ export function ScaleDetail() {
         <div className="flex flex-wrap gap-1.5">
           {scale.notes.map((note, i) => {
             const degree = (i + 1) as keyof typeof DEGREE_COLORS;
-            const color = DEGREE_COLORS[degree] ?? 'var(--text-muted)';
             return (
-              <span
-                key={i}
-                className="px-2.5 py-1.5 rounded-lg text-xs font-semibold"
-                style={{
-                  backgroundColor: `${color}15`,
-                  color,
-                  border: `1px solid ${color}30`,
-                }}
-              >
+              <Badge key={i} degree={degree} shape="square" size="sm" outlined>
                 {noteToString(note)}
-              </span>
+              </Badge>
             );
           })}
         </div>
