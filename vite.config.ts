@@ -37,8 +37,20 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-        globIgnores: ['**/vexflow*'],
+        // Precache only the app shell + small core deps. Curriculum data,
+        // exercises, and VexFlow stream in via runtimeCaching on demand —
+        // a Level-1 user shouldn't pay for Level-9 content on first visit.
+        globPatterns: ['**/*.{css,html,ico,png,svg,woff2}', 'assets/index-*.js', 'assets/i18next-*.js', 'assets/framer-motion-*.js', 'assets/zustand-*.js', 'assets/supabase-*.js'],
+        globIgnores: [
+          '**/vexflow*',
+          '**/curriculum[lL]*',
+          '**/exercisesL*',
+          '**/templatesL*',
+          '**/songReferences*',
+          '**/ExploreView-*',
+          '**/PlayView-*',
+          '**/LearnView-*',
+        ],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
@@ -50,6 +62,17 @@ export default defineConfig({
             options: {
               cacheName: 'vexflow-cache',
               expiration: { maxEntries: 2, maxAgeSeconds: 30 * 24 * 60 * 60 },
+            },
+          },
+          // Curriculum levels + exercises + templates + song refs + view chunks:
+          // StaleWhileRevalidate so users get offline support after first touch
+          // without blowing up the first-visit precache.
+          {
+            urlPattern: /\/assets\/(curriculum[Ll]|exercisesL|templatesL|songReferences|ExploreView-|PlayView-|LearnView-).*\.js$/,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'content-cache',
+              expiration: { maxEntries: 80, maxAgeSeconds: 30 * 24 * 60 * 60 },
             },
           },
         ],
