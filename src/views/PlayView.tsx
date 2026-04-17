@@ -96,12 +96,11 @@ const FUNCTION_KEYS: Record<number, string> = {
   4: 'degree.subdominant', 5: 'degree.dominant', 6: 'degree.submediant', 7: 'degree.leading',
 };
 
-const ROMAN = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii°'];
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export function PlayView() {
-  const { scale, getNoteDegree } = useKeyContext();
+  const { scale, getNoteDegree, diatonicChords } = useKeyContext();
   const selectedScale = useAppStore((s) => s.selectedScale);
   const activeNotes = useAppStore((s) => s.activeNotes);
   const synthPreset = useAppStore((s) => s.synthPreset);
@@ -415,7 +414,7 @@ export function PlayView() {
                       className="text-2xs font-bold leading-none"
                       style={{ color }}
                     >
-                      {ROMAN[i]}
+                      {diatonicChords[i]?.numeral ?? ''}
                     </span>
                     <span
                       className="text-xs font-medium leading-none transition-colors"

@@ -9,9 +9,9 @@ import {
   SYNTH_PRESETS,
   resumeAudio,
 } from '../../core/services/audio.ts';
-import { SCALE_TYPE_NAMES, SCALE_FORMULAS } from '../../core/constants/scales.ts';
+import { SCALE_TYPE_NAMES, SCALE_FORMULAS, getScaleDegreeIntervalLabel } from '../../core/constants/scales.ts';
 import { buildAscendingMidi, buildDescendingMidi } from '../../utils/midiHelpers.ts';
-import { INTERVAL_SHORT_LABELS, buildChord, CHORD_SYMBOLS } from '../../core/constants/chords.ts';
+import { buildChord, CHORD_SYMBOLS } from '../../core/constants/chords.ts';
 import { MODE_INFO } from '../../core/constants/modes.ts';
 import { getChordsForScale } from '../../core/constants/chordScaleRelationships.ts';
 import { useAppStore } from '../../state/store.ts';
@@ -110,10 +110,10 @@ export function ScaleDetail() {
     }
   }, [removeActiveNote]);
 
-  // Formula from core
+  // Formula from core — letter-aware labels (b6 at degree 6, not #5)
   const formula = SCALE_FORMULAS[selectedScale];
   const formulaLabels = useMemo(
-    () => formula.map((s) => INTERVAL_SHORT_LABELS[s] ?? `${s}`),
+    () => formula.map((s, i) => getScaleDegreeIntervalLabel(i, s, formula.length)),
     [formula],
   );
 
@@ -226,7 +226,7 @@ export function ScaleDetail() {
         </h3>
         <Suspense fallback={<StaffNotationSkeleton height={120} />}>
           <StaffNotation
-            notes={getScaleNotesWithOctaves(scale.notes, baseOctave)}
+            notes={getScaleNotesWithOctaves(scale.notes, 4)}
             keySignature={getKeySignatureForScale(scale.root, selectedScale) ?? undefined}
             noteColors={Object.fromEntries(
               scale.notes.map((_, i) => [i, DEGREE_COLORS[(i + 1) as keyof typeof DEGREE_COLORS] ?? 'var(--text-muted)'])

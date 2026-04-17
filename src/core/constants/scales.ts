@@ -2,6 +2,7 @@
 
 import { ScaleType, Note, NaturalNote, Scale } from '../types/music';
 import { getPitchClass, getNaturalAtInterval, NATURAL_TO_PITCH_CLASS } from './notes';
+import { INTERVAL_SHORT_LABELS } from './chords';
 
 // Scale formulas as semitone intervals from root
 // Each number is the semitone distance from the root
@@ -88,6 +89,50 @@ const SUBTONIC_SCALES = new Set<string>([
 export function getSeventhDegreeName(scaleType?: string): string {
   if (scaleType && SUBTONIC_SCALES.has(scaleType)) return 'Subtonic';
   return 'Leading Tone';
+}
+
+// Letter-aware short interval label for a scale degree. The same semitone count
+// spells differently depending on letter position: 8 semitones at degree 6 is
+// b6 (minor 6th), at degree 5 is #5 (augmented 5th). Only 7-note scales follow
+// strict letter-per-degree; other lengths fall back to semitone-based labels.
+const INTERVAL_LABEL_BY_DEGREE: Record<number, Record<number, string>> = {
+  0: { 0: 'R' },
+  1: { 1: 'b2', 2: '2', 3: '#2' },
+  2: { 2: 'bb3', 3: 'b3', 4: '3' },
+  3: { 4: 'b4', 5: '4', 6: '#4' },
+  4: { 6: 'b5', 7: '5', 8: '#5' },
+  5: { 7: 'bb6', 8: 'b6', 9: '6', 10: '#6' },
+  6: { 9: 'bb7', 10: 'b7', 11: '7' },
+};
+
+export function getScaleDegreeIntervalLabel(
+  degreeIndex: number,
+  semitones: number,
+  totalNotes: number,
+): string {
+  if (totalNotes === 7) {
+    const byDegree = INTERVAL_LABEL_BY_DEGREE[degreeIndex]?.[semitones];
+    if (byDegree) return byDegree;
+  }
+  return INTERVAL_SHORT_LABELS[semitones] ?? `${semitones}`;
+}
+
+// i18n key for the functional name of a scale degree (tonic, supertonic, etc.).
+// Leading/subtonic for degree 7 depends on whether the semitone distance is 11 or 10.
+export function getScaleDegreeFunctionKey(
+  degreeIndex: number,
+  semitones: number,
+): string | null {
+  switch (degreeIndex) {
+    case 0: return 'degreeShort.tonic';
+    case 1: return 'degreeShort.supertonic';
+    case 2: return 'degreeShort.mediant';
+    case 3: return 'degreeShort.subdominant';
+    case 4: return semitones === 6 ? 'degreeShort.tritone' : 'degreeShort.dominant';
+    case 5: return 'degreeShort.submediant';
+    case 6: return semitones === 11 ? 'degreeShort.leading' : 'degreeShort.subtonic';
+    default: return null;
+  }
 }
 
 // Display names for scale types

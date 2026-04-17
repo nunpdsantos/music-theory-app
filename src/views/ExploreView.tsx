@@ -197,7 +197,7 @@ export function ExploreView() {
             <div className="rounded-xl p-3" style={{ border: '1px solid color-mix(in srgb, var(--card) 50%, transparent)', backgroundColor: 'color-mix(in srgb, var(--bg) 30%, transparent)', boxShadow: 'var(--shadow-sm)' }}>
               <Suspense fallback={<StaffNotationSkeleton height={130} />}>
                 <StaffNotation
-                  notes={getScaleNotesWithOctaves(scale.notes, baseOctave)}
+                  notes={getScaleNotesWithOctaves(scale.notes, 4)}
                   keySignature={getKeySignatureForScale(scale.root, selectedScale) ?? undefined}
                   noteColors={Object.fromEntries(
                     scale.notes.map((_, i) => [i, DEGREE_COLORS[(i + 1) as keyof typeof DEGREE_COLORS] ?? 'var(--text-muted)'])

@@ -2,27 +2,14 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import { noteToString } from '../../core/types/music.ts';
-import { SCALE_FORMULAS } from '../../core/constants/scales.ts';
-import { INTERVAL_SHORT_LABELS } from '../../core/constants/chords.ts';
+import {
+  SCALE_FORMULAS,
+  getScaleDegreeIntervalLabel,
+  getScaleDegreeFunctionKey,
+} from '../../core/constants/scales.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
 import { useAppStore } from '../../state/store.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
-
-// Map interval short labels to i18n keys
-const FUNCTION_KEY_BY_INTERVAL: Record<string, string> = {
-  'R': 'degreeShort.tonic',
-  '2': 'degreeShort.supertonic',
-  'm2': 'degreeShort.supertonic',
-  '3': 'degreeShort.mediant',
-  'm3': 'degreeShort.mediant',
-  '4': 'degreeShort.subdominant',
-  'b5': 'degreeShort.tritone',
-  '5': 'degreeShort.dominant',
-  '#5': 'degreeShort.augFifth',
-  '6': 'degreeShort.submediant',
-  'b7': 'degreeShort.subtonic',
-  '7': 'degreeShort.leading',
-};
 
 export function ScaleDegreeBar() {
   const { t } = useTranslation();
@@ -32,14 +19,13 @@ export function ScaleDegreeBar() {
   const setSelectedDegree = useAppStore((s) => s.setSelectedDegree);
 
   const formula = SCALE_FORMULAS[selectedScale];
-
-  const degreeLabels = useMemo(
-    () => formula.map((semitones) => INTERVAL_SHORT_LABELS[semitones] ?? `${semitones}`),
-    [formula],
-  );
-
   const noteCount = scale.notes.length;
   const isCompact = noteCount > 8;
+
+  const degreeLabels = useMemo(
+    () => formula.map((semitones, i) => getScaleDegreeIntervalLabel(i, semitones, noteCount)),
+    [formula, noteCount],
+  );
 
   return (
     <div className="flex items-stretch gap-1.5 max-sm:gap-0.5 max-sm:overflow-x-auto max-sm:snap-x max-sm:snap-proximity" role="group" aria-label="Scale degrees" style={{ boxShadow: 'var(--shadow-sm)' }}>
@@ -52,7 +38,9 @@ export function ScaleDegreeBar() {
           : (((i % 7) + 1) as keyof typeof DEGREE_COLORS);
         const color = DEGREE_COLORS[colorKey] ?? 'var(--text-muted)';
         const intervalLabel = degreeLabels[i] ?? `${i + 1}`;
-        const funcKey = FUNCTION_KEY_BY_INTERVAL[intervalLabel];
+        const funcKey = noteCount === 7
+          ? getScaleDegreeFunctionKey(i, formula[i] ?? 0)
+          : null;
         const funcLabel = funcKey ? t(funcKey) : '';
 
         return (

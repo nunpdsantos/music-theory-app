@@ -188,7 +188,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
         </h3>
         <Suspense fallback={<StaffNotationSkeleton height={120} />}>
           <StaffNotation
-            notes={getVoicedChordNotes(notesForPlayback, baseOctave)}
+            notes={getVoicedChordNotes(notesForPlayback, 4)}
             height={120}
             duration="w"
           />
