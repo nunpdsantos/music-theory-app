@@ -172,6 +172,7 @@
     "subtitle": "A structured path from the basics to advanced harmony",
     "parallelTrack": "Parallel Track",
     "level": "Level {{n}}",
+    "lockedBy": "Complete Level {{n}}",
     "unit": "Unit {{n}}",
     "module": "Module {{n}}",
     "learningObjectives": "Learning Objectives",

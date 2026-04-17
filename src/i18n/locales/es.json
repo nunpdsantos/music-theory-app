@@ -172,6 +172,7 @@
     "subtitle": "Un camino estructurado desde lo b\u00e1sico hasta la armon\u00eda avanzada",
     "parallelTrack": "Recorrido Paralelo",
     "level": "Nivel {{n}}",
+    "lockedBy": "Completa el Nivel {{n}}",
     "unit": "Unidad {{n}}",
     "module": "M\u00f3dulo {{n}}",
     "learningObjectives": "Objetivos de Aprendizaje",

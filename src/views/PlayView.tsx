@@ -172,9 +172,6 @@ export function PlayView() {
                 {scale.notes.length} notes &middot; {scale.notes.map((n) => noteToString(n)).join(' ')}
               </p>
             </div>
-            <div className="text-2xs font-medium" style={{ color: 'var(--text-dim)' }}>
-              {t('play.performanceMode')}
-            </div>
           </div>
         </m.div>
 

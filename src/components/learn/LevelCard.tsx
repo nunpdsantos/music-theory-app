@@ -70,7 +70,7 @@ export function LevelCard({ level, state, completedModuleCount, index, onClick }
             {state === 'locked' && (
               <span className="text-2xs font-medium px-2 py-0.5 rounded-full flex items-center gap-1" style={{ color: 'var(--text-dim)', backgroundColor: 'var(--card-hover)' }}>
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
-                {t('learn.level', { n: level.prerequisites?.[0]?.replace('l', '') ?? '' })}
+                {t('learn.lockedBy', { n: level.prerequisites?.[0]?.replace('l', '') ?? '' })}
               </span>
             )}
             {state === 'coming-soon' && (

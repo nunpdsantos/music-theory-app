@@ -22,7 +22,11 @@ export async function getMidiAccess(): Promise<MIDIAccess | null> {
       return access;
     })
     .catch((e) => {
-      console.warn('[MIDI] Access denied:', e);
+      // Permission-denied is expected when MIDI is unsupported or the user
+      // hasn't granted access; log at info level so it's not flagged as a bug.
+      const isPermission = e instanceof DOMException && (e.name === 'NotAllowedError' || e.name === 'SecurityError');
+      if (isPermission) console.info('[MIDI] Access not granted (this is fine unless you want MIDI input).');
+      else console.warn('[MIDI]', e);
       return null;
     })
     .finally(() => { pending = null; });

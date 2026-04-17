@@ -172,6 +172,7 @@
     "subtitle": "Um caminho estruturado desde o b\u00e1sico at\u00e9 \u00e0 harmonia avan\u00e7ada",
     "parallelTrack": "Percurso Paralelo",
     "level": "N\u00edvel {{n}}",
+    "lockedBy": "Completa o N\u00edvel {{n}}",
     "unit": "Unidade {{n}}",
     "module": "M\u00f3dulo {{n}}",
     "learningObjectives": "Objetivos de Aprendizagem",
