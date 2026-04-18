@@ -65,7 +65,7 @@ export const SCALE_DEGREE_NAMES = [
   'Leading Tone', // 7 — default; use getSeventhDegreeName() for context-aware label
 ];
 
-// Scales where the 7th degree is a whole step below tonic (Subtonic, not Leading Tone)
+// Internal helper for the deprecated `getSeventhDegreeName` export below.
 const SUBTONIC_SCALES = new Set<string>([
   'natural_minor',
   'dorian',
@@ -83,9 +83,9 @@ const SUBTONIC_SCALES = new Set<string>([
   'hungarian_major',
 ]);
 
-// Context-aware 7th degree name
-// Leading Tone: half-step below tonic (major, harmonic minor, melodic minor, Ionian, Lydian)
-// Subtonic: whole-step below tonic (natural minor, Dorian, Phrygian, Mixolydian, etc.)
+// Context-aware 7th degree name. UI paths use `getScaleDegreeFunctionKey`
+// (semitone-based); this scale-type-keyed variant is exercised by
+// `scripts/audit/verify-engine.ts`.
 export function getSeventhDegreeName(scaleType?: string): string {
   if (scaleType && SUBTONIC_SCALES.has(scaleType)) return 'Subtonic';
   return 'Leading Tone';

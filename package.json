@@ -10,7 +10,11 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "npx playwright test"
+    "test:e2e": "npx playwright test",
+    "audit:engine": "tsx scripts/audit/verify-engine.ts",
+    "audit:exercises": "tsx scripts/audit/verify-exercises.ts",
+    "audit:generated": "tsx scripts/audit/verify-generated.ts",
+    "audit:all": "npm run audit:engine && npm run audit:exercises && npm run audit:generated"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.95.3",

@@ -161,7 +161,9 @@ These are acceptable simplifications that would improve with a qualifier word or
 
 These are design decisions or constraints that are not bugs but should be understood.
 
-- **Exotic scale diatonic triads** — `src/core/constants/chords.ts` `DIATONIC_QUALITIES` for Double Harmonic, Neapolitan Major, Hungarian Minor have incorrect triad types on some degrees. All standard scales are correct. `src/core/` is read-only (shared from another project). Fix in source project when possible.
+- **Exotic scale diatonic triads (expanded)** — `src/core/constants/chords.ts` `DIATONIC_QUALITIES` for `double_harmonic`, `neapolitan_major`, `neapolitan_minor`, `hungarian_minor`, `hungarian_major`, and `persian` declare incorrect triad qualities on some degrees (audit 2026-04-17 §S1). All standard scales remain correct. The error IS user-visible: Explore's `KeySelector` lets users pick any of these scales, and the resulting ChordGrid shows mislabelled diatonic triads. Awaiting upstream fix in the shared `src/core/` project; app-side options (script-generate qualities from `SCALE_FORMULAS`, or return `[]` for exotic scales) require engine edits and so are deferred.
+
+- **Engine triple-accidental silent wrong output (latent)** — `src/core/constants/scales.ts:185-204` `getAccidentalForPitchClass` handles accidental deltas of 0, 1, 2, 10, 11 semitones only (natural, `#`, `##`, `b`, `bb`). For deltas 3–9 — which arise when a non-7-note scale's letter-assignment algorithm forces a theoretical triple-sharp or triple-flat — the function falls back to `diff > 6 ? 'b' : '#'` and emits the wrong pitch class. `scripts/audit/verify-engine.ts` enumerates 23 root×scale combos (involving `whole_tone`, `chromatic`, `diminished_whole_half`, `diminished_half_whole`, `altered`, `hungarian_major`, `lydian_augmented` with roots like `Db`, `Gb`, `A#`, `Cb`, `Fb`, `E#`, `B#`). No current exercise template, hand-authored exercise, or curriculum module exercises these combos — latent/not user-reachable from current content, but triggerable via Explore's `KeySelector`. Fix belongs upstream in shared core; deferred per read-only-core policy.
 
 - **Tritone aug4/dim5 conflation** — Exercise validation uses semitone count only. Cannot teach the aug4 vs dim5 distinction. Would need a `targetIntervalName` field alongside `targetSemitones`. Systemic design limitation, not a bug.
 
@@ -170,6 +172,8 @@ These are design decisions or constraints that are not bugs but should be unders
 - **Descending interval inversion** — Descending exercises validate by semitone count. A student who thinks "C down to G = perfect 5th" (correct in absolute terms) will be marked wrong (correct answer: perfect 4th downward). The module teaches this but hints could be clearer.
 
 - **SATB ranges** — Slightly narrower than standard textbook ranges (soprano tops G5 not A5, etc.). Not wrong — just conservative.
+
+- **PT diacritic loss across ~16 content files (audit 2026-04-17 §S3)** — About half of the Portuguese content reads as unaccented (e.g., `tonica` instead of `tónica`, `setima` instead of `sétima`). Requires a native European Portuguese reviewer; see `docs/pt-diacritic-todo.md` for the file list and the recurring terms to restore.
 
 ---
 
