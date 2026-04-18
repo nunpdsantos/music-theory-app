@@ -173,6 +173,7 @@
     "parallelTrack": "Recorrido Paralelo",
     "level": "Nivel {{n}}",
     "lockedBy": "Completa el Nivel {{n}}",
+    "reportMistake": "\u00bfEncontraste un error? Av\u00edsame",
     "unit": "Unidad {{n}}",
     "module": "M\u00f3dulo {{n}}",
     "learningObjectives": "Objetivos de Aprendizaje",

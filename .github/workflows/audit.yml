@@ -1,0 +1,31 @@
+name: Audit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  audit:
+    name: Lint, type-check, tests, content audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Type-check
+        run: npx tsc -b --noEmit
+      - name: Unit tests
+        run: npm run test
+      - name: Engine audit
+        run: npm run audit:engine
+      - name: Hand-authored exercise audit
+        run: npm run audit:exercises
+      - name: Generated exercise audit
+        run: npm run audit:generated

@@ -7,6 +7,7 @@ import { getNextModuleInLevel, getPreviousModuleInLevel, getLevelModuleCount } f
 import { executeTheoryQuery } from '../../utils/queryExecutor';
 import { LearnBreadcrumb } from './LearnBreadcrumb';
 import { ExerciseRunner } from './exercises/ExerciseRunner';
+import { ReportMistakeLink } from './ReportMistakeLink';
 import { Confetti } from './Confetti';
 import { toast } from '../../state/toastStore';
 import { getSongReferences } from '../../data/songReferences';
@@ -526,6 +527,8 @@ export function ModuleView({
             <div />
           )}
         </m.div>
+
+        <ReportMistakeLink moduleId={module.id} moduleTitle={module.title} />
       </div>
       {showConfetti && <Confetti onComplete={() => setShowConfetti(false)} />}
     </div>

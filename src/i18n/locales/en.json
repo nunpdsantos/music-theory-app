@@ -175,6 +175,7 @@
     "lockedBy": "Complete Level {{n}}",
     "unit": "Unit {{n}}",
     "module": "Module {{n}}",
+    "reportMistake": "Found a mistake? Tell me",
     "learningObjectives": "Learning Objectives",
     "practiceTasks": "Practice Tasks",
     "tryThis": "Try This",
