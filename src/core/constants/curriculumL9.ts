@@ -207,7 +207,7 @@ const l9u30m4: CurriculumModule = {
     {
       title: 'Descending Large Intervals',
       explanation:
-        'Descending intervals sound different from ascending even though the distance is the same. A descending perfect 5th (G down to C) sounds like a resolution or grounding motion. A descending major 6th sounds warm and nostalgic. Descending 7ths sound dramatic and wide. Train descending intervals separately — many students who master ascending intervals struggle with descending ones. Use descending song associations: descending P5 = O Come, All Ye Faithful (opening "O come, all"), descending m3 = Hey Jude (hey-Jude). Build the descending set as its own skill.',
+        'Descending intervals sound different from ascending even though the distance is the same. A descending perfect 5th (G down to C) sounds like a resolution or grounding motion. A descending major 6th sounds warm and nostalgic. Descending 7ths sound dramatic and wide. Train descending intervals separately — many students who master ascending intervals struggle with descending ones. Use descending song associations: descending P5 = Feelings (opening "Feelings, oh feelings..."), descending m3 = Hey Jude (hey-Jude). Build the descending set as its own skill.',
       tryThisQuery: 'C major scale',
       tryThisLabel: 'Play C major descending — hear intervals in reverse',
     },
