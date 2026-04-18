@@ -65,14 +65,54 @@ const templates: ModuleTemplateConfig[] = [
     moduleId: 'l7u21m2',
     templates: [
       {
-        type: 'chord_build',
-        promptTemplate: 'Build a shell voicing of {root} {quality}. Use only root, 3rd, and 7th.',
-        hintTemplate: 'Shell voicings use root + 3rd + 7th (omitting the 5th). This captures the essential character of the chord with minimal notes. Build from {root}.',
+        type: 'multiple_choice',
+        promptTemplate: 'Which set of three notes is the correct shell voicing?',
+        hintTemplate: 'A shell voicing uses only root, 3rd, and 7th — the 5th is omitted. The 3rd defines the chord quality (major/minor); the 7th defines the 7th-chord type (major7 / minor7 / dominant7).',
         params: {
-          roots: ['C', 'D', 'F', 'G', 'A', 'B', 'E'],
-          accidentals: ['', '', '', '', '', 'b', ''],
-          chordQualities: ['major7', 'minor7', 'dominant7'],
-          noteCounts: [3],
+          choiceSets: [
+            [
+              { label: 'Cmaj7 shell: C, E, B', correct: true },
+              { label: 'Cmaj7 full: C, E, G, B', correct: false },
+              { label: 'Cmaj7 without the 3rd: C, G, B', correct: false },
+              { label: 'Cmaj7 without the 7th: C, E, G', correct: false },
+            ],
+            [
+              { label: 'Dm7 shell: D, F, C', correct: true },
+              { label: 'Dm7 full: D, F, A, C', correct: false },
+              { label: 'Dm7 without the 3rd: D, A, C', correct: false },
+              { label: 'Dm7 without the 7th: D, F, A', correct: false },
+            ],
+            [
+              { label: 'G7 shell: G, B, F', correct: true },
+              { label: 'G7 full: G, B, D, F', correct: false },
+              { label: 'G7 without the 3rd: G, D, F', correct: false },
+              { label: 'G7 without the 7th: G, B, D', correct: false },
+            ],
+            [
+              { label: 'Fmaj7 shell: F, A, E', correct: true },
+              { label: 'Fmaj7 full: F, A, C, E', correct: false },
+              { label: 'Fmaj7 without the 3rd: F, C, E', correct: false },
+              { label: 'Fmaj7 without the 7th: F, A, C', correct: false },
+            ],
+            [
+              { label: 'Am7 shell: A, C, G', correct: true },
+              { label: 'Am7 full: A, C, E, G', correct: false },
+              { label: 'Am7 without the 3rd: A, E, G', correct: false },
+              { label: 'Am7 without the 7th: A, C, E', correct: false },
+            ],
+            [
+              { label: 'E7 shell: E, G#, D', correct: true },
+              { label: 'E7 full: E, G#, B, D', correct: false },
+              { label: 'E7 without the 3rd: E, B, D', correct: false },
+              { label: 'E7 without the 7th: E, G#, B', correct: false },
+            ],
+            [
+              { label: 'Bbmaj7 shell: Bb, D, A', correct: true },
+              { label: 'Bbmaj7 full: Bb, D, F, A', correct: false },
+              { label: 'Bbmaj7 without the 3rd: Bb, F, A', correct: false },
+              { label: 'Bbmaj7 without the 7th: Bb, D, F', correct: false },
+            ],
+          ],
         },
       },
       {

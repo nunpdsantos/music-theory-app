@@ -13,7 +13,7 @@ const l4u12m1: CurriculumModule = {
   objectives: [
     'Understand the three-phase suspension pattern: preparation, dissonance, resolution',
     'Identify all four suspension types by their intervals above the bass',
-    'Recognize the 2-3 bass suspension as the only upward-resolving suspension',
+    'Recognize the 2-3 bass suspension: the bass resolves downward by step, and the interval above it grows from a 2nd to a 3rd',
   ],
   concepts: [
     {
@@ -33,9 +33,9 @@ const l4u12m1: CurriculumModule = {
     {
       title: 'The 2-3 Bass Suspension',
       explanation:
-        'The 2-3 suspension is unique: it occurs in the bass voice rather than an upper voice, and it resolves upward. The bass note is held from the previous chord, forming a 2nd against an upper voice, then resolves up by step to a 3rd. It is the only standard suspension that resolves upward. Some theorists describe it as a "bass suspension" to distinguish it from the upper-voice types.',
+        'The 2-3 suspension is unique: it occurs in the bass voice rather than an upper voice. The bass note is held from the previous chord, forming a 2nd against a stationary upper voice, then resolves downward by step. The label "2-3" describes the interval above the bass: as the bass descends, that interval grows from a 2nd to a 3rd — the upper voice does not move. The bass, like all standard suspensions, resolves by step downward. (Kostka/Payne, Tonal Harmony, Ch. 12.)',
       tryThisQuery: 'C major chord',
-      tryThisLabel: 'The bass C could suspend into a D chord',
+      tryThisLabel: 'Hold E in an upper voice while the bass descends D → C — the interval above the bass grows from a 2nd to a 3rd',
     },
   ],
   tasks: [
@@ -243,8 +243,8 @@ const l4u12m5: CurriculumModule = {
       title: 'Third Inversion (V4/2)',
       explanation:
         'V4/2 places the chordal 7th in the bass. Since the 7th is a tendency tone that must resolve down by step, V4/2 almost always resolves to I6 (first-inversion tonic). In G7, the 7th is F; F must step down to E, giving C/E (I6) as the resolution. This constraint is absolute in strict voice leading \u2014 V4/2 to root-position I would leave the bass 7th unresolved.',
-      tryThisQuery: 'G/B',
-      tryThisLabel: 'Play G/B to hear V6/5 bass motion',
+      tryThisQuery: 'G7/F',
+      tryThisLabel: 'Play G7/F to hear V4/2 bass motion (F → E as the 7th resolves)',
     },
   ],
   tasks: [
@@ -669,9 +669,9 @@ const l4u14m3: CurriculumModule = {
       tryThisLabel: 'The diatonic framework chromaticism decorates',
     },
     {
-      title: 'Chromatic Voice Exchange',
+      title: 'Chromatic Contrary Motion',
       explanation:
-        'A chromatic voice exchange is a special technique where one voice moves chromatically up while another moves chromatically down, often involving an augmented sixth interval expanding to an octave. For example, the bass might ascend C-C\u266F while an upper voice descends E-E\u266D, both converging on D. This creates a striking cross-motion effect that adds intensity and sophistication to the voice leading without leaving the key.',
+        'In chromatic contrary motion, two voices move chromatically in opposite directions, converging or diverging by half step. For example, the bass ascends C-C\u266F while an upper voice descends E-E\u266D, both converging on D. This creates a striking cross-motion effect that adds intensity and sophistication to voice leading without leaving the key — and it is a staple building block for the chromatic chords studied in Level 6.',
       tryThisQuery: 'chromatic scale',
       tryThisLabel: 'Chromatic steps are the raw material',
     },
@@ -762,7 +762,7 @@ const l4u14m5: CurriculumModule = {
     {
       title: 'The Minor Key Chord Palette',
       explanation:
-        'In practice, minor keys draw chords from all three minor forms: V and vii\u00B0 from harmonic minor (because the leading tone is needed for strong cadences), i, iv, VI, and III from natural minor (using the unaltered 6th and 7th), and II and IV from melodic minor ascending (which raises the 6th degree). This gives minor keys more chord options than major keys, not fewer. The composer chooses which form to use based on voice leading needs and the desired harmonic color.',
+        'In practice, minor keys draw chords from all three minor forms: V and vii\u00B0 from harmonic minor (because the leading tone is needed for strong cadences), i, iv, VI, and III from natural minor (using the unaltered 6th and 7th), and ii and IV from melodic minor ascending (which raises the 6th, in addition to the 7th). This gives minor keys more chord options than major keys, not fewer. The composer chooses which form to use based on voice leading needs and the desired harmonic color.',
       tryThisQuery: 'A natural minor scale',
       tryThisLabel: 'See the natural minor foundation',
     },

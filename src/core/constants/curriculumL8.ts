@@ -369,7 +369,7 @@ const l8u27m1: CurriculumModule = {
     {
       title: 'Pitch-Class Sets: Normal Order and Prime Form',
       explanation:
-        'A pitch-class set is an unordered collection of distinct pitch classes — the post-tonal equivalent of a chord. Normal order is the most compact ascending arrangement: rotate the set until the span from first to last element is smallest (using left-packing to break ties). Prime form transposes the normal order to start on 0, then compares with the inversion to select whichever is more tightly packed to the left. Prime form is the canonical label: {C, E, G} and {D, F, A} both reduce to prime form [0, 3, 7]. Allen Forte\'s catalog assigns each prime form a number — 3-11 for [0, 3, 7] — creating a universal classification system for post-tonal sonorities.',
+        'A pitch-class set is an unordered collection of distinct pitch classes — the post-tonal equivalent of a chord. Normal order is the most compact ascending arrangement: rotate the set until the span from first to last element is smallest (using left-packing to break ties). Prime form transposes the normal order to start on 0, then compares with the inversion to select whichever is more tightly packed to the left. {C, E, G} has normal order [0,4,7]; its inversion gives [0,3,7], which is more tightly left-packed, so prime form = [0,3,7]. {D, F, A} reduces directly to [0,3,7]. Allen Forte\'s catalog assigns each prime form a number — 3-11 for [0, 3, 7] — creating a universal classification system for post-tonal sonorities.',
       tryThisQuery: 'Cm',
       tryThisLabel: 'See C minor — Forte set 3-11, prime form [0,3,7]',
     },
@@ -441,7 +441,7 @@ const l8u27m2: CurriculumModule = {
     {
       id: 'l8u27m2t1',
       instruction:
-        'Create your own 12-tone row by ordering all integers 0-11 without repetition. Write your P0. Now derive R0 (reverse the order), I0 (subtract each element from 12, mod 12), and RI0 (reverse the inversion).',
+        'Create your own 12-tone row by ordering all integers 0-11 without repetition. Set P0 to begin on pitch class 0 for this exercise. Write your P0. Now derive R0 (reverse the order), I0 (subtract each element from 12, mod 12), and RI0 (reverse the inversion).',
     },
     {
       id: 'l8u27m2t2',
@@ -506,7 +506,7 @@ const l8u27m3: CurriculumModule = {
     {
       id: 'l8u27m3t3',
       instruction:
-        'Imagine playing a C major triad in the right hand and an F# major triad in the left hand simultaneously. List all six pitch classes that would sound. Is there any overlap? What is the total number of distinct pitch classes? (This is Petrushka\'s famous bitonal chord.)',
+        'Imagine playing a C major triad in the right hand and an F# major triad in the left hand simultaneously. List the pitch classes in both triads; how many are distinct? (This is Petrushka\'s famous bitonal chord.)',
     },
   ],
   prerequisites: ['l8u27m2'],

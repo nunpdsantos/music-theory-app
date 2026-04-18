@@ -362,7 +362,7 @@ const l2u7m1: CurriculumModule = {
     {
       title: 'The Quality System',
       explanation:
-        "In Level 1, you measured intervals by number: a 3rd, a 5th. Now add quality — which refines the number with precise character. Perfect intervals (unison, 4th, 5th, octave) occur naturally between the tonic and the 4th/5th degrees. Major intervals (2nd, 3rd, 6th, 7th) occur between the tonic and upper degrees in a major scale. Minor intervals are one half step smaller than major.",
+        "In Level 1, you measured intervals by number: a 3rd, a 5th. Now add quality — which refines the number with precise character. Perfect intervals (unison, 4th, 5th, octave) occur naturally between the tonic and scale degrees 1, 4, 5, and 8. Major intervals (2nd, 3rd, 6th, 7th) occur between the tonic and upper degrees in a major scale. Minor intervals are one half step smaller than major.",
       tryThisQuery: 'C major scale',
       tryThisLabel: 'See all major-scale intervals from C',
     },

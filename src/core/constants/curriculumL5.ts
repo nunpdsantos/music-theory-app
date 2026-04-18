@@ -528,7 +528,7 @@ const l5u16m5: CurriculumModule = {
     {
       title: 'The Picardy Third',
       explanation:
-        'The Picardy third is mode mixture in the opposite direction: borrowing from parallel major into a minor key. A minor-key piece ends its final cadence on a major tonic (I instead of i). In C minor, the final chord becomes C major — the raised third (E natural instead of Eb) creates unexpected brightness, a ray of light at the end. Common in Baroque and Renaissance music, where minor-key pieces almost always end with a Picardy third.',
+        'The Picardy third is mode mixture in the opposite direction: borrowing from parallel major into a minor key. A minor-key piece ends its final cadence on a major tonic (I instead of i). In C minor, the final chord becomes C major — the raised third (E natural instead of Eb) creates unexpected brightness, a ray of light at the end. Common in Baroque and Renaissance music, where minor-key pieces often end with a Picardy third, especially in late-Renaissance and early-Baroque cadences.',
       tryThisQuery: 'C major chord',
       tryThisLabel: 'Hear C major — the Picardy third in a C minor context',
     },

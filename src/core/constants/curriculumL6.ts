@@ -83,7 +83,7 @@ const l6u18m2: CurriculumModule = {
     {
       title: 'The Italian Sixth (It+6)',
       explanation:
-        'The Italian sixth has three notes: b6, 1, #4. In C: Ab-C-F#. It is the simplest augmented sixth chord \u2014 just the augmented sixth interval plus scale degree 1 to fill out the sonority. It resolves directly to V with the root doubled. Because it contains only three notes, it is the lightest and most transparent member of the family.',
+        'The Italian sixth has three notes: b6, 1, #4. In C: Ab-C-F#. It is the simplest augmented sixth chord \u2014 just the augmented sixth interval plus scale degree 1 to fill out the sonority. It resolves directly to V with scale degree 1 doubled. Because it contains only three notes, it is the lightest and most transparent member of the family.',
       tryThisQuery: 'Ab major chord',
       tryThisLabel: 'Hear Ab \u2014 the bass note of augmented sixths in C',
     },
@@ -256,7 +256,7 @@ const l6u19m1: CurriculumModule = {
     {
       title: 'Four Possible Resolutions',
       explanation:
-        'Because any of the four notes can serve as the leading tone, one diminished seventh chord can function as viio7 in four different keys. B-D-F-Ab resolves to C minor (B is leading tone). Respell as D-F-Ab-Cb: resolves to Eb minor (D is leading tone). Respell as F-Ab-Cb-Ebb: resolves to Gb minor. Respell as Ab-Cb-Ebb-Gbb: resolves to A minor. The four target keys are each a minor third apart.',
+        'Because any of the four notes can serve as the leading tone, one diminished seventh chord can function as viio7 in four different keys. B-D-F-Ab resolves to C minor (B is leading tone). Respell as D-F-Ab-Cb: resolves to Eb minor (D is leading tone). Respell as F-Ab-Cb-Ebb: resolves to Gb minor. Respell as Ab-Cb-Ebb-Gbb: resolves to A minor (strictly Bbb minor; A minor via enharmonic respelling as G#-B-D-F). The four target keys are each a minor third apart.',
       tryThisQuery: 'C minor scale',
       tryThisLabel: 'See C minor \u2014 one of four possible resolutions',
     },
@@ -333,7 +333,7 @@ const l6u19m2: CurriculumModule = {
     {
       id: 'l6u19m2t2',
       instruction:
-        'Build CTo7 of G major: keep G, add a dim7 chord containing G. Result: G-A#-C#-E. A# resolves to B, C# resolves to D, E stays or resolves to D. The target is G-B-D',
+        'Build CTo7 of G major: keep G, add a dim7 chord containing G. Result: G-A#-C#-E. A# resolves to B, C# resolves to D, E resolves to D (whole step down). The target is G-B-D',
     },
     {
       id: 'l6u19m2t3',

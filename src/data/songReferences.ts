@@ -76,7 +76,7 @@ const SONG_REFERENCES: Record<string, SongReference[]> = {
   // L2U5: Minor Scales and Key Relationships
   'l2u5m1': [
     { song: 'Losing My Religion', artist: 'R.E.M.', context: 'Built on the natural minor (Aeolian) scale in A minor, with the characteristic flat seventh.' },
-    { song: 'Eleanor Rigby', artist: 'The Beatles', context: 'Written entirely in E minor using only Em and C chords — a pure natural minor (Aeolian) sound with no raised 6th or 7th, making it a textbook Aeolian example.' },
+    { song: 'Eleanor Rigby', artist: 'The Beatles', context: 'Built on Em and C chords with a modal flavor that mixes Aeolian and Dorian — the melody raises the 6th (C♯) in places, giving it a modal rather than purely diatonic minor quality.' },
   ],
   'l2u5m2': [
     { song: 'Hava Nagila', artist: 'Traditional', context: 'Uses the harmonic minor scale — the augmented second between b6 and #7 gives it its distinctive sound.' },
@@ -89,7 +89,7 @@ const SONG_REFERENCES: Record<string, SongReference[]> = {
 
   // L2U6: Compound Meter and Syncopation
   'l2u6m1': [
-    { song: 'House of the Rising Sun', artist: 'Traditional (The Animals)', context: 'The arpeggiated accompaniment in 6/8 time demonstrates compound-duple meter, where each of the two main beats subdivides into groups of three eighth notes.' },
+    { song: 'House of the Rising Sun', artist: 'Traditional (The Animals)', context: 'The arpeggiated accompaniment in 6/8 time demonstrates compound-duple meter, where each of the two main beats subdivides into groups of three eighth notes (some editions notate it in 12/8; the compound-duple feel is the same).' },
     { song: 'We Are the Champions', artist: 'Queen', context: 'The verse is in 6/8 before the chorus shifts feel — a contrast between compound and simple meter.' },
   ],
   'l2u6m2': [
@@ -136,7 +136,7 @@ const SONG_REFERENCES: Record<string, SongReference[]> = {
   ],
   'l3u9m4': [
     { song: 'Blue Bossa', artist: 'Kenny Dorham', context: 'Opens in C minor with a i7–iv7–iiø7–V7 progression, demonstrating how diatonic seventh chords and the ii–V cadential motion function in a minor key.' },
-    { song: 'Summertime', artist: 'George Gershwin (Porgy and Bess)', context: 'The minor-key seventh chord progression (i–iv7–V7) creates the languid feel of the song.' },
+    { song: 'Summertime', artist: 'George Gershwin (Porgy and Bess)', context: 'The minor-key seventh chord progression (i–iiø7–V7–i) creates the languid feel of the song.' },
   ],
 
   // L3U10: Voice Leading and Part Writing
@@ -156,7 +156,7 @@ const SONG_REFERENCES: Record<string, SongReference[]> = {
 
   // L3U11: Cadences, Phrases, and Embellishment
   'l3u11m1': [
-    { song: 'Hallelujah', artist: 'Leonard Cohen', context: 'Each verse ends with a clear authentic cadence (V–I) on the word "Hallelujah."' },
+    { song: 'Hallelujah', artist: 'Leonard Cohen', context: 'Each verse ends with a clear authentic cadence (V–I) on the word "Hallelujah." The iconic pre-chorus motion (IV–V–vi = "the minor fall, the major lift") is a textbook deceptive-cadence gesture.' },
     { song: 'Yesterday', artist: 'The Beatles', context: 'Contains both half cadences (pausing on V) and authentic cadences within its phrase structure.' },
   ],
   'l3u11m2': [

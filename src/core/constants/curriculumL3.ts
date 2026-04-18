@@ -115,7 +115,7 @@ const l3u9m2: CurriculumModule = {
     {
       id: 'l3u9m2t3',
       instruction:
-        "Build 'Dm7/C' — Dm7 in third inversion. The chordal seventh (C) is in the bass. In the key of C major this is ii4/2, commonly used before V6/5 in a smooth bass descent: C-B (ii4/2 to V6/5)",
+        "Build 'Dm7/C' — Dm7 in third inversion. The chordal seventh (C) is in the bass. In the key of C major this is ii4/2; it resolves with the bass descending C → B. In Bach chorales the most frequent resolution is ii4/2 → V6; ii4/2 → V6/5 also occurs",
       query: 'Dm7/C',
     },
   ],
@@ -195,7 +195,7 @@ const l3u9m4: CurriculumModule = {
     {
       title: 'Harmonic Minor Changes Everything',
       explanation:
-        'The harmonic minor scale raises the seventh degree, creating dramatically different seventh chord qualities compared to major. On scale degree 1, the minor triad gains a major seventh, producing the rare minor-major seventh chord: i(m\u03947). On degree 3, the raised seventh turns the major triad into an augmented triad with a major seventh: III+maj7. These exotic qualities give minor keys their characteristic tension and darkness.',
+        'The harmonic minor scale raises the seventh degree, creating dramatically different seventh chord qualities compared to major. On scale degree 1, the minor triad gains a major seventh, producing the rare minor-major seventh chord: i(m\u03947). On degree 3, the raised seventh turns the major triad into an augmented triad with a major seventh: III+maj7. These exotic qualities give minor keys their characteristic tension and darkness. (Half-diminished is written m7b5 or with the ⌀ symbol — so ii\u00F87 and Bm7b5 name the same chord.)',
       tryThisQuery: 'A harmonic minor scale',
       tryThisLabel:
         'See A harmonic minor — the source scale for minor-key seventh chords',
@@ -494,7 +494,7 @@ const l3u11m1: CurriculumModule = {
     {
       title: 'Authentic Cadences — Perfect and Imperfect',
       explanation:
-        'The perfect authentic cadence (PAC) is V(7) to I, both in root position, with the soprano landing on scale degree 1. It is the strongest harmonic arrival — a full stop. The imperfect authentic cadence (IAC) also moves V to I but weakens the closure: one chord may be inverted, or the soprano lands on the 3rd or 5th of I instead of the root. An IAC functions like a comma rather than a period.',
+        'The perfect authentic cadence (PAC) is V(7) to I, both in root position, with the soprano landing on scale degree 1. It is the strongest harmonic arrival — a full stop. The imperfect authentic cadence (IAC) also moves V to I but weakens the closure: one chord may be inverted, or the soprano lands on the 3rd or 5th of I instead of the root, or viio6 substitutes for V (leading-tone IAC). An IAC functions like a comma rather than a period.',
       tryThisQuery: 'G7',
       tryThisLabel:
         'Hear V7 in C major — the departure point of authentic cadences',
@@ -511,9 +511,8 @@ const l3u11m1: CurriculumModule = {
       title: 'The Phrygian Half Cadence',
       explanation:
         'Characteristic of minor keys: iv6 resolving to V, with the bass descending by half step from scale degree b6 to 5. This half-step descent in the bass gives the cadence its name — it resembles the characteristic falling half step of the Phrygian mode. Common in Baroque music, the Phrygian half cadence has a distinctively dark, archaic quality that no other cadence replicates.',
-      tryThisQuery: 'Am',
-      tryThisLabel:
-        'Hear vi — the surprise resolution target of a deceptive cadence',
+      tryThisQuery: 'Dm/F',
+      tryThisLabel: 'Hear iv6 — the Phrygian HC approach in A minor',
     },
   ],
   tasks: [

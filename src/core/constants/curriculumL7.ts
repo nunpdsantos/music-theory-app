@@ -249,7 +249,7 @@ const l7u21m5: CurriculumModule = {
     {
       title: 'Jazz Blues',
       explanation:
-        'Jazz blues enriches the basic 12-bar form with ii-V insertions, tritone substitutions, and diminished passing chords. A common jazz blues in C: C7 / F7 / C7 / C7 / F7 / F#dim7 / C7 / Am7 / Dm7 / G7 / C7-Am7 / Dm7-G7. The #IVdim7 (F#dim7) acts as a chromatic passing chord between IV7 and I7. The final four bars become a turnaround with a ii-V (Dm7-G7) that cycles back to the top. Bird blues (Charlie Parker) adds even more substitutions and ii-V chains.',
+        'Jazz blues enriches the basic 12-bar form with ii-V insertions, tritone substitutions, and diminished passing chords. A common jazz blues in C: C7 / F7 / C7 / C7 / F7 / F#dim7 / C7 / A7 / Dm7 / G7 / C7-A7 / Dm7-G7. The #IVdim7 (F#dim7) acts as a chromatic passing chord between IV7 and I7. A7 (V7/ii) pulls to Dm7, supplying the ii-V logic of bars 8–9 and the turnaround. The final four bars become a turnaround with a ii-V (Dm7-G7) that cycles back to the top. Bird blues (Charlie Parker) adds even more substitutions and ii-V chains.',
       tryThisQuery: 'F7',
       tryThisLabel: 'Build F7 — the IV7 of C blues',
     },
@@ -413,7 +413,7 @@ const l7u22m2: CurriculumModule = {
     {
       title: 'Upper-Structure Triads',
       explanation:
-        'Upper-structure voicing places a simple triad in the upper register over a bass note and guide tones below. The triad creates specific extensions without spelling out each note individually. A D major triad over a C7 bass yields C13#11 — the D, F#, and A become the 9th, #11th, and 13th. An Eb major triad over C7 produces C7#9b13. An Ab major triad over C7 creates C7b9b13. The upper triad is chosen for the extensions it generates, not for its own identity. This technique allows jazz pianists and arrangers to voice complex chords with simple shapes.',
+        'Upper-structure voicing places a simple triad in the upper register over a bass note and guide tones below. The triad creates specific extensions without spelling out each note individually. A D major triad over a C7 bass yields C13#11 — the D, F#, and A become the 9th, #11th, and 13th. An Eb major triad over C7 produces C7(#9). An Ab major triad over C7 produces C7(#9,b13). A Db major triad over C7 produces C7(b9,#11,b13) — the tritone-sub voicing. The upper triad is chosen for the extensions it generates, not for its own identity. This technique allows jazz pianists and arrangers to voice complex chords with simple shapes. (See Levine, The Jazz Theory Book, UST appendix.)',
       tryThisQuery: 'C13',
       tryThisLabel: 'Build C13 — hear the extensions an upper structure creates',
     },
@@ -436,7 +436,7 @@ const l7u22m2: CurriculumModule = {
     {
       id: 'l7u22m2t1',
       instruction:
-        "Explore upper structures: type 'C13' — this is the sound of a D major triad (D-F#-A = 9-#11-13) over a C7 shell (C-E-Bb). The complex symbol is voiced with a simple triad on top.",
+        "Explore upper structures: type 'C13#11' — this is the sound of a D major triad (D-F#-A = 9-#11-13) over a C7 shell (C-E-Bb). The complex symbol is voiced with a simple triad on top.",
     },
     {
       id: 'l7u22m2t2',
@@ -469,7 +469,7 @@ const l7u22m3: CurriculumModule = {
     {
       title: 'The Giant Steps Matrix',
       explanation:
-        'John Coltrane devised chord progressions that cycle through three major key centers separated by major thirds, dividing the octave into three equal parts. The Giant Steps progression: Bmaj7-D7-Gmaj7-Bb7-Ebmaj7-F#7-Bmaj7, touching keys B, G, and Eb. Each key center is approached by its V7 chord. The result is extremely rapid harmonic rhythm that demands thinking in three keys simultaneously — one of the great challenges in jazz improvisation and a summit of chord-scale mastery.',
+        'John Coltrane devised chord progressions that cycle through three major key centers separated by major thirds, dividing the octave into three equal parts. The Giant Steps progression: Bmaj7-D7-Gmaj7-Bb7-Ebmaj7-F#7-Bmaj7, touching keys B, G, and Eb (abbreviated — the full tune interleaves ii7 chords such as Am7-D7). Each key center is approached by its V7 chord. The result is extremely rapid harmonic rhythm that demands thinking in three keys simultaneously — one of the great challenges in jazz improvisation and a summit of chord-scale mastery.',
       tryThisQuery: 'Bmaj7',
       tryThisLabel: 'Start on Bmaj7 — the first key center',
     },

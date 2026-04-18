@@ -151,7 +151,7 @@ const l9u30m3: CurriculumModule = {
     {
       title: 'Perfect vs. Imperfect Consonance',
       explanation:
-        'The intervals in this module split into two families. Perfect consonances (P1, P4, P5) sound "open" and "hollow" — like a bell or an open string. They have a stark, bare quality. Imperfect consonances (m3, M3) sound "warm" and "blended" — the notes fuse smoothly but with more color. Seconds (m2, M2) are dissonances — they sound "rough" or "crunchy" when played together. The tritone is the most dissonant interval of all — tense, unstable, and demanding resolution. Learning to categorize by consonance/dissonance is faster than memorizing each interval individually.',
+        'The intervals in this module split into two families. Perfect consonances (P1, P4, P5) sound "open" and "hollow" — like a bell or an open string. They have a stark, bare quality. Imperfect consonances (m3, M3) sound "warm" and "blended" — the notes fuse smoothly but with more color. Seconds (m2, M2) are dissonances — they sound "rough" or "crunchy" when played together. The tritone is the most dissonant interval of all — tense, unstable, and demanding resolution. Learning to categorize by consonance/dissonance is faster than memorizing each interval individually. (In species counterpoint, studied in L4 and L6, the P4 above the bass is treated as a dissonance; the acoustic "perfect" classification here is ear-training-oriented.)',
       tryThisQuery: 'C major chord',
       tryThisLabel: 'Hear the major 3rd (C to E) and perfect 5th (C to G)',
     },
@@ -200,14 +200,14 @@ const l9u30m4: CurriculumModule = {
     {
       title: 'Song Associations: Large Intervals',
       explanation:
-        'Continuing the mnemonic approach for the upper half of the octave. Minor 6th = The Entertainer. Major 6th = My Bonnie (my-bon). Minor 7th = Somewhere (West Side Story). Major 7th = Take On Me (take-on). Octave = Somewhere Over the Rainbow. Large intervals are harder to identify because they feel like "big leaps" and the size differences between them are proportionally smaller. The 6ths and 7ths are particularly tricky — they are inversions of 3rds and 2nds, so their character is related but wider. Train by contrasting pairs: m6 vs. M6, m7 vs. M7.',
+        'Continuing the mnemonic approach for the upper half of the octave. Minor 6th = Love Story (Where Do I Begin). Major 6th = My Bonnie (my-bon). Minor 7th = Somewhere (West Side Story). Major 7th = Take On Me (take-on). Octave = Somewhere Over the Rainbow. Large intervals are harder to identify because they feel like "big leaps" and the size differences between them are proportionally smaller. The 6ths and 7ths are particularly tricky — they are inversions of 3rds and 2nds, so their character is related but wider. Train by contrasting pairs: m6 vs. M6, m7 vs. M7.',
       tryThisQuery: 'Cmaj7',
       tryThisLabel: 'Hear the major 7th interval (C to B)',
     },
     {
       title: 'Descending Large Intervals',
       explanation:
-        'Descending intervals sound different from ascending even though the distance is the same. A descending perfect 5th (G down to C) sounds like a resolution or grounding motion. A descending major 6th sounds warm and nostalgic. Descending 7ths sound dramatic and wide. Train descending intervals separately — many students who master ascending intervals struggle with descending ones. Use descending song associations: descending P5 = Flintstones (Flint-stones), descending m3 = Hey Jude (hey-Jude). Build the descending set as its own skill.',
+        'Descending intervals sound different from ascending even though the distance is the same. A descending perfect 5th (G down to C) sounds like a resolution or grounding motion. A descending major 6th sounds warm and nostalgic. Descending 7ths sound dramatic and wide. Train descending intervals separately — many students who master ascending intervals struggle with descending ones. Use descending song associations: descending P5 = O Come, All Ye Faithful (opening "O come, all"), descending m3 = Hey Jude (hey-Jude). Build the descending set as its own skill.',
       tryThisQuery: 'C major scale',
       tryThisLabel: 'Play C major descending — hear intervals in reverse',
     },
