@@ -624,7 +624,7 @@ const curriculumL7: CurriculumLevelOverlay = {
         {
           title: 'Modulacao Direta e Mudancas de Tonalidade Abruptas',
           explanation:
-            'A modulacao direta muda a tonalidade abruptamente — sem acorde pivot, sem preparacao. A forma mais comum e a "modulacao do camionista": o ultimo refrrao salta um meio-tom (ou um tom) para um impulso de energia. Funciona pela pura novidade — o brilho subito de uma tonalidade mais aguda regista-se como escalada emocional. Modulacoes diretas mais sofisticadas usam mediantes cromaticas: um verso em Do maior a saltar para a ponte em Lab maior cria uma mudanca dramatica de atmosfera sem quaisquer acordes de transicao.',
+            'A modulacao direta muda a tonalidade abruptamente — sem acorde pivot, sem preparacao. A forma mais comum e a "modulacao do camionista": o ultimo refrão salta um meio-tom (ou um tom) para um impulso de energia. Funciona pela pura novidade — o brilho subito de uma tonalidade mais aguda regista-se como escalada emocional. Modulacoes diretas mais sofisticadas usam mediantes cromaticas: um verso em Do maior a saltar para a ponte em Lab maior cria uma mudanca dramatica de atmosfera sem quaisquer acordes de transicao.',
           tryThisLabel: 'Ouve Reb — um destino de mudanca de tonalidade por meio-tom acima de Do',
         },
       ],

@@ -127,7 +127,7 @@ const overlay: ExerciseLevelOverlay = {
     hint: 'Los acordes pivote diatónicos enlazan solo tonalidades cercanas. La reinterpretación enarmónica de Gr+6 como V7 (o viceversa) puede enlazar tonalidades a un tritono o más de distancia — la técnica emblemática de los compositores del periodo romántico.',
   },
   l6u18m4e3: {
-    prompt: 'Si una Gr+6 en Do menor (Ab, C, Eb, F#) se reinterpreta como V7, ¿qué tonalidad tonicaliza ahora?',
+    prompt: 'Si una Gr+6 en Do menor (Ab, C, Eb, F#) se reinterpreta como V7, ¿qué tonalidad toniciza ahora?',
     choices: [
       'Reb mayor/menor — reescrita como Ab, C, Eb, Gb = Ab7 = V7/Db',
       'Sol mayor — porque F# resuelve ascendiendo hacia Sol',

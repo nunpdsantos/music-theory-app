@@ -289,7 +289,7 @@ const overlay: ExerciseLevelOverlay = {
   },
   l5u16m4e3: {
     prompt:
-      'O que e mistura modal (tambem chamada intercambio modal)?',
+      'O que e mistura modal?',
     choices: [
       'Emprestar acordes da tonalidade menor (ou maior) paralela para acrescentar cor cromatica sem sair da tonalidade de origem',
       'Misturar dois modos diferentes como Dorico e Mixolidio na mesma passagem',

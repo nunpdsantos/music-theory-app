@@ -393,7 +393,7 @@ const overlay: ExerciseLevelOverlay = {
       'Un dominante secundario apuntando al acorde IV',
       'Una reescritura enarmónica del acorde vii disminuido',
     ],
-    hint: 'bVII se toma prestado del mixolidio de Do o del Do menor natural. En Do mayor, Sib no es diatónico, pero tomarlo prestado crea un sonido rock/pop. Esto es mezcla modal (también llamada intercambio modal o acordes prestados).',
+    hint: 'bVII se toma prestado del mixolidio de Do o del Do menor natural. En Do mayor, Sib no es diatónico, pero tomarlo prestado crea un sonido rock/pop. Esto es mezcla modal (también llamada acordes prestados).',
   },
   l7u23m2e2: {
     prompt:

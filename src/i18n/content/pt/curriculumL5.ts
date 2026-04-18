@@ -11,7 +11,7 @@ const curriculumL5: CurriculumLevelOverlay = {
     u16: {
       title: 'Modulação e Mistura Modal',
       description:
-        'Modulação por acorde pivot, tonalidades próximas, outros tipos de modulação e empréstimo modal',
+        'Modulação por acorde pivot, tonalidades próximas, outros tipos de modulação e mistura modal',
     },
     u17: {
       title: 'Forma, Textura e Condução de Vozes',

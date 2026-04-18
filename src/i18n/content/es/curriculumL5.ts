@@ -4,14 +4,14 @@ const curriculumL5: CurriculumLevelOverlay = {
   // ─── Unidades ─────────────────────────────────────────────────────────────
   units: {
     u15: {
-      title: 'Dominantes Secundarias y Tonicalización',
+      title: 'Dominantes Secundarias y Tonicización',
       description:
-        'Dominantes aplicadas, acordes de sensible secundaria, tonicalización y cadenas de dominantes',
+        'Dominantes aplicadas, acordes de sensible secundaria, tonicización y cadenas de dominantes',
     },
     u16: {
       title: 'Modulación y Mezcla Modal',
       description:
-        'Modulación por acorde pivote, tonalidades cercanas, otros tipos de modulación e intercambio modal',
+        'Modulación por acorde pivote, tonalidades cercanas, otros tipos de modulación y mezcla modal',
     },
     u17: {
       title: 'Forma, Textura y Conducción de Voces',
@@ -27,7 +27,7 @@ const curriculumL5: CurriculumLevelOverlay = {
       title: 'Dominantes Secundarias: V/V y V7/V',
       subtitle: 'La dominante de la dominante — tu primer acorde aplicado',
       objectives: [
-        'Comprender qué significa «V de algo» (tonicalizar temporalmente un acorde diatónico)',
+        'Comprender qué significa «V de algo» (tonicizar temporalmente un acorde diatónico)',
         'Construir y resolver V/V y V7/V en tonalidades mayores',
         'Identificar la nota cromática (4.º grado elevado) que crea la sensible de V',
       ],
@@ -131,7 +131,7 @@ const curriculumL5: CurriculumLevelOverlay = {
         {
           title: 'Totalmente Disminuido vs. Semidisminuido',
           explanation:
-            'viio7/X (séptima totalmente disminuida) es más intenso y más habitual en tonalidades menores. Todos los intervalos son terceras menores, lo que hace al acorde simétrico — cualquier nota puede funcionar como fundamental. viio7/X con séptima semidisminuida es menos intenso y más habitual en tonalidades mayores. La séptima totalmente disminuida permite la reinterpretación enarmónica, lo que se vuelve importante para las modulaciones a tonalidades lejanas en el Nivel 6.',
+            'viio7/X (totalmente disminuido) es más intenso y más habitual en tonalidades menores. Todos los intervalos son terceras menores, lo que hace al acorde simétrico — cualquier nota puede funcionar como fundamental. viiø7/X (semidisminuido) es menos intenso y más habitual en tonalidades mayores. La séptima totalmente disminuida permite la reinterpretación enarmónica, lo que se vuelve importante para las modulaciones a tonalidades lejanas en el Nivel 6.',
           tryThisLabel: 'Escucha Bdim7 — un acorde de séptima totalmente disminuida',
         },
         {
@@ -157,58 +157,58 @@ const curriculumL5: CurriculumLevelOverlay = {
       ],
     },
 
-    // ── U15 M4: Tonicalización vs. Modulación ────────────────────────────
+    // ── U15 M4: Tonicización vs. Modulación ────────────────────────────
     l5u15m4: {
-      title: 'Tonicalización vs. Modulación',
-      subtitle: 'Distinguir una tonicalización breve de un cambio permanente de tonalidad',
+      title: 'Tonicización vs. Modulación',
+      subtitle: 'Distinguir una tonicización breve de un cambio permanente de tonalidad',
       objectives: [
-        'Distinguir la tonicalización de la modulación (cambio breve vs. permanente de tonalidad)',
-        'Reconocer la tonicalización como una dominante secundaria que resuelve en su objetivo',
-        'Identificar la tonicalización prolongada (ii/V para V7/V para V)',
+        'Distinguir la tonicización de la modulación (cambio breve vs. permanente de tonalidad)',
+        'Reconocer la tonicización como una dominante secundaria que resuelve en su objetivo',
+        'Identificar la tonicización prolongada (ii/V a V7/V a V)',
       ],
       concepts: [
         {
-          title: 'Tonicalización vs. Modulación',
+          title: 'Tonicización vs. Modulación',
           explanation:
-            'La tonicalización es un énfasis breve y momentáneo sobre un acorde no tónica. Uno o dos acordes «apuntan» al objetivo y después la música regresa a la tonalidad original. Sin cambio de armadura de clave, sin cadencia en la nueva tonalidad. La modulación es un cambio efectivo de tonalidad que persiste — confirmado por una cadencia en la nueva tonalidad. La regla práctica: si hay una cadencia en la nueva tonalidad, es modulación. Si es solo V/X resolviendo a X, es tonicalización.',
+            'La tonicización es un énfasis breve y momentáneo sobre un acorde no tónica. Uno o dos acordes «apuntan» al objetivo y después la música regresa a la tonalidad original. Sin cambio de armadura de clave, sin cadencia en la nueva tonalidad. La modulación es un cambio efectivo de tonalidad que persiste — confirmado por una cadencia en la nueva tonalidad. La regla práctica: si hay una cadencia en la nueva tonalidad, es modulación. Si es solo V/X resolviendo a X, es tonicización.',
           tryThisLabel: 'Observa Do mayor — la tonalidad de origen a la que regresar',
         },
         {
-          title: 'Tonicalización Breve vs. Prolongada',
+          title: 'Tonicización Breve vs. Prolongada',
           explanation:
-            'Un único V7/X resolviendo a X es una tonicalización breve. Pero varios acordes pueden funcionar en la «tonalidad temporal». ii/V para V7/V para V crea un mini ii–V–I en la tonalidad de V. La tonalidad temporal tiene su propia predominante y dominante, pero la música regresa a la tónica original. La tonicalización prolongada difumina la frontera con la modulación — la distinción depende de si la música cadencia y permanece en la nueva tonalidad.',
-          tryThisLabel: 'Observa Sol mayor — objetivo habitual de tonicalización desde Do',
+            'Un único V7/X resolviendo a X es una tonicización breve. Pero varios acordes pueden funcionar en la «tonalidad temporal». ii/V a V7/V a V crea un mini ii–V–I en la tonalidad de V. La tonalidad temporal tiene su propia predominante y dominante, pero la música regresa a la tónica original. La tonicización prolongada difumina la frontera con la modulación — la distinción depende de si la música cadencia y permanece en la nueva tonalidad.',
+          tryThisLabel: 'Observa Sol mayor — objetivo habitual de tonicización desde Do',
         },
         {
-          title: 'Analizar Tonicalizaciones en Música Real',
+          title: 'Analizar Tonicizaciones en Música Real',
           explanation:
-            'Al analizar un pasaje con dominantes secundarias, se marca la región tonicalizada entre corchetes y se indica tanto la función local como la función en la tonalidad de origen. En Do mayor, el pasaje C–D7–G–C se analiza como I–[V7/V–V]–I, donde los corchetes muestran la zona tonicalizada. La cadencia V7–I al final confirma Do como la verdadera tónica. Si el pasaje hubiera continuado en Sol con una cadencia (D7–G como V7–I en Sol), el análisis pasaría a ser modulación. La prueba de la cadencia es la línea divisoria fiable entre tonicalización y modulación en el análisis real.',
-          tryThisLabel: 'D7 tonicaliza Sol pero no modula a Sol',
+            'Al analizar un pasaje con dominantes secundarias, se marca la región tonicizada entre corchetes y se indica tanto la función local como la función en la tonalidad de origen. En Do mayor, el pasaje C–D7–G–C se analiza como I–[V7/V–V]–I, donde los corchetes muestran la zona tonicizada. La cadencia V7–I al final confirma Do como la verdadera tónica. Si el pasaje hubiera continuado en Sol con una cadencia (D7–G como V7–I en Sol), el análisis pasaría a ser modulación. La prueba de la cadencia es la línea divisoria fiable entre tonicización y modulación en el análisis real.',
+          tryThisLabel: 'D7 toniciza Sol pero no modula a Sol',
         },
       ],
       tasks: [
         {
           instruction:
-            'Abre "key of C" y piensa: si escuchas D7 seguido de G7 seguido de C, el D7 tonicaliza brevemente Sol, pero la música regresa a Do. Eso es tonicalización, no modulación.',
+            'Abre "key of C" y piensa: si escuchas D7 seguido de G7 seguido de C, el D7 toniciza brevemente Sol, pero la música regresa a Do. Eso es tonicización, no modulación.',
         },
         {
           instruction:
-            'Piensa en una tonicalización prolongada: Am7 (ii/V) para D7 (V7/V) para G (V). Tres acordes funcionan en la tonalidad de Sol, pero la música regresa a Do. Sigue siendo tonicalización porque no hay cadencia en Sol.',
+            'Piensa en una tonicización prolongada: Am7 (ii/V) para D7 (V7/V) para G (V). Tres acordes funcionan en la tonalidad de Sol, pero la música regresa a Do. Sigue siendo tonicización porque no hay cadencia en Sol.',
         },
         {
           instruction:
-            'Ahora imagina: D7 a G, después Am a D7 a G con una CAP en Sol mayor. La cadencia en Sol confirma que es una modulación, no una tonicalización. La cadencia es la línea divisoria.',
+            'Ahora imagina: D7 a G, después Am a D7 a G con una CAP en Sol mayor. La cadencia en Sol confirma que es una modulación, no una tonicización. La cadencia es la línea divisoria.',
         },
       ],
     },
 
     // ── U15 M5: Cadenas de Dominantes ─────────────────────────────────────
     l5u15m5: {
-      title: 'Cadenas de Dominantes y Tonicalización Secuencial',
+      title: 'Cadenas de Dominantes y Tonicización Secuencial',
       subtitle: 'Cadenas de dominantes aplicadas descendentes por quintas',
       objectives: [
         'Construir cadenas de dominantes secundarias (cada dominante resuelve en la siguiente)',
-        'Comprender la tonicalización secuencial como un patrón de quintas descendentes con dominantes aplicadas',
+        'Comprender la tonicización secuencial como un patrón de quintas descendentes con dominantes aplicadas',
         'Trazar cadenas de dominantes en el Círculo de Quintas',
       ],
       concepts: [
@@ -219,9 +219,9 @@ const curriculumL5: CurriculumLevelOverlay = {
           tryThisLabel: 'Observa el Círculo de Quintas que siguen las cadenas',
         },
         {
-          title: 'Tonicalización Secuencial',
+          title: 'Tonicización Secuencial',
           explanation:
-            'Una secuencia armónica en la que cada paso tonicaliza el siguiente acorde diatónico. Quintas descendentes con dominantes secundarias: V7/IV a IV, V7/iii a iii, V7/ii a ii, V7 a I. Cada par es un V–I en miniatura en una tonalidad temporal. El patrón secuencial crea un ritmo armónico predecible mientras las notas cromáticas aportan color. Esta técnica es habitual en secuencias barrocas y turnarounds de jazz.',
+            'Una secuencia armónica en la que cada paso toniciza el siguiente acorde diatónico. Quintas descendentes con dominantes secundarias: V7/IV a IV, V7/iii a iii, V7/ii a ii, V7 a I. Cada par es un V–I en miniatura en una tonalidad temporal. El patrón secuencial crea un ritmo armónico predecible mientras las notas cromáticas aportan color. Esta técnica es habitual en secuencias barrocas y turnarounds de jazz.',
           tryThisLabel: 'Observa Do mayor — traza los objetivos diatónicos a lo largo de la secuencia',
         },
         {
@@ -238,7 +238,7 @@ const curriculumL5: CurriculumLevelOverlay = {
         },
         {
           instruction:
-            'Escribe "D7", después "G7", después "Cmaj7" — esta es una cadena de dominantes. D7 tonicaliza Sol, G7 tonicaliza Do. La resolución final a Cmaj7 confirma Do como la verdadera tónica.',
+            'Escribe "D7", después "G7", después "Cmaj7" — esta es una cadena de dominantes. D7 toniciza Sol, G7 toniciza Do. La resolución final a Cmaj7 confirma Do como la verdadera tónica.',
         },
         {
           instruction:

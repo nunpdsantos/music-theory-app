@@ -271,9 +271,9 @@ const overlay: TemplateLevelOverlay = {
     {
       // multiple_choice
       promptTemplate:
-        'Identifica el intercambio modal usado en esta progresión pop.',
+        'Identifica la mezcla modal usada en esta progresión pop.',
       hintTemplate:
-        'Intercambio modal común en el pop: I - bVII - IV (bVII mixolidio), I - bVI - bVII (bVI y bVII eólicos), I - iv (iv eólico).',
+        'Mezcla modal común en el pop: I - bVII - IV (bVII mixolidio), I - bVI - bVII (bVI y bVII eólicos), I - iv (iv eólico).',
       choiceSets: [
         [
           'El acorde bVII en una tonalidad mayor se toma prestado del modo mixolidio',

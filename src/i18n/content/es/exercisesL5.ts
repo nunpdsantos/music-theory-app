@@ -7,7 +7,7 @@ import type { ExerciseLevelOverlay } from '../types';
 
 const overlay: ExerciseLevelOverlay = {
   // =========================================================================
-  // Unidad 15: Dominantes Secundarias y Tonicalización
+  // Unidad 15: Dominantes Secundarias y Tonicización
   // =========================================================================
 
   // ---- l5u15m1: Dominantes Secundarias V/V ----
@@ -25,12 +25,12 @@ const overlay: ExerciseLevelOverlay = {
   l5u15m1e3: {
     prompt: '¿Qué es V/V?',
     choices: [
-      'Una dominante secundaria que tonicaliza el acorde dominante de la tonalidad',
+      'Una dominante secundaria que toniciza el acorde dominante de la tonalidad',
       'El quinto acorde tocado dos veces seguidas',
       'Un acorde disminuido construido sobre el segundo grado de la escala',
       'El acorde dominante en segunda inversión',
     ],
-    hint: 'V/V significa «la dominante de la dominante». En Do mayor, V es Sol. La dominante de Sol es Re mayor. Por tanto, V/V en Do = Re mayor, un acorde cromático que tonicaliza temporalmente Sol.',
+    hint: 'V/V significa «la dominante de la dominante». En Do mayor, V es Sol. La dominante de Sol es Re mayor. Por tanto, V/V en Do = Re mayor, un acorde cromático que toniciza temporalmente Sol.',
   },
 
   // ---- l5u15m2: Dominantes Secundarias de ii, iii, IV, vi ----
@@ -72,7 +72,7 @@ const overlay: ExerciseLevelOverlay = {
     prompt:
       '¿Cuál es la función de un acorde de sensible secundaria (p. ej., viiº/V)?',
     choices: [
-      'Funciona como un acorde disminuido que resuelve medio tono arriba hacia el acorde tonicalizado, tal como viiº resuelve hacia I',
+      'Funciona como un acorde disminuido que resuelve medio tono arriba hacia el acorde tonicizado, tal como viiº resuelve hacia I',
       'Sustituye completamente al acorde dominante en las cadencias',
       'Funciona como un acorde de paso sin atracción armónica',
       'Es la sensible de la tonalidad tocada como nota aislada',
@@ -102,38 +102,38 @@ const overlay: ExerciseLevelOverlay = {
     hint: 'El «/V» indica el objetivo: V. En Do mayor, V es Sol. viiº/V es Fa# disminuido (F#, A, C), y el F# resuelve medio tono arriba hacia Sol, la fundamental del acorde objetivo.',
   },
 
-  // ---- l5u15m4: Tonicalización vs. Modulación ----
+  // ---- l5u15m4: Tonicización vs. Modulación ----
 
   l5u15m4e1: {
-    prompt: '¿Qué es la tonicalización?',
+    prompt: '¿Qué es la tonicización?',
     choices: [
       'Un énfasis breve y temporal en un acorde no tónica utilizando su propia dominante, sin abandonar la tonalidad original',
       'Un cambio permanente de centro tonal hacia una nueva tónica',
       'Tocar el acorde de tónica repetidamente para establecer la tonalidad',
       'Transponer una melodía a una nueva tonalidad',
     ],
-    hint: 'La tonicalización es fugaz: una dominante secundaria o acorde de sensible trata brevemente un acorde diatónico como tónica local, pero la tonalidad original mantiene el control. Piensa en ello como un desvío momentáneo.',
+    hint: 'La tonicización es fugaz: una dominante secundaria o acorde de sensible trata brevemente un acorde diatónico como tónica local, pero la tonalidad original mantiene el control. Piensa en ello como un desvío momentáneo.',
   },
   l5u15m4e2: {
-    prompt: '¿Cómo se distingue la modulación de la tonicalización?',
+    prompt: '¿Cómo se distingue la modulación de la tonicización?',
     choices: [
-      'La modulación establece una nueva tonalidad mediante cadencias y pasajes extensos; la tonicalización es breve y regresa a la tonalidad original',
-      'La modulación usa sostenidos; la tonicalización usa bemoles',
-      'La modulación solo ocurre al final de una pieza; la tonicalización ocurre en el medio',
+      'La modulación establece una nueva tonalidad mediante cadencias y pasajes extensos; la tonicización es breve y regresa a la tonalidad original',
+      'La modulación usa sostenidos; la tonicización usa bemoles',
+      'La modulación solo ocurre al final de una pieza; la tonicización ocurre en el medio',
       'No hay diferencia real; los términos son intercambiables',
     ],
-    hint: 'La prueba clave: ¿el nuevo centro tonal se mantiene con sus propias cadencias y pasajes estables? Si es así, es modulación. Si la tonalidad original se reafirma rápidamente, es solo tonicalización.',
+    hint: 'La prueba clave: ¿el nuevo centro tonal se mantiene con sus propias cadencias y pasajes estables? Si es así, es modulación. Si la tonalidad original se reafirma rápidamente, es solo tonicización.',
   },
   l5u15m4e3: {
     prompt:
-      'Cuando una tonicalización se prolonga durante varios compases pero no establece completamente la nueva tonalidad, ¿cómo se denomina?',
+      'Cuando una tonicización se prolonga durante varios compases pero no establece completamente la nueva tonalidad, ¿cómo se denomina?',
     choices: [
-      'Una tonicalización prolongada — más larga que un solo acorde pero sin confirmación cadencial completa en la nueva tonalidad',
+      'Una tonicización prolongada — más larga que un solo acorde pero sin confirmación cadencial completa en la nueva tonalidad',
       'Una modulación por acorde pivote',
       'Una cadencia engañosa',
       'Una secuencia cromática',
     ],
-    hint: 'Las tonicalizaciones prolongadas ocupan una zona gris: duran más que un rápido V/x – x, pero la nueva tonalidad nunca se confirma con una cadencia fuerte. La frontera entre tonicalización prolongada y modulación es subjetiva.',
+    hint: 'Las tonicizaciones prolongadas ocupan una zona gris: duran más que un rápido V/x – x, pero la nueva tonalidad nunca se confirma con una cadencia fuerte. La frontera entre tonicización prolongada y modulación es subjetiva.',
   },
 
   // ---- l5u15m5: Cadenas de Dominantes ----
@@ -141,7 +141,7 @@ const overlay: ExerciseLevelOverlay = {
   l5u15m5e1: {
     prompt: '¿Qué es una cadena de dominantes secundarias?',
     choices: [
-      'Una secuencia en la que cada acorde funciona como V7 del siguiente, pasando por múltiples tonicalizaciones antes de resolver hacia la tónica',
+      'Una secuencia en la que cada acorde funciona como V7 del siguiente, pasando por múltiples tonicizaciones antes de resolver hacia la tónica',
       'Tocar el acorde V de cada tonalidad mayor en sucesión',
       'Una serie de acordes disminuidos descendiendo cromáticamente',
       'Alternar entre I y V repetidamente',
@@ -160,14 +160,14 @@ const overlay: ExerciseLevelOverlay = {
     hint: 'Las cadenas de dominantes explotan el movimiento de fundamentales más fuerte de la música tonal: quinta descendente. Cada V7 resuelve una quinta por debajo hacia su objetivo, y ese objetivo se reinterpreta como el siguiente V7.',
   },
   l5u15m5e3: {
-    prompt: '¿Qué es la tonicalización secuencial?',
+    prompt: '¿Qué es la tonicización secuencial?',
     choices: [
-      'Un patrón armónico en el que el mismo gesto de tonicalización (p. ej., V7 – objetivo) se repite en diferentes niveles de altura en secuencia',
+      'Un patrón armónico en el que el mismo gesto de tonicización (p. ej., V7 – objetivo) se repite en diferentes niveles de altura en secuencia',
       'Una modulación que pasa por todas las tonalidades en el círculo de quintas',
       'Tocar escalas en secuencia ascendente cromáticamente',
       'Una serie de cadencias engañosas en diferentes tonalidades',
     ],
-    hint: 'La tonicalización secuencial aplica el mismo patrón armónico (frecuentemente V7 – acorde) a grados de la escala sucesivos, creando un movimiento cromático previsible pero colorido. Es habitual en la música barroca y en el jazz.',
+    hint: 'La tonicización secuencial aplica el mismo patrón armónico (frecuentemente V7 – acorde) a grados de la escala sucesivos, creando un movimiento cromático previsible pero colorido. Es habitual en la música barroca y en el jazz.',
   },
 
   // =========================================================================
@@ -289,7 +289,7 @@ const overlay: ExerciseLevelOverlay = {
   },
   l5u16m4e3: {
     prompt:
-      '¿Qué es la mezcla modal (también llamada intercambio modal)?',
+      '¿Qué es la mezcla modal?',
     choices: [
       'Tomar prestados acordes de la tonalidad menor (o mayor) paralela para añadir color cromático sin abandonar la tonalidad de origen',
       'Mezclar dos modos diferentes como dórico y mixolidio en el mismo pasaje',
@@ -329,7 +329,7 @@ const overlay: ExerciseLevelOverlay = {
       'Usar un acorde IV mayor en una tonalidad menor, prestado del mayor paralelo',
       'Usar el acorde V en una tonalidad menor (que requiere el 7.º grado elevado de la menor armónica)',
       'Modular a la relativa mayor',
-      'Usar una dominante secundaria para tonicalizar la dominante',
+      'Usar una dominante secundaria para tonicizar la dominante',
     ],
     hint: 'El acorde V en el modo menor proviene de la menor armónica, no de la mezcla modal. La mezcla modal toma prestados específicamente acordes de la tonalidad paralela. Un IV mayor en el modo menor (p. ej., Re mayor en La menor en vez de Re menor) es mezcla modal genuina.',
   },

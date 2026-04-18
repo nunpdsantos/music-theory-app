@@ -393,7 +393,7 @@ const overlay: ExerciseLevelOverlay = {
       'Um dominante secundario a apontar para o acorde IV',
       'Uma reescrita enarmonica do acorde vii diminuto',
     ],
-    hint: 'bVII e emprestado do mixolidio de Do ou de Do menor natural. Em Do maior, Sib nao e diatonico, mas empresta-lo cria um som rock/pop. Isto e mistura modal (tambem chamada intercambio modal ou acordes emprestados).',
+    hint: 'bVII e emprestado do mixolidio de Do ou de Do menor natural. Em Do maior, Sib nao e diatonico, mas empresta-lo cria um som rock/pop. Isto e mistura modal (tambem chamada acordes emprestados).',
   },
   l7u23m2e2: {
     prompt:

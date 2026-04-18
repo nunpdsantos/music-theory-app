@@ -7,7 +7,7 @@ import type { TemplateLevelOverlay } from '../types';
 
 const overlay: TemplateLevelOverlay = {
   // =========================================================================
-  // Unidad 15: Dominantes Secundarias y Tonicalización
+  // Unidad 15: Dominantes Secundarias y Tonicización
   // =========================================================================
 
   // ---- l5u15m1: Dominantes Secundarias V/V ----
@@ -24,7 +24,7 @@ const overlay: TemplateLevelOverlay = {
       promptTemplate:
         'Identifica la función y resolución de V/V.',
       hintTemplate:
-        'V/V tonicaliza el acorde dominante. Contiene una alteración cromática (4.º grado elevado) y resuelve hacia V.',
+        'V/V toniciza el acorde dominante. Contiene una alteración cromática (4.º grado elevado) y resuelve hacia V.',
       choiceSets: [
         [
           'V/V contiene el 4.º grado elevado y resuelve hacia V',
@@ -47,14 +47,14 @@ const overlay: TemplateLevelOverlay = {
     {
       // chord_build
       promptTemplate:
-        'Construye el acorde de dominante secundaria que tonicaliza el objetivo indicado en {root} mayor.',
+        'Construye el acorde de dominante secundaria que toniciza el objetivo indicado en {root} mayor.',
       hintTemplate:
         'Una dominante secundaria es una tríada mayor o séptima dominante que resuelve hacia un acorde diatónico distinto de I. Construye un acorde de cualidad dominante una 5.ªJ por encima del objetivo.',
     },
     {
       // multiple_choice
       promptTemplate:
-        'Identifica qué acorde está siendo tonicalizado por esta dominante secundaria.',
+        'Identifica qué acorde está siendo tonicizado por esta dominante secundaria.',
       hintTemplate:
         'Cada dominante secundaria apunta a un acorde diatónico específico. V7/ii resuelve hacia ii, V7/IV resuelve hacia IV, V7/vi resuelve hacia vi, etc.',
       choiceSets: [
@@ -111,25 +111,25 @@ const overlay: TemplateLevelOverlay = {
     },
   ],
 
-  // ---- l5u15m4: Tonicalización vs. Modulación ----
+  // ---- l5u15m4: Tonicización vs. Modulación ----
   l5u15m4: [
     {
       // multiple_choice
       promptTemplate:
-        'Distingue entre tonicalización y modulación.',
+        'Distingue entre tonicización y modulación.',
       hintTemplate:
-        'La tonicalización es un énfasis breve y momentáneo en un acorde no tónica (de 1 a 2 acordes de duración). La modulación es un cambio más permanente hacia una nueva tonalidad (confirmada por una cadencia en la nueva tonalidad).',
+        'La tonicización es un énfasis breve y momentáneo en un acorde no tónica (de 1 a 2 acordes de duración). La modulación es un cambio más permanente hacia una nueva tonalidad (confirmada por una cadencia en la nueva tonalidad).',
       choiceSets: [
         [
-          'La tonicalización enfatiza temporalmente un acorde; la modulación establece una nueva tonalidad con una cadencia',
-          'Tonicalización y modulación significan lo mismo',
-          'La tonicalización requiere una cadencia en la nueva tonalidad',
+          'La tonicización enfatiza temporalmente un acorde; la modulación establece una nueva tonalidad con una cadencia',
+          'Tonicización y modulación significan lo mismo',
+          'La tonicización requiere una cadencia en la nueva tonalidad',
           'La modulación nunca usa acordes cromáticos',
         ],
         [
-          'Una única dominante secundaria seguida de su objetivo es tonicalización, no modulación',
+          'Una única dominante secundaria seguida de su objetivo es tonicización, no modulación',
           'Una dominante secundaria crea siempre una modulación',
-          'La tonicalización requiere al menos 8 compases en la nueva tonalidad',
+          'La tonicización requiere al menos 8 compases en la nueva tonalidad',
           'No hay diferencia práctica entre ambas',
         ],
         [
@@ -164,7 +164,7 @@ const overlay: TemplateLevelOverlay = {
           'Esta cadena se mueve por quintas ascendentes',
         ],
         [
-          'La tonicalización prolongada mediante cadenas de dominantes crea movimiento cromático en el bajo',
+          'La tonicización prolongada mediante cadenas de dominantes crea movimiento cromático en el bajo',
           'Las cadenas de dominantes nunca producen movimiento cromático',
           'El bajo se mantiene siempre diatónico en las cadenas de dominantes',
           'Las cadenas de dominantes usan solo acordes en posición fundamental',
@@ -220,7 +220,7 @@ const overlay: TemplateLevelOverlay = {
         [
           'Una modulación directa cambia a una nueva tonalidad en un límite de frase sin acorde pivote',
           'Una modulación directa usa siempre un acorde pivote',
-          'Una modulación directa es lo mismo que la tonicalización',
+          'Una modulación directa es lo mismo que la tonicización',
           'Una modulación directa solo sube medio tono',
         ],
         [
