@@ -17,7 +17,8 @@
   "theme": {
     "dark": "Oscuro",
     "light": "Claro",
-    "system": "Sistema"
+    "system": "Sistema",
+    "fermata": "Fermata"
   },
   "common": {
     "play": "Tocar",

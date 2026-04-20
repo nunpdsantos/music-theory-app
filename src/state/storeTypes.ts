@@ -13,7 +13,7 @@ import type { SynthPresetName } from '../core/types/visual.ts';
 export type ViewMode = 'explore' | 'play' | 'learn';
 export type InstrumentType = 'piano' | 'guitar';
 export type ColorMode = 'functional' | 'absolute';
-export type ThemeMode = 'dark' | 'light' | 'system';
+export type ThemeMode = 'dark' | 'light' | 'system' | 'fermata';
 
 // ─── Slice interfaces ───────────────────────────────────────────────────────
 

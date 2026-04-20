@@ -4,6 +4,7 @@ import { noteToString } from '../../core/types/music.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
 import { useAppStore } from '../../state/store.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
+import { useDegreeColorsEnabled } from '../../hooks/useDegreeColors.ts';
 
 const QUALITY_LABELS: Record<string, string> = {
   major: '',
@@ -36,6 +37,7 @@ export function ChordGrid() {
   const { diatonicChords } = useKeyContext();
   const setSelectedChord = useAppStore((s) => s.setSelectedChord);
   const selectedChord = useAppStore((s) => s.selectedChord);
+  const degreeColorsOn = useDegreeColorsEnabled();
 
   if (diatonicChords.length === 0) {
     return (
@@ -62,7 +64,9 @@ export function ChordGrid() {
   return (
     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2" role="group" aria-label="Diatonic chords">
       {diatonicChords.map(({ chord, numeral, degree }, i) => {
-        const color = DEGREE_COLORS[degree as keyof typeof DEGREE_COLORS];
+        const color = degreeColorsOn
+          ? DEGREE_COLORS[degree as keyof typeof DEGREE_COLORS]
+          : 'var(--accent)';
         const rootLabel = noteToString(chord.root);
         const qualityLabel = QUALITY_LABELS[chord.quality] ?? chord.quality;
         const qualityFull = QUALITY_FULL[chord.quality] ?? chord.quality;

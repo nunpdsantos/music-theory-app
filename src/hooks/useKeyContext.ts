@@ -6,6 +6,7 @@ import { getScaleNotesWithOctaves, getVoicedChordNotes, getMidiNumber } from '..
 import { getPitchClass } from '../core/constants/notes.ts';
 import type { Note, Scale, Chord, PitchedNote } from '../core/types/music.ts';
 import { DEGREE_COLORS } from '../design/tokens/colors.ts';
+import { useDegreeColorsEnabled } from './useDegreeColors.ts';
 
 export interface DiatonicChord {
   chord: Chord;
@@ -41,6 +42,7 @@ export function useKeyContext(): KeyContextValue {
   const chordInversion = useAppStore((s) => s.chordInversion);
   const scaleOctaves = useAppStore((s) => s.scaleOctaves);
   const baseOctave = useAppStore((s) => s.baseOctave);
+  const degreeColorsOn = useDegreeColorsEnabled();
 
   const scale = useMemo(
     () => buildScale(selectedKey, selectedScale),
@@ -74,9 +76,10 @@ export function useKeyContext(): KeyContextValue {
     return (note: Note): string | undefined => {
       const degree = pitchClassToDegree.get(getPitchClass(note));
       if (degree === undefined) return undefined;
+      if (!degreeColorsOn) return undefined;
       return DEGREE_COLORS[degree as keyof typeof DEGREE_COLORS];
     };
-  }, [pitchClassToDegree]);
+  }, [pitchClassToDegree, degreeColorsOn]);
 
   const getNoteDegree = useMemo(() => {
     return (note: Note): number | undefined => {
