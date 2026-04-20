@@ -107,7 +107,7 @@ export function ExploreView() {
                     {SCALE_TYPE_NAMES[selectedScale]}
                   </span>
                 </h2>
-                <p className="text-xs mt-1" style={{ color: 'var(--text-dim)' }}>
+                <p className="text-xs mt-1 explore-prose" style={{ color: 'var(--text-dim)' }}>
                   {t('explore.notes', { count: scale.notes.length })} &middot;{' '}
                   {scale.notes.map((n) => noteToString(n)).join(' ')}
                 </p>

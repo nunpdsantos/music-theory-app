@@ -179,6 +179,45 @@
   --piano-label: #55554e;
 }
 
+/* Fermata theme — warm cream + walnut + ivory, editorial/luthier aesthetic.
+   Opt-in via themeMode='fermata'. Explore view is the primary design target;
+   Learn, Play, Progress fall back to these tokens but may need follow-up work. */
+:root.fermata {
+  color-scheme: light;
+  --font-sans: 'Source Serif 4', 'Georgia', serif;
+  --font-serif: 'Source Serif 4', 'Georgia', serif;
+  --bg: #f5efe2;
+  --bg-raised: #efe7d5;
+  --card: #ede4cf;
+  --card-hover: #e4d9bf;
+  --card-active: #d9ccad;
+  --border: #c9b895;
+  --border-light: #b8a57e;
+  --border-subtle: #e0d4ba;
+  --text: #2a1f14;
+  --text-muted: #6b5436;
+  --text-dim: #8b7551;
+  --input-bg: rgba(237, 228, 207, 0.8);
+  --scrollbar: #c9b895;
+  --scrollbar-hover: #b8a57e;
+  --accent: #a65a2a;
+  --accent-hover: #8f4a1e;
+  --accent-dim: rgba(166, 90, 42, 0.15);
+  --accent-bg: rgba(166, 90, 42, 0.08);
+  --focus-ring: rgba(166, 90, 42, 0.5);
+  --shadow-sm: 0 1px 3px rgba(74, 48, 24, 0.08), 0 1px 2px rgba(74, 48, 24, 0.04);
+  --shadow-md: 0 4px 12px rgba(74, 48, 24, 0.1), 0 2px 4px rgba(74, 48, 24, 0.05);
+  --shadow-lg: 0 8px 30px rgba(74, 48, 24, 0.14), 0 4px 8px rgba(74, 48, 24, 0.07);
+  --shadow-glow: 0 0 14px rgba(166, 90, 42, 0.22);
+  --piano-white: #faf5e9;
+  --piano-white-hover: #fffcf0;
+  --piano-white-shadow: inset 0 -3px 4px rgba(74, 48, 24, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --piano-black: #2a1f14;
+  --piano-black-shadow: 0 2px 6px rgba(0, 0, 0, 0.35), inset 0 -1px 2px rgba(255, 255, 255, 0.08);
+  --piano-border: #8b5e2a;
+  --piano-label: #8b7551;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -410,6 +449,34 @@ body {
 /* Learn view — serif typography for concept text */
 .learn-serif {
   font-family: var(--font-serif);
+}
+
+/* ─── Fermata-theme typography overrides ───────────────────────────
+   Editorial/luthier aesthetic: italic serif titles, warm tracked labels,
+   body prose in serif. Scoped to :root.fermata so dark/light unaffected. */
+:root.fermata .learn-serif {
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  font-size: 1.6em;
+  line-height: 1.15;
+}
+
+:root.fermata .type-section {
+  color: var(--text-muted);
+  letter-spacing: 0.18em;
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Body prose — under fermata, make description text italic serif.
+   Scoped to paragraphs inside the hero block and detail panels. */
+:root.fermata .explore-prose,
+:root.fermata p.explore-prose {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.005em;
+  line-height: var(--leading-relaxed);
 }
 
 /* Learn view — concept explanation text */

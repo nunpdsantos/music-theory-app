@@ -10,6 +10,7 @@ import {
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
 import { useAppStore } from '../../state/store.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
+import { useDegreeColorsEnabled } from '../../hooks/useDegreeColors.ts';
 import { SPRING_SNAPPY } from '../../design/tokens/motion';
 
 export function ScaleDegreeBar() {
@@ -22,6 +23,7 @@ export function ScaleDegreeBar() {
   const formula = SCALE_FORMULAS[selectedScale];
   const noteCount = scale.notes.length;
   const isCompact = noteCount > 8;
+  const degreeColorsOn = useDegreeColorsEnabled();
 
   const degreeLabels = useMemo(
     () => formula.map((semitones, i) => getScaleDegreeIntervalLabel(i, semitones, noteCount)),
@@ -37,7 +39,9 @@ export function ScaleDegreeBar() {
         const colorKey = noteCount <= 7
           ? (degree as keyof typeof DEGREE_COLORS)
           : (((i % 7) + 1) as keyof typeof DEGREE_COLORS);
-        const color = DEGREE_COLORS[colorKey] ?? 'var(--text-muted)';
+        const color = degreeColorsOn
+          ? (DEGREE_COLORS[colorKey] ?? 'var(--text-muted)')
+          : 'var(--accent)';
         const intervalLabel = degreeLabels[i] ?? `${i + 1}`;
         const funcKey = noteCount === 7
           ? getScaleDegreeFunctionKey(i, formula[i] ?? 0)

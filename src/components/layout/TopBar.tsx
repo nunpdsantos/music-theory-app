@@ -16,11 +16,12 @@ const VIEW_KEYS: Record<ViewMode, string> = {
   learn: 'nav.learn',
 };
 
-const THEME_CYCLE: ThemeMode[] = ['dark', 'light', 'system'];
+const THEME_CYCLE: ThemeMode[] = ['dark', 'light', 'system', 'fermata'];
 const THEME_KEYS: Record<ThemeMode, string> = {
   dark: 'theme.dark',
   light: 'theme.light',
   system: 'theme.system',
+  fermata: 'theme.fermata',
 };
 
 function ThemeIcon({ mode }: { mode: ThemeMode }) {
@@ -46,6 +47,15 @@ function ThemeIcon({ mode }: { mode: ThemeMode }) {
         <rect x="2" y="3" width="20" height="14" rx="2" />
         <line x1="8" y1="21" x2="16" y2="21" />
         <line x1="12" y1="17" x2="12" y2="21" />
+      </svg>
+    );
+  }
+  if (mode === 'fermata') {
+    // Fermata symbol — arc over a dot
+    return (
+      <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <path d="M4 14 A 8 8 0 0 1 20 14" />
+        <circle cx="12" cy="16" r="1.5" fill="currentColor" />
       </svg>
     );
   }
@@ -98,14 +108,38 @@ export function TopBar() {
       }}
     >
       <div className="flex items-center gap-3">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" className="max-sm:hidden shrink-0">
-          <path d="M9 18V5l12-2v13" />
-          <circle cx="6" cy="18" r="3" />
-          <circle cx="18" cy="16" r="3" />
-        </svg>
-        <span className="text-xs font-medium tracking-tight max-sm:hidden" style={{ color: 'var(--text-muted)' }}>
-          {t('nav.musicTheory')}
-        </span>
+        {themeMode === 'fermata' ? (
+          <>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.8" strokeLinecap="round" className="max-sm:hidden shrink-0" aria-hidden="true">
+              <path d="M4 14 A 8 8 0 0 1 20 14" />
+              <circle cx="12" cy="16" r="1.8" fill="var(--accent)" />
+            </svg>
+            <span
+              className="max-sm:hidden"
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontStyle: 'italic',
+                fontSize: '17px',
+                fontWeight: 500,
+                color: 'var(--text)',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              Fermata
+            </span>
+          </>
+        ) : (
+          <>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" className="max-sm:hidden shrink-0">
+              <path d="M9 18V5l12-2v13" />
+              <circle cx="6" cy="18" r="3" />
+              <circle cx="18" cy="16" r="3" />
+            </svg>
+            <span className="text-xs font-medium tracking-tight max-sm:hidden" style={{ color: 'var(--text-muted)' }}>
+              {t('nav.musicTheory')}
+            </span>
+          </>
+        )}
       </div>
 
       <nav

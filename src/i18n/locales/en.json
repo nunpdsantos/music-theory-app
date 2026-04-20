@@ -17,7 +17,8 @@
   "theme": {
     "dark": "Dark",
     "light": "Light",
-    "system": "System"
+    "system": "System",
+    "fermata": "Fermata"
   },
   "common": {
     "play": "Play",
