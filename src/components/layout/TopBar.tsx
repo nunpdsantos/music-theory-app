@@ -108,38 +108,23 @@ export function TopBar() {
       }}
     >
       <div className="flex items-center gap-3">
-        {themeMode === 'fermata' ? (
-          <>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.8" strokeLinecap="round" className="max-sm:hidden shrink-0" aria-hidden="true">
-              <path d="M4 14 A 8 8 0 0 1 20 14" />
-              <circle cx="12" cy="16" r="1.8" fill="var(--accent)" />
-            </svg>
-            <span
-              className="max-sm:hidden"
-              style={{
-                fontFamily: 'var(--font-serif)',
-                fontStyle: 'italic',
-                fontSize: '17px',
-                fontWeight: 500,
-                color: 'var(--text)',
-                letterSpacing: '-0.01em',
-              }}
-            >
-              Fermata
-            </span>
-          </>
-        ) : (
-          <>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" className="max-sm:hidden shrink-0">
-              <path d="M9 18V5l12-2v13" />
-              <circle cx="6" cy="18" r="3" />
-              <circle cx="18" cy="16" r="3" />
-            </svg>
-            <span className="text-xs font-medium tracking-tight max-sm:hidden" style={{ color: 'var(--text-muted)' }}>
-              {t('nav.musicTheory')}
-            </span>
-          </>
-        )}
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="1.8" strokeLinecap="round" className="max-sm:hidden shrink-0" aria-hidden="true">
+          <path d="M4 14 A 8 8 0 0 1 20 14" />
+          <circle cx="12" cy="16" r="1.8" fill="var(--accent)" />
+        </svg>
+        <span
+          className="max-sm:hidden"
+          style={{
+            fontFamily: 'var(--font-serif)',
+            fontStyle: 'italic',
+            fontSize: '17px',
+            fontWeight: 500,
+            color: 'var(--text)',
+            letterSpacing: '-0.01em',
+          }}
+        >
+          {t('nav.musicTheory')}
+        </span>
       </div>
 
       <nav

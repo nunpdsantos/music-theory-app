@@ -1,26 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- Background -->
-  <rect width="512" height="512" rx="108" fill="#09090b"/>
+  <!-- Fermata app mark — warm cream with walnut fermata symbol.
+       Musical notation: the arc (corona) sits above, the dot (punctum)
+       marks the held note below. Readable at 32px favicon and 512px app icon. -->
 
-  <!-- Gradient ring — tonic glow fading around the circle -->
-  <path d="M 181.77 59.56 A 210 210 0 0 1 330.23 59.56 L 303.72 129.72 A 135 135 0 0 0 208.28 129.72 Z" fill="#60A5FA"/>
-  <path d="M 342.42 64.61 A 210 210 0 0 1 447.39 169.58 L 379.04 200.45 A 135 135 0 0 0 311.55 132.96 Z" fill="#60A5FA8c"/>
-  <path d="M 452.44 181.77 A 210 210 0 0 1 452.44 330.23 L 382.28 303.72 A 135 135 0 0 0 382.28 208.28 Z" fill="#60A5FA38"/>
-  <path d="M 447.39 342.42 A 210 210 0 0 1 342.42 447.39 L 311.55 379.04 A 135 135 0 0 0 379.04 311.55 Z" fill="#60A5FA14"/>
-  <path d="M 330.23 452.44 A 210 210 0 0 1 181.77 452.44 L 208.28 382.28 A 135 135 0 0 0 303.72 382.28 Z" fill="#60A5FA0a"/>
-  <path d="M 169.58 447.39 A 210 210 0 0 1 64.61 342.42 L 132.96 311.55 A 135 135 0 0 0 200.45 379.04 Z" fill="#60A5FA14"/>
-  <path d="M 59.56 330.23 A 210 210 0 0 1 59.56 181.77 L 129.72 208.28 A 135 135 0 0 0 129.72 303.72 Z" fill="#60A5FA38"/>
-  <path d="M 64.61 169.58 A 210 210 0 0 1 169.58 64.61 L 200.45 132.96 A 135 135 0 0 0 132.96 200.45 Z" fill="#60A5FA8c"/>
+  <!-- Rounded-square background, cream -->
+  <rect width="512" height="512" rx="108" fill="#f5efe2"/>
 
-  <!-- Subtle glow on the tonic segment -->
-  <defs>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="8" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-  </defs>
-  <path d="M 181.77 59.56 A 210 210 0 0 1 330.23 59.56 L 303.72 129.72 A 135 135 0 0 0 208.28 129.72 Z" fill="#60A5FA40" filter="url(#glow)"/>
+  <!-- Subtle inner border for definition at small sizes -->
+  <rect x="6" y="6" width="500" height="500" rx="102" fill="none" stroke="#d8c9a8" stroke-width="4"/>
+
+  <!-- Fermata arc (corona) — centred horizontally, upper third vertically.
+       Centre at (256, 300), radius ~140, top semi-circle.
+       Substantial stroke weight for visibility at small sizes. -->
+  <path d="M 116 300 A 140 140 0 0 1 396 300"
+        fill="none"
+        stroke="#2a1f14"
+        stroke-width="30"
+        stroke-linecap="round"/>
+
+  <!-- Fermata dot (punctum) — filled circle below the arc -->
+  <circle cx="256" cy="340" r="28" fill="#2a1f14"/>
 </svg>

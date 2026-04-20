@@ -10,11 +10,11 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Music Theory',
-        short_name: 'MusicTheory',
-        description: 'Interactive music theory explorer',
-        theme_color: '#09090b',
-        background_color: '#09090b',
+        name: 'Fermata — Music Theory',
+        short_name: 'Fermata',
+        description: 'Fermata — interactive music theory through your instrument. Explore scales, chords, and keys with a piano or guitar always in reach.',
+        theme_color: '#f5efe2',
+        background_color: '#f5efe2',
         display: 'standalone',
         icons: [
           {

@@ -18,7 +18,7 @@ const REPORT_EMAIL = 'nunopdsantos+musictheory@gmail.com';
 export function ReportMistakeLink({ moduleId, moduleTitle }: ReportMistakeLinkProps) {
   const { t, i18n } = useTranslation();
 
-  const subject = `[Music Theory] Mistake in ${moduleId} — ${moduleTitle}`;
+  const subject = `[Fermata] Mistake in ${moduleId} — ${moduleTitle}`;
   const body = [
     `Module: ${moduleTitle} (${moduleId})`,
     `Language: ${i18n.language}`,

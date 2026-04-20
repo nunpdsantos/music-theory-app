@@ -1,6 +1,6 @@
 {
   "nav": {
-    "musicTheory": "Teor\u00eda Musical",
+    "musicTheory": "Fermata",
     "explore": "Explorar",
     "play": "Tocar",
     "learn": "Aprender",
@@ -253,7 +253,7 @@
   "pwa": {
     "newVersion": "Nueva versi\u00f3n disponible",
     "offlineReady": "App lista para uso sin conexi\u00f3n",
-    "installPrompt": "\u00bfInstalar Teor\u00eda Musical?"
+    "installPrompt": "\u00bfInstalar Fermata?"
   },
   "error": {
     "somethingWentWrong": "Algo ha ido mal",

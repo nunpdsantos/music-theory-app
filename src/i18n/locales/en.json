@@ -1,6 +1,6 @@
 {
   "nav": {
-    "musicTheory": "Music Theory",
+    "musicTheory": "Fermata",
     "explore": "Explore",
     "play": "Play",
     "learn": "Learn",
@@ -253,7 +253,7 @@
   "pwa": {
     "newVersion": "New version available",
     "offlineReady": "App ready for offline use",
-    "installPrompt": "Install Music Theory?"
+    "installPrompt": "Install Fermata?"
   },
   "error": {
     "somethingWentWrong": "Something went wrong",
