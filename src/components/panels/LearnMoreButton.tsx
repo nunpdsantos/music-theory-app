@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { findModulesByQuery } from '../../data/moduleIndex.ts';
 import { useAppStore } from '../../state/store.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
+import { useDegreeColorsEnabled } from '../../hooks/useDegreeColors.ts';
 
 interface LearnMoreButtonProps {
   /** Text to search the module index with, e.g. "Dorian", "Major Seventh" */
@@ -16,9 +17,16 @@ interface LearnMoreButtonProps {
 export function LearnMoreButton({ query }: LearnMoreButtonProps) {
   const { t } = useTranslation();
   const match = useMemo(() => findModulesByQuery(query, 1)[0] ?? null, [query]);
+  const degreeColorsOn = useDegreeColorsEnabled();
   if (!match) return null;
 
-  const color = DEGREE_COLORS[2];
+  const color = degreeColorsOn ? DEGREE_COLORS[2] : 'var(--accent)';
+  const bg = degreeColorsOn
+    ? `${DEGREE_COLORS[2]}14`
+    : 'color-mix(in srgb, var(--accent) 8%, transparent)';
+  const borderColor = degreeColorsOn
+    ? `${DEGREE_COLORS[2]}33`
+    : 'color-mix(in srgb, var(--accent) 20%, transparent)';
 
   return (
     <button
@@ -34,7 +42,7 @@ export function LearnMoreButton({ query }: LearnMoreButtonProps) {
         });
       }}
       className="mt-3 ml-2 inline-flex items-center gap-1.5 text-[10px] font-semibold px-2 py-1 rounded-full transition-colors"
-      style={{ color, backgroundColor: `${color}14`, border: `1px solid ${color}33` }}
+      style={{ color, backgroundColor: bg, border: `1px solid ${borderColor}` }}
       title={match.title}
     >
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

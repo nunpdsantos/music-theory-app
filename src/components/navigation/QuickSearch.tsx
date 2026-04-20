@@ -10,6 +10,7 @@ import { parseChordSymbol, formatParsedChordName } from '../../core/utils/chordP
 import { parseScaleSymbol, formatParsedScaleName } from '../../core/utils/scaleParser.ts';
 import { findModulesByQuery } from '../../data/moduleIndex.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
+import { useDegreeColorsEnabled } from '../../hooks/useDegreeColors.ts';
 
 type SearchResultType = 'Scale' | 'Chord' | 'Key' | 'Lesson';
 
@@ -182,6 +183,7 @@ export function QuickSearch() {
   const { t } = useTranslation();
   const quickSearchOpen = useAppStore((s) => s.quickSearchOpen);
   const setQuickSearchOpen = useAppStore((s) => s.setQuickSearchOpen);
+  const degreeColorsOn = useDegreeColorsEnabled();
   const [query, setQuery] = useState('');
   const [selectedIdx, setSelectedIdx] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -343,16 +345,22 @@ export function QuickSearch() {
                       <span
                         className="text-[10px] px-1.5 py-0.5 rounded font-medium"
                         style={{
-                          backgroundColor:
-                            r.type === 'Scale' ? 'var(--accent-dim)' :
-                            r.type === 'Chord' ? `${DEGREE_COLORS[5]}14` :
-                            r.type === 'Lesson' ? `${DEGREE_COLORS[2]}1a` :
-                            `${DEGREE_COLORS[4]}14`,
-                          color:
-                            r.type === 'Scale' ? 'var(--accent)' :
-                            r.type === 'Chord' ? DEGREE_COLORS[5] :
-                            r.type === 'Lesson' ? DEGREE_COLORS[2] :
-                            DEGREE_COLORS[4],
+                          backgroundColor: degreeColorsOn
+                            ? (
+                                r.type === 'Scale' ? 'var(--accent-dim)' :
+                                r.type === 'Chord' ? `${DEGREE_COLORS[5]}14` :
+                                r.type === 'Lesson' ? `${DEGREE_COLORS[2]}1a` :
+                                `${DEGREE_COLORS[4]}14`
+                              )
+                            : 'var(--accent-dim)',
+                          color: degreeColorsOn
+                            ? (
+                                r.type === 'Scale' ? 'var(--accent)' :
+                                r.type === 'Chord' ? DEGREE_COLORS[5] :
+                                r.type === 'Lesson' ? DEGREE_COLORS[2] :
+                                DEGREE_COLORS[4]
+                              )
+                            : 'var(--text-muted)',
                         }}
                       >
                         {t(TYPE_KEYS[r.type])}

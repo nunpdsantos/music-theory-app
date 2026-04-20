@@ -1,5 +1,6 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
 import { DEGREE_COLORS } from '../../design/tokens/colors';
+import { useDegreeColorsEnabled } from '../../hooks/useDegreeColors';
 
 type BadgeShape = 'pill' | 'square';
 type BadgeSize = 'xs' | 'sm';
@@ -48,7 +49,13 @@ export function Badge({
   children,
   ...rest
 }: BadgeProps) {
-  const color = degree !== undefined ? DEGREE_COLORS[degree] : accentColor;
+  const degreeColorsOn = useDegreeColorsEnabled();
+  // Degree-based badges fall through to the neutral style when the theme
+  // suppresses functional colour (fermata Explore/Play). Explicit
+  // accentColor overrides are always respected — caller picked that hue.
+  const color = degree !== undefined
+    ? (degreeColorsOn ? DEGREE_COLORS[degree] : undefined)
+    : accentColor;
   const isAccented = !!color;
 
   const resolvedStyle: CSSProperties = isAccented

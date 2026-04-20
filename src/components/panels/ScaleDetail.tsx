@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import { noteToString, type Note, type ModeName } from '../../core/types/music.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
+import { useDegreeColorsEnabled } from '../../hooks/useDegreeColors.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
 import {
   playScale,
@@ -176,7 +177,8 @@ export function ScaleDetail() {
     [playWithVisuals],
   );
 
-  const tonicColor = DEGREE_COLORS[1];
+  const degreeColorsOn = useDegreeColorsEnabled();
+  const tonicColor = degreeColorsOn ? DEGREE_COLORS[1] : 'var(--accent)';
 
   return (
     <m.div
@@ -224,9 +226,9 @@ export function ScaleDetail() {
           <StaffNotation
             notes={getScaleNotesWithOctaves(scale.notes, 4)}
             keySignature={getKeySignatureForScale(scale.root, selectedScale) ?? undefined}
-            noteColors={Object.fromEntries(
+            noteColors={degreeColorsOn ? Object.fromEntries(
               scale.notes.map((_, i) => [i, DEGREE_COLORS[(i + 1) as keyof typeof DEGREE_COLORS] ?? 'var(--text-muted)'])
-            )}
+            ) : undefined}
             height={120}
             duration="q"
           />
@@ -318,9 +320,13 @@ export function ScaleDetail() {
                 onClick={() => setScaleOctaves(n)}
                 className="px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-150"
                 style={{
-                  backgroundColor: isActive ? `${tonicColor}20` : 'var(--card)',
+                  backgroundColor: isActive
+                    ? (degreeColorsOn ? `${DEGREE_COLORS[1]}20` : 'color-mix(in srgb, var(--accent) 13%, transparent)')
+                    : 'var(--card)',
                   color: isActive ? tonicColor : 'var(--text-muted)',
-                  border: isActive ? `1px solid ${tonicColor}50` : '1px solid var(--border)',
+                  border: isActive
+                    ? `1px solid ${degreeColorsOn ? `${DEGREE_COLORS[1]}50` : 'color-mix(in srgb, var(--accent) 31%, transparent)'}`
+                    : '1px solid var(--border)',
                 }}
               >
                 {n > 1 ? t('panel.octaveCount_plural', { n }) : t('panel.octaveCount', { n })}
@@ -336,9 +342,9 @@ export function ScaleDetail() {
           onClick={handlePlayAscending}
           className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-150 hover:scale-[1.02]"
           style={{
-            backgroundColor: `${tonicColor}15`,
+            backgroundColor: degreeColorsOn ? `${DEGREE_COLORS[1]}15` : 'color-mix(in srgb, var(--accent) 9%, transparent)',
             color: tonicColor,
-            border: `1px solid ${tonicColor}30`,
+            border: `1px solid ${degreeColorsOn ? `${DEGREE_COLORS[1]}30` : 'color-mix(in srgb, var(--accent) 19%, transparent)'}`,
           }}
         >
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">

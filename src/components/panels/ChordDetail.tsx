@@ -3,7 +3,15 @@ import { useTranslation } from 'react-i18next';
 import { m } from 'framer-motion';
 import { noteToString, type Chord, type Note } from '../../core/types/music.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
+import { useDegreeColorsEnabled } from '../../hooks/useDegreeColors.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
+
+// Resolve alpha for a colour that may be a hex literal or CSS var.
+function alpha(color: string, hex: string): string {
+  if (color.startsWith('#')) return color + hex;
+  const pct = Math.round((parseInt(hex, 16) / 255) * 100);
+  return `color-mix(in srgb, ${color} ${pct}%, transparent)`;
+}
 import {
   playChordVoiced,
   playArpeggioAscending,
@@ -45,6 +53,12 @@ const FIT_COLORS = {
   color: DEGREE_COLORS[3],
 } as const;
 
+const FIT_COLORS_MUTED: Record<keyof typeof FIT_COLORS, string> = {
+  primary: 'var(--accent)',
+  secondary: 'var(--text-muted)',
+  color: 'var(--text-dim)',
+};
+
 export function ChordDetail({ chord }: ChordDetailProps) {
   const { t } = useTranslation();
   const { getNoteDegree, invertedNotes } = useKeyContext();
@@ -56,8 +70,13 @@ export function ChordDetail({ chord }: ChordDetailProps) {
   const removeActiveNote = useAppStore((s) => s.removeActiveNote);
   const setScale = useAppStore((s) => s.setScale);
   const setKey = useAppStore((s) => s.setKey);
+  const degreeColorsOn = useDegreeColorsEnabled();
   const degree = getNoteDegree(chord.root);
-  const color = degree ? DEGREE_COLORS[degree as keyof typeof DEGREE_COLORS] : 'var(--text-muted)';
+  const color = degreeColorsOn && degree
+    ? DEGREE_COLORS[degree as keyof typeof DEGREE_COLORS]
+    : degree
+      ? 'var(--accent)'
+      : 'var(--text-muted)';
 
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
@@ -163,9 +182,11 @@ export function ChordDetail({ chord }: ChordDetailProps) {
         <div className="flex gap-1.5">
           {notesForPlayback.map((note, i) => {
             const noteDegree = getNoteDegree(note);
-            const noteColor = noteDegree
+            const noteColor = degreeColorsOn && noteDegree
               ? DEGREE_COLORS[noteDegree as keyof typeof DEGREE_COLORS]
-              : 'var(--text-muted)';
+              : noteDegree
+                ? 'var(--accent)'
+                : 'var(--text-muted)';
             const isBass = i === 0 && chordInversion > 0;
             const isSlashBass = chord.bassNote &&
               noteToString(note) === noteToString(chord.bassNote) && i === 0;
@@ -174,7 +195,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
                 key={i}
                 className="px-2.5 py-1.5 rounded-lg text-xs font-semibold"
                 style={{
-                  backgroundColor: `${noteColor}15`,
+                  backgroundColor: alpha(noteColor, '15'),
                   color: noteColor,
                   border: isSlashBass
                     ? `1.5px dashed ${noteColor}`
@@ -219,9 +240,9 @@ export function ChordDetail({ chord }: ChordDetailProps) {
                 onClick={() => setChordInversion(i)}
                 className="relative px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-150"
                 style={{
-                  backgroundColor: isActive ? `${color}20` : 'var(--card)',
+                  backgroundColor: isActive ? alpha(color, '20') : 'var(--card)',
                   color: isActive ? color : 'var(--text-muted)',
-                  border: isActive ? `1px solid ${color}50` : '1px solid var(--border)',
+                  border: isActive ? `1px solid ${alpha(color, '50')}` : '1px solid var(--border)',
                 }}
               >
                 {t(INVERSION_LABEL_KEYS[i] ?? 'panel.rootPos')}
@@ -257,7 +278,7 @@ export function ChordDetail({ chord }: ChordDetailProps) {
           </h3>
           <div className="flex flex-wrap gap-1.5">
             {scaleSuggestions.map((s) => {
-              const fitColor = FIT_COLORS[s.fit];
+              const fitColor = degreeColorsOn ? FIT_COLORS[s.fit] : FIT_COLORS_MUTED[s.fit];
               return (
                 <button
                   key={s.scale}
@@ -267,9 +288,9 @@ export function ChordDetail({ chord }: ChordDetailProps) {
                   }}
                   className="px-2 py-1 rounded-lg text-[11px] font-medium transition-all hover:brightness-125"
                   style={{
-                    backgroundColor: `${fitColor}12`,
+                    backgroundColor: alpha(fitColor, '12'),
                     color: fitColor,
-                    border: `1px solid ${fitColor}30`,
+                    border: `1px solid ${alpha(fitColor, '30')}`,
                   }}
                   title={s.context}
                 >
@@ -287,9 +308,9 @@ export function ChordDetail({ chord }: ChordDetailProps) {
           onClick={handlePlayChord}
           className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-150 hover:scale-[1.02]"
           style={{
-            backgroundColor: `${color}15`,
+            backgroundColor: alpha(color, '15'),
             color,
-            border: `1px solid ${color}30`,
+            border: `1px solid ${alpha(color, '30')}`,
           }}
         >
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">

@@ -6,6 +6,7 @@ import { noteToString } from '../../core/types/music.ts';
 import { buildScale, SCALE_TYPE_NAMES } from '../../core/constants/scales.ts';
 import { getPitchClass } from '../../core/constants/notes.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
+import { useDegreeColorsEnabled } from '../../hooks/useDegreeColors.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
 import { palette } from '../../design/tokens/palette';
 
@@ -20,6 +21,19 @@ export function ScaleComparison() {
   const comparisonScale = useAppStore((s) => s.comparisonScale);
   const setComparisonScale = useAppStore((s) => s.setComparisonScale);
   const { scale: scaleA } = useKeyContext();
+  const degreeColorsOn = useDegreeColorsEnabled();
+  const tonicColor = degreeColorsOn ? DEGREE_COLORS[1] : 'var(--accent)';
+  const compareColor = degreeColorsOn ? DEGREE_COLORS[5] : 'var(--text-muted)';
+
+  // Resolve alpha for a colour that may be a hex literal or a CSS var.
+  // Legacy hex-alpha concatenation (e.g. `${hex}18`) doesn't work on CSS
+  // variables, so fall back to color-mix() when the input isn't a hex.
+  const alpha = (color: string | undefined, hex: string): string => {
+    if (!color) return 'transparent';
+    if (color.startsWith('#')) return color + hex;
+    const pct = Math.round((parseInt(hex, 16) / 255) * 100);
+    return `color-mix(in srgb, ${color} ${pct}%, transparent)`;
+  };
 
   const scaleB = useMemo(
     () => comparisonScale ? buildScale(selectedKey, comparisonScale) : null,
@@ -40,29 +54,39 @@ export function ScaleComparison() {
     return s;
   }, [scaleB]);
 
-  // Degree color map for each scale (pitch class → degree color)
+  // Degree color map for each scale (pitch class → degree color).
+  // Under fermata-theme Explore, degreeColorsOn is false — collapse to the
+  // theme accent / muted for scale A / B so the chromatic diff still reads.
   const degreeColorA = useMemo(() => {
     const m = new Map<number, string>();
     scaleA.notes.forEach((n, i) => {
+      if (!degreeColorsOn) {
+        m.set(getPitchClass(n), 'var(--accent)');
+        return;
+      }
       const key = scaleA.notes.length <= 7
         ? (i + 1) as keyof typeof DEGREE_COLORS
         : (((i % 7) + 1) as keyof typeof DEGREE_COLORS);
       m.set(getPitchClass(n), DEGREE_COLORS[key] ?? 'var(--text-muted)');
     });
     return m;
-  }, [scaleA]);
+  }, [scaleA, degreeColorsOn]);
 
   const degreeColorB = useMemo(() => {
     if (!scaleB) return new Map<number, string>();
     const m = new Map<number, string>();
     scaleB.notes.forEach((n, i) => {
+      if (!degreeColorsOn) {
+        m.set(getPitchClass(n), 'var(--text-muted)');
+        return;
+      }
       const key = scaleB.notes.length <= 7
         ? (i + 1) as keyof typeof DEGREE_COLORS
         : (((i % 7) + 1) as keyof typeof DEGREE_COLORS);
       m.set(getPitchClass(n), DEGREE_COLORS[key] ?? 'var(--text-muted)');
     });
     return m;
-  }, [scaleB]);
+  }, [scaleB, degreeColorsOn]);
 
   // Note name map for display (pitch class → note name in each scale)
   const noteNameA = useMemo(() => {
@@ -156,7 +180,7 @@ export function ScaleComparison() {
       {/* Scale labels + selector */}
       <div className="flex items-center justify-between mb-3 gap-3 flex-wrap">
         <div className="flex items-center gap-4 text-xs">
-          <span style={{ color: DEGREE_COLORS[1] }} className="font-semibold">
+          <span style={{ color: tonicColor }} className="font-semibold">
             {SCALE_TYPE_NAMES[selectedScale]}
           </span>
           <span style={{ color: 'var(--text-dim)' }}>{t('explore.vs')}</span>
@@ -166,8 +190,8 @@ export function ScaleComparison() {
             className="px-2 py-1 rounded-lg text-xs"
             style={{
               backgroundColor: 'var(--card)',
-              color: DEGREE_COLORS[5],
-              border: `1px solid ${DEGREE_COLORS[5]}30`,
+              color: compareColor,
+              border: `1px solid ${alpha(compareColor, '30')}`,
             }}
             aria-label={t('explore.changeComparisonScale')}
           >
@@ -192,17 +216,17 @@ export function ScaleComparison() {
             className="flex flex-col items-center gap-0.5 py-2 max-sm:py-1.5 rounded-lg text-center transition-colors"
             style={{
               backgroundColor: slot.inA
-                ? `${slot.colorA}18`
+                ? alpha(slot.colorA, '18')
                 : 'transparent',
               border: slot.inA
-                ? `1px solid ${slot.colorA}30`
+                ? `1px solid ${alpha(slot.colorA, '30')}`
                 : '1px solid transparent',
             }}
           >
             <span className="text-[10px] font-bold" style={{ color: slot.inA ? slot.colorA : 'var(--text-dim)' }}>
               {slot.noteA ?? ''}
             </span>
-            <span className="text-[8px] max-sm:hidden" style={{ color: slot.inA ? `${slot.colorA}99` : 'transparent' }}>
+            <span className="text-[8px] max-sm:hidden" style={{ color: slot.inA ? alpha(slot.colorA, '99') : 'transparent' }}>
               {slot.label}
             </span>
           </div>
@@ -218,10 +242,10 @@ export function ScaleComparison() {
               <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: palette.success }} title={t('explore.sharedLegend')} />
             )}
             {slot.onlyA && (
-              <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: DEGREE_COLORS[1] }} title={t('explore.onlyLegend', { name: SCALE_TYPE_NAMES[selectedScale] })} />
+              <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: tonicColor }} title={t('explore.onlyLegend', { name: SCALE_TYPE_NAMES[selectedScale] })} />
             )}
             {slot.onlyB && (
-              <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: DEGREE_COLORS[5] }} title={t('explore.onlyLegend', { name: SCALE_TYPE_NAMES[comparisonScale] })} />
+              <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: compareColor }} title={t('explore.onlyLegend', { name: SCALE_TYPE_NAMES[comparisonScale] })} />
             )}
           </div>
         ))}
@@ -233,17 +257,17 @@ export function ScaleComparison() {
             className="flex flex-col items-center gap-0.5 py-2 max-sm:py-1.5 rounded-lg text-center transition-colors"
             style={{
               backgroundColor: slot.inB
-                ? `${slot.colorB}18`
+                ? alpha(slot.colorB, '18')
                 : 'transparent',
               border: slot.inB
-                ? `1px solid ${slot.colorB}30`
+                ? `1px solid ${alpha(slot.colorB, '30')}`
                 : '1px solid transparent',
             }}
           >
             <span className="text-[10px] font-bold" style={{ color: slot.inB ? slot.colorB : 'var(--text-dim)' }}>
               {slot.noteB ?? ''}
             </span>
-            <span className="text-[8px] max-sm:hidden" style={{ color: slot.inB ? `${slot.colorB}99` : 'transparent' }}>
+            <span className="text-[8px] max-sm:hidden" style={{ color: slot.inB ? alpha(slot.colorB, '99') : 'transparent' }}>
               {slot.label}
             </span>
           </div>
@@ -257,11 +281,11 @@ export function ScaleComparison() {
           {t('explore.sharedLegend')}
         </span>
         <span className="flex items-center gap-1">
-          <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: DEGREE_COLORS[1] }} />
+          <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: tonicColor }} />
           {t('explore.onlyLegend', { name: SCALE_TYPE_NAMES[selectedScale] })}
         </span>
         <span className="flex items-center gap-1">
-          <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: DEGREE_COLORS[5] }} />
+          <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: compareColor }} />
           {t('explore.onlyLegend', { name: SCALE_TYPE_NAMES[comparisonScale] })}
         </span>
       </div>
