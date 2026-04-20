@@ -13,6 +13,7 @@ import { noteToString } from '../core/types/music.ts';
 import { SCALE_TYPE_NAMES } from '../core/constants/scales.ts';
 import { useAppStore } from '../state/store.ts';
 import { DEGREE_COLORS } from '../design/tokens/colors.ts';
+import { useDegreeColorsEnabled } from '../hooks/useDegreeColors.ts';
 import {
   playScale,
   SYNTH_PRESETS,
@@ -64,7 +65,12 @@ export function ExploreView() {
     playScale(scale.notes, baseOctave, true, false, 0.25, () => {}, () => {}, config);
   }, [scale, synthPreset, baseOctave]);
 
-  const tonicColor = DEGREE_COLORS[1];
+  const degreeColorsOn = useDegreeColorsEnabled();
+  const tonicColor = degreeColorsOn ? DEGREE_COLORS[1] : 'var(--accent)';
+  const tonicAlpha = (hex: string): string =>
+    degreeColorsOn
+      ? `${DEGREE_COLORS[1]}${hex}`
+      : `color-mix(in srgb, var(--accent) ${Math.round((parseInt(hex, 16) / 255) * 100)}%, transparent)`;
 
   return (
     <div className="flex h-full">
@@ -86,8 +92,8 @@ export function ExploreView() {
             variants={fadeUp}
             className="relative rounded-2xl overflow-hidden"
             style={{
-              backgroundColor: `${tonicColor}06`,
-              border: `1px solid ${tonicColor}12`,
+              backgroundColor: tonicAlpha('06'),
+              border: `1px solid ${tonicAlpha('12')}`,
               boxShadow: 'var(--shadow-sm)',
             }}
           >
@@ -95,7 +101,7 @@ export function ExploreView() {
             <div
               className="absolute inset-0 pointer-events-none"
               style={{
-                background: `radial-gradient(ellipse at 20% 50%, ${tonicColor}08 0%, transparent 60%)`,
+                background: `radial-gradient(ellipse at 20% 50%, ${tonicAlpha('08')} 0%, transparent 60%)`,
               }}
             />
 
@@ -118,9 +124,9 @@ export function ExploreView() {
                   onClick={handleQuickPlay}
                   className="flex items-center gap-1.5 px-3 py-1.5 max-sm:py-2 rounded-xl text-xs font-semibold transition-all duration-150 hover:scale-[1.03] active:scale-[0.97] max-sm:justify-center"
                   style={{
-                    backgroundColor: `${tonicColor}15`,
+                    backgroundColor: tonicAlpha('15'),
                     color: tonicColor,
-                    border: `1px solid ${tonicColor}30`,
+                    border: `1px solid ${tonicAlpha('30')}`,
                   }}
                   aria-label={t('explore.playScaleAscending')}
                 >
@@ -199,9 +205,9 @@ export function ExploreView() {
                 <StaffNotation
                   notes={getScaleNotesWithOctaves(scale.notes, 4)}
                   keySignature={getKeySignatureForScale(scale.root, selectedScale) ?? undefined}
-                  noteColors={Object.fromEntries(
+                  noteColors={degreeColorsOn ? Object.fromEntries(
                     scale.notes.map((_, i) => [i, DEGREE_COLORS[(i + 1) as keyof typeof DEGREE_COLORS] ?? 'var(--text-muted)'])
-                  )}
+                  ) : undefined}
                   height={130}
                   duration="q"
                 />

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../../state/store.ts';
 import { noteToString, type Note, type ScaleType } from '../../core/types/music.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
+import { useDegreeColorsEnabled } from '../../hooks/useDegreeColors.ts';
 
 const ROOTS: Note[] = [
   { natural: 'C', accidental: '' },
@@ -101,8 +102,6 @@ const SCALE_GROUPS: { label: string; options: { value: ScaleType; label: string 
 
 const ALWAYS_VISIBLE_COUNT = 4; // first 4 groups always shown
 
-const TONIC_COLOR = DEGREE_COLORS[1]; // #60A5FA
-
 export function KeySelector() {
   const { t } = useTranslation();
   const selectedKey = useAppStore((s) => s.selectedKey);
@@ -110,6 +109,16 @@ export function KeySelector() {
   const setKey = useAppStore((s) => s.setKey);
   const setScale = useAppStore((s) => s.setScale);
   const [expanded, setExpanded] = useState(false);
+  const degreeColorsOn = useDegreeColorsEnabled();
+  const tonicBg = degreeColorsOn
+    ? `${DEGREE_COLORS[1]}25`
+    : 'color-mix(in srgb, var(--accent) 15%, transparent)';
+  const tonicBorder = degreeColorsOn
+    ? `${DEGREE_COLORS[1]}50`
+    : 'color-mix(in srgb, var(--accent) 31%, transparent)';
+  const tonicGlow = degreeColorsOn
+    ? `${DEGREE_COLORS[1]}15`
+    : 'color-mix(in srgb, var(--accent) 9%, transparent)';
 
   // Auto-expand if selected scale is in a hidden group
   const isSelectedInHiddenGroup = useMemo(() => {
@@ -167,9 +176,9 @@ export function KeySelector() {
               height: rootIndicator.height,
               top: '50%',
               transform: 'translateY(-50%)',
-              backgroundColor: `${TONIC_COLOR}25`,
-              border: `1px solid ${TONIC_COLOR}50`,
-              boxShadow: `0 0 12px ${TONIC_COLOR}15`,
+              backgroundColor: tonicBg,
+              border: `1px solid ${tonicBorder}`,
+              boxShadow: `0 0 12px ${tonicGlow}`,
               transition: 'left 0.2s cubic-bezier(0.4, 0, 0.2, 1), width 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
           />

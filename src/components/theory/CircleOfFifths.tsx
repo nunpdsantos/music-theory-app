@@ -11,7 +11,7 @@ import {
   CIRCLE_MAJOR, CIRCLE_MINOR, KEY_SIGNATURES,
   MINOR_SCALES, MINOR_SCALE_LABELS, ROMAN_NUMERALS,
   SIZE, CENTER, MAJOR_INNER, MAJOR_OUTER, MINOR_INNER, MINOR_OUTER,
-  KEYSIG_R, SEG_GAP, TONIC_HUE,
+  KEYSIG_R, SEG_GAP, TONIC_HUE, accentAlpha,
   DIST_FILL_MAJOR, DIST_STROKE_MAJOR, DIST_TEXT_MAJOR,
   DIST_FILL_MINOR, DIST_STROKE_MINOR, DIST_TEXT_MINOR,
   DISTANCE_LABELS,
@@ -139,7 +139,7 @@ export const CircleOfFifths = memo(function CircleOfFifths() {
         fill: DIST_FILL_MAJOR[dist],
         stroke: DIST_STROKE_MAJOR[dist],
         textFill: DIST_TEXT_MAJOR[dist],
-        hoverFill: dist === 0 ? TONIC_HUE : TONIC_HUE + (dist <= 2 ? '50' : '25'),
+        hoverFill: dist === 0 ? TONIC_HUE : accentAlpha(dist <= 2 ? 31 : 15),
       };
     });
   }, [selectedPc, isMinorSel, selectedIdx, getNoteDegree]);
@@ -160,7 +160,7 @@ export const CircleOfFifths = memo(function CircleOfFifths() {
         fill: DIST_FILL_MINOR[dist],
         stroke: DIST_STROKE_MINOR[dist],
         textFill: DIST_TEXT_MINOR[dist],
-        hoverFill: dist === 0 ? TONIC_HUE : TONIC_HUE + (dist <= 2 ? '40' : '1a'),
+        hoverFill: dist === 0 ? TONIC_HUE : accentAlpha(dist <= 2 ? 25 : 10),
       };
     });
   }, [selectedPc, isMinorSel, selectedIdx, getNoteDegree]);
@@ -266,7 +266,8 @@ export const CircleOfFifths = memo(function CircleOfFifths() {
               textAnchor="middle"
               dominantBaseline="central"
               className="text-[6px] select-none pointer-events-none"
-              fill={DIST_TEXT_MAJOR[Math.min(s.dist, 3)] + '88'}
+              fill={DIST_TEXT_MAJOR[Math.min(s.dist, 3)]}
+              fillOpacity={0.53}
             >
               {ROMAN_NUMERALS[s.degree]}
             </text>
@@ -391,7 +392,7 @@ export const CircleOfFifths = memo(function CircleOfFifths() {
                 className="px-2.5 py-1 rounded-md text-[10px] font-medium transition-colors"
                 style={{
                   backgroundColor: active ? TONIC_HUE : 'var(--card)',
-                  color: active ? '#000' : 'var(--text-muted)',
+                  color: active ? 'var(--bg)' : 'var(--text-muted)',
                   border: `1px solid ${active ? TONIC_HUE : 'var(--card-hover)'}`,
                 }}
               >

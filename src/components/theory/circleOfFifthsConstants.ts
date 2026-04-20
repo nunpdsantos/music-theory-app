@@ -57,53 +57,59 @@ export const MINOR_OUTER = 80;
 export const KEYSIG_R = 132;
 export const SEG_GAP = 1.2;
 
-// Tonic accent color used for proximity gradient
-export const TONIC_HUE = '#60A5FA';
+// Tonic accent color — uses the theme's accent CSS var so the Circle of
+// Fifths follows dark/light/fermata automatically. color-mix() gives us
+// percentage alpha without baking hex values.
+export const TONIC_HUE = 'var(--accent)';
+
+// Helper: semi-transparent accent. pct is 0-100.
+export const accentAlpha = (pct: number): string =>
+  `color-mix(in srgb, var(--accent) ${pct}%, transparent)`;
 
 // Distance-based fills for major ring (0 = selected, handled with glow)
 export const DIST_FILL_MAJOR = [
-  TONIC_HUE,        // 0 — selected
-  TONIC_HUE + '38', // 1 — nearest neighbor (share 6/7 notes)
-  TONIC_HUE + '24', // 2 — share 5/7
-  TONIC_HUE + '16', // 3 — share 4/7
-  TONIC_HUE + '0c', // 4 — share 3/7
+  TONIC_HUE,         // 0 — selected
+  accentAlpha(22),   // 1 — nearest neighbor (share 6/7 notes)
+  accentAlpha(14),   // 2 — share 5/7
+  accentAlpha(9),    // 3 — share 4/7
+  accentAlpha(5),    // 4 — share 3/7
   'var(--card)',     // 5 — distant
   'var(--bg-raised)',// 6 — tritone
 ];
 export const DIST_STROKE_MAJOR = [
-  '#fff',
-  TONIC_HUE + '50',
-  TONIC_HUE + '35',
-  TONIC_HUE + '22',
+  'var(--bg-raised)',
+  accentAlpha(31),
+  accentAlpha(21),
+  accentAlpha(13),
   'var(--border)',
   'var(--border-subtle)',
   'var(--border-subtle)',
 ];
 export const DIST_TEXT_MAJOR = [
-  '#000', '#e4e4e7', '#c4c4ca', 'var(--text-muted)', 'var(--text-dim)', 'var(--border-light)', 'var(--border)',
+  'var(--bg)', 'var(--text)', 'var(--text-muted)', 'var(--text-muted)', 'var(--text-dim)', 'var(--border-light)', 'var(--border)',
 ];
 
 // Minor ring — slightly subtler
 export const DIST_FILL_MINOR = [
-  TONIC_HUE,        // 0
-  TONIC_HUE + '28', // 1
-  TONIC_HUE + '18', // 2
-  TONIC_HUE + '0e', // 3
+  TONIC_HUE,         // 0
+  accentAlpha(16),   // 1
+  accentAlpha(9),    // 2
+  accentAlpha(5),    // 3
   'var(--bg-raised)',// 4
   'var(--bg)',       // 5
   'var(--bg)',       // 6
 ];
 export const DIST_STROKE_MINOR = [
-  '#fff',
-  TONIC_HUE + '40',
-  TONIC_HUE + '28',
-  TONIC_HUE + '18',
+  'var(--bg-raised)',
+  accentAlpha(25),
+  accentAlpha(16),
+  accentAlpha(9),
   'var(--border-subtle)',
   'var(--border-subtle)',
   'var(--card)',
 ];
 export const DIST_TEXT_MINOR = [
-  '#000', '#c4c4ca', 'var(--text-muted)', 'var(--text-dim)', 'var(--border-light)', 'var(--border)', 'var(--border)',
+  'var(--bg)', 'var(--text-muted)', 'var(--text-muted)', 'var(--text-dim)', 'var(--border-light)', 'var(--border)', 'var(--border)',
 ];
 
 export const DISTANCE_LABELS = [
