@@ -6,7 +6,14 @@ import { noteToString } from '../../core/types/music.ts';
 import type { Chord } from '../../core/types/music.ts';
 import { useAppStore } from '../../state/store.ts';
 import { DEGREE_COLORS } from '../../design/tokens/colors.ts';
+import { useDegreeColorsEnabled } from '../../hooks/useDegreeColors.ts';
 import { palette } from '../../design/tokens/palette';
+
+function alpha(color: string, hex: string): string {
+  if (color.startsWith('#')) return color + hex;
+  const pct = Math.round((parseInt(hex, 16) / 255) * 100);
+  return `color-mix(in srgb, ${color} ${pct}%, transparent)`;
+}
 import { playChord, resumeAudio, stopPlayback, SYNTH_PRESETS } from '../../core/services/audio.ts';
 
 interface ProgressionSlot {
@@ -20,6 +27,8 @@ export function ChordProgressionBuilder() {
   const { diatonicChords } = useKeyContext();
   const synthPreset = useAppStore((s) => s.synthPreset);
   const baseOctave = useAppStore((s) => s.baseOctave);
+  const degreeColorsOn = useDegreeColorsEnabled();
+  const tonicPlayColor = degreeColorsOn ? DEGREE_COLORS[1] : 'var(--accent)';
   const [progression, setProgression] = useState<ProgressionSlot[]>([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const playTimeoutRef = useRef<number[]>([]);
@@ -93,11 +102,11 @@ export function ChordProgressionBuilder() {
               style={{
                 backgroundColor: isPlaying
                   ? `color-mix(in srgb, ${palette.danger} 12%, transparent)`
-                  : `${DEGREE_COLORS[1]}15`,
-                color: isPlaying ? palette.danger : DEGREE_COLORS[1],
+                  : alpha(tonicPlayColor, '15'),
+                color: isPlaying ? palette.danger : tonicPlayColor,
                 border: `1px solid ${isPlaying
                   ? `color-mix(in srgb, ${palette.danger} 19%, transparent)`
-                  : `${DEGREE_COLORS[1]}30`}`,
+                  : alpha(tonicPlayColor, '30')}`,
               }}
             >
               {isPlaying ? (
@@ -127,15 +136,17 @@ export function ChordProgressionBuilder() {
       {progression.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-3 min-h-[40px] p-2 rounded-lg" style={{ backgroundColor: 'var(--card)', border: '1px solid var(--border)' }}>
           {progression.map((slot, i) => {
-            const color = DEGREE_COLORS[slot.degree as keyof typeof DEGREE_COLORS] ?? 'var(--text-muted)';
+            const color = degreeColorsOn
+              ? (DEGREE_COLORS[slot.degree as keyof typeof DEGREE_COLORS] ?? 'var(--text-muted)')
+              : 'var(--accent)';
             return (
               <m.button
                 key={`${i}-${slot.numeral}`}
                 onClick={() => removeChord(i)}
                 className="flex flex-col items-center gap-0.5 px-2.5 py-1.5 rounded-lg text-center transition-colors"
                 style={{
-                  backgroundColor: `${color}15`,
-                  border: `1px solid ${color}30`,
+                  backgroundColor: alpha(color, '15'),
+                  border: `1px solid ${alpha(color, '30')}`,
                 }}
                 whileTap={{ scale: 0.95 }}
                 title={t('chordProg.clickToRemove')}
@@ -160,7 +171,9 @@ export function ChordProgressionBuilder() {
       {/* Available chords */}
       <div className="flex flex-wrap gap-1.5" role="group" aria-label={t('chordProg.addChord')}>
         {diatonicChords.map((dc) => {
-          const color = DEGREE_COLORS[dc.degree as keyof typeof DEGREE_COLORS] ?? 'var(--text-muted)';
+          const color = degreeColorsOn
+            ? (DEGREE_COLORS[dc.degree as keyof typeof DEGREE_COLORS] ?? 'var(--text-muted)')
+            : 'var(--accent)';
           return (
             <m.button
               key={dc.numeral}

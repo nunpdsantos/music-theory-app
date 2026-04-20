@@ -6,7 +6,14 @@ import { noteToString } from '../core/types/music.ts';
 import { SCALE_TYPE_NAMES } from '../core/constants/scales.ts';
 import { useAppStore } from '../state/store.ts';
 import { DEGREE_COLORS } from '../design/tokens/colors.ts';
+import { useDegreeColorsEnabled } from '../hooks/useDegreeColors.ts';
 import { setMasterVolume } from '../core/services/audio.ts';
+
+function alphaColor(color: string, hex: string): string {
+  if (color.startsWith('#')) return color + hex;
+  const pct = Math.round((parseInt(hex, 16) / 255) * 100);
+  return `color-mix(in srgb, ${color} ${pct}%, transparent)`;
+}
 import { MetronomeControl } from '../components/play/MetronomeControl.tsx';
 import { MidiOutputControl } from '../components/play/MidiOutputControl.tsx';
 import { MidiInputControl } from '../components/play/MidiInputControl.tsx';
@@ -112,7 +119,8 @@ export function PlayView() {
   const setBaseOctave = useAppStore((s) => s.setBaseOctave);
   const { t } = useTranslation();
 
-  const tonicColor = DEGREE_COLORS[1];
+  const degreeColorsOn = useDegreeColorsEnabled();
+  const tonicColor = degreeColorsOn ? DEGREE_COLORS[1] : 'var(--accent)';
 
   // Volume change handler — updates both store and audio engine
   const handleVolumeChange = useCallback(
@@ -131,9 +139,11 @@ export function PlayView() {
     const name = noteMap[pitchClass] ?? 'C';
     const note = { natural: name[0] as 'C', accidental: (name.slice(1) || '') as '' };
     const degree = getNoteDegree(note);
-    const color = degree
+    const color = degreeColorsOn && degree
       ? DEGREE_COLORS[degree as keyof typeof DEGREE_COLORS]
-      : 'var(--text-dim)';
+      : degree
+        ? 'var(--accent)'
+        : 'var(--text-dim)';
     const octave = Math.floor((midi - 12) / 12);
     return { midi, name, degree, color, octave, functionKey: degree ? FUNCTION_KEYS[degree] : undefined };
   });
@@ -151,14 +161,14 @@ export function PlayView() {
           variants={fadeUp}
           className="relative rounded-2xl overflow-hidden"
           style={{
-            backgroundColor: `${tonicColor}06`,
-            border: `1px solid ${tonicColor}12`,
+            backgroundColor: alphaColor(tonicColor, '06'),
+            border: `1px solid ${alphaColor(tonicColor, '12')}`,
           }}
         >
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: `radial-gradient(ellipse at 20% 50%, ${tonicColor}08 0%, transparent 60%)`,
+              background: `radial-gradient(ellipse at 20% 50%, ${alphaColor(tonicColor, '08')} 0%, transparent 60%)`,
             }}
           />
           <div className="relative px-5 py-3.5 flex items-center justify-between">
@@ -193,8 +203,8 @@ export function PlayView() {
                   onClick={() => setSynthPreset(preset)}
                   className="relative flex flex-col items-center gap-1 px-3 py-2.5 rounded-xl flex-1 min-w-0 group transition-colors overflow-hidden"
                   style={{
-                    backgroundColor: isActive ? `${tonicColor}15` : 'var(--card)',
-                    border: isActive ? `1.5px solid ${tonicColor}50` : '1.5px solid var(--card-hover)',
+                    backgroundColor: isActive ? alphaColor(tonicColor, '15') : 'var(--card)',
+                    border: isActive ? `1.5px solid ${alphaColor(tonicColor, '50')}` : '1.5px solid var(--card-hover)',
                   }}
                   whileHover={{ scale: 1.03, y: -1 }}
                   whileTap={{ scale: 0.96 }}
@@ -290,9 +300,9 @@ export function PlayView() {
                     onClick={() => setBaseOctave(oct)}
                     className="px-3 py-2.5 rounded-xl text-xs font-semibold flex-1 transition-all duration-150"
                     style={{
-                      backgroundColor: isActive ? `${tonicColor}18` : 'var(--card)',
+                      backgroundColor: isActive ? alphaColor(tonicColor, '18') : 'var(--card)',
                       color: isActive ? tonicColor : 'var(--text-muted)',
-                      border: isActive ? `1.5px solid ${tonicColor}50` : '1.5px solid var(--card-hover)',
+                      border: isActive ? `1.5px solid ${alphaColor(tonicColor, '50')}` : '1.5px solid var(--card-hover)',
                     }}
                   >
                     C{oct}
@@ -325,7 +335,7 @@ export function PlayView() {
                   transition={{ duration: 0.3 }}
                   className="absolute inset-0 pointer-events-none"
                   style={{
-                    background: `radial-gradient(ellipse at center, ${activeInfo[0].color}08 0%, transparent 70%)`,
+                    background: `radial-gradient(ellipse at center, ${alphaColor(activeInfo[0].color, '08')} 0%, transparent 70%)`,
                   }}
                 />
               )}
@@ -360,9 +370,9 @@ export function PlayView() {
                       transition={SPRING_BOUNCY}
                       className="flex flex-col items-center px-5 py-3 rounded-xl"
                       style={{
-                        backgroundColor: `${color}15`,
-                        border: `1.5px solid ${color}50`,
-                        boxShadow: `0 0 24px ${color}15`,
+                        backgroundColor: alphaColor(color, '15'),
+                        border: `1.5px solid ${alphaColor(color, '50')}`,
+                        boxShadow: `0 0 24px ${alphaColor(color, '15')}`,
                       }}
                     >
                       <span className="text-xl font-bold leading-none" style={{ color }}>
@@ -393,7 +403,9 @@ export function PlayView() {
             <div className="flex items-stretch gap-1 max-sm:grid max-sm:grid-cols-4 max-sm:gap-1" role="group" aria-label={t('play.scaleReference')}>
               {scale.notes.map((note, i) => {
                 const degree = i + 1;
-                const color = DEGREE_COLORS[degree as keyof typeof DEGREE_COLORS];
+                const color = degreeColorsOn
+                  ? DEGREE_COLORS[degree as keyof typeof DEGREE_COLORS]
+                  : 'var(--accent)';
                 const pc = (12 + ({'C':0,'D':2,'E':4,'F':5,'G':7,'A':9,'B':11}[note.natural] ?? 0) +
                   (note.accidental === '#' ? 1 : note.accidental === 'b' ? -1 : 0)) % 12;
                 // Check if any active note matches this pitch class
@@ -404,8 +416,8 @@ export function PlayView() {
                     key={`${noteToString(note)}-${i}`}
                     className="flex flex-col items-center gap-1 py-2 rounded-lg flex-1 min-w-0 transition-all duration-150"
                     style={{
-                      backgroundColor: isActive ? `${color}20` : 'transparent',
-                      border: isActive ? `1px solid ${color}40` : '1px solid transparent',
+                      backgroundColor: isActive ? alphaColor(color, '20') : 'transparent',
+                      border: isActive ? `1px solid ${alphaColor(color, '40')}` : '1px solid transparent',
                     }}
                   >
                     <span
