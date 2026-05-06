@@ -63,10 +63,10 @@ export function ChordBuilderStaff({ notes }: ChordBuilderStaffProps) {
           </button>
         </div>
       </div>
-      <Suspense fallback={<StaffNotationSkeleton height={100} />}>
+      <Suspense fallback={<StaffNotationSkeleton height={120} />}>
         <StaffNotation
           notes={pitched}
-          height={100}
+          height={120}
           duration={mode === 'chord' ? 'w' : 'q'}
           chord={mode === 'chord'}
         />
@@ -76,19 +76,22 @@ export function ChordBuilderStaff({ notes }: ChordBuilderStaffProps) {
 }
 
 /**
- * Place each Note on a sensible octave so the chord/arpeggio sits comfortably
- * on the treble staff. Anchor the lowest note around C4 and stack upward by
- * pitch class so the order matches what the user clicked on the strip.
+ * Place each Note on a sensible octave so the chord/arpeggio sits inside the
+ * treble staff (E4–F5) rather than below it. Anchor the first note based on
+ * its pitch class — pcs below E (0–3 = C/C♯/D/D♯) start at octave 5 so the
+ * note sits in the staff; E and above start at octave 4 (bottom line). Each
+ * subsequent note keeps ascending by bumping the octave when the pitch class
+ * wraps.
  */
 function pitchNotes(notes: Note[]): PitchedNote[] {
   if (notes.length === 0) return [];
   const out: PitchedNote[] = [];
+  const firstPc = getPitchClass(notes[0]);
+  let octave = firstPc < 4 ? 5 : 4;
   let lastPc = -1;
-  let octave = 4;
   for (const n of notes) {
     const pc = getPitchClass(n);
     if (lastPc !== -1 && pc <= lastPc) {
-      // Wrapped around — bump octave so the sequence keeps ascending.
       octave += 1;
     }
     out.push({ ...n, octave });
