@@ -38,13 +38,13 @@ describe('ChromaticStrip', () => {
     expect(buttons).toHaveLength(13);
   });
 
-  it('locks the root block (block 0) — disabled, click does nothing', () => {
+  it('block 0 (anchor) is toggleable like any other block', () => {
     const onToggleStep = vi.fn();
     render(<ChromaticStrip {...makeProps(new Set([0]), onToggleStep)} />);
     const root = screen.getAllByRole('button')[0] as HTMLButtonElement;
-    expect(root.disabled).toBe(true);
+    expect(root.disabled).toBe(false);
     fireEvent.click(root);
-    expect(onToggleStep).not.toHaveBeenCalled();
+    expect(onToggleStep).toHaveBeenCalledWith(0);
   });
 
   it('clicking a non-root block calls onToggleStep with that step', () => {

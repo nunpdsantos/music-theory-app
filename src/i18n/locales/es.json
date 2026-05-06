@@ -503,6 +503,9 @@
     "otherInterpretations": "Otras interpretaciones",
     "ofKey": "de {{key}}",
     "nonDiatonicAt": "no diatónico (la tónica es el {{numeral}} de {{key}})",
-    "outOfKey": "fuera de tonalidad ({{key}})"
+    "outOfKey": "fuera de tonalidad ({{key}})",
+    "staff": "Pentagrama",
+    "staffChord": "Acorde",
+    "staffArpeggio": "Arpegio"
   }
 }
