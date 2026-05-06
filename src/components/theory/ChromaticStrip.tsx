@@ -1,0 +1,140 @@
+import { useEffect } from 'react';
+import { Note, noteToString } from '../../core/types/music.ts';
+import { DEGREE_COLORS, DEGREE_COLORS_DIM } from '../../design/tokens/colors.ts';
+
+const INTERVAL_SHORT = [
+  'R', 'm2', 'M2', 'm3', 'M3', 'P4', 'TT', 'P5', 'm6', 'M6', 'm7', 'M7', '8',
+] as const;
+
+const KEY_TO_STEP: Record<string, number> = {
+  '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
+  '0': 10, '-': 11, '=': 12,
+};
+
+export interface ChromaticStripProps {
+  /** The note that sits at block 0 (always selected, locked). */
+  rootNote: Note;
+  /** Note name to display at each block (caller controls spelling). */
+  noteAtStep: (step: number) => Note;
+  /** Steps from root currently turned on. Block 0 is always implicitly on. */
+  activeSteps: Set<number>;
+  onToggleStep: (step: number) => void;
+
+  /** Optional in-key tinting + scale-degree labels. */
+  inKeyPitchClasses?: Set<number>;
+  /** Caller maps a pitch class (0-11) → diatonic scale degree (1-7) or undefined. */
+  pitchClassToDegree?: (pc: number) => number | undefined;
+  /** Pitch class for each step — for in-key check. */
+  pitchClassAtStep?: (step: number) => number;
+
+  /** Enable keyboard shortcuts (1-9, 0, -, = → blocks 1-12). Default true. */
+  keyboard?: boolean;
+  className?: string;
+}
+
+/**
+ * 13-block chromatic strip — one block per half-step from the chord root.
+ * Click a block to toggle that interval. Block 0 is the root and is locked on.
+ * If `inKeyPitchClasses` is provided, in-key blocks get a tinted background and a
+ * scale-degree number; out-of-key blocks stay neutral.
+ */
+export function ChromaticStrip({
+  rootNote,
+  noteAtStep,
+  activeSteps,
+  onToggleStep,
+  inKeyPitchClasses,
+  pitchClassToDegree,
+  pitchClassAtStep,
+  keyboard = true,
+  className = '',
+}: ChromaticStripProps) {
+  useEffect(() => {
+    if (!keyboard) return;
+    const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === 'SELECT' || target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) return;
+      const step = KEY_TO_STEP[e.key];
+      if (step !== undefined) {
+        e.preventDefault();
+        onToggleStep(step);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [keyboard, onToggleStep]);
+
+  return (
+    <div
+      className={`grid gap-1.5 ${className}`}
+      style={{ gridTemplateColumns: 'repeat(13, minmax(0, 1fr))' }}
+      role="group"
+      aria-label={`Chromatic strip from ${noteToString(rootNote)}`}
+    >
+      {Array.from({ length: 13 }, (_, step) => {
+        const note = noteAtStep(step);
+        const noteLabel = noteToString(note);
+        const intervalLabel = INTERVAL_SHORT[step];
+        const isRoot = step === 0;
+        const isActive = activeSteps.has(step);
+        const pc = pitchClassAtStep ? pitchClassAtStep(step) : undefined;
+        const inKey = inKeyPitchClasses && pc !== undefined ? inKeyPitchClasses.has(pc) : false;
+        const degree = inKey && pitchClassToDegree && pc !== undefined ? pitchClassToDegree(pc) : undefined;
+
+        const stateLabel = isRoot
+          ? `Root, ${noteLabel}`
+          : `${intervalLabel}, ${noteLabel}${isActive ? ', selected' : ''}${degree ? `, scale degree ${degree}` : ''}`;
+
+        // Tinted state, matching Fermata's existing chord-browser aesthetic.
+        let bg: string;
+        let border: string;
+        let text = 'var(--text)';
+        if (isRoot) {
+          bg = DEGREE_COLORS_DIM[1];
+          border = DEGREE_COLORS[1];
+          text = DEGREE_COLORS[1];
+        } else if (isActive) {
+          bg = 'var(--accent-dim)';
+          border = 'var(--accent)';
+          text = 'var(--accent)';
+        } else if (inKey && degree) {
+          const d = degree as 1 | 2 | 3 | 4 | 5 | 6 | 7;
+          bg = DEGREE_COLORS_DIM[d];
+          border = `color-mix(in srgb, ${DEGREE_COLORS[d]} 35%, transparent)`;
+        } else {
+          bg = 'var(--card)';
+          border = 'var(--border)';
+        }
+
+        return (
+          <button
+            key={step}
+            type="button"
+            onClick={() => !isRoot && onToggleStep(step)}
+            disabled={isRoot}
+            aria-pressed={isActive}
+            aria-label={stateLabel}
+            className="relative rounded-lg px-1 py-2.5 text-center transition-transform enabled:cursor-pointer enabled:hover:brightness-110 enabled:active:scale-[0.97] disabled:cursor-default"
+            style={{
+              backgroundColor: bg,
+              border: `1px solid ${border}`,
+              color: text,
+            }}
+          >
+            {degree && !isRoot && !isActive && (
+              <span
+                className="absolute right-1.5 top-0.5 text-[9px] font-semibold"
+                style={{ color: DEGREE_COLORS[degree as 1 | 2 | 3 | 4 | 5 | 6 | 7] }}
+              >
+                {degree}
+              </span>
+            )}
+            <span className="block text-[10px] opacity-70">{step}</span>
+            <span className="block text-base font-semibold mt-0.5">{noteLabel}</span>
+            <span className="block text-[11px] opacity-80">{intervalLabel}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}

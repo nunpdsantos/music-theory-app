@@ -6,6 +6,7 @@ import { ScaleDegreeBar } from '../components/theory/ScaleDegreeBar.tsx';
 import { ScaleComparison } from '../components/theory/ScaleComparison.tsx';
 import { ChordGrid } from '../components/theory/ChordGrid.tsx';
 import { ChordBrowser } from '../components/theory/ChordBrowser.tsx';
+import { ChordBuilderPanel } from '../components/theory/ChordBuilderPanel.tsx';
 import { CircleOfFifths } from '../components/theory/CircleOfFifths.tsx';
 import { DetailPanel } from '../components/panels/DetailPanel.tsx';
 import { useKeyContext } from '../hooks/useKeyContext.ts';
@@ -52,7 +53,7 @@ export function ExploreView() {
   const detailPanelOpen = useAppStore((s) => s.detailPanelOpen);
   const synthPreset = useAppStore((s) => s.synthPreset);
   const baseOctave = useAppStore((s) => s.baseOctave);
-  const [chordMode, setChordMode] = useState<'diatonic' | 'all'>('diatonic');
+  const [chordMode, setChordMode] = useState<'diatonic' | 'all' | 'build'>('diatonic');
 
   const handleShowScale = () => {
     setSelectedChord(null);
@@ -251,9 +252,21 @@ export function ExploreView() {
                   >
                     {t('explore.allChords')}
                   </button>
+                  <button
+                    onClick={() => setChordMode('build')}
+                    className="px-2 py-0.5 text-2xs font-medium transition-colors max-sm:px-3 max-sm:py-1.5 max-sm:text-xs"
+                    style={{
+                      backgroundColor: chordMode === 'build' ? 'var(--card-hover)' : 'transparent',
+                      color: chordMode === 'build' ? 'var(--text)' : 'var(--text-dim)',
+                    }}
+                  >
+                    {t('explore.build')}
+                  </button>
                 </div>
               </div>
-              {chordMode === 'diatonic' ? <ChordGrid /> : <ChordBrowser />}
+              {chordMode === 'diatonic' && <ChordGrid />}
+              {chordMode === 'all' && <ChordBrowser />}
+              {chordMode === 'build' && <ChordBuilderPanel />}
             </div>
             <div>
               <h3 className="type-section mb-2.5">

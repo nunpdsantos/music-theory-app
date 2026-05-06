@@ -51,6 +51,7 @@
     "chords": "Acordes",
     "diatonic": "Diat\u00f3nicos",
     "allChords": "Todos os Acordes",
+    "build": "Construir",
     "circleOfFifths": "C\u00edrculo de Quintas",
     "notes": "{{count}} notas",
     "playScaleAscending": "Tocar escala ascendente",
@@ -487,5 +488,21 @@
     "skip": "Saltar",
     "next": "Seguinte",
     "finish": "Entendido"
+  },
+  "chordBuilder": {
+    "chordRoot": "Tónica do acorde",
+    "clear": "Limpar",
+    "syncRoot": "Igualar à tónica",
+    "syncRootTitle": "Definir tónica do acorde para {{tonic}} (tónica atual)",
+    "detected": "Detetado",
+    "notes": "Notas",
+    "intervals": "Intervalos",
+    "halfSteps": "Semitons",
+    "none": "(nenhuma)",
+    "noMatch": "sem correspondência exata — adiciona ou remove uma nota",
+    "otherInterpretations": "Outras interpretações",
+    "ofKey": "de {{key}}",
+    "nonDiatonicAt": "não diatónico (a tónica é o {{numeral}} de {{key}})",
+    "outOfKey": "fora da tonalidade ({{key}})"
   }
 }
