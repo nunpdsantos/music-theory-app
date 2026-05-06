@@ -51,6 +51,7 @@
     "chords": "Chords",
     "diatonic": "Diatonic",
     "allChords": "All Chords",
+    "build": "Build",
     "circleOfFifths": "Circle of Fifths",
     "notes": "{{count}} notes",
     "playScaleAscending": "Play scale ascending",
@@ -487,5 +488,21 @@
     "skip": "Skip",
     "next": "Next",
     "finish": "Got it"
+  },
+  "chordBuilder": {
+    "chordRoot": "Chord root",
+    "clear": "Clear",
+    "syncRoot": "Sync root to tonic",
+    "syncRootTitle": "Set chord root to {{tonic}} (current tonic)",
+    "detected": "Detected",
+    "notes": "Notes",
+    "intervals": "Intervals",
+    "halfSteps": "Half-steps",
+    "none": "(none)",
+    "noMatch": "no exact match — add or remove a note",
+    "otherInterpretations": "Other interpretations",
+    "ofKey": "of {{key}}",
+    "nonDiatonicAt": "non-diatonic (root is the {{numeral}} of {{key}})",
+    "outOfKey": "out of key ({{key}})"
   }
 }
