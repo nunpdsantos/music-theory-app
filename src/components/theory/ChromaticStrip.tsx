@@ -12,7 +12,8 @@ const KEY_TO_STEP: Record<string, number> = {
 };
 
 export interface ChromaticStripProps {
-  /** The note that sits at block 0 (always selected, locked). */
+  /** The note that sits at block 0. Always shown with the anchor (tonic-blue) ring;
+   * defaults to selected but the caller may render it deselected. */
   rootNote: Note;
   /** Note name to display at each block (caller controls spelling). */
   noteAtStep: (step: number) => Note;
@@ -34,7 +35,11 @@ export interface ChromaticStripProps {
 
 /**
  * 13-block chromatic strip — one block per half-step from the chord root.
- * Click a block to toggle that interval. Block 0 is the root and is locked on.
+ * Click a block to toggle that interval. Block 0 (the anchor / chord root) wears
+ * a permanent tonic-blue ring marking it as the interval-reference point, but is
+ * toggleable like any other block — useful for naming chords whose root isn't the
+ * strip's anchor (e.g. play D-F#-A on a strip anchored at C and Fermata's parser
+ * recognises it as D major).
  * If `inKeyPitchClasses` is provided, in-key blocks get a tinted background and a
  * scale-degree number; out-of-key blocks stay neutral.
  */
@@ -108,11 +113,10 @@ export function ChromaticStrip({
           <button
             key={step}
             type="button"
-            onClick={() => !isRoot && onToggleStep(step)}
-            disabled={isRoot}
+            onClick={() => onToggleStep(step)}
             aria-pressed={isActive}
             aria-label={stateLabel}
-            className="relative rounded-lg px-1 py-2.5 text-center transition-transform enabled:cursor-pointer enabled:hover:brightness-110 enabled:active:scale-[0.97] disabled:cursor-default"
+            className="relative rounded-lg px-1 py-2.5 text-center cursor-pointer transition-transform hover:brightness-110 active:scale-[0.97]"
             style={{
               backgroundColor: bg,
               border: `1px solid ${border}`,

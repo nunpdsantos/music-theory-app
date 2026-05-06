@@ -16,6 +16,9 @@ export interface StaffNotationProps {
   noteColors?: Record<number, string>;
   /** VexFlow duration: 'w' (whole) | 'h' (half) | 'q' (quarter). Default: 'q' */
   duration?: string;
+  /** When true, render all notes stacked as a single chord (one head, multiple
+   *  pitches). When false (default), render notes sequentially as a melody. */
+  chord?: boolean;
   className?: string;
 }
 
@@ -27,6 +30,7 @@ export function StaffNotation({
   height = 150,
   noteColors,
   duration,
+  chord,
   className,
 }: StaffNotationProps) {
   const { containerRef, loading } = useStaffNotation({
@@ -37,6 +41,7 @@ export function StaffNotation({
     height,
     noteColors,
     duration,
+    chord,
   });
 
   if (loading) {

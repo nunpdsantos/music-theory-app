@@ -503,6 +503,9 @@
     "otherInterpretations": "Outras interpretações",
     "ofKey": "de {{key}}",
     "nonDiatonicAt": "não diatónico (a tónica é o {{numeral}} de {{key}})",
-    "outOfKey": "fora da tonalidade ({{key}})"
+    "outOfKey": "fora da tonalidade ({{key}})",
+    "staff": "Pauta",
+    "staffChord": "Acorde",
+    "staffArpeggio": "Arpejo"
   }
 }

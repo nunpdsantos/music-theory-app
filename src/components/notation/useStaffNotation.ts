@@ -20,6 +20,9 @@ interface UseStaffNotationOptions {
   height?: number;
   noteColors?: Record<number, string>;
   duration?: string;
+  /** When true, render all notes stacked as a single chord (one StaveNote with
+   *  multiple keys). When false (default), render each note sequentially. */
+  chord?: boolean;
 }
 
 export function useStaffNotation(options: UseStaffNotationOptions) {
@@ -104,25 +107,43 @@ export function useStaffNotation(options: UseStaffNotationOptions) {
     // Build notes
     if (options.notes.length === 0) return;
 
-    const staveNotes = options.notes.map((note, i) => {
-      const key = pitchedNoteToVexKey(note);
-      const sn = new StaveNote({ keys: [key], duration, clef });
-
-      const acc = getVexAccidental(note);
-      if (acc) {
-        sn.addModifier(new Accidental(acc), 0);
+    let staveNotes: InstanceType<typeof StaveNote>[];
+    if (options.chord) {
+      // Stacked-chord mode: one StaveNote with all keys.
+      const keys = options.notes.map(pitchedNoteToVexKey);
+      const sn = new StaveNote({ keys, duration, clef });
+      options.notes.forEach((note, i) => {
+        const acc = getVexAccidental(note);
+        if (acc) sn.addModifier(new Accidental(acc), i);
+      });
+      // Use the first provided color for the whole chord (StaveNote-level styling).
+      const firstColor = options.noteColors?.[0];
+      if (firstColor) {
+        sn.setStyle({ fillStyle: firstColor, strokeStyle: firstColor });
       }
+      staveNotes = [sn];
+    } else {
+      // Sequential mode: one StaveNote per pitched note.
+      staveNotes = options.notes.map((note, i) => {
+        const key = pitchedNoteToVexKey(note);
+        const sn = new StaveNote({ keys: [key], duration, clef });
 
-      // Apply degree color if provided
-      if (options.noteColors?.[i]) {
-        sn.setStyle({
-          fillStyle: options.noteColors[i],
-          strokeStyle: options.noteColors[i],
-        });
-      }
+        const acc = getVexAccidental(note);
+        if (acc) {
+          sn.addModifier(new Accidental(acc), 0);
+        }
 
-      return sn;
-    });
+        // Apply degree color if provided
+        if (options.noteColors?.[i]) {
+          sn.setStyle({
+            fillStyle: options.noteColors[i],
+            strokeStyle: options.noteColors[i],
+          });
+        }
+
+        return sn;
+      });
+    }
 
     const voice = new Voice({ numBeats: staveNotes.length, beatValue: 1 })
       .setMode(Voice.Mode.SOFT);

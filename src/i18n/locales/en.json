@@ -503,6 +503,9 @@
     "otherInterpretations": "Other interpretations",
     "ofKey": "of {{key}}",
     "nonDiatonicAt": "non-diatonic (root is the {{numeral}} of {{key}})",
-    "outOfKey": "out of key ({{key}})"
+    "outOfKey": "out of key ({{key}})",
+    "staff": "Staff",
+    "staffChord": "Chord",
+    "staffArpeggio": "Arpeggio"
   }
 }

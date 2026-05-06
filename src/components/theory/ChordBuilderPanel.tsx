@@ -7,6 +7,7 @@ import { CHORD_QUALITY_NAMES } from '../../core/constants/chords.ts';
 import { useKeyContext } from '../../hooks/useKeyContext.ts';
 import { useAppStore } from '../../state/store.ts';
 import { ChromaticStrip } from './ChromaticStrip.tsx';
+import { ChordBuilderStaff } from './ChordBuilderStaff.tsx';
 
 // Default chromatic spelling fallback when a pitch isn't in the current scale.
 const PC_TO_NOTE_SHARP: Record<number, Note> = {
@@ -95,7 +96,6 @@ export function ChordBuilderPanel() {
   );
 
   const onToggleStep = useCallback((step: number) => {
-    if (step === 0) return;
     setActive((prev) => {
       const next = new Set(prev);
       if (next.has(step)) next.delete(step);
@@ -204,6 +204,8 @@ export function ChordBuilderPanel() {
         pitchClassToDegree={pitchClassToDegree}
         pitchClassAtStep={pitchClassAtStep}
       />
+
+      <ChordBuilderStaff notes={inputNotes} />
 
       <div
         className="rounded-xl p-3 text-sm"
