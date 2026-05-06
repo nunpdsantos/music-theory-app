@@ -4,6 +4,7 @@
 import { memo, useCallback, useEffect, useRef } from 'react';
 import type { PianoKey as PianoKeyData } from '../../core/utils/pianoLayout.ts';
 import { noteToString } from '../../core/types/music.ts';
+import { useAppStore } from '../../state/store.ts';
 
 type SizeMode = 'mobile' | 'tablet' | 'desktop';
 
@@ -51,6 +52,11 @@ export const PianoKeyComponent = memo(function PianoKeyComponent({
   const isPressed = useRef(false);
   const elementRef = useRef<HTMLDivElement>(null);
   const dims = DIMS[sizeMode];
+  // Fermata theme: solid colour fills on white keys destroy the white/black
+  // hierarchy because the warm walnut accent looks like a black key. Switch to
+  // a soft top-tint so the key still reads as white while the colour signals
+  // "in scale".
+  const isFermata = useAppStore((s) => s.themeMode === 'fermata');
 
   useEffect(() => {
     if (isFocused && elementRef.current && document.activeElement !== elementRef.current) {
@@ -161,9 +167,14 @@ export const PianoKeyComponent = memo(function PianoKeyComponent({
     } else if (isDimmed) {
       bg = 'var(--piano-black)';
     } else if (isHighlighted) {
-      bg = color;
-      opacity = 0.8;
-      labelColor = '#000';
+      if (isFermata) {
+        bg = `color-mix(in srgb, ${color} 60%, var(--piano-black))`;
+        labelColor = 'var(--piano-white)';
+      } else {
+        bg = color;
+        opacity = 0.8;
+        labelColor = '#000';
+      }
     } else {
       bg = 'var(--piano-black)';
     }
@@ -251,9 +262,14 @@ export const PianoKeyComponent = memo(function PianoKeyComponent({
   } else if (isDimmed) {
     bg = 'var(--piano-white)';
   } else if (isHighlighted) {
-    bg = color;
-    opacity = 0.7;
-    labelColor = '#000';
+    if (isFermata) {
+      bg = `color-mix(in srgb, ${color} 35%, var(--piano-white))`;
+      labelColor = 'var(--text)';
+    } else {
+      bg = color;
+      opacity = 0.7;
+      labelColor = '#000';
+    }
   } else {
     bg = 'var(--piano-white)';
   }

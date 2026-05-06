@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect, useState } from 'react';
+import { useRef, useLayoutEffect, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppStore, type ViewMode, type ThemeMode } from '../../state/store.ts';
 import { useGamificationStore } from '../../state/gamificationStore.ts';
@@ -16,7 +16,7 @@ const VIEW_KEYS: Record<ViewMode, string> = {
   learn: 'nav.learn',
 };
 
-const THEME_CYCLE: ThemeMode[] = ['dark', 'light', 'system', 'fermata'];
+const THEME_OPTIONS: ThemeMode[] = ['dark', 'light', 'system', 'fermata'];
 const THEME_KEYS: Record<ThemeMode, string> = {
   dark: 'theme.dark',
   light: 'theme.light',
@@ -88,13 +88,6 @@ export function TopBar() {
     if (!btn) return;
     setIndicator({ left: btn.offsetLeft, width: btn.offsetWidth });
   }, [view]);
-
-  const cycleTheme = () => {
-    const idx = THEME_CYCLE.indexOf(themeMode);
-    const next = THEME_CYCLE[(idx + 1) % THEME_CYCLE.length];
-    setThemeMode(next);
-    toast(t('toast.themeChanged', { mode: t(THEME_KEYS[next]) }), 'info');
-  };
 
   const themeLabel = t(THEME_KEYS[themeMode]);
 
@@ -215,20 +208,14 @@ export function TopBar() {
           ))}
         </select>
 
-        {/* Theme toggle */}
-        <button
-          onClick={cycleTheme}
-          className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs transition-colors"
-          style={{
-            color: 'var(--text-dim)',
-            border: '1px solid color-mix(in srgb, var(--border) 50%, transparent)',
-          }}
-          aria-label={t('nav.themeLabel', { mode: themeLabel })}
-          title={`${t('nav.themeLabel', { mode: themeLabel }).split('.')[0]}`}
-        >
-          <ThemeIcon mode={themeMode} />
-          <span className="max-sm:hidden">{themeLabel}</span>
-        </button>
+        {/* Theme menu — pick directly instead of cycling */}
+        <ThemeMenu
+          mode={themeMode}
+          onChange={setThemeMode}
+          ariaLabel={t('nav.themeLabel', { mode: themeLabel })}
+          label={themeLabel}
+        />
+
 
         {/* Quick search */}
         <button
@@ -261,5 +248,100 @@ export function TopBar() {
       <AuthModal open={authModalOpen} onClose={() => setAuthModalOpen(false)} onSignIn={signIn} />
     )}
     </>
+  );
+}
+
+interface ThemeMenuProps {
+  mode: ThemeMode;
+  onChange: (m: ThemeMode) => void;
+  ariaLabel: string;
+  label: string;
+}
+
+function ThemeMenu({ mode, onChange, ariaLabel, label }: ThemeMenuProps) {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Close on outside click or Escape.
+  useEffect(() => {
+    if (!open) return;
+    const onClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('mousedown', onClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onClick);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open]);
+
+  const pick = (m: ThemeMode) => {
+    onChange(m);
+    setOpen(false);
+    toast(t('toast.themeChanged', { mode: t(THEME_KEYS[m]) }), 'info');
+  };
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs transition-colors"
+        style={{
+          color: 'var(--text-dim)',
+          border: '1px solid color-mix(in srgb, var(--border) 50%, transparent)',
+          backgroundColor: open ? 'var(--card-hover)' : 'transparent',
+        }}
+        aria-label={ariaLabel}
+        aria-haspopup="menu"
+        aria-expanded={open}
+      >
+        <ThemeIcon mode={mode} />
+        <span className="max-sm:hidden">{label}</span>
+      </button>
+      {open && (
+        <div
+          role="menu"
+          className="absolute right-0 mt-1.5 z-50 rounded-lg overflow-hidden min-w-[150px]"
+          style={{
+            backgroundColor: 'var(--bg-raised)',
+            border: '1px solid var(--border)',
+            boxShadow: 'var(--shadow-md)',
+          }}
+        >
+          {THEME_OPTIONS.map((m) => {
+            const active = m === mode;
+            return (
+              <button
+                key={m}
+                type="button"
+                role="menuitemradio"
+                aria-checked={active}
+                onClick={() => pick(m)}
+                className="flex items-center gap-2 w-full px-3 py-2 text-xs text-left transition-colors"
+                style={{
+                  color: active ? 'var(--accent)' : 'var(--text)',
+                  backgroundColor: active ? 'var(--accent-dim)' : 'transparent',
+                  fontWeight: active ? 600 : 400,
+                }}
+              >
+                <ThemeIcon mode={m} />
+                <span className="flex-1">{t(THEME_KEYS[m])}</span>
+                {active && (
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
   );
 }
