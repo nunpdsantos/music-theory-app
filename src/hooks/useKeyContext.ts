@@ -72,11 +72,23 @@ export function useKeyContext(): KeyContextValue {
     return m;
   }, [scale]);
 
+  // Fermata-coherent fallback when functional degree colours are disabled.
+  // Single hue, two saturations: tonic strong walnut, other scale notes a
+  // lighter walnut. Keeps the editorial feel while leaving the instruments
+  // visually functional (without this, fretboard scale dots disappear and
+  // piano scale keys lose any signal).
   const getNoteColor = useMemo(() => {
     return (note: Note): string | undefined => {
       const degree = pitchClassToDegree.get(getPitchClass(note));
       if (degree === undefined) return undefined;
-      if (!degreeColorsOn) return undefined;
+      if (!degreeColorsOn) {
+        // Hex literals here mirror the .fermata CSS palette (`--accent` and a
+        // lighter walnut). Returning hex (not `var(--accent)`) is deliberate:
+        // FretCell/PianoKey templates this colour into hex-alpha strings like
+        // `${color}30` to dim it, which CSS variables don't support.
+        // eslint-disable-next-line no-restricted-syntax
+        return degree === 1 ? '#a65a2a' : '#c9a574';
+      }
       return DEGREE_COLORS[degree as keyof typeof DEGREE_COLORS];
     };
   }, [pitchClassToDegree, degreeColorsOn]);
