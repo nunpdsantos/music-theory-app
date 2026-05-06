@@ -85,19 +85,14 @@ export function ChromaticStrip({
           ? `Root, ${noteLabel}`
           : `${intervalLabel}, ${noteLabel}${isActive ? ', selected' : ''}${degree ? `, scale degree ${degree}` : ''}`;
 
-        // Tinted state, matching Fermata's existing chord-browser aesthetic.
+        // Two orthogonal visual channels:
+        //   1) Background tint encodes scale-degree / key context (degree colors when in-key).
+        //   2) Outer ring (box-shadow) encodes chord-build state — accent ring for selected,
+        //      tonic-blue ring for the locked root. The two channels never collide on the same
+        //      property, so degree-5 amber doesn't get mistaken for "selected", etc.
         let bg: string;
         let border: string;
-        let text = 'var(--text)';
-        if (isRoot) {
-          bg = DEGREE_COLORS_DIM[1];
-          border = DEGREE_COLORS[1];
-          text = DEGREE_COLORS[1];
-        } else if (isActive) {
-          bg = 'var(--accent-dim)';
-          border = 'var(--accent)';
-          text = 'var(--accent)';
-        } else if (inKey && degree) {
+        if (inKey && degree) {
           const d = degree as 1 | 2 | 3 | 4 | 5 | 6 | 7;
           bg = DEGREE_COLORS_DIM[d];
           border = `color-mix(in srgb, ${DEGREE_COLORS[d]} 35%, transparent)`;
@@ -105,6 +100,9 @@ export function ChromaticStrip({
           bg = 'var(--card)';
           border = 'var(--border)';
         }
+        const ringColor = isRoot ? DEGREE_COLORS[1] : isActive ? 'var(--accent)' : null;
+        const boxShadow = ringColor ? `0 0 0 2px ${ringColor}` : 'none';
+        const text = 'var(--text)';
 
         return (
           <button
@@ -119,9 +117,10 @@ export function ChromaticStrip({
               backgroundColor: bg,
               border: `1px solid ${border}`,
               color: text,
+              boxShadow,
             }}
           >
-            {degree && !isRoot && !isActive && (
+            {degree && (
               <span
                 className="absolute right-1.5 top-0.5 text-[9px] font-semibold"
                 style={{ color: DEGREE_COLORS[degree as 1 | 2 | 3 | 4 | 5 | 6 | 7] }}
